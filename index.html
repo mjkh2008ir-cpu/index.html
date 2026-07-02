@@ -268,7 +268,34 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 // ============================================================
 // دیتا و متغیرها
 // ============================================================
-let allPosts = JSON.parse(localStorage.getItem('padafand_posts') || '[]');
+// ===== مطالب پیش‌فرض (همیشه نمایش داده میشن) =====
+const defaultPosts = [
+  {
+    shobe: "چرا پول هیأت را به فقرا نمیدهید؟",
+    answer: "اولا همه کسانی که گفته شد، مجانی کار نمیکنند.",
+    author: "واحد اطلاعات عملیات",
+    source: "ویکی شبهه",
+    tags: ["مذهبی", "اعتقادی"],
+    cat: "مذهبی",
+    date: "۱۴۰۴/۰۱/۰۱"
+  },
+  {
+    shobe: "آیا کنارگذاشتن برنامه هسته‌ای ایران باعث صلح با آمریکا میشود؟",
+    answer: "شواهد تاریخی نشان می‌دهد تسلیم شدن درگیری‌ها را پایان نمی‌دهد.",
+    author: "واحد اطلاعات عملیات",
+    source: "اندیشکده سعداء",
+    tags: ["هستهای", "سیاسی"],
+    cat: "سیاسی",
+    date: "۱۴۰۴/۰۱/۰۲"
+  }
+];
+
+// بارگذاری مطالب: اول از localStorage، اگه نبود از defaultPosts
+let allPosts = JSON.parse(localStorage.getItem('padafand_posts') || 'null');
+if (!allPosts || allPosts.length === 0) {
+  allPosts = defaultPosts;
+  localStorage.setItem('padafand_posts', JSON.stringify(defaultPosts));
+  }
 let allUsers = JSON.parse(localStorage.getItem('padafand_users') || '{}');
 let loggedUser = null;
 let currentCat = 'همه';
