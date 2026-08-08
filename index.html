@@ -3,165 +3,578 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>پدافند شبهات</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>مرکز فرماندهی پدافند شبهات</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
-/* ===== RESET & BASE ===== */
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b}
-[data-theme="light"]{--bg:#e8f0e0;--bgm:#d0e0c0;--bgp:#c0d0b0;--br:#8aaa6a;--tp:#1a2a0a;--ts:#3a5a2a}
-body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px}
-::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
+body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;justify-content:center;align-items:center;background-image:radial-gradient(circle at 20% 30%,#1a2a0e 0%,#0a0e08 80%)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.cmd-container{width:100%;max-width:500px;padding:1rem}
+.cmd-box{background:linear-gradient(145deg,#0f1a0a,#1a2a0e);border:2px solid #4a7c20;border-radius:20px;padding:2rem 1.5rem;box-shadow:0 0 60px rgba(74,124,32,.2);animation:fadeIn .5s ease}
+.cmd-header{text-align:center;border-bottom:2px solid #2e4018;padding-bottom:0.8rem;margin-bottom:1.2rem}
+.cmd-header .logo{font-size:2.5rem}
+.cmd-header h1{color:#d4e8b0;font-size:1.2rem;letter-spacing:4px}
+.cmd-header h1 span{color:#6db33f}
+.cmd-header .sub{color:#7a9a55;font-size:.5rem;letter-spacing:3px;font-family:monospace}
+.cmd-header .status{display:flex;justify-content:center;gap:.5rem;margin-top:.2rem}
+.cmd-header .status .dot{width:6px;height:6px;border-radius:50%;background:#6db33f;animation:blink 1.2s infinite}
+.cmd-header .status span{color:#6db33f;font-size:.5rem;letter-spacing:1px;font-family:monospace}
 
-/* ===== HEADER ===== */
-#header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.4rem 0.8rem 0.3rem;position:sticky;top:0;z-index:100}
-.hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);font-family:monospace;margin-bottom:0.1rem}
-.hdr-top .online{display:flex;gap:.2rem;align-items:center}
-.hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--gl);animation:blink 1.5s infinite}
-.hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem}
-.hdr-left{display:flex;align-items:center;gap:0.4rem}
-.hdr-left .icon{font-size:1.6rem}
-.hdr-left h1{font-size:1rem;font-weight:900;letter-spacing:1px}
-.hdr-left h1 span{color:var(--gl)}
-.hdr-left .sub{font-size:.5rem;color:var(--ts);letter-spacing:0.5px;margin-top:-0.1rem}
-.hdr-actions{display:flex;gap:0.3rem;align-items:center}
-.hdr-actions .theme-toggle{background:none;border:1px solid var(--br);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tp);font-size:.8rem}
-.hdr-actions .user-btn{background:var(--bgp);border:1px solid var(--br);border-radius:3px;padding:0.15rem 0.5rem;color:var(--tp);font-size:.6rem;cursor:pointer}
+.upload-area{background:linear-gradient(145deg,#0d1408,#1a240e);border:2px dashed #c8a000;border-radius:12px;padding:1.2rem;margin-bottom:1rem;text-align:center}
+.upload-area .icon{font-size:3rem;opacity:.5}
+.upload-area .title{color:#c8a000;font-size:.7rem;letter-spacing:2px;font-weight:700}
+.upload-area .sub{color:#7a9a55;font-size:.5rem}
+.upload-area input[type="file"]{display:none}
+.upload-area .btn-upload{background:#c8a000;border:none;border-radius:6px;color:#1a1000;padding:.4rem 1.5rem;font-size:.7rem;font-weight:700;cursor:pointer;margin-top:.4rem}
+.upload-area .btn-upload:hover{background:#d4b000}
+.upload-area .preview{display:none;margin-top:.5rem;padding:.3rem;background:#0a0e08;border-radius:6px;border:1px solid #2e4018}
+.upload-area .preview img{max-width:100%;max-height:100px;border-radius:4px}
+.upload-area .preview .file-name{color:#d4e8b0;font-size:.55rem}
+.upload-area .preview .card-info{color:#6db33f;font-size:.5rem}
 
-/* ===== SEARCH ===== */
-#search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
-.search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
-.search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.75rem;outline:none;min-height:28px}
-.search-wrap input:focus{border-color:var(--gl)}
-.search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.7rem;cursor:pointer;min-height:28px}
+#securityPage .input-group{margin-bottom:.6rem}
+#securityPage label{color:#7a9a55;font-size:.55rem;display:block;margin-bottom:.1rem;letter-spacing:2px}
+#securityPage input{width:100%;padding:.4rem .7rem;background:#0d1408;border:1.5px solid #2e4018;border-radius:6px;color:#d4e8b0;font-size:.8rem;outline:none;text-align:center}
+#securityPage input:focus{border-color:#6db33f}
+#securityPage .btn-cmd{width:100%;padding:.6rem;background:linear-gradient(135deg,#4a7c20,#2a4a12);border:1px solid #6db33f;border-radius:8px;color:#e8f5cc;font-weight:700;font-size:.85rem;cursor:pointer;letter-spacing:3px;transition:.3s;margin-top:.2rem}
+#securityPage .btn-cmd:hover{background:linear-gradient(135deg,#3a6a1a,#1a3a0a);box-shadow:0 0 30px rgba(74,124,32,.2)}
+#securityPage .error{color:#c0392b;font-size:.6rem;min-height:1rem;text-align:center;margin-top:.1rem}
+.security-badge{text-align:center;margin-top:.6rem;border-top:1px solid #2e4018;padding-top:.5rem}
+.security-badge span{color:#7a9a55;font-size:.4rem;letter-spacing:2px;font-family:monospace}
 
-/* ===== NAV ===== */
-#main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
-.nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
-.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.7rem;cursor:pointer;white-space:nowrap;font-family:inherit}
-.nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
-.nav-btn:hover{color:var(--tp)}
+#dashboardPage{display:none;animation:fadeIn .5s ease}
+.dash-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #2e4018;padding-bottom:.3rem;margin-bottom:.6rem;flex-wrap:wrap}
+.dash-header .title{color:#6db33f;font-size:.75rem;letter-spacing:2px;font-weight:700}
+.dash-header .unit{color:#7a9a55;font-size:.5rem;letter-spacing:1px}
+.dash-header .logout{background:none;border:1px solid #c0392b;color:#c0392b;padding:.15rem .6rem;border-radius:4px;cursor:pointer;font-size:.55rem}
+.dash-header .logout:hover{background:#c0392b;color:#fff}
 
-/* ===== CONTENT ===== */
-#content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
-.page{display:none}
-.page.active{display:block}
-.page-title{font-size:.85rem;font-weight:700;color:var(--gl);letter-spacing:1px;margin-bottom:0.4rem;border-bottom:1px solid var(--br);padding-bottom:0.2rem}
-.page-title i{margin-left:0.3rem}
+.monitor{background:#0d1408;border:2px solid #2e4018;border-radius:8px;padding:.6rem;margin-bottom:.6rem;position:relative;overflow:hidden}
+.monitor::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(74,124,32,.03) 2px,rgba(74,124,32,.03) 4px)}
+.monitor .monitor-title{display:flex;justify-content:space-between;color:#7a9a55;font-size:.4rem;letter-spacing:2px;font-family:monospace;border-bottom:1px solid #1a2a0e;padding-bottom:.1rem;margin-bottom:.2rem}
+.monitor-grid{display:grid;grid-template-columns:1fr 1fr;gap:.2rem}
+.monitor-item{background:#0a0e08;border:1px solid #1a2a0e;border-radius:4px;padding:.2rem .3rem;text-align:center}
+.monitor-item .icon{font-size:.8rem}
+.monitor-item .num{font-size:.9rem;font-weight:900;color:#d4e8b0;line-height:1.2}
+.monitor-item .label{color:#7a9a55;font-size:.35rem;letter-spacing:1px}
 
-.stats{display:flex;gap:0.5rem;background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--gl);border-radius:4px;padding:0.3rem 0.6rem;margin-bottom:0.5rem;flex-wrap:wrap;font-size:.65rem}
-.stat-item{color:var(--ts)}
-.stat-item b{color:var(--am)}
+.user-list{background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:.3rem;margin-bottom:.5rem;max-height:80px;overflow-y:auto}
+.user-list::-webkit-scrollbar{width:3px}
+.user-list::-webkit-scrollbar-thumb{background:#4a7c20}
+.user-item{display:flex;justify-content:space-between;align-items:center;padding:.1rem .2rem;border-bottom:1px solid #1a2a0e;font-size:.55rem;color:#d4e8b0}
+.user-item .phone{color:#6db33f;font-size:.45rem;direction:ltr}
+.padafand-list{background:#0d1408;border:1px solid #c8a000;border-radius:6px;padding:.3rem;margin-bottom:.5rem;max-height:70px;overflow-y:auto;border-right:2px solid #c8a000}
+.padafand-list::-webkit-scrollbar-thumb{background:#c8a000}
+.padafand-item{display:flex;justify-content:space-between;align-items:center;padding:.1rem .2rem;border-bottom:1px solid #1a2a0e;font-size:.55rem;color:#d4e8b0}
+.padafand-item .count{color:#6db33f;font-size:.45rem;font-weight:700}
+.padafand-item .time{color:#7a9a55;font-size:.4rem}
 
-/* ===== POSTS ===== */
-.post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden}
-.post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem}
-.post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
-.post-hdr .title i{color:var(--am);margin-left:0.2rem}
-.post-hdr .arrow{color:var(--gl);font-size:.7rem;transition:.3s}
-.post-hdr .arrow.open{transform:rotate(180deg)}
-.post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br)}
-.post-body.show{display:block}
-.post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
-.post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.6rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
-.post-body .tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.3rem}
-.post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.55rem;color:var(--am)}
-
-.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.4rem;margin-top:0.3rem}
-.ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.4rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.7rem}
-.ai-card:hover{border-color:var(--gl)}
-.ai-card .ai-icon{font-size:1.2rem;display:block}
-.ai-card .ai-name{font-weight:700;font-size:.7rem}
-.ai-card .ai-desc{font-size:.55rem;color:var(--ts)}
-
-/* ===== FOOTER ===== */
-#footer{border-top:1px solid var(--br);padding:0.4rem 0.8rem;background:var(--bgm);margin-top:0.8rem}
-.foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem}
-.foot-links{display:flex;gap:0.3rem;flex-wrap:wrap}
-.foot-links a{color:var(--ts);text-decoration:none;font-size:.6rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer}
-.foot-links a:hover{color:var(--gl);border-color:var(--gl)}
-.foot-copy{color:var(--ts);font-size:.5rem;opacity:0.4}
-
-/* ===== USER PANEL ===== */
-#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:280px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
-#userPanel.show{display:block;animation:slideIn .25s}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
-#userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
-#userPanel .user-title{font-size:.95rem;font-weight:700;color:var(--gl);margin-bottom:0.8rem;border-bottom:1px solid var(--br);padding-bottom:0.3rem}
-#userPanel .form-group{margin-bottom:0.5rem}
-#userPanel .form-group label{display:block;font-size:.6rem;color:var(--ts)}
-#userPanel .form-group input,#userPanel .form-group textarea{width:100%;padding:0.3rem 0.5rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.75rem;outline:none;font-family:inherit}
-#userPanel .form-group input:focus,#userPanel .form-group textarea:focus{border-color:var(--gl)}
-#userPanel .form-group textarea{resize:vertical;min-height:40px}
-#userPanel .btn-primary{background:linear-gradient(135deg,var(--g),#355c16);color:#e8f5cc;border:1px solid var(--gl);border-radius:3px;padding:0.3rem;font-weight:700;cursor:pointer;width:100%;font-size:.75rem}
-#userPanel .user-info{margin-top:0.5rem;padding:0.6rem;background:var(--bg);border-radius:4px;border:1px solid var(--br);text-align:center}
-#userPanel .user-info .avatar{font-size:2rem;display:block}
-#userPanel .user-info .name{font-size:.85rem;font-weight:700}
-#userPanel .user-info .bio{font-size:.65rem;color:var(--ts)}
-#userPanel .user-info .phone{font-size:.65rem;color:var(--ts)}
-#userPanel .switch-link{color:var(--ts);font-size:.6rem;text-align:center;margin-top:0.3rem;cursor:pointer}
-#userPanel .switch-link:hover{color:var(--gl)}
-
-@media(max-width:600px){
-  .hdr-left h1{font-size:.85rem}
-  .hdr-left .sub{font-size:.45rem}
-  .nav-btn{font-size:.6rem;padding:0.2rem 0.4rem}
-  #content{padding:0.4rem}
-  .stats{font-size:.55rem;padding:0.2rem 0.4rem;gap:0.3rem}
-  .post-hdr .title{font-size:.7rem}
-  .post-body .ans{font-size:.68rem}
-  .foot-inner{flex-direction:column;text-align:center}
-  #userPanel{width:100%}
-  .ai-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
-}
+.form-section{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:.5rem;border-right:3px solid #c8a000}
+.form-section .form-title{display:flex;align-items:center;gap:.4rem;margin-bottom:.2rem}
+.form-section .form-title span{color:#c8a000;font-weight:700;font-size:.65rem;letter-spacing:1px}
+.form-section .form-title .sub{color:#7a9a55;font-size:.35rem;margin-right:auto}
+.form-section input,.form-section textarea,.form-section select{width:100%;padding:.3rem .5rem;background:#0a0e08;border:1.5px solid #2e4018;border-radius:4px;color:#d4e8b0;font-size:.65rem;outline:none;font-family:inherit;margin-bottom:.15rem}
+.form-section input:focus,.form-section textarea:focus,.form-section select:focus{border-color:#6db33f}
+.form-section textarea{resize:vertical;min-height:35px}
+.form-section .row{display:grid;grid-template-columns:1fr 1fr;gap:.15rem}
+.form-section .btn-fire{width:100%;padding:.35rem;background:linear-gradient(135deg,#c8a000,#a08000);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.7rem;cursor:pointer;letter-spacing:1px;margin-top:.1rem}
+.form-section .btn-fire:hover{background:linear-gradient(135deg,#d4b000,#b09000)}
+.form-section .msg{color:#6db33f;font-size:.55rem;text-align:center;min-height:.8rem}
+.scan-line{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;background:repeating-linear-gradient(0deg,transparent,transparent 3px,#6db33f 3px,#6db33f 4px)}
+@media(max-width:450px){.cmd-box{padding:.8rem .6rem}}
 </style>
 </head>
 <body>
+<div class="scan-line"></div>
 
-<!-- HEADER -->
-<header id="header">
-  <div style="max-width:800px;margin:0 auto">
-    <div class="hdr-top">
-      <span>SYS // PADAFAND v4.0</span>
-      <div class="online"><span class="dot"></span><span class="txt">آنلاین</span></div>
+<div class="cmd-container">
+<div class="cmd-box">
+
+  <div class="cmd-header">
+    <div class="logo">🎖️</div>
+    <h1>مرکز فرماندهی <span>پدافند</span></h1>
+    <div class="sub">══ سامانهٔ دسترسی سطح یک ══</div>
+    <div class="status"><span class="dot"></span><span>سیستم فعال</span></div>
+  </div>
+
+  <div id="securityPage">
+    <div class="upload-area">
+      <div class="icon">🪪</div>
+      <div class="title">ارائه کارت شناسایی</div>
+      <div class="sub">عکس کارت خود را آپلود کنید (سیستم به‌صورت خودکار خوانده می‌شود)</div>
+      <input type="file" id="cardUpload" accept="image/*">
+      <button class="btn-upload" onclick="document.getElementById('cardUpload').click()">📤 انتخاب عکس</button>
+      <div class="preview" id="previewContainer">
+        <img id="previewImage" src="#" alt="پیش‌نمایش کارت">
+        <div class="file-name" id="fileName">—</div>
+        <div class="card-info" id="cardInfo"></div>
+      </div>
     </div>
-    <div class="hdr-main">
-      <div class="hdr-left">
-        <span class="icon">🛡️</span>
-        <div>
-          <h1><span>پدافند</span> شبهات</h1>
-          <div class="sub">قرارگاه پاسخگویی به شبهات</div>
+
+    <div class="input-group">
+      <label>واحد عملیاتی (دقیقاً تایپ کنید)</label>
+      <input type="text" id="cmdUnit" placeholder="شورای فرماندهی یا اطلاعات عملیات">
+    </div>
+
+    <button class="btn-cmd" id="cmdBtn" onclick="checkAccess()">🔓 تأیید هویت</button>
+    <div class="error" id="cmdError"></div>
+    <div class="security-badge">
+      <span>● امنیت سطح یک • ورود با کارت شناسایی</span>
+    </div>
+  </div>
+
+  <div id="dashboardPage">
+    <div class="dash-header">
+      <div>
+        <div class="title"><i class="fas fa-shield-alt"></i> اتاق فرماندهی</div>
+        <div class="unit">واحد: <span id="dashUnit">—</span> | کاربر: <span id="dashUser">—</span></div>
+      </div>
+      <button class="logout" onclick="logoutCmd()">🚪 خروج</button>
+    </div>
+
+    <div class="monitor">
+      <div class="monitor-title">
+        <span>📡 سیستم پایش</span>
+        <span id="monitorTime"></span>
+      </div>
+      <div class="monitor-grid">
+        <div class="monitor-item">
+          <div class="icon">📊</div>
+          <div class="num" id="statPosts">0</div>
+          <div class="label">شبهه پاسخ داده شد</div>
+        </div>
+        <div class="monitor-item">
+          <div class="icon">📁</div>
+          <div class="num" id="statCats">0</div>
+          <div class="label">دسته‌بندی</div>
+        </div>
+        <div class="monitor-item">
+          <div class="icon">👥</div>
+          <div class="num" id="statUsers">0</div>
+          <div class="label">کاربران ثبت‌نام‌شده</div>
+        </div>
+        <div class="monitor-item">
+          <div class="icon">📅</div>
+          <div class="num" id="statToday">0</div>
+          <div class="label">مطلب امروز</div>
         </div>
       </div>
-      <div class="hdr-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" title="تغییر تم">🌓</button>
-        <button class="user-btn" onclick="toggleUserPanel()"><i class="fas fa-user"></i> <span id="userBtnText">ورود</span></button>
+    </div>
+
+    <div style="background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:.3rem;margin-bottom:.5rem">
+      <div style="display:flex;justify-content:space-between;color:#7a9a55;font-size:.4rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
+        <span>👥 کاربران ثبت‌نام‌شده</span>
+        <span>شماره تلفن</span>
+      </div>
+      <div class="user-list" id="userListContainer">
+        <div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">در حال بارگذاری...</div>
       </div>
     </div>
-  </div>
-</header>
 
-<!-- SEARCH -->
-<div id="search-section">
-  <div class="search-wrap">
-    <i class="fas fa-search" style="color:var(--ts);font-size:.7rem"></i>
-    <input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()">
-    <button onclick="filterPosts()">جستجو</button>
+    <div class="padafand-list">
+      <div style="display:flex;justify-content:space-between;color:#c8a000;font-size:.4rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
+        <span>🛡️ فرستندگان از فرماندهی</span>
+        <span>تعداد / زمان</span>
+      </div>
+      <div id="padafandListContainer">
+        <div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">در حال بارگذاری...</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-title">
+        <span>📝 ایجاد عملیات جدید</span>
+        <span class="sub">فرم ارسال شبهه</span>
+      </div>
+      <input type="text" id="newShobe" placeholder="📌 شبهه را وارد کنید...">
+      <textarea id="newAnswer" placeholder="💡 پاسخ کامل را وارد کنید..."></textarea>
+      <div class="row">
+        <input type="text" id="newSource" placeholder="📚 منبع (اختیاری)">
+        <input type="text" id="newTags" placeholder="#هشتگ1 #هشتگ2">
+      </div>
+      <select id="newCategory">
+        <option value="اعتقادی">اعتقادی</option>
+        <option value="مذهبی">مذهبی</option>
+        <option value="سیاسی">سیاسی</option>
+        <option value="اجتماعی">اجتماعی</option>
+        <option value="نظامی">نظامی</option>
+        <option value="تاریخی">تاریخی</option>
+      </select>
+      <button class="btn-fire" onclick="firePost()">🚀 شلیک مطلب</button>
+      <div class="msg" id="fireMsg"></div>
+    </div>
   </div>
+
+</div>
 </div>
 
-<!-- NAV -->
-<nav id="main-nav">
-  <div class="nav-inner">
-    <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
-    <button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button>
-    <button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button>
-  </div>
-</nav>
+<script>
+// ============================================================
+// توابع رمزنگاری
+// ============================================================
+function encryptData(data) {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+}
 
-<!-- CONTENT -->
-<div id="content">
+function decryptData(encrypted) {
+    try {
+        return JSON.parse(decodeURIComponent(escape(atob(encrypted))));
+    } catch(e) {
+        return null;
+    }
+}
+
+function saveData(key, data) {
+    const encrypted = encryptData(data);
+    localStorage.setItem(key, encrypted);
+}
+
+function loadData(key) {
+    const encrypted = localStorage.getItem(key);
+    if (!encrypted) return null;
+    return decryptData(encrypted);
+}
+
+// ============================================================
+// دیتا (با رمزنگاری)
+// ============================================================
+let allPosts = loadData('padafand_posts') || [];
+let allUsers = loadData('padafand_users') || {};
+let currentUser = null;
+let currentUnit = '';
+let uploadedCardData = null;
+let isCardVerified = false;
+
+// ============================================================
+// اعضای شورای فرماندهی
+// ============================================================
+const commandMembers = {
+  "khayyatzadeh": {
+    name: "محمد جواد خیاط زاده",
+    code: "101",
+    role: "شورای فرماندهی_مستشار ایتا",
+    rank: "سردار",
+    unit: "شورای فرماندهی",
+    phone: "09123456789"
+  },
+  "motavassel": {
+    name: "محمد باقر متوسل",
+    code: "102",
+    role: "شورای فرماندهی_معاون عملیات",
+    rank: "سردار",
+    unit: "شورای فرماندهی",
+    phone: "09123456788"
+  },
+  "barzkar": {
+    name: "محمد برزکار",
+    code: "103",
+    role: "شورای فرماندهی_مشاور",
+    rank: "سردار",
+    unit: "شورای فرماندهی",
+    phone: "09123456787"
+  },
+  "saeedi": {
+    name: "محمد مهدی سعیدی",
+    code: "104",
+    role: "واحد اطلاعات عملیات",
+    rank: "سردار",
+    unit: "واحد اطلاعات عملیات",
+    phone: "09123456786"
+  }
+};
+
+// ============================================================
+// تشخیص متن از روی عکس با Tesseract
+// ============================================================
+async function scanCardImage(imageData) {
+    try {
+        const result = await Tesseract.recognize(imageData, 'fas', {
+            logger: m => console.log(m)
+        });
+        const text = result.data.text;
+        console.log('متن تشخیص داده شده:', text);
+        
+        let foundKey = null;
+        for (let key in commandMembers) {
+            if (text.includes(key) || text.includes(commandMembers[key].name)) {
+                foundKey = key;
+                break;
+            }
+        }
+        
+        if (foundKey) {
+            const member = commandMembers[foundKey];
+            document.getElementById('cardInfo').textContent = '✅ کارت شناسایی معتبر: ' + member.name;
+            document.getElementById('cardInfo').style.color = '#6db33f';
+            return member;
+        } else {
+            document.getElementById('cardInfo').textContent = '⚠️ متن روی کارت شناسایی خوانده نشد';
+            document.getElementById('cardInfo').style.color = '#c0392b';
+            return null;
+        }
+    } catch (e) {
+        document.getElementById('cardInfo').textContent = '⚠️ خطا در خواندن کارت: ' + e.message;
+        document.getElementById('cardInfo').style.color = '#c0392b';
+        return null;
+    }
+}
+
+// ============================================================
+// آپلود عکس
+// ============================================================
+document.getElementById('cardUpload').addEventListener('change', async function(e) {
+    const file = this.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async function(event) {
+        const preview = document.getElementById('previewContainer');
+        const img = document.getElementById('previewImage');
+        const name = document.getElementById('fileName');
+        
+        img.src = event.target.result;
+        name.textContent = file.name;
+        preview.style.display = 'block';
+        
+        document.getElementById('cmdError').textContent = '⏳ در حال خواندن کارت...';
+        document.getElementById('cmdError').style.color = '#c8a000';
+        
+        let member = await scanCardImage(event.target.result);
+        
+        if (!member) {
+            const fileName = file.name.toLowerCase();
+            for (let key in commandMembers) {
+                if (fileName.includes(key.toLowerCase())) {
+                    member = commandMembers[key];
+                    document.getElementById('cardInfo').textContent = '✅ کارت شناسایی (از روی اسم فایل): ' + member.name;
+                    document.getElementById('cardInfo').style.color = '#6db33f';
+                    break;
+                }
+            }
+        }
+        
+        if (member) {
+            uploadedCardData = member;
+            isCardVerified = true;
+            document.getElementById('cmdError').textContent = '✅ کارت خوانده شد. برای ورود کلیک کنید.';
+            document.getElementById('cmdError').style.color = '#6db33f';
+            document.getElementById('cmdBtn').classList.add('active');
+        } else {
+            uploadedCardData = null;
+            isCardVerified = false;
+            document.getElementById('cmdError').textContent = '⚠️ کارت شناسایی نامعتبر است';
+            document.getElementById('cmdError').style.color = '#c0392b';
+            document.getElementById('cmdBtn').classList.remove('active');
+        }
+    };
+    reader.readAsDataURL(file);
+});
+
+// ============================================================
+// ورود
+// ============================================================
+function checkAccess() {
+    if (!isCardVerified) {
+        document.getElementById('cmdError').textContent = '⚠️ ابتدا کارت شناسایی معتبر آپلود کنید';
+        document.getElementById('cmdError').style.color = '#c0392b';
+        return;
+    }
+    
+    const unitInput = document.getElementById('cmdUnit').value.trim();
+    const validUnits = ['شورای فرماندهی', 'واحد اطلاعات عملیات'];
+    
+    if (!unitInput || !validUnits.includes(unitInput)) {
+        document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید (شورای فرماندهی یا اطلاعات عملیات)';
+        document.getElementById('cmdError').style.color = '#c0392b';
+        return;
+    }
+    
+    if (!uploadedCardData) {
+        document.getElementById('cmdError').textContent = '⚠️ لطفاً عکس کارت شناسایی معتبر آپلود کنید';
+        document.getElementById('cmdError').style.color = '#c0392b';
+        return;
+    }
+
+    if (unitInput === 'شورای فرماندهی' && !uploadedCardData.role.includes('شورای فرماندهی')) {
+        document.getElementById('cmdError').textContent = '⛔ این کارت برای شورای فرماندهی مجاز نیست';
+        document.getElementById('cmdError').style.color = '#c0392b';
+        return;
+    }
+    if (unitInput === 'واحد اطلاعات عملیات' && !uploadedCardData.role.includes('اطلاعات عملیات')) {
+        document.getElementById('cmdError').textContent = '⛔ این کارت برای واحد اطلاعات عملیات مجاز نیست';
+        document.getElementById('cmdError').style.color = '#c0392b';
+        return;
+    }
+
+    currentUser = uploadedCardData.name;
+    currentUnit = unitInput;
+    
+    document.getElementById('securityPage').style.display = 'none';
+    document.getElementById('dashboardPage').style.display = 'block';
+    document.getElementById('dashUnit').textContent = unitInput;
+    document.getElementById('dashUser').textContent = uploadedCardData.name;
+    document.getElementById('cmdError').textContent = '';
+    
+    updateMonitor();
+    renderUsers();
+    renderSenders();
+    updateTime();
+    setInterval(updateTime, 1000);
+}
+
+function logoutCmd() {
+    currentUser = null;
+    currentUnit = null;
+    uploadedCardData = null;
+    isCardVerified = false;
+    document.getElementById('securityPage').style.display = 'block';
+    document.getElementById('dashboardPage').style.display = 'none';
+    document.getElementById('cardUpload').value = '';
+    document.getElementById('previewContainer').style.display = 'none';
+    document.getElementById('cmdUnit').value = '';
+    document.getElementById('cmdError').textContent = '';
+    document.getElementById('cmdBtn').classList.remove('active');
+}
+
+function updateTime() {
+    const now = new Date();
+    document.getElementById('monitorTime').textContent = now.toLocaleTimeString('fa-IR');
+}
+
+function updateMonitor() {
+    document.getElementById('statPosts').textContent = allPosts.length;
+    const cats = new Set(allPosts.map(p => p.cat));
+    document.getElementById('statCats').textContent = cats.size;
+    const users = Object.keys(allUsers);
+    document.getElementById('statUsers').textContent = users.length;
+    const today = new Date().toLocaleDateString('fa-IR');
+    const todayPosts = allPosts.filter(p => p.date === today);
+    document.getElementById('statToday').textContent = todayPosts.length || '—';
+}
+
+function renderUsers() {
+    const container = document.getElementById('userListContainer');
+    const userList = Object.keys(allUsers);
+    if (!userList.length) {
+        container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هیچ کاربری ثبت‌نام نکرده است</div>';
+        return;
+    }
+    container.innerHTML = userList.map(u => `
+        <div class="user-item">
+            <span>👤 ${u}</span>
+            <span class="phone">${allUsers[u].phone || '—'}</span>
+        </div>
+    `).join('');
+}
+
+function renderSenders() {
+    const container = document.getElementById('padafandListContainer');
+    const senders = {};
+    allPosts.forEach(p => {
+        if (p.sender && p.sender !== 'سیستم') {
+            if (!senders[p.sender]) {
+                senders[p.sender] = { count: 0, lastTime: p.time || '—', lastDate: p.date || '—' };
+            }
+            senders[p.sender].count++;
+            if (p.time) senders[p.sender].lastTime = p.time;
+        }
+    });
+    const list = Object.keys(senders);
+    if (!list.length) {
+        container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
+        return;
+    }
+    list.sort((a, b) => senders[b].count - senders[a].count);
+    container.innerHTML = list.map(name => `
+        <div class="padafand-item">
+            <span>🛡️ ${name}</span>
+            <span class="count">${senders[name].count} مطلب</span>
+            <span class="time">${senders[name].lastDate} ${senders[name].lastTime}</span>
+        </div>
+    `).join('');
+}
+
+// ============================================================
+// ذخیره در سرور (JSONBin)
+// ============================================================
+const BIN_ID = '6a771499da38895dfec99f53';
+const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
+
+async function saveToServer(data) {
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+            console.log('⚠️ خطا در ذخیره‌سازی سرور:', response.status);
+        }
+    } catch (e) {
+        console.log('⚠️ خطا در ذخیره‌سازی سرور:', e.message);
+    }
+}
+
+// ============================================================
+// firePost (به‌روز شده با ذخیره در سرور)
+// ============================================================
+function firePost() {
+    if (!currentUser) {
+        document.getElementById('fireMsg').textContent = '⚠️ ابتدا وارد شوید';
+        return;
+    }
+    const shobe = document.getElementById('newShobe').value.trim();
+    const answer = document.getElementById('newAnswer').value.trim();
+    if (!shobe || !answer) {
+        document.getElementById('fireMsg').textContent = '⚠️ شبهه و پاسخ را وارد کنید';
+        return;
+    }
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fa-IR');
+    const dateStr = now.toLocaleDateString('fa-IR');
+
+    const newPost = {
+        shobe,
+        answer,
+        author: currentUser,
+        source: document.getElementById('newSource').value.trim() || 'منبع معتبر',
+        tags: document.getElementById('newTags').value.trim().split(' ').filter(Boolean),
+        cat: document.getElementById('newCategory').value,
+        date: dateStr,
+        time: timeStr,
+        sender: currentUser
+    };
+
+    // 1. ذخیره در localStorage
+    allPosts.unshift(newPost);
+    saveData('padafand_posts', allPosts);
+
+    // 2. ذخیره در سرور (JSONBin)
+    saveToServer(allPosts);
+
+    document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
+    ['newShobe','newAnswer','newSource','newTags'].forEach(id => document.getElementById(id).value = '');
+    
+    updateMonitor();
+    renderSenders();
+}
+
+// ============================================================
+// بارگذاری اولیه
+// ============================================================
+updateMonitor();
+renderUsers();
+renderSenders();
+updateTime();
+setInterval(updateTime, 1000);
+</script>
+</body>
+            </html><div id="content">
 
   <!-- HOME -->
   <div id="page-home" class="page active">
