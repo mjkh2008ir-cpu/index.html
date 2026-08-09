@@ -6,58 +6,184 @@
 <title>پدافند شبهات</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,sans-serif;background:#0d1408;color:#d4e8b0;padding:20px;direction:rtl}
+body{background:#0d1408;color:#d4e8b0;font-family:Tahoma;padding:15px;direction:rtl}
 .container{max-width:800px;margin:0 auto}
-.header{text-align:center;border-bottom:2px solid #4a7c20;padding-bottom:10px;margin-bottom:20px}
+
+/* هدر */
+.header{text-align:center;border-bottom:2px solid #4a7c20;padding-bottom:10px;margin-bottom:15px}
 .header h1{color:#6db33f}
-.header span{color:#c8a000}
-.post{background:#1a2410;border:1px solid #2e4018;padding:15px;margin-bottom:15px;border-radius:8px}
+.header h1 span{color:#c8a000}
+.header .sub{color:#7a9a55;font-size:14px}
+
+/* منو */
+.nav{display:flex;gap:8px;justify-content:center;margin:15px 0;flex-wrap:wrap}
+.nav button{background:#1a2410;border:1px solid #2e4018;color:#d4e8b0;padding:8px 18px;border-radius:6px;cursor:pointer;font-size:14px;transition:0.3s}
+.nav button:hover{background:#2e4018}
+.nav button.active{background:#4a7c20;color:#0d1408;border-color:#6db33f}
+
+/* صفحات */
+.page{display:none}
+.page.active{display:block}
+
+/* پست‌ها */
+.post{background:#1a2410;border:1px solid #2e4018;padding:15px;margin:12px 0;border-radius:8px}
 .post h3{color:#c8a000;margin-bottom:8px}
-.post p{color:#d4e8b0;line-height:1.8}
-.post .meta{color:#7a9a55;font-size:12px;margin-top:10px;border-top:1px solid #2e4018;padding-top:10px}
-.footer{text-align:center;margin-top:30px;padding-top:15px;border-top:1px solid #2e4018;color:#7a9a55;font-size:12px}
+.post p{line-height:1.8}
+.post .meta{color:#7a9a55;font-size:12px;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px}
+.post .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.post .actions button{background:#2e4018;border:1px solid #4a7c20;color:#d4e8b0;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:13px;transition:0.3s}
+.post .actions button:hover{background:#4a7c20;color:#0d1408}
+.post .comments{margin-top:12px;border-top:1px solid #2e4018;padding-top:10px}
+.post .comments .cmt{background:#0d1408;padding:8px 12px;border-radius:5px;margin:5px 0;font-size:13px;border-right:3px solid #6db33f}
+.post .comments input{width:70%;padding:8px;border-radius:5px;border:1px solid #2e4018;background:#0d1408;color:#d4e8b0;margin-left:5px}
+.post .comments button{background:#4a7c20;border:none;color:#0d1408;padding:8px 16px;border-radius:5px;cursor:pointer}
+.saved-msg{color:#6db33f;font-size:13px;margin-right:10px}
+
+/* جعبه مهمات */
+.saved-item{background:#1a2410;border:1px solid #c8a000;padding:12px;margin:10px 0;border-radius:6px;border-right:3px solid #c8a000}
+.saved-item h4{color:#c8a000}
+.saved-item .del-btn{background:#c0392b;border:none;color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;margin-top:6px}
+.empty-msg{color:#7a9a55;text-align:center;padding:30px 0}
+
+.footer{text-align:center;color:#7a9a55;font-size:11px;margin-top:30px;padding-top:10px;border-top:1px solid #2e4018}
+.footer a{color:#6db33f;text-decoration:none}
 </style>
 </head>
 <body>
+
 <div class="container">
+
+  <!-- هدر -->
   <div class="header">
     <h1>🛡 <span>پدافند</span> شبهات</h1>
-    <p>قرارگاه پاسخگویی به شبهات — مذهب شیعه اثناعشری</p>
+    <div class="sub">قرارگاه پاسخگویی به شبهات — مذهب شیعه اثناعشری</div>
   </div>
 
-  <div id="posts"></div>
+  <!-- منو -->
+  <div class="nav">
+    <button class="active" onclick="switchPage('home')">🏠 خانه</button>
+    <button onclick="switchPage('posts')">📚 مطالب</button>
+    <button onclick="switchPage('ai')">🤖 هوش مصنوعی</button>
+    <button onclick="switchPage('saved')">📦 جعبه مهمات</button>
+  </div>
 
+  <!-- صفحه خانه -->
+  <div id="page-home" class="page active">
+    <div id="homePosts"></div>
+  </div>
+
+  <!-- صفحه مطالب -->
+  <div id="page-posts" class="page">
+    <div id="allPosts"></div>
+  </div>
+
+  <!-- صفحه هوش مصنوعی -->
+  <div id="page-ai" class="page">
+    <div style="background:#1a2410;border:1px solid #2e4018;padding:15px;border-radius:8px;text-align:center">
+      <p style="font-size:18px;color:#c8a000">🤖 هوش مصنوعی</p>
+      <p style="color:#7a9a55;margin:10px 0">به زودی سامانه اختصاصی پاسخگویی هوشمند راه‌اندازی می‌شود.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:15px">
+        <a href="https://chatgpt.com/" target="_blank" style="background:#2e4018;padding:8px 18px;border-radius:6px;color:#d4e8b0;text-decoration:none;border:1px solid #4a7c20">ChatGPT</a>
+        <a href="https://deepseek.com/" target="_blank" style="background:#2e4018;padding:8px 18px;border-radius:6px;color:#d4e8b0;text-decoration:none;border:1px solid #4a7c20">DeepSeek</a>
+        <a href="https://noorai.ir/" target="_blank" style="background:#2e4018;padding:8px 18px;border-radius:6px;color:#d4e8b0;text-decoration:none;border:1px solid #4a7c20">نور AI</a>
+        <a href="https://claude.ai/" target="_blank" style="background:#2e4018;padding:8px 18px;border-radius:6px;color:#d4e8b0;text-decoration:none;border:1px solid #4a7c20">Claude</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحه جعبه مهمات -->
+  <div id="page-saved" class="page">
+    <div style="background:#1a2410;border:1px solid #c8a000;padding:12px;border-radius:8px;margin-bottom:15px;border-right:3px solid #c8a000">
+      <p style="color:#c8a000;font-size:14px">📦 جعبه مهمات شما</p>
+      <p style="color:#7a9a55;font-size:12px">مطالبی که ذخیره کردی اینجا هستن.</p>
+    </div>
+    <div id="savedList"></div>
+  </div>
+
+  <!-- فوتر -->
   <div class="footer">
-    <p>🛡 پدافند شبهات؛ پاسخ به شبهات با مستندات معتبر</p>
-    <p style="font-size:10px;color:#4a6a2a">«وَ مَا النَّصْرُ إِلَّا مِنْ عِندِ اللَّهِ»</p>
+    🛡 پدافند شبهات | پاسخ به شبهات با مستندات معتبر<br>
+    <a href="command.html" target="_blank">🎖️ مرکز فرماندهی</a>
   </div>
+
 </div>
 
 <script>
-// ===== بارگذاری مطالب =====
+// ===== دیتا و متغیرها =====
 const BIN_ID = '6a771499da38895dfec99f53';
 const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
+let allPosts = [];
+let currentPage = 'home';
 
+// ===== بارگذاری مطالب =====
 async function loadPosts() {
   try {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
       headers: { 'X-Master-Key': API_KEY }
     });
     const data = await res.json();
-    const posts = data.record || [];
-    renderPosts(posts);
+    allPosts = data.record || [];
+    renderHome();
+    renderAllPosts();
+    renderSaved();
   } catch(e) {
-    document.getElementById('posts').innerHTML = '<p style="color:#c0392b;">⚠️ خطا در دریافت مطالب</p>';
+    document.getElementById('homePosts').innerHTML = '<p style="color:#c0392b;">⚠️ خطا در دریافت مطالب</p>';
   }
 }
 
-function renderPosts(posts) {
-  const container = document.getElementById('posts');
-  if (!posts || posts.length === 0) {
-    container.innerHTML = '<p style="color:#7a9a55;">🔍 هنوز مطلبی ثبت نشده است.</p>';
+// ===== ذخیره در سرور =====
+async function saveToServer() {
+  try {
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY
+      },
+      body: JSON.stringify(allPosts)
+    });
+  } catch(e) {
+    console.log('⚠️ خطا در ذخیره‌سازی');
+  }
+}
+
+// ===== صفحه‌گردانی =====
+function switchPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  document.querySelector(`.nav button:nth-child(${['home','posts','ai','saved'].indexOf(page)+1})`).classList.add('active');
+  if (page === 'saved') renderSaved();
+  if (page === 'home') renderHome();
+  if (page === 'posts') renderAllPosts();
+}
+
+// ===== رندر صفحه اصلی =====
+function renderHome() {
+  const container = document.getElementById('homePosts');
+  const posts = allPosts.slice(0, 3);
+  if (!posts.length) {
+    container.innerHTML = '<p style="color:#7a9a55;text-align:center;padding:20px;">🔍 هنوز مطلبی ثبت نشده است.</p>';
     return;
   }
-  container.innerHTML = posts.map(p => `
+  container.innerHTML = posts.map((p, i) => `
+    <div class="post">
+      <h3>❓ ${p.shobe || 'بدون عنوان'}</h3>
+      <p>${(p.answer || 'پاسخی ثبت نشده').substring(0, 150)}${p.answer && p.answer.length > 150 ? '...' : ''}</p>
+      <div class="meta">✍️ ${p.author || 'ناشناس'} ${p.date ? `| 📅 ${p.date}` : ''}</div>
+    </div>
+  `).join('');
+}
+
+// ===== رندر همه مطالب =====
+function renderAllPosts() {
+  const container = document.getElementById('allPosts');
+  if (!allPosts || !allPosts.length) {
+    container.innerHTML = '<p style="color:#7a9a55;text-align:center;padding:20px;">🔍 هنوز مطلبی ثبت نشده است.</p>';
+    return;
+  }
+  container.innerHTML = allPosts.map((p, index) => `
     <div class="post">
       <h3>❓ ${p.shobe || 'بدون عنوان'}</h3>
       <p>${(p.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>')}</p>
@@ -65,11 +191,96 @@ function renderPosts(posts) {
         ✍️ ${p.author || 'ناشناس'} 
         ${p.source ? `| 📖 ${p.source}` : ''}
         ${p.cat ? `| 🏷️ ${p.cat}` : ''}
+        ${p.date ? `| 📅 ${p.date}` : ''}
+      </div>
+      <div class="actions">
+        <button onclick="saveToBox(${index})">📦 ذخیره در جعبه مهمات</button>
+        <button onclick="sharePost(${index})">📤 اشتراک‌گذاری</button>
+        <span id="savedMsg${index}" class="saved-msg"></span>
+      </div>
+      <div class="comments">
+        <div id="comments${index}">
+          ${(p.comments || []).map(c => `<div class="cmt">💬 ${c}</div>`).join('')}
+        </div>
+        <div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;">
+          <input type="text" id="cmtInput${index}" placeholder="نظرت رو بنویس..." style="flex:1;min-width:150px;">
+          <button onclick="addComment(${index})">ارسال نظر</button>
+        </div>
       </div>
     </div>
   `).join('');
 }
 
+// ===== ۱. ذخیره در جعبه مهمات =====
+function saveToBox(index) {
+  const post = allPosts[index];
+  if (!post) return;
+  let savedBox = JSON.parse(localStorage.getItem('padafand_saved') || '[]');
+  if (!savedBox.some(p => p.shobe === post.shobe && p.answer === post.answer)) {
+    savedBox.push({ ...post, savedAt: new Date().toLocaleDateString('fa-IR') });
+    localStorage.setItem('padafand_saved', JSON.stringify(savedBox));
+    document.getElementById(`savedMsg${index}`).textContent = '✅ ذخیره شد!';
+    setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 3000);
+  } else {
+    document.getElementById(`savedMsg${index}`).textContent = '⚠️ قبلاً ذخیره شده';
+    setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 3000);
+  }
+}
+
+// ===== ۲. اشتراک‌گذاری =====
+function sharePost(index) {
+  const post = allPosts[index];
+  if (!post) return;
+  const text = `🛡 پدافند شبهات\n❓ ${post.shobe}\n💡 ${post.answer}\n📖 ${post.source || 'پدافند شبهات'}`;
+  if (navigator.share) {
+    navigator.share({ title: 'پدافند شبهات', text: text, url: window.location.href }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text + '\n\n' + window.location.href)
+      .then(() => alert('✅ مطلب کپی شد!'))
+      .catch(() => alert('📋 لینک و متن رو کپی کن:\n' + text));
+  }
+}
+
+// ===== ۳. اضافه کردن کامنت =====
+function addComment(index) {
+  const input = document.getElementById(`cmtInput${index}`);
+  const text = input.value.trim();
+  if (!text) return alert('لطفاً یک نظر بنویس.');
+  if (!allPosts[index].comments) allPosts[index].comments = [];
+  allPosts[index].comments.push(text);
+  input.value = '';
+  saveToServer();
+  renderAllPosts();
+}
+
+// ===== رندر جعبه مهمات =====
+function renderSaved() {
+  const container = document.getElementById('savedList');
+  const saved = JSON.parse(localStorage.getItem('padafand_saved') || '[]');
+  if (!saved.length) {
+    container.innerHTML = '<div class="empty-msg">📦 جعبه مهمات خالی است.<br>برای ذخیره مطالب، روی دکمه 📦 ذخیره در جعبه مهمات کلیک کن.</div>';
+    return;
+  }
+  container.innerHTML = saved.map((p, i) => `
+    <div class="saved-item">
+      <h4>❓ ${p.shobe || 'بدون عنوان'}</h4>
+      <p style="color:#d4e8b0;font-size:13px;margin:6px 0">${(p.answer || '').substring(0, 120)}${p.answer && p.answer.length > 120 ? '...' : ''}</p>
+      <div style="color:#7a9a55;font-size:11px">📅 ذخیره شده در: ${p.savedAt || 'تاریخ نامشخص'}</div>
+      <button class="del-btn" onclick="removeFromSaved(${i})">🗑️ حذف</button>
+    </div>
+  `).join('');
+}
+
+// ===== حذف از جعبه مهمات =====
+function removeFromSaved(index) {
+  if (!confirm('مطمئنی این مطلب رو از جعبه مهمات حذف کنی؟')) return;
+  let saved = JSON.parse(localStorage.getItem('padafand_saved') || '[]');
+  saved.splice(index, 1);
+  localStorage.setItem('padafand_saved', JSON.stringify(saved));
+  renderSaved();
+}
+
+// ===== بارگذاری اولیه =====
 loadPosts();
 </script>
 </body>
