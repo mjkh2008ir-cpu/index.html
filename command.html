@@ -6,6 +6,7 @@
 <title>مرکز فرماندهی پدافند شبهات</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
+/* ===== استایل‌های قبلی ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;justify-content:center;align-items:center;background-image:radial-gradient(circle at 20% 30%,#1a2a0e 0%,#0a0e08 80%)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -218,39 +219,21 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
 
 <script>
 // ============================================================
-// توابع رمزنگاری
+// یک کلید مشترک برای همه داده‌ها
 // ============================================================
-function encryptData(data) {
-    return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-}
-function decryptData(encrypted) {
+const STORAGE_KEY = 'padafand_data';
+
+function getData() {
     try {
-        return JSON.parse(decodeURIComponent(escape(atob(encrypted))));
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
     } catch(e) {
-        return null;
+        return { posts: [], users: {} };
     }
 }
-function saveData(key, data) {
-    const encrypted = encryptData(data);
-    localStorage.setItem(key, encrypted);
-}
-function loadData(key) {
-    const encrypted = localStorage.getItem(key);
-    if (!encrypted) return null;
-    return decryptData(encrypted);
-}
 
-// ============================================================
-// دیتا
-// ============================================================
-const BIN_ID = '6a771499da38895dfec99f53';
-const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
-let allPosts = loadData('padafand_posts') || [];
-let allUsers = loadData('padafand_users') || {};
-let currentUser = null;
-let currentUnit = '';
-let uploadedCardData = null;
-let isCardVerified = false;
+function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
 
 // ============================================================
 // اعضای شورای فرماندهی
@@ -261,6 +244,15 @@ const commandMembers = {
   "barzkar": { name: "محمد برزکار", code: "103", role: "شورای فرماندهی_مشاور", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456787" },
   "saeedi": { name: "محمد مهدی سعیدی", code: "104", role: "واحد اطلاعات عملیات", rank: "سردار", unit: "واحد اطلاعات عملیات", phone: "09123456786" }
 };
+
+// ============================================================
+// متغیرهای اصلی
+// ============================================================
+let allData = getData();
+let currentUser = null;
+let currentUnit = '';
+let uploadedCardData = null;
+let isCardVerified = false;
 
 // ============================================================
 // تشخیص متن از روی عکس
@@ -421,27 +413,26 @@ function updateTime() {
 }
 
 // ============================================================
-// توابع اصلی مانیتور (به‌روز شده)
+// توابع اصلی مانیتور
 // ============================================================
 function updateMonitor() {
-    // بارگذاری مجدد دیتاها از localStorage برای اطمینان از به‌روز بودن
-    allPosts = loadData('padafand_posts') || [];
-    allUsers = loadData('padafand_users') || {};
-
+    // بارگذاری مجدد از کلید مشترک
+    allData = getData();
+    
     // تعداد کل مطالب
-    document.getElementById('statPosts').textContent = allPosts.length;
+    document.getElementById('statPosts').textContent = allData.posts.length;
     
     // تعداد دسته‌بندی‌ها
-    const cats = new Set(allPosts.map(p => p.cat));
+    const cats = new Set(allData.posts.map(p => p.cat));
     document.getElementById('statCats').textContent = cats.size;
     
     // تعداد کاربران ثبت‌نام‌شده
-    const users = Object.keys(allUsers);
+    const users = Object.keys(allData.users);
     document.getElementById('statUsers').textContent = users.length;
     
     // تعداد مطالب امروز
     const today = new Date().toLocaleDateString('fa-IR');
-    const todayPosts = allPosts.filter(p => p.date === today);
+    const todayPosts = allData.posts.filter(p => p.date === today);
     document.getElementById('statToday').textContent = todayPosts.length || '—';
 
     // به‌روزرسانی لیست کاربران و مطالب
@@ -451,9 +442,8 @@ function updateMonitor() {
 
 function renderUsers() {
     const container = document.getElementById('userListContainer');
-    // دوباره از localStorage می‌خونیم تا مطمئن بشیم
-    allUsers = loadData('padafand_users') || {};
-    const userList = Object.keys(allUsers);
+    allData = getData();
+    const userList = Object.keys(allData.users);
     
     if (!userList.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هیچ کاربری ثبت‌نام نکرده است</div>';
@@ -461,7 +451,7 @@ function renderUsers() {
     }
     
     container.innerHTML = userList.map(u => {
-        const user = allUsers[u];
+        const user = allData.users[u];
         return `
             <div class="user-item">
                 <span>👤 <span class="fullname">${user.fullname || u}</span></span>
@@ -473,11 +463,10 @@ function renderUsers() {
 
 function renderSenders() {
     const container = document.getElementById('padafandListContainer');
-    // دوباره از localStorage می‌خونیم
-    allPosts = loadData('padafand_posts') || [];
+    allData = getData();
     
     // فقط مطالب ارسال‌شده از فرماندهی رو نشون بده (اونی که sender داره)
-    const cmdPosts = allPosts.filter(p => p.sender && p.sender !== 'سیستم');
+    const cmdPosts = allData.posts.filter(p => p.sender && p.sender !== 'سیستم');
     
     if (!cmdPosts.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
@@ -485,56 +474,35 @@ function renderSenders() {
     }
     
     container.innerHTML = cmdPosts.map((p, index) => {
-        const actualIndex = allPosts.indexOf(p);
         return `
             <div class="padafand-item">
                 <span class="sender-name">🛡️ ${p.sender}</span>
                 <span class="count">${p.shobe ? p.shobe.substring(0, 20) + '...' : 'بدون عنوان'}</span>
                 <span class="time">${p.date || ''} ${p.time || ''}</span>
-                <button class="del-btn" onclick="deletePost(${actualIndex})">🗑️</button>
+                <button class="del-btn" onclick="deletePost(${index})">🗑️</button>
             </div>
         `;
     }).join('');
 }
 
 // ============================================================
-// حذف مطلب (فقط برای فرستنده یا ادمین)
+// حذف مطلب
 // ============================================================
 function deletePost(index) {
     if (!currentUser) return;
-    const post = allPosts[index];
+    allData = getData();
+    const post = allData.posts[index];
+    if (!post) return;
     if (post.sender !== currentUser && currentUser !== 'محمد جواد خیاط زاده') {
         alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
         return;
     }
     if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
-    allPosts.splice(index, 1);
-    saveData('padafand_posts', allPosts);
-    // ذخیره در سرور
-    saveToServer(allPosts);
+    allData.posts.splice(index, 1);
+    saveData(allData);
     updateMonitor();
-    renderSenders();
     document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت حذف شد';
     setTimeout(() => document.getElementById('fireMsg').textContent = '', 3000);
-}
-
-// ============================================================
-// ذخیره در سرور (JSONBin)
-// ============================================================
-async function saveToServer(data) {
-    try {
-        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': API_KEY
-            },
-            body: JSON.stringify(data)
-        });
-        console.log('✅ داده‌ها در سرور ذخیره شدند');
-    } catch (e) {
-        console.log('⚠️ خطا در ذخیره‌سازی سرور');
-    }
 }
 
 // ============================================================
@@ -570,15 +538,14 @@ function firePost() {
         savedAt: new Date().toISOString()
     };
 
-    allPosts.unshift(newPost);
-    saveData('padafand_posts', allPosts);
-    saveToServer(allPosts);
+    allData = getData();
+    allData.posts.unshift(newPost);
+    saveData(allData);
 
     document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
     ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
 
     updateMonitor();
-    renderSenders();
 }
 
 // ============================================================
@@ -591,4 +558,4 @@ updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-          </html> 
+      </html> 
