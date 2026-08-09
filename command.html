@@ -6,7 +6,7 @@
 <title>مرکز فرماندهی پدافند شبهات</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
-/* ===== استایل‌های قبلی ===== */
+/* ===== تمام استایل‌های قبلی ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;justify-content:center;align-items:center;background-image:radial-gradient(circle at 20% 30%,#1a2a0e 0%,#0a0e08 80%)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -168,7 +168,6 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
       </div>
     </div>
 
-    <!-- لیست کاربران با نام و شماره -->
     <div style="background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:.3rem;margin-bottom:.5rem">
       <div style="display:flex;justify-content:space-between;color:#7a9a55;font-size:.4rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
         <span>👥 کاربران ثبت‌نام‌شده</span>
@@ -179,7 +178,6 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
       </div>
     </div>
 
-    <!-- لیست مطالب ارسال‌شده از فرماندهی با قابلیت حذف -->
     <div class="padafand-list">
       <div style="display:flex;justify-content:space-between;color:#c8a000;font-size:.4rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
         <span>🛡️ مطالب ارسال‌شده از فرماندهی</span>
@@ -219,20 +217,44 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
 
 <script>
 // ============================================================
-// یک کلید مشترک برای همه داده‌ها
+// کلیدهای ذخیره‌سازی و سرور
 // ============================================================
 const STORAGE_KEY = 'padafand_data';
+const BIN_ID = '6a771499da38895dfec99f53';
+const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
 
-function getData() {
+// ============================================================
+// توابع سرور (JSONBin)
+// ============================================================
+async function loadFromServer() {
     try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: { 'X-Master-Key': API_KEY }
+        });
+        const data = await res.json();
+        const serverData = data.record || { posts: [], users: {} };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
+        return serverData;
     } catch(e) {
-        return { posts: [], users: {} };
+        console.log('⚠️ خطا در دریافت از سرور، استفاده از داده‌های محلی');
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
     }
 }
 
-function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+async function saveToServer(data) {
+    try {
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(data)
+        });
+        console.log('✅ داده‌ها در سرور ذخیره شدند');
+    } catch(e) {
+        console.log('⚠️ خطا در ذخیره‌سازی سرور');
+    }
 }
 
 // ============================================================
@@ -246,22 +268,12 @@ const commandMembers = {
 };
 
 // ============================================================
-// متغیرهای اصلی
-// ============================================================
-let allData = getData();
-let currentUser = null;
-let currentUnit = '';
-let uploadedCardData = null;
-let isCardVerified = false;
-
-// ============================================================
 // تشخیص متن از روی عکس
 // ============================================================
 async function scanCardImage(imageData) {
     try {
         const result = await Tesseract.recognize(imageData, 'fas', { logger: m => console.log(m) });
         const text = result.data.text;
-        console.log('متن تشخیص داده شده:', text);
         let foundKey = null;
         for (let key in commandMembers) {
             if (text.includes(key) || text.includes(commandMembers[key].name)) {
@@ -333,13 +345,45 @@ document.getElementById('cardUpload').addEventListener('change', async function(
 });
 
 // ============================================================
+// دیتا و متغیرها
+// ============================================================
+let allData = { posts: [], users: {} };
+let allPosts = [];
+let allUsers = {};
+let currentUser = null;
+let currentUnit = '';
+let uploadedCardData = null;
+let isCardVerified = false;
+
+// ============================================================
+// بارگذاری از سرور
+// ============================================================
+async function loadData() {
+    allData = await loadFromServer();
+    allPosts = allData.posts || [];
+    allUsers = allData.users || {};
+    updateMonitor();
+    renderUsers();
+    renderSenders();
+}
+
+// ============================================================
+// ذخیره در سرور و localStorage
+// ============================================================
+function saveData() {
+    allData.posts = allPosts;
+    allData.users = allUsers;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+    saveToServer(allData);
+}
+
+// ============================================================
 // ورود (با دو راه)
 // ============================================================
 function checkAccess() {
     const unitInput = document.getElementById('cmdUnit').value.trim();
     const validUnits = ['شورای فرماندهی', 'واحد اطلاعات عملیات'];
     
-    // ===== راه سریع (مخفی) برای سازنده =====
     if (unitInput === 'Khayyatzadeh') {
         currentUser = 'محمد جواد خیاط زاده';
         currentUnit = 'شورای فرماندهی';
@@ -348,15 +392,12 @@ function checkAccess() {
         document.getElementById('dashUnit').textContent = 'شورای فرماندهی';
         document.getElementById('dashUser').textContent = 'محمد جواد خیاط زاده';
         document.getElementById('cmdError').textContent = '';
-        updateMonitor();
-        renderUsers();
-        renderSenders();
+        loadData();
         updateTime();
         setInterval(updateTime, 1000);
         return;
     }
     
-    // ===== راه عادی (برای بقیه) =====
     if (!unitInput || !validUnits.includes(unitInput)) {
         document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید (شورای فرماندهی یا اطلاعات عملیات)';
         document.getElementById('cmdError').style.color = '#c0392b';
@@ -378,7 +419,6 @@ function checkAccess() {
         return;
     }
     
-    // موفق (راه عادی)
     currentUser = uploadedCardData.name;
     currentUnit = unitInput;
     document.getElementById('securityPage').style.display = 'none';
@@ -386,9 +426,7 @@ function checkAccess() {
     document.getElementById('dashUnit').textContent = unitInput;
     document.getElementById('dashUser').textContent = uploadedCardData.name;
     document.getElementById('cmdError').textContent = '';
-    updateMonitor();
-    renderUsers();
-    renderSenders();
+    loadData();
     updateTime();
     setInterval(updateTime, 1000);
 }
@@ -413,45 +451,27 @@ function updateTime() {
 }
 
 // ============================================================
-// توابع اصلی مانیتور
+// توابع مانیتور
 // ============================================================
 function updateMonitor() {
-    // بارگذاری مجدد از کلید مشترک
-    allData = getData();
-    
-    // تعداد کل مطالب
-    document.getElementById('statPosts').textContent = allData.posts.length;
-    
-    // تعداد دسته‌بندی‌ها
-    const cats = new Set(allData.posts.map(p => p.cat));
+    document.getElementById('statPosts').textContent = allPosts.length;
+    const cats = new Set(allPosts.map(p => p.cat));
     document.getElementById('statCats').textContent = cats.size;
-    
-    // تعداد کاربران ثبت‌نام‌شده
-    const users = Object.keys(allData.users);
-    document.getElementById('statUsers').textContent = users.length;
-    
-    // تعداد مطالب امروز
+    document.getElementById('statUsers').textContent = Object.keys(allUsers).length;
     const today = new Date().toLocaleDateString('fa-IR');
-    const todayPosts = allData.posts.filter(p => p.date === today);
+    const todayPosts = allPosts.filter(p => p.date === today);
     document.getElementById('statToday').textContent = todayPosts.length || '—';
-
-    // به‌روزرسانی لیست کاربران و مطالب
-    renderUsers();
-    renderSenders();
 }
 
 function renderUsers() {
     const container = document.getElementById('userListContainer');
-    allData = getData();
-    const userList = Object.keys(allData.users);
-    
+    const userList = Object.keys(allUsers);
     if (!userList.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هیچ کاربری ثبت‌نام نکرده است</div>';
         return;
     }
-    
     container.innerHTML = userList.map(u => {
-        const user = allData.users[u];
+        const user = allUsers[u];
         return `
             <div class="user-item">
                 <span>👤 <span class="fullname">${user.fullname || u}</span></span>
@@ -463,16 +483,11 @@ function renderUsers() {
 
 function renderSenders() {
     const container = document.getElementById('padafandListContainer');
-    allData = getData();
-    
-    // فقط مطالب ارسال‌شده از فرماندهی رو نشون بده (اونی که sender داره)
-    const cmdPosts = allData.posts.filter(p => p.sender && p.sender !== 'سیستم');
-    
+    const cmdPosts = allPosts.filter(p => p.sender && p.sender !== 'سیستم');
     if (!cmdPosts.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
         return;
     }
-    
     container.innerHTML = cmdPosts.map((p, index) => {
         return `
             <div class="padafand-item">
@@ -490,17 +505,17 @@ function renderSenders() {
 // ============================================================
 function deletePost(index) {
     if (!currentUser) return;
-    allData = getData();
-    const post = allData.posts[index];
+    const post = allPosts[index];
     if (!post) return;
     if (post.sender !== currentUser && currentUser !== 'محمد جواد خیاط زاده') {
         alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
         return;
     }
     if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
-    allData.posts.splice(index, 1);
-    saveData(allData);
+    allPosts.splice(index, 1);
+    saveData();
     updateMonitor();
+    renderSenders();
     document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت حذف شد';
     setTimeout(() => document.getElementById('fireMsg').textContent = '', 3000);
 }
@@ -538,24 +553,22 @@ function firePost() {
         savedAt: new Date().toISOString()
     };
 
-    allData = getData();
-    allData.posts.unshift(newPost);
-    saveData(allData);
+    allPosts.unshift(newPost);
+    saveData();
 
     document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
     ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
 
     updateMonitor();
+    renderSenders();
 }
 
 // ============================================================
 // بارگذاری اولیه
 // ============================================================
-updateMonitor();
-renderUsers();
-renderSenders();
+loadData();
 updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-      </html> 
+          </html> 
