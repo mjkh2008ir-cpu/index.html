@@ -6,6 +6,7 @@
 <title>پدافند شبهات</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
+/* ===== تمام استایل‌های قبلی ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#d4a017}
 [data-theme="light"]{--bg:#f5f8f2;--bgm:#e6efe0;--bgp:#d8e6ce;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000;--rd:#c0392b}
@@ -13,12 +14,10 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* ===== دکمه شناور ===== */
 .floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:1.8rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
 .floating-btn:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(74,124,32,.6)}
 .floating-btn a{color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
 
-/* ===== HEADER ===== */
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.4rem 0.8rem 0.3rem;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);font-family:monospace;margin-bottom:0.1rem}
 .hdr-top .online{display:flex;gap:.2rem;align-items:center}
@@ -35,7 +34,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .hdr-actions .user-btn{background:var(--bgp);border:1px solid var(--br);border-radius:3px;padding:0.15rem 0.5rem;color:var(--tp);font-size:.6rem;cursor:pointer}
 .hdr-actions .user-btn:hover{background:var(--g);color:#fff}
 
-/* ===== SEARCH ===== */
 #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
 .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
 .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.75rem;outline:none;min-height:28px}
@@ -43,14 +41,12 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.7rem;cursor:pointer;min-height:28px}
 .search-wrap button:hover{opacity:.85}
 
-/* ===== NAV ===== */
 #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
 .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
 .nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.7rem;cursor:pointer;white-space:nowrap;font-family:inherit}
 .nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
 .nav-btn:hover{color:var(--tp)}
 
-/* ===== CONTENT ===== */
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
 .page{display:none}
 .page.active{display:block}
@@ -61,7 +57,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .stat-item{color:var(--ts)}
 .stat-item b{color:var(--am)}
 
-/* ===== POSTS ===== */
 .post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden}
 .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:0.2s}
 .post-hdr:hover{background:var(--bgm)}
@@ -112,7 +107,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .ai-card .ai-name{font-weight:700;font-size:.7rem}
 .ai-card .ai-desc{font-size:.55rem;color:var(--ts)}
 
-/* ===== جعبه مهمات ===== */
 .saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am)}
 .saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .saved-item .saved-hdr h4{color:var(--am);font-size:.75rem;flex:1}
@@ -124,7 +118,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.1rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
 .saved-item .del-btn:hover{background:#a02020}
 
-/* ===== FOOTER ===== */
 #footer{border-top:1px solid var(--br);padding:0.4rem 0.8rem;background:var(--bgm);margin-top:0.8rem}
 .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem}
 .foot-links{display:flex;gap:0.3rem;flex-wrap:wrap}
@@ -132,7 +125,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .foot-links a:hover{color:var(--gl);border-color:var(--gl)}
 .foot-copy{color:var(--ts);font-size:.5rem;opacity:0.4}
 
-/* ===== USER PANEL ===== */
 #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.5rem 1.2rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
 #userPanel.show{display:block;animation:slideIn .25s}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
@@ -171,14 +163,12 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 </head>
 <body>
 
-<!-- ===== دکمه شناور ===== -->
 <div class="floating-btn">
   <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank" title="ارسال شبهه">
     <i class="fas fa-paper-plane"></i>
   </a>
 </div>
 
-<!-- HEADER -->
 <header id="header">
   <div style="max-width:800px;margin:0 auto">
     <div class="hdr-top">
@@ -201,7 +191,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </header>
 
-<!-- SEARCH -->
 <div id="search-section">
   <div class="search-wrap">
     <i class="fas fa-search" style="color:var(--ts);font-size:.7rem"></i>
@@ -210,7 +199,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </div>
 
-<!-- NAV -->
 <nav id="main-nav">
   <div class="nav-inner">
     <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
@@ -220,10 +208,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </nav>
 
-<!-- CONTENT -->
 <div id="content">
 
-  <!-- HOME -->
   <div id="page-home" class="page active">
     <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
     <div class="stats">
@@ -245,14 +231,12 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     </div>
   </div>
 
-  <!-- POSTS -->
   <div id="page-posts" class="page">
     <div class="page-title"><i class="fas fa-list"></i> شبهات</div>
     <div id="filterChips" style="display:flex;flex-wrap:wrap;gap:0.2rem;margin-bottom:0.4rem"></div>
     <div id="postContainer"></div>
   </div>
 
-  <!-- AI -->
   <div id="page-ai" class="page">
     <div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div>
     <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.6rem;margin-bottom:0.5rem;border-right:2px solid var(--am)">
@@ -268,7 +252,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     </div>
   </div>
 
-  <!-- SAVED -->
   <div id="page-saved" class="page">
     <div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div>
     <div style="background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;border-radius:4px;margin-bottom:0.5rem;border-right:2px solid var(--am)">
@@ -279,7 +262,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 </div>
 
-<!-- FOOTER -->
 <footer id="footer">
   <div class="foot-inner">
     <div class="foot-links">
@@ -291,7 +273,6 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </footer>
 
-<!-- USER PANEL -->
 <div id="userPanel">
   <button class="close" onclick="toggleUserPanel()">✕</button>
   <div class="user-title"><i class="fas fa-user-shield"></i> حساب کاربری</div>
@@ -335,12 +316,28 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 <script>
 // ============================================================
+// یک کلید مشترک برای همه داده‌ها
+// ============================================================
+const STORAGE_KEY = 'padafand_data';
+
+function getData() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
+    } catch(e) {
+        return { posts: [], users: {} };
+    }
+}
+
+function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// ============================================================
 // دیتا و متغیرها
 // ============================================================
-const BIN_ID = '6a771499da38895dfec99f53';
-const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
-let allPosts = [];
-let allUsers = JSON.parse(localStorage.getItem('padafand_users') || '{}');
+let allData = getData();
+let allPosts = allData.posts || [];
+let allUsers = allData.users || {};
 let loggedUser = null;
 let currentCat = 'همه';
 let currentPage = 'home';
@@ -351,51 +348,6 @@ const SPECIAL_USERS = ['محمد جواد خیاط زاده', 'محمد مهدی
 // ============================================================
 function getUserRank(username) {
     return SPECIAL_USERS.includes(username) ? '⭐ سردار' : '';
-}
-
-// ============================================================
-// بارگذاری مطالب از سرور
-// ============================================================
-async function loadPosts() {
-  try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': API_KEY }
-    });
-    const data = await res.json();
-    allPosts = data.record || [];
-    localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
-    renderAll();
-  } catch(e) {
-    allPosts = JSON.parse(localStorage.getItem('padafand_posts') || '[]');
-    renderAll();
-  }
-}
-
-function renderAll() {
-  renderPosts(allPosts);
-  renderPosts(allPosts.slice(0, 3), 'homePosts');
-  document.getElementById('postCount').textContent = allPosts.length;
-  renderSaved();
-  updateUserCount();
-  renderChips();
-}
-
-// ============================================================
-// ذخیره در سرور
-// ============================================================
-async function saveToServer() {
-  try {
-    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY
-      },
-      body: JSON.stringify(allPosts)
-    });
-  } catch(e) {
-    console.log('⚠️ خطا در ذخیره‌سازی سرور');
-  }
 }
 
 // ============================================================
@@ -416,17 +368,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('userBtnText').textContent = loggedUser;
   }
   
-  loadPosts();
-  
-  // همگام‌سازی خودکار هر ۳ ثانیه
-  setInterval(function() {
-    const newPosts = JSON.parse(localStorage.getItem('padafand_posts') || '[]');
-    if (JSON.stringify(newPosts) !== JSON.stringify(allPosts)) {
-      allPosts = newPosts;
-      renderAll();
-    }
-  }, 3000);
+  loadDataAndRender();
 });
+
+function loadDataAndRender() {
+    allData = getData();
+    allPosts = allData.posts || [];
+    allUsers = allData.users || {};
+    renderAll();
+}
+
+function renderAll() {
+  renderPosts(allPosts);
+  renderPosts(allPosts.slice(0, 3), 'homePosts');
+  document.getElementById('postCount').textContent = allPosts.length;
+  renderSaved();
+  updateUserCount();
+  renderChips();
+}
 
 function switchPage(page) {
   currentPage = page;
@@ -559,14 +518,15 @@ function setCat(c) {
 function deletePost(index) {
   if (!loggedUser) return;
   const post = allPosts[index];
-  if (post.sender !== loggedUser) {
+  if (!post) return;
+  if (post.sender !== loggedUser && loggedUser !== 'محمد جواد خیاط زاده') {
     alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
     return;
   }
   if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
   allPosts.splice(index, 1);
-  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
-  saveToServer();
+  allData.posts = allPosts;
+  saveData(allData);
   renderAll();
 }
 
@@ -629,8 +589,8 @@ function addComment(index) {
     replies: []
   });
   input.value = '';
-  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
-  saveToServer();
+  allData.posts = allPosts;
+  saveData(allData);
   renderPosts(allPosts);
 }
 
@@ -644,8 +604,8 @@ function likeComment(postIndex, commentId) {
   const comment = post.comments.find(c => c.id === commentId);
   if (!comment) return;
   comment.likes = (comment.likes || 0) + 1;
-  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
-  saveToServer();
+  allData.posts = allPosts;
+  saveData(allData);
   renderPosts(allPosts);
 }
 
@@ -669,8 +629,8 @@ function addReply(postIndex, commentId) {
   if (!comment.replies) comment.replies = [];
   comment.replies.push({ user: loggedUser, text: text });
   input.value = '';
-  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
-  saveToServer();
+  allData.posts = allPosts;
+  saveData(allData);
   renderPosts(allPosts);
 }
 
@@ -733,7 +693,6 @@ function toggleUserPanel() {
     document.getElementById('displayBio').textContent = u.bio || '—';
     document.getElementById('displayPhone').textContent = u.phone || '—';
     document.getElementById('displayDate').textContent = u.date || 'امروز';
-    // نمایش درجه در پروفایل
     const nameEl = document.querySelector('#userInfo .name');
     if (nameEl) {
       nameEl.innerHTML = (u.fullname || loggedUser) + (rank ? ` <span class="rank">${rank}</span>` : '');
@@ -783,7 +742,8 @@ function userRegister() {
     fullname, phone, bio: bio || '—',
     password, date: new Date().toLocaleDateString('fa-IR')
   };
-  localStorage.setItem('padafand_users', JSON.stringify(allUsers));
+  allData.users = allUsers;
+  saveData(allData);
   document.getElementById('regMsg').textContent = '✅ ثبت‌نام موفق! وارد شوید.';
   showLogin();
   updateUserCount();
@@ -830,6 +790,19 @@ function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   document.documentElement.setAttribute('data-theme', current === 'light' ? '' : 'light');
 }
+
+// ============================================================
+// همگام‌سازی خودکار
+// ============================================================
+setInterval(function() {
+  const newData = getData();
+  if (JSON.stringify(newData) !== JSON.stringify(allData)) {
+    allData = newData;
+    allPosts = allData.posts || [];
+    allUsers = allData.users || {};
+    renderAll();
+  }
+}, 3000);
 </script>
 </body>
-  </html>
+      </html>
