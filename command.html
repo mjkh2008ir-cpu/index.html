@@ -59,16 +59,21 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
 .monitor-item .num{font-size:.9rem;font-weight:900;color:#d4e8b0;line-height:1.2}
 .monitor-item .label{color:#7a9a55;font-size:.35rem;letter-spacing:1px}
 
-.user-list{background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:.3rem;margin-bottom:.5rem;max-height:80px;overflow-y:auto}
+.user-list{background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:.3rem;margin-bottom:.5rem;max-height:100px;overflow-y:auto}
 .user-list::-webkit-scrollbar{width:3px}
 .user-list::-webkit-scrollbar-thumb{background:#4a7c20}
 .user-item{display:flex;justify-content:space-between;align-items:center;padding:.1rem .2rem;border-bottom:1px solid #1a2a0e;font-size:.55rem;color:#d4e8b0}
 .user-item .phone{color:#6db33f;font-size:.45rem;direction:ltr}
-.padafand-list{background:#0d1408;border:1px solid #c8a000;border-radius:6px;padding:.3rem;margin-bottom:.5rem;max-height:70px;overflow-y:auto;border-right:2px solid #c8a000}
+.user-item .fullname{color:#c8a000;font-size:.5rem;font-weight:700}
+
+.padafand-list{background:#0d1408;border:1px solid #c8a000;border-radius:6px;padding:.3rem;margin-bottom:.5rem;max-height:150px;overflow-y:auto;border-right:2px solid #c8a000}
 .padafand-list::-webkit-scrollbar-thumb{background:#c8a000}
-.padafand-item{display:flex;justify-content:space-between;align-items:center;padding:.1rem .2rem;border-bottom:1px solid #1a2a0e;font-size:.55rem;color:#d4e8b0}
+.padafand-item{display:flex;justify-content:space-between;align-items:center;padding:.1rem .2rem;border-bottom:1px solid #1a2a0e;font-size:.55rem;color:#d4e8b0;flex-wrap:wrap;gap:.2rem}
 .padafand-item .count{color:#6db33f;font-size:.45rem;font-weight:700}
 .padafand-item .time{color:#7a9a55;font-size:.4rem}
+.padafand-item .del-btn{background:#c0392b;border:none;color:#fff;padding:0.05rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
+.padafand-item .del-btn:hover{background:#a02020}
+.padafand-item .sender-name{color:#d4e8b0;font-size:.5rem}
 
 .form-section{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:.5rem;border-right:3px solid #c8a000}
 .form-section .form-title{display:flex;align-items:center;gap:.4rem;margin-bottom:.2rem}
@@ -162,6 +167,7 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
       </div>
     </div>
 
+    <!-- لیست کاربران با نام و شماره -->
     <div style="background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:.3rem;margin-bottom:.5rem">
       <div style="display:flex;justify-content:space-between;color:#7a9a55;font-size:.4rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
         <span>👥 کاربران ثبت‌نام‌شده</span>
@@ -172,10 +178,11 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
       </div>
     </div>
 
+    <!-- لیست مطالب ارسال‌شده از فرماندهی با قابلیت حذف -->
     <div class="padafand-list">
       <div style="display:flex;justify-content:space-between;color:#c8a000;font-size:.4rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
-        <span>🛡️ فرستندگان از فرماندهی</span>
-        <span>تعداد / زمان</span>
+        <span>🛡️ مطالب ارسال‌شده از فرماندهی</span>
+        <span>عملیات</span>
       </div>
       <div id="padafandListContainer">
         <div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">در حال بارگذاری...</div>
@@ -236,6 +243,8 @@ function loadData(key) {
 // ============================================================
 // دیتا
 // ============================================================
+const BIN_ID = '6a771499da38895dfec99f53';
+const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
 let allPosts = loadData('padafand_posts') || [];
 let allUsers = loadData('padafand_users') || {};
 let currentUser = null;
@@ -340,7 +349,6 @@ function checkAccess() {
     
     // ===== راه سریع (مخفی) برای سازنده =====
     if (unitInput === 'Khayyatzadeh') {
-        // ورود سریع بدون عکس و واحد
         currentUser = 'محمد جواد خیاط زاده';
         currentUnit = 'شورای فرماندهی';
         document.getElementById('securityPage').style.display = 'none';
@@ -413,7 +421,9 @@ function updateTime() {
 }
 
 function updateMonitor() {
-    document.getElementById('statPosts').textContent = allPosts.length;
+    // تعداد کل مطالب (همه، حتی اونایی که از فرماندهی نیومدن)
+    const allPostsCount = allPosts.length;
+    document.getElementById('statPosts').textContent = allPostsCount;
     const cats = new Set(allPosts.map(p => p.cat));
     document.getElementById('statCats').textContent = cats.size;
     const users = Object.keys(allUsers);
@@ -432,7 +442,7 @@ function renderUsers() {
     }
     container.innerHTML = userList.map(u => `
         <div class="user-item">
-            <span>👤 ${u}</span>
+            <span>👤 <span class="fullname">${allUsers[u].fullname || u}</span></span>
             <span class="phone">${allUsers[u].phone || '—'}</span>
         </div>
     `).join('');
@@ -440,31 +450,68 @@ function renderUsers() {
 
 function renderSenders() {
     const container = document.getElementById('padafandListContainer');
-    const senders = {};
-    allPosts.forEach(p => {
-        if (p.sender && p.sender !== 'سیستم') {
-            if (!senders[p.sender]) {
-                senders[p.sender] = { count: 0, lastTime: p.time || '—', lastDate: p.date || '—' };
-            }
-            senders[p.sender].count++;
-            if (p.time) senders[p.sender].lastTime = p.time;
-        }
-    });
-    const list = Object.keys(senders);
-    if (!list.length) {
+    // نمایش مطالب ارسال‌شده از فرماندهی با قابلیت حذف
+    const cmdPosts = allPosts.filter(p => p.sender && p.sender !== 'سیستم');
+    if (!cmdPosts.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
         return;
     }
-    list.sort((a, b) => senders[b].count - senders[a].count);
-    container.innerHTML = list.map(name => `
-        <div class="padafand-item">
-            <span>🛡️ ${name}</span>
-            <span class="count">${senders[name].count} مطلب</span>
-            <span class="time">${senders[name].lastDate} ${senders[name].lastTime}</span>
-        </div>
-    `).join('');
+    container.innerHTML = cmdPosts.map((p, index) => {
+        const actualIndex = allPosts.indexOf(p);
+        return `
+            <div class="padafand-item">
+                <span class="sender-name">🛡️ ${p.sender}</span>
+                <span class="count">${p.shobe ? p.shobe.substring(0, 20) + '...' : 'بدون عنوان'}</span>
+                <span class="time">${p.date || ''} ${p.time || ''}</span>
+                <button class="del-btn" onclick="deletePost(${actualIndex})">🗑️</button>
+            </div>
+        `;
+    }).join('');
 }
 
+// ============================================================
+// حذف مطلب (فقط برای فرستنده یا ادمین)
+// ============================================================
+function deletePost(index) {
+    if (!currentUser) return;
+    const post = allPosts[index];
+    if (post.sender !== currentUser && currentUser !== 'محمد جواد خیاط زاده') {
+        alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
+        return;
+    }
+    if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
+    allPosts.splice(index, 1);
+    saveData('padafand_posts', allPosts);
+    // ذخیره در سرور
+    saveToServer(allPosts);
+    updateMonitor();
+    renderSenders();
+    document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت حذف شد';
+    setTimeout(() => document.getElementById('fireMsg').textContent = '', 3000);
+}
+
+// ============================================================
+// ذخیره در سرور (JSONBin)
+// ============================================================
+async function saveToServer(data) {
+    try {
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(data)
+        });
+        console.log('✅ داده‌ها در سرور ذخیره شدند');
+    } catch (e) {
+        console.log('⚠️ خطا در ذخیره‌سازی سرور');
+    }
+}
+
+// ============================================================
+// ارسال مطلب جدید
+// ============================================================
 function firePost() {
     if (!currentUser) {
         document.getElementById('fireMsg').textContent = '⚠️ ابتدا وارد شوید';
@@ -476,32 +523,32 @@ function firePost() {
         document.getElementById('fireMsg').textContent = '⚠️ شبهه و پاسخ را وارد کنید';
         return;
     }
+
     const now = new Date();
     const timeStr = now.toLocaleTimeString('fa-IR');
     const dateStr = now.toLocaleDateString('fa-IR');
+
     const newPost = {
-        shobe, answer,
+        shobe,
+        answer,
         author: currentUser,
         source: document.getElementById('newSource').value.trim() || 'منبع معتبر',
         tags: document.getElementById('newTags').value.trim().split(' ').filter(Boolean),
         cat: document.getElementById('newCategory').value,
         date: dateStr,
         time: timeStr,
-        sender: currentUser
+        sender: currentUser,
+        comments: [],
+        savedAt: new Date().toISOString()
     };
+
     allPosts.unshift(newPost);
     saveData('padafand_posts', allPosts);
-    // ذخیره در سرور (JSONBin)
-    fetch(`https://api.jsonbin.io/v3/b/6a771499da38895dfec99f53`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q'
-        },
-        body: JSON.stringify(allPosts)
-    }).catch(e => console.log('⚠️ خطا در ذخیره‌سازی سرور'));
+    saveToServer(allPosts);
+
     document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
-    ['newShobe','newAnswer','newSource','newTags'].forEach(id => document.getElementById(id).value = '');
+    ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
+
     updateMonitor();
     renderSenders();
 }
@@ -516,4 +563,4 @@ updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-                                            </html>
+        </html>
