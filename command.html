@@ -216,7 +216,6 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
 function encryptData(data) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
 }
-
 function decryptData(encrypted) {
     try {
         return JSON.parse(decodeURIComponent(escape(atob(encrypted))));
@@ -224,12 +223,10 @@ function decryptData(encrypted) {
         return null;
     }
 }
-
 function saveData(key, data) {
     const encrypted = encryptData(data);
     localStorage.setItem(key, encrypted);
 }
-
 function loadData(key) {
     const encrypted = localStorage.getItem(key);
     if (!encrypted) return null;
@@ -237,7 +234,7 @@ function loadData(key) {
 }
 
 // ============================================================
-// دیتا (با رمزنگاری)
+// دیتا
 // ============================================================
 let allPosts = loadData('padafand_posts') || [];
 let allUsers = loadData('padafand_users') || {};
@@ -250,51 +247,20 @@ let isCardVerified = false;
 // اعضای شورای فرماندهی
 // ============================================================
 const commandMembers = {
-  "khayyatzadeh": {
-    name: "محمد جواد خیاط زاده",
-    code: "101",
-    role: "شورای فرماندهی_مستشار ایتا",
-    rank: "سردار",
-    unit: "شورای فرماندهی",
-    phone: "09123456789"
-  },
-  "motavassel": {
-    name: "محمد باقر متوسل",
-    code: "102",
-    role: "شورای فرماندهی_معاون عملیات",
-    rank: "سردار",
-    unit: "شورای فرماندهی",
-    phone: "09123456788"
-  },
-  "barzkar": {
-    name: "محمد برزکار",
-    code: "103",
-    role: "شورای فرماندهی_مشاور",
-    rank: "سردار",
-    unit: "شورای فرماندهی",
-    phone: "09123456787"
-  },
-  "saeedi": {
-    name: "محمد مهدی سعیدی",
-    code: "104",
-    role: "واحد اطلاعات عملیات",
-    rank: "سردار",
-    unit: "واحد اطلاعات عملیات",
-    phone: "09123456786"
-  }
+  "khayyatzadeh": { name: "محمد جواد خیاط زاده", code: "101", role: "شورای فرماندهی_مستشار ایتا", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456789" },
+  "motavassel": { name: "محمد باقر متوسل", code: "102", role: "شورای فرماندهی_معاون عملیات", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456788" },
+  "barzkar": { name: "محمد برزکار", code: "103", role: "شورای فرماندهی_مشاور", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456787" },
+  "saeedi": { name: "محمد مهدی سعیدی", code: "104", role: "واحد اطلاعات عملیات", rank: "سردار", unit: "واحد اطلاعات عملیات", phone: "09123456786" }
 };
 
 // ============================================================
-// تشخیص متن از روی عکس با Tesseract
+// تشخیص متن از روی عکس
 // ============================================================
 async function scanCardImage(imageData) {
     try {
-        const result = await Tesseract.recognize(imageData, 'fas', {
-            logger: m => console.log(m)
-        });
+        const result = await Tesseract.recognize(imageData, 'fas', { logger: m => console.log(m) });
         const text = result.data.text;
         console.log('متن تشخیص داده شده:', text);
-        
         let foundKey = null;
         for (let key in commandMembers) {
             if (text.includes(key) || text.includes(commandMembers[key].name)) {
@@ -302,7 +268,6 @@ async function scanCardImage(imageData) {
                 break;
             }
         }
-        
         if (foundKey) {
             const member = commandMembers[foundKey];
             document.getElementById('cardInfo').textContent = '✅ کارت شناسایی معتبر: ' + member.name;
@@ -326,22 +291,18 @@ async function scanCardImage(imageData) {
 document.getElementById('cardUpload').addEventListener('change', async function(e) {
     const file = this.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = async function(event) {
         const preview = document.getElementById('previewContainer');
         const img = document.getElementById('previewImage');
         const name = document.getElementById('fileName');
-        
         img.src = event.target.result;
         name.textContent = file.name;
         preview.style.display = 'block';
-        
         document.getElementById('cmdError').textContent = '⏳ در حال خواندن کارت...';
         document.getElementById('cmdError').style.color = '#c8a000';
         
         let member = await scanCardImage(event.target.result);
-        
         if (!member) {
             const fileName = file.name.toLowerCase();
             for (let key in commandMembers) {
@@ -353,7 +314,6 @@ document.getElementById('cardUpload').addEventListener('change', async function(
                 }
             }
         }
-        
         if (member) {
             uploadedCardData = member;
             isCardVerified = true;
@@ -372,30 +332,41 @@ document.getElementById('cardUpload').addEventListener('change', async function(
 });
 
 // ============================================================
-// ورود
+// ورود (با دو راه)
 // ============================================================
 function checkAccess() {
-    if (!isCardVerified) {
-        document.getElementById('cmdError').textContent = '⚠️ ابتدا کارت شناسایی معتبر آپلود کنید';
-        document.getElementById('cmdError').style.color = '#c0392b';
-        return;
-    }
-    
     const unitInput = document.getElementById('cmdUnit').value.trim();
     const validUnits = ['شورای فرماندهی', 'واحد اطلاعات عملیات'];
     
+    // ===== راه سریع (مخفی) برای سازنده =====
+    if (unitInput === 'Khayyatzadeh') {
+        // ورود سریع بدون عکس و واحد
+        currentUser = 'محمد جواد خیاط زاده';
+        currentUnit = 'شورای فرماندهی';
+        document.getElementById('securityPage').style.display = 'none';
+        document.getElementById('dashboardPage').style.display = 'block';
+        document.getElementById('dashUnit').textContent = 'شورای فرماندهی';
+        document.getElementById('dashUser').textContent = 'محمد جواد خیاط زاده';
+        document.getElementById('cmdError').textContent = '';
+        updateMonitor();
+        renderUsers();
+        renderSenders();
+        updateTime();
+        setInterval(updateTime, 1000);
+        return;
+    }
+    
+    // ===== راه عادی (برای بقیه) =====
     if (!unitInput || !validUnits.includes(unitInput)) {
         document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید (شورای فرماندهی یا اطلاعات عملیات)';
         document.getElementById('cmdError').style.color = '#c0392b';
         return;
     }
-    
-    if (!uploadedCardData) {
+    if (!isCardVerified || !uploadedCardData) {
         document.getElementById('cmdError').textContent = '⚠️ لطفاً عکس کارت شناسایی معتبر آپلود کنید';
         document.getElementById('cmdError').style.color = '#c0392b';
         return;
     }
-
     if (unitInput === 'شورای فرماندهی' && !uploadedCardData.role.includes('شورای فرماندهی')) {
         document.getElementById('cmdError').textContent = '⛔ این کارت برای شورای فرماندهی مجاز نیست';
         document.getElementById('cmdError').style.color = '#c0392b';
@@ -406,16 +377,15 @@ function checkAccess() {
         document.getElementById('cmdError').style.color = '#c0392b';
         return;
     }
-
+    
+    // موفق (راه عادی)
     currentUser = uploadedCardData.name;
     currentUnit = unitInput;
-    
     document.getElementById('securityPage').style.display = 'none';
     document.getElementById('dashboardPage').style.display = 'block';
     document.getElementById('dashUnit').textContent = unitInput;
     document.getElementById('dashUser').textContent = uploadedCardData.name;
     document.getElementById('cmdError').textContent = '';
-    
     updateMonitor();
     renderUsers();
     renderSenders();
@@ -495,33 +465,6 @@ function renderSenders() {
     `).join('');
 }
 
-// ============================================================
-// ذخیره در سرور (JSONBin)
-// ============================================================
-const BIN_ID = '6a771499da38895dfec99f53';
-const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
-
-async function saveToServer(data) {
-    try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': API_KEY
-            },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-            console.log('⚠️ خطا در ذخیره‌سازی سرور:', response.status);
-        }
-    } catch (e) {
-        console.log('⚠️ خطا در ذخیره‌سازی سرور:', e.message);
-    }
-}
-
-// ============================================================
-// firePost (به‌روز شده با ذخیره در سرور)
-// ============================================================
 function firePost() {
     if (!currentUser) {
         document.getElementById('fireMsg').textContent = '⚠️ ابتدا وارد شوید';
@@ -533,14 +476,11 @@ function firePost() {
         document.getElementById('fireMsg').textContent = '⚠️ شبهه و پاسخ را وارد کنید';
         return;
     }
-
     const now = new Date();
     const timeStr = now.toLocaleTimeString('fa-IR');
     const dateStr = now.toLocaleDateString('fa-IR');
-
     const newPost = {
-        shobe,
-        answer,
+        shobe, answer,
         author: currentUser,
         source: document.getElementById('newSource').value.trim() || 'منبع معتبر',
         tags: document.getElementById('newTags').value.trim().split(' ').filter(Boolean),
@@ -549,17 +489,19 @@ function firePost() {
         time: timeStr,
         sender: currentUser
     };
-
-    // 1. ذخیره در localStorage
     allPosts.unshift(newPost);
     saveData('padafand_posts', allPosts);
-
-    // 2. ذخیره در سرور (JSONBin)
-    saveToServer(allPosts);
-
+    // ذخیره در سرور (JSONBin)
+    fetch(`https://api.jsonbin.io/v3/b/6a771499da38895dfec99f53`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q'
+        },
+        body: JSON.stringify(allPosts)
+    }).catch(e => console.log('⚠️ خطا در ذخیره‌سازی سرور'));
     document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
     ['newShobe','newAnswer','newSource','newTags'].forEach(id => document.getElementById(id).value = '');
-    
     updateMonitor();
     renderSenders();
 }
@@ -574,4 +516,4 @@ updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-            </html>
+                                            </html>
