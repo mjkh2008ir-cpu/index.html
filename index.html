@@ -6,14 +6,17 @@
 <title>پدافند شبهات</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ===== RESET & BASE ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#d4a017}
-/* ===== تم روز (طراحی جدید) ===== */
 [data-theme="light"]{--bg:#f5f8f2;--bgm:#e6efe0;--bgp:#d8e6ce;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000;--rd:#c0392b}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ===== دکمه شناور ===== */
+.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:1.8rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
+.floating-btn:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(74,124,32,.6)}
+.floating-btn a{color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
 
 /* ===== HEADER ===== */
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.4rem 0.8rem 0.3rem;position:sticky;top:0;z-index:100}
@@ -84,17 +87,17 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
 .comments-section .cmt .cmt-rank{color:var(--gold);font-size:.5rem}
 .comments-section .cmt .cmt-text{color:var(--tp)}
-.comments-section .cmt .cmt-actions{display:flex;gap:0.3rem;margin-top:0.1rem}
-.comments-section .cmt .cmt-actions button{background:none;border:none;color:var(--ts);font-size:.5rem;cursor:pointer}
+.comments-section .cmt .cmt-actions{display:flex;gap:0.3rem;margin-top:0.1rem;flex-wrap:wrap}
+.comments-section .cmt .cmt-actions button{background:none;border:none;color:var(--ts);font-size:.5rem;cursor:pointer;display:flex;align-items:center;gap:0.1rem}
 .comments-section .cmt .cmt-actions button:hover{color:var(--gl)}
+.comments-section .cmt .cmt-actions .like-btn{color:var(--rd)}
+.comments-section .cmt .cmt-actions .like-btn:hover{color:#a02020}
+.comments-section .cmt .cmt-actions .like-count{color:var(--ts);font-size:.5rem}
 .comments-section .cmt .replies{margin-right:1rem;border-right:1px solid var(--br);padding-right:0.3rem}
-.comments-section .cmt .reply-input{display:flex;gap:0.2rem;margin-top:0.2rem}
-.comments-section .cmt .reply-input input{flex:1;padding:0.15rem 0.3rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.55rem;outline:none}
+.comments-section .cmt .reply-input{display:flex;gap:0.2rem;margin-top:0.2rem;flex-wrap:wrap}
+.comments-section .cmt .reply-input input{flex:1;padding:0.15rem 0.3rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.55rem;outline:none;min-width:80px}
 .comments-section .cmt .reply-input button{background:var(--g);border:none;color:#fff;padding:0.1rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
 .comments-section .cmt .reply-input input:focus{border-color:var(--gl)}
-.comments-section .cmt .like-btn{color:var(--rd);font-size:.55rem;cursor:pointer;background:none;border:none}
-.comments-section .cmt .like-btn:hover{opacity:.7}
-.comments-section .cmt .like-count{color:var(--ts);font-size:.5rem;margin-left:0.2rem}
 .comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
 .comments-section .comment-form input{flex:1;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.65rem;outline:none;min-width:100px}
 .comments-section .comment-form input:focus{border-color:var(--gl)}
@@ -162,10 +165,18 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   .foot-inner{flex-direction:column;text-align:center}
   #userPanel{width:100%}
   .ai-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
+  .floating-btn{width:50px;height:50px;font-size:1.4rem;bottom:15px;left:15px}
 }
 </style>
 </head>
 <body>
+
+<!-- ===== دکمه شناور ===== -->
+<div class="floating-btn">
+  <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank" title="ارسال شبهه">
+    <i class="fas fa-paper-plane"></i>
+  </a>
+</div>
 
 <!-- HEADER -->
 <header id="header">
@@ -407,14 +418,14 @@ document.addEventListener('DOMContentLoaded', function() {
   
   loadPosts();
   
-  // همگام‌سازی خودکار هر ۵ ثانیه
+  // همگام‌سازی خودکار هر ۳ ثانیه
   setInterval(function() {
     const newPosts = JSON.parse(localStorage.getItem('padafand_posts') || '[]');
     if (JSON.stringify(newPosts) !== JSON.stringify(allPosts)) {
       allPosts = newPosts;
       renderAll();
     }
-  }, 5000);
+  }, 3000);
 });
 
 function switchPage(page) {
@@ -474,7 +485,7 @@ function renderPosts(list, containerId = 'postContainer') {
                   ${getUserRank(c.user) ? `<span class="cmt-rank">${getUserRank(c.user)}</span>` : ''}
                   <span class="cmt-text">: ${c.text}</span>
                   <div class="cmt-actions">
-                    <button onclick="likeComment(${i}, '${c.id || ''}')">❤️ <span class="like-count">${c.likes || 0}</span></button>
+                    <button class="like-btn" onclick="likeComment(${i}, '${c.id || ''}')">❤️ <span class="like-count">${c.likes || 0}</span></button>
                     <button onclick="showReplyInput(${i}, '${c.id || ''}')">💬 پاسخ</button>
                   </div>
                   <div class="replies" id="replies-${i}-${c.id || ''}">
@@ -598,7 +609,7 @@ function sharePost(index) {
 }
 
 // ============================================================
-// کامنت‌ها (با قابلیت لایک و پاسخ)
+// کامنت‌ها
 // ============================================================
 function addComment(index) {
   if (!loggedUser) {
@@ -664,7 +675,7 @@ function addReply(postIndex, commentId) {
 }
 
 // ============================================================
-// جعبه مهمات (آکاردئونی)
+// جعبه مهمات
 // ============================================================
 function renderSaved() {
   const container = document.getElementById('savedContainer');
