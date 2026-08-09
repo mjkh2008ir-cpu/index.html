@@ -6,18 +6,28 @@
 <title>پدافند شبهات</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ===== استایل‌های قبلی (همون چیزی که بود) ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#d4a017}
 [data-theme="light"]{--bg:#f5f8f2;--bgm:#e6efe0;--bgp:#d8e6ce;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000;--rd:#c0392b}
-body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px;padding-top:0}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes slideMenu{from{transform:translateX(100%)}to{transform:translateX(0)}}
 
-.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:1.8rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
-.floating-btn:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(74,124,32,.6)}
-.floating-btn a{color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+/* ===== منوی همبرگری ===== */
+.hamburger{position:fixed;top:10px;left:10px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.5rem;padding:0.3rem 0.7rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
+.side-menu{position:fixed;top:0;left:0;width:260px;height:100%;background:var(--bgm);border-right:2px solid var(--g);z-index:1000;padding:2rem 1.2rem;transform:translateX(-100%);transition:.3s;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.6)}
+.side-menu.open{transform:translateX(0)}
+.side-menu .close-menu{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--ts);font-size:1.3rem;cursor:pointer}
+.side-menu .menu-title{color:var(--gl);font-size:1rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:1rem}
+.side-menu .menu-item{display:block;padding:0.5rem 0.5rem;color:var(--tp);text-decoration:none;font-size:.8rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
+.side-menu .menu-item:hover{background:var(--bgp);color:var(--gl)}
+.side-menu .menu-item i{margin-left:0.5rem;width:20px;color:var(--am)}
 
+.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:55px;height:55px;font-size:1.5rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
+.floating-btn:hover{transform:scale(1.1)}
+
+/* ===== HEADER ===== */
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.4rem 0.8rem 0.3rem;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);font-family:monospace;margin-bottom:0.1rem}
 .hdr-top .online{display:flex;gap:.2rem;align-items:center}
@@ -41,12 +51,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.7rem;cursor:pointer;min-height:28px}
 .search-wrap button:hover{opacity:.85}
 
-#main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
-.nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
-.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.7rem;cursor:pointer;white-space:nowrap;font-family:inherit}
-.nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
-.nav-btn:hover{color:var(--tp)}
-
+/* ===== CONTENT ===== */
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
 .page{display:none}
 .page.active{display:block}
@@ -67,17 +72,17 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br)}
 .post-body.show{display:block}
 .post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
-.post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.6rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
+.post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.6rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding-bottom:0.3rem}
 .post-body .meta .rank{color:var(--gold);font-weight:700}
 .post-body .tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.3rem}
 .post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.55rem;color:var(--am)}
-.post-actions{display:flex;gap:0.4rem;margin-top:0.4rem;flex-wrap:wrap;align-items:center}
+.post-actions{display:flex;gap:0.4rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
 .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.6rem;transition:0.3s}
 .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
 .post-actions .del-btn{background:var(--rd);border-color:var(--rd);color:#fff}
 .post-actions .del-btn:hover{background:#a02020;color:#fff}
 .saved-msg{color:var(--gl);font-size:.6rem;margin-right:0.3rem}
-.comments-section{margin-top:0.4rem;border-top:1px solid var(--br);padding-top:0.3rem}
+.comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
 .comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.2rem 0;font-size:.65rem;border-right:2px solid var(--gl)}
 .comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
 .comments-section .cmt .cmt-rank{color:var(--gold);font-size:.5rem}
@@ -118,38 +123,44 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.1rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
 .saved-item .del-btn:hover{background:#a02020}
 
-#footer{border-top:1px solid var(--br);padding:0.4rem 0.8rem;background:var(--bgm);margin-top:0.8rem}
-.foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem}
-.foot-links{display:flex;gap:0.3rem;flex-wrap:wrap}
-.foot-links a{color:var(--ts);text-decoration:none;font-size:.6rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer}
+#footer{border-top:1px solid var(--br);padding:0.3rem 0.6rem;background:var(--bgm);margin-top:0.5rem}
+.foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem}
+.foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
+.foot-links a{color:var(--ts);text-decoration:none;font-size:.55rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer}
 .foot-links a:hover{color:var(--gl);border-color:var(--gl)}
-.foot-copy{color:var(--ts);font-size:.5rem;opacity:0.4}
+.foot-copy{color:var(--ts);font-size:.45rem;opacity:0.4}
 
-#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.5rem 1.2rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
+/* ===== PANEL USER ===== */
+#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
 #userPanel.show{display:block;animation:slideIn .25s}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
 #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
-#userPanel .user-title{font-size:.95rem;font-weight:700;color:var(--gl);margin-bottom:0.8rem;border-bottom:1px solid var(--br);padding-bottom:0.3rem}
-#userPanel .form-group{margin-bottom:0.6rem}
-#userPanel .form-group label{display:block;font-size:.6rem;color:var(--ts);margin-bottom:0.1rem}
-#userPanel .form-group input,#userPanel .form-group textarea{width:100%;padding:0.3rem 0.5rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.75rem;outline:none;font-family:inherit}
+#userPanel .user-title{font-size:.9rem;font-weight:700;color:var(--gl);margin-bottom:0.6rem;border-bottom:1px solid var(--br);padding-bottom:0.3rem}
+#userPanel .form-group{margin-bottom:0.4rem}
+#userPanel .form-group label{display:block;font-size:.55rem;color:var(--ts);margin-bottom:0.1rem}
+#userPanel .form-group input,#userPanel .form-group textarea{width:100%;padding:0.3rem 0.5rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.7rem;outline:none;font-family:inherit}
 #userPanel .form-group input:focus,#userPanel .form-group textarea:focus{border-color:var(--gl)}
-#userPanel .form-group textarea{resize:vertical;min-height:40px}
-#userPanel .btn-primary{background:linear-gradient(135deg,var(--g),#355c16);color:#e8f5cc;border:1px solid var(--gl);border-radius:3px;padding:0.35rem;font-weight:700;cursor:pointer;width:100%;font-size:.75rem}
+#userPanel .form-group textarea{resize:vertical;min-height:35px}
+#userPanel .avatar-select{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.2rem}
+#userPanel .avatar-select .av-item{font-size:1.8rem;cursor:pointer;border:2px solid transparent;border-radius:50%;padding:0.1rem;transition:.3s}
+#userPanel .avatar-select .av-item:hover{border-color:var(--gl)}
+#userPanel .avatar-select .av-item.active{border-color:var(--am)}
+#userPanel .btn-primary{background:linear-gradient(135deg,var(--g),#355c16);color:#e8f5cc;border:1px solid var(--gl);border-radius:3px;padding:0.3rem;font-weight:700;cursor:pointer;width:100%;font-size:.7rem}
 #userPanel .btn-primary:hover{opacity:0.85}
-#userPanel .user-info{margin-top:0.5rem;padding:0.6rem;background:var(--bg);border-radius:4px;border:1px solid var(--br);text-align:center}
-#userPanel .user-info .avatar{font-size:2.5rem;display:block;margin-bottom:0.2rem}
-#userPanel .user-info .name{font-size:.85rem;font-weight:700}
-#userPanel .user-info .name .rank{color:var(--gold);font-size:.6rem}
-#userPanel .user-info .bio{font-size:.65rem;color:var(--ts);margin-top:0.1rem}
-#userPanel .user-info .phone{font-size:.65rem;color:var(--ts)}
-#userPanel .switch-link{color:var(--ts);font-size:.6rem;text-align:center;margin-top:0.3rem;cursor:pointer}
+#userPanel .switch-link{color:var(--ts);font-size:.55rem;text-align:center;margin-top:0.2rem;cursor:pointer}
 #userPanel .switch-link:hover{color:var(--gl)}
+#userPanel .user-info{margin-top:0.4rem;padding:0.5rem;background:var(--bg);border-radius:4px;border:1px solid var(--br);text-align:center}
+#userPanel .user-info .avatar{font-size:2.5rem;display:block}
+#userPanel .user-info .name{font-size:.8rem;font-weight:700}
+#userPanel .user-info .name .rank{color:var(--gold);font-size:.55rem}
+#userPanel .user-info .bio{font-size:.6rem;color:var(--ts)}
+#userPanel .user-info .phone{font-size:.6rem;color:var(--ts)}
+#userPanel .user-info .edit-btn{background:var(--am);border:none;color:#1a1000;padding:0.15rem 0.8rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
+#userPanel .user-info .edit-btn:hover{opacity:.8}
 
 @media(max-width:600px){
   .hdr-left h1{font-size:.85rem}
   .hdr-left .sub{font-size:.45rem}
-  .nav-btn{font-size:.6rem;padding:0.2rem 0.4rem}
   #content{padding:0.4rem}
   .stats{font-size:.55rem;padding:0.2rem 0.4rem;gap:0.3rem}
   .post-hdr .title{font-size:.7rem}
@@ -157,18 +168,36 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   .foot-inner{flex-direction:column;text-align:center}
   #userPanel{width:100%}
   .ai-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
-  .floating-btn{width:50px;height:50px;font-size:1.4rem;bottom:15px;left:15px}
+  .floating-btn{width:45px;height:45px;font-size:1.2rem;bottom:15px;left:15px}
+  .hamburger{font-size:1.2rem;padding:0.2rem 0.5rem;top:8px;left:8px}
+  .side-menu{width:220px}
 }
 </style>
 </head>
 <body>
 
-<div class="floating-btn">
-  <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank" title="ارسال شبهه">
-    <i class="fas fa-paper-plane"></i>
-  </a>
+<!-- ===== دکمه همبرگری ===== -->
+<button class="hamburger" onclick="toggleSideMenu()"><i class="fas fa-bars"></i></button>
+
+<!-- ===== منوی کناری ===== -->
+<div class="side-menu" id="sideMenu">
+  <button class="close-menu" onclick="toggleSideMenu()">✕</button>
+  <div class="menu-title">🛡️ منو</div>
+  <a class="menu-item" onclick="switchPage('home');toggleSideMenu()"><i class="fas fa-home"></i> خانه</a>
+  <a class="menu-item" onclick="switchPage('posts');toggleSideMenu()"><i class="fas fa-list"></i> شبهات</a>
+  <a class="menu-item" onclick="switchPage('ai');toggleSideMenu()"><i class="fas fa-robot"></i> هوش مصنوعی</a>
+  <a class="menu-item" onclick="switchPage('saved');toggleSideMenu()"><i class="fas fa-box"></i> جعبه مهمات</a>
+  <a class="menu-item" onclick="toggleUserPanel();toggleSideMenu()"><i class="fas fa-user"></i> حساب کاربری</a>
+  <a class="menu-item" href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> مرکز فرماندهی</a>
+  <a class="menu-item" href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-paper-plane"></i> ارسال شبهه</a>
 </div>
 
+<!-- ===== دکمه شناور ===== -->
+<div class="floating-btn" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')">
+  <i class="fas fa-paper-plane"></i>
+</div>
+
+<!-- HEADER -->
 <header id="header">
   <div style="max-width:800px;margin:0 auto">
     <div class="hdr-top">
@@ -191,6 +220,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </header>
 
+<!-- SEARCH -->
 <div id="search-section">
   <div class="search-wrap">
     <i class="fas fa-search" style="color:var(--ts);font-size:.7rem"></i>
@@ -199,15 +229,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </div>
 
-<nav id="main-nav">
-  <div class="nav-inner">
-    <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
-    <button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button>
-    <button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button>
-    <button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button>
-  </div>
-</nav>
-
+<!-- CONTENT -->
 <div id="content">
 
   <div id="page-home" class="page active">
@@ -262,6 +284,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 </div>
 
+<!-- FOOTER -->
 <footer id="footer">
   <div class="foot-inner">
     <div class="foot-links">
@@ -273,10 +296,12 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </footer>
 
+<!-- ===== PANEL USER ===== -->
 <div id="userPanel">
   <button class="close" onclick="toggleUserPanel()">✕</button>
   <div class="user-title"><i class="fas fa-user-shield"></i> حساب کاربری</div>
   
+  <!-- فرم ورود -->
   <div id="userLoginForm">
     <div class="form-group">
       <label>نام کاربری</label>
@@ -288,29 +313,63 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     </div>
     <button class="btn-primary" onclick="userLogin()">ورود</button>
     <div class="switch-link" onclick="showRegister()">ثبت‌نام جدید</div>
-    <div id="userMsg" style="color:var(--rd);font-size:.65rem;text-align:center;margin-top:0.2rem"></div>
+    <div id="userMsg" style="color:var(--rd);font-size:.6rem;text-align:center;margin-top:0.2rem"></div>
   </div>
 
+  <!-- فرم ثبت‌نام -->
   <div id="userRegisterForm" style="display:none">
     <div class="form-group"><label>نام و نام خانوادگی</label><input type="text" id="regFullname" placeholder="نام کامل..."></div>
     <div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div>
     <div class="form-group"><label>بیوگرافی (اختیاری)</label><textarea id="regBio" placeholder="درباره خودت..." rows="2"></textarea></div>
     <div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری..."></div>
     <div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور..."></div>
+    <div class="form-group">
+      <label>انتخاب پروفایل</label>
+      <div class="avatar-select" id="avatarSelect">
+        <span class="av-item" data-avatar="👤" onclick="selectAvatar(this)">👤</span>
+        <span class="av-item" data-avatar="👩" onclick="selectAvatar(this)">👩</span>
+        <span class="av-item" data-avatar="👨" onclick="selectAvatar(this)">👨</span>
+        <span class="av-item" data-avatar="👨‍🦰" onclick="selectAvatar(this)">👨‍🦰</span>
+        <span class="av-item" data-avatar="👩‍🦰" onclick="selectAvatar(this)">👩‍🦰</span>
+      </div>
+    </div>
     <button class="btn-primary" onclick="userRegister()">ثبت‌نام</button>
     <div class="switch-link" onclick="showLogin()">قبلاً ثبت‌نام کردی؟ وارد شو</div>
-    <div id="regMsg" style="color:var(--gl);font-size:.65rem;text-align:center;margin-top:0.2rem"></div>
+    <div id="regMsg" style="color:var(--gl);font-size:.6rem;text-align:center;margin-top:0.2rem"></div>
   </div>
 
+  <!-- اطلاعات کاربر (پروفایل) -->
   <div id="userInfo" style="display:none">
     <div class="user-info">
-      <span class="avatar">👤</span>
+      <span class="avatar" id="displayAvatar">👤</span>
       <div class="name" id="displayName"></div>
       <div class="bio" id="displayBio">—</div>
       <div class="phone" id="displayPhone">—</div>
-      <div style="font-size:.55rem;color:var(--ts);margin-top:0.2rem">عضو از <span id="displayDate"></span></div>
+      <div style="font-size:.5rem;color:var(--ts);margin-top:0.1rem">عضو از <span id="displayDate"></span></div>
+      <button class="edit-btn" onclick="showEditProfile()">✏️ ویرایش حساب</button>
     </div>
-    <button class="btn-primary" onclick="userLogout()" style="margin-top:0.4rem;background:var(--rd)">خروج</button>
+    <button class="btn-primary" onclick="userLogout()" style="margin-top:0.3rem;background:var(--rd)">خروج</button>
+  </div>
+
+  <!-- فرم ویرایش حساب -->
+  <div id="userEditForm" style="display:none">
+    <div class="form-group"><label>نام کامل</label><input type="text" id="editFullname" placeholder="نام کامل..."></div>
+    <div class="form-group"><label>بیوگرافی</label><textarea id="editBio" rows="2"></textarea></div>
+    <div class="form-group"><label>شماره تلفن</label><input type="tel" id="editPhone" placeholder="شماره تلفن..."></div>
+    <div class="form-group"><label>رمز عبور جدید (اختیاری)</label><input type="password" id="editPassword" placeholder="رمز عبور جدید..."></div>
+    <div class="form-group">
+      <label>انتخاب پروفایل</label>
+      <div class="avatar-select" id="editAvatarSelect">
+        <span class="av-item" data-avatar="👤" onclick="selectEditAvatar(this)">👤</span>
+        <span class="av-item" data-avatar="👩" onclick="selectEditAvatar(this)">👩</span>
+        <span class="av-item" data-avatar="👨" onclick="selectEditAvatar(this)">👨</span>
+        <span class="av-item" data-avatar="👨‍🦰" onclick="selectEditAvatar(this)">👨‍🦰</span>
+        <span class="av-item" data-avatar="👩‍🦰" onclick="selectEditAvatar(this)">👩‍🦰</span>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="saveEditProfile()">ذخیره تغییرات</button>
+    <div class="switch-link" onclick="cancelEditProfile()">انصراف</div>
+    <div id="editMsg" style="color:var(--gl);font-size:.6rem;text-align:center;margin-top:0.2rem"></div>
   </div>
 </div>
 
@@ -327,13 +386,9 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 async function fetchPosts() {
     try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=*&order=id.desc`, {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
-        const data = await res.json();
-        return data || [];
+        return await res.json() || [];
     } catch(e) {
         console.log('⚠️ خطا در دریافت مطالب:', e.message);
         return [];
@@ -343,34 +398,12 @@ async function fetchPosts() {
 async function fetchUsers() {
     try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/users?select=*`, {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
-        const data = await res.json();
-        return data || [];
+        return await res.json() || [];
     } catch(e) {
         console.log('⚠️ خطا در دریافت کاربران:', e.message);
         return [];
-    }
-}
-
-async function savePost(post) {
-    try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/posts`, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(post)
-        });
-        return await res.json();
-    } catch(e) {
-        console.log('⚠️ خطا در ذخیره مطلب:', e.message);
-        return null;
     }
 }
 
@@ -392,6 +425,24 @@ async function saveUser(user) {
     }
 }
 
+async function updateUserInDB(username, data) {
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${username}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return true;
+    } catch(e) {
+        console.log('⚠️ خطا در ویرایش کاربر:', e.message);
+        return false;
+    }
+}
+
 // ============================================================
 // دیتا و متغیرها
 // ============================================================
@@ -399,13 +450,46 @@ let allPosts = [];
 let allUsers = [];
 let loggedUser = null;
 let currentCat = 'همه';
+let selectedAvatar = '👤';
+let selectedEditAvatar = '👤';
 const SPECIAL_USERS = ['محمد جواد خیاط زاده', 'محمد مهدی سعیدی', 'محمد باقر متوسل', 'محمد برزکار'];
 
 // ============================================================
-// درجه سرداری
+// توابع کمکی
 // ============================================================
 function getUserRank(username) {
     return SPECIAL_USERS.includes(username) ? '⭐ سردار' : '';
+}
+
+function getUserAvatar(username) {
+    const user = allUsers.find(u => u.username === username);
+    return user?.avatar || '👤';
+}
+
+function isLoggedIn() {
+    return loggedUser !== null;
+}
+
+// ============================================================
+// منوی همبرگری
+// ============================================================
+function toggleSideMenu() {
+    document.getElementById('sideMenu').classList.toggle('open');
+}
+
+// ============================================================
+// انتخاب پروفایل
+// ============================================================
+function selectAvatar(el) {
+    document.querySelectorAll('#avatarSelect .av-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    selectedAvatar = el.dataset.avatar;
+}
+
+function selectEditAvatar(el) {
+    document.querySelectorAll('#editAvatarSelect .av-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    selectedEditAvatar = el.dataset.avatar;
 }
 
 // ============================================================
@@ -417,27 +501,6 @@ async function loadAllData() {
     renderAll();
 }
 
-// ============================================================
-// منو
-// ============================================================
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.dataset.page;
-            switchPage(page);
-        });
-    });
-    
-    const savedUser = localStorage.getItem('padafand_logged_user');
-    if (savedUser) {
-        loggedUser = savedUser;
-        document.getElementById('userBtnText').textContent = loggedUser;
-    }
-    
-    loadAllData();
-});
-
 function renderAll() {
     renderPosts(allPosts);
     renderPosts(allPosts.slice(0, 3), 'homePosts');
@@ -447,23 +510,38 @@ function renderAll() {
     renderChips();
 }
 
+// ============================================================
+// منو
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    const savedUser = localStorage.getItem('padafand_logged_user');
+    if (savedUser) {
+        loggedUser = savedUser;
+        document.getElementById('userBtnText').textContent = loggedUser;
+    }
+    loadAllData();
+    
+    // همگام‌سازی خودکار هر 5 ثانیه
+    setInterval(async function() {
+        const newPosts = await fetchPosts();
+        if (JSON.stringify(newPosts) !== JSON.stringify(allPosts)) {
+            allPosts = newPosts;
+            renderAll();
+        }
+    }, 5000);
+});
+
 function switchPage(page) {
-    currentPage = page;
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById(`page-${page}`);
     if (target) target.classList.add('active');
-    
-    document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
-    const activeBtn = document.querySelector(`.nav-btn[data-page="${page}"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-    
     if (page === 'posts') filterPosts();
     if (page === 'home') renderPosts(allPosts.slice(0, 3), 'homePosts');
     if (page === 'saved') renderSaved();
 }
 
 // ============================================================
-// پست‌ها
+// پست‌ها (حذف اسم از پایین)
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
     const el = document.getElementById(containerId);
@@ -476,6 +554,7 @@ function renderPosts(list, containerId = 'postContainer') {
         const uid = `pb-${containerId}-${i}`;
         const rank = getUserRank(p.sender || p.author || '');
         const isOwner = loggedUser && p.sender === loggedUser;
+        const avatar = getUserAvatar(p.sender || p.author || '');
         return `
             <div class="post">
                 <div class="post-hdr" onclick="togglePost('${uid}', this)">
@@ -523,7 +602,7 @@ function renderPosts(list, containerId = 'postContainer') {
                                 </div>
                             `).join('')}
                         </div>
-                        ${loggedUser ? `
+                        ${isLoggedIn() ? `
                             <div class="comment-form">
                                 <input type="text" id="cmtInput${i}" placeholder="نظرت رو بنویس...">
                                 <button onclick="addComment(${i})">ارسال</button>
@@ -573,10 +652,89 @@ function setCat(c) {
 }
 
 // ============================================================
+// کامنت‌ها
+// ============================================================
+async function addComment(index) {
+    if (!isLoggedIn()) {
+        alert('⚠️ برای نظر دادن وارد حساب خود شوید.');
+        return;
+    }
+    const input = document.getElementById(`cmtInput${index}`);
+    const text = input.value.trim();
+    if (!text) return;
+    if (!allPosts[index].comments) allPosts[index].comments = [];
+    const commentId = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
+    allPosts[index].comments.push({
+        id: commentId,
+        user: loggedUser,
+        text: text,
+        likes: 0,
+        replies: []
+    });
+    input.value = '';
+    await updatePostToServer(allPosts[index]);
+    renderPosts(allPosts);
+}
+
+async function likeComment(postIndex, commentId) {
+    if (!isLoggedIn()) {
+        alert('⚠️ برای لایک کردن وارد حساب خود شوید.');
+        return;
+    }
+    const post = allPosts[postIndex];
+    if (!post) return;
+    const comment = post.comments.find(c => c.id === commentId);
+    if (!comment) return;
+    comment.likes = (comment.likes || 0) + 1;
+    await updatePostToServer(post);
+    renderPosts(allPosts);
+}
+
+function showReplyInput(postIndex, commentId) {
+    const el = document.getElementById(`replyInput-${postIndex}-${commentId}`);
+    if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function addReply(postIndex, commentId) {
+    if (!isLoggedIn()) {
+        alert('⚠️ برای پاسخ دادن وارد حساب خود شوید.');
+        return;
+    }
+    const input = document.getElementById(`replyText-${postIndex}-${commentId}`);
+    const text = input.value.trim();
+    if (!text) return;
+    const post = allPosts[postIndex];
+    if (!post) return;
+    const comment = post.comments.find(c => c.id === commentId);
+    if (!comment) return;
+    if (!comment.replies) comment.replies = [];
+    comment.replies.push({ user: loggedUser, text: text });
+    input.value = '';
+    await updatePostToServer(post);
+    renderPosts(allPosts);
+}
+
+async function updatePostToServer(post) {
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${post.id}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ comments: post.comments })
+        });
+    } catch(e) {
+        console.log('⚠️ خطا در به‌روزرسانی کامنت');
+    }
+}
+
+// ============================================================
 // حذف مطلب
 // ============================================================
 async function deletePost(index) {
-    if (!loggedUser) return;
+    if (!isLoggedIn()) return;
     const post = allPosts[index];
     if (!post) return;
     if (post.sender !== loggedUser && loggedUser !== 'محمد جواد خیاط زاده') {
@@ -587,10 +745,7 @@ async function deletePost(index) {
     try {
         await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${post.id}`, {
             method: 'DELETE',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         allPosts.splice(index, 1);
         renderAll();
@@ -600,10 +755,10 @@ async function deletePost(index) {
 }
 
 // ============================================================
-// ذخیره در جعبه مهمات
+// جعبه مهمات
 // ============================================================
 function saveToBox(index) {
-    if (!loggedUser) {
+    if (!isLoggedIn()) {
         alert('⚠️ برای ذخیره مطالب ابتدا وارد حساب کاربری خود شوید.');
         return;
     }
@@ -621,9 +776,6 @@ function saveToBox(index) {
     }
 }
 
-// ============================================================
-// اشتراک‌گذاری
-// ============================================================
 function sharePost(index) {
     const post = allPosts[index];
     if (!post) return;
@@ -637,89 +789,9 @@ function sharePost(index) {
     }
 }
 
-// ============================================================
-// کامنت‌ها
-// ============================================================
-function addComment(index) {
-    if (!loggedUser) {
-        alert('⚠️ برای نظر دادن وارد حساب خود شوید.');
-        return;
-    }
-    const input = document.getElementById(`cmtInput${index}`);
-    const text = input.value.trim();
-    if (!text) return;
-    if (!allPosts[index].comments) allPosts[index].comments = [];
-    const commentId = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
-    allPosts[index].comments.push({
-        id: commentId,
-        user: loggedUser,
-        text: text,
-        likes: 0,
-        replies: []
-    });
-    input.value = '';
-    updatePostToServer(allPosts[index]);
-}
-
-async function updatePostToServer(post) {
-    try {
-        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${post.id}`, {
-            method: 'PATCH',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ comments: post.comments })
-        });
-        renderPosts(allPosts);
-    } catch(e) {
-        console.log('⚠️ خطا در به‌روزرسانی کامنت');
-    }
-}
-
-function likeComment(postIndex, commentId) {
-    if (!loggedUser) {
-        alert('⚠️ برای لایک کردن وارد حساب خود شوید.');
-        return;
-    }
-    const post = allPosts[postIndex];
-    if (!post) return;
-    const comment = post.comments.find(c => c.id === commentId);
-    if (!comment) return;
-    comment.likes = (comment.likes || 0) + 1;
-    updatePostToServer(post);
-}
-
-function showReplyInput(postIndex, commentId) {
-    const el = document.getElementById(`replyInput-${postIndex}-${commentId}`);
-    if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
-}
-
-function addReply(postIndex, commentId) {
-    if (!loggedUser) {
-        alert('⚠️ برای پاسخ دادن وارد حساب خود شوید.');
-        return;
-    }
-    const input = document.getElementById(`replyText-${postIndex}-${commentId}`);
-    const text = input.value.trim();
-    if (!text) return;
-    const post = allPosts[postIndex];
-    if (!post) return;
-    const comment = post.comments.find(c => c.id === commentId);
-    if (!comment) return;
-    if (!comment.replies) comment.replies = [];
-    comment.replies.push({ user: loggedUser, text: text });
-    input.value = '';
-    updatePostToServer(post);
-}
-
-// ============================================================
-// جعبه مهمات
-// ============================================================
 function renderSaved() {
     const container = document.getElementById('savedContainer');
-    if (!loggedUser) {
+    if (!isLoggedIn()) {
         container.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts);font-size:.7rem">🔒 برای دیدن جعبه مهمات، وارد حساب کاربری خود شوید.</div>';
         return;
     }
@@ -765,38 +837,87 @@ function removeFromSaved(index) {
 function toggleUserPanel() {
     const panel = document.getElementById('userPanel');
     panel.classList.toggle('show');
-    
-    if (loggedUser) {
-        const u = allUsers.find(u => u.username === loggedUser);
-        const rank = getUserRank(loggedUser);
-        document.getElementById('displayName').textContent = u?.fullname || loggedUser;
-        document.getElementById('displayBio').textContent = u?.bio || '—';
-        document.getElementById('displayPhone').textContent = u?.phone || '—';
-        document.getElementById('displayDate').textContent = u?.date || 'امروز';
-        const nameEl = document.querySelector('#userInfo .name');
-        if (nameEl) {
-            nameEl.innerHTML = (u?.fullname || loggedUser) + (rank ? ` <span class="rank">${rank}</span>` : '');
-        }
-        document.getElementById('userLoginForm').style.display = 'none';
-        document.getElementById('userRegisterForm').style.display = 'none';
-        document.getElementById('userInfo').style.display = 'block';
+    if (isLoggedIn()) {
+        showUserInfo();
     } else {
         document.getElementById('userInfo').style.display = 'none';
         document.getElementById('userLoginForm').style.display = 'block';
         document.getElementById('userRegisterForm').style.display = 'none';
+        document.getElementById('userEditForm').style.display = 'none';
     }
+}
+
+function showUserInfo() {
+    const u = allUsers.find(u => u.username === loggedUser);
+    const rank = getUserRank(loggedUser);
+    document.getElementById('displayAvatar').textContent = u?.avatar || '👤';
+    document.getElementById('displayName').innerHTML = (u?.fullname || loggedUser) + (rank ? ` <span class="rank">${rank}</span>` : '');
+    document.getElementById('displayBio').textContent = u?.bio || '—';
+    document.getElementById('displayPhone').textContent = u?.phone || '—';
+    document.getElementById('displayDate').textContent = u?.date || 'امروز';
+    document.getElementById('userLoginForm').style.display = 'none';
+    document.getElementById('userRegisterForm').style.display = 'none';
+    document.getElementById('userEditForm').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'block';
 }
 
 function showRegister() {
     document.getElementById('userLoginForm').style.display = 'none';
     document.getElementById('userRegisterForm').style.display = 'block';
     document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('userEditForm').style.display = 'none';
 }
 
 function showLogin() {
     document.getElementById('userLoginForm').style.display = 'block';
     document.getElementById('userRegisterForm').style.display = 'none';
     document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('userEditForm').style.display = 'none';
+}
+
+function showEditProfile() {
+    const u = allUsers.find(u => u.username === loggedUser);
+    document.getElementById('editFullname').value = u?.fullname || '';
+    document.getElementById('editBio').value = u?.bio || '';
+    document.getElementById('editPhone').value = u?.phone || '';
+    document.getElementById('editPassword').value = '';
+    selectedEditAvatar = u?.avatar || '👤';
+    document.querySelectorAll('#editAvatarSelect .av-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.avatar === selectedEditAvatar);
+    });
+    document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('userEditForm').style.display = 'block';
+}
+
+function cancelEditProfile() {
+    document.getElementById('userEditForm').style.display = 'none';
+    showUserInfo();
+}
+
+async function saveEditProfile() {
+    const fullname = document.getElementById('editFullname').value.trim();
+    const bio = document.getElementById('editBio').value.trim();
+    const phone = document.getElementById('editPhone').value.trim();
+    const password = document.getElementById('editPassword').value.trim();
+    const avatar = selectedEditAvatar;
+    
+    const updateData = { fullname, bio, phone, avatar };
+    if (password) updateData.password = password;
+    
+    const success = await updateUserInDB(loggedUser, updateData);
+    if (success) {
+        // به‌روزرسانی لیست کاربران
+        allUsers = await fetchUsers();
+        document.getElementById('editMsg').textContent = '✅ تغییرات ذخیره شد!';
+        setTimeout(() => {
+            document.getElementById('editMsg').textContent = '';
+            document.getElementById('userEditForm').style.display = 'none';
+            showUserInfo();
+        }, 1000);
+    } else {
+        document.getElementById('editMsg').textContent = '⚠️ خطا در ذخیره تغییرات';
+        document.getElementById('editMsg').style.color = '#c0392b';
+    }
 }
 
 async function userRegister() {
@@ -820,14 +941,19 @@ async function userRegister() {
     }
     const newUser = {
         username, fullname, phone, bio: bio || '—',
-        password, date: new Date().toLocaleDateString('fa-IR')
+        password, date: new Date().toLocaleDateString('fa-IR'),
+        avatar: selectedAvatar
     };
     const result = await saveUser(newUser);
     if (result) {
-        allUsers.push(result);
+        allUsers = await fetchUsers();
         document.getElementById('regMsg').textContent = '✅ ثبت‌نام موفق! وارد شوید.';
+        document.getElementById('regMsg').style.color = '#6db33f';
         showLogin();
         updateUserCount();
+    } else {
+        document.getElementById('regMsg').textContent = '⚠️ خطا در ثبت‌نام';
+        document.getElementById('regMsg').style.color = '#c0392b';
     }
 }
 
