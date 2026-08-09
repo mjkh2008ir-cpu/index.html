@@ -217,43 +217,84 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
 
 <script>
 // ============================================================
-// کلیدهای ذخیره‌سازی و سرور
+// اتصال به Supabase
 // ============================================================
-const STORAGE_KEY = 'padafand_data';
-const BIN_ID = '6a771499da38895dfec99f53';
-const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
+const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
 // ============================================================
-// توابع سرور (JSONBin)
+// توابع Supabase
 // ============================================================
-async function loadFromServer() {
+async function fetchPosts() {
     try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-            headers: { 'X-Master-Key': API_KEY }
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=*&order=id.desc`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
-        const data = await res.json();
-        const serverData = data.record || { posts: [], users: {} };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
-        return serverData;
+        return await res.json() || [];
     } catch(e) {
-        console.log('⚠️ خطا در دریافت از سرور، استفاده از داده‌های محلی');
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
+        console.log('⚠️ خطا در دریافت مطالب:', e.message);
+        return [];
     }
 }
 
-async function saveToServer(data) {
+async function fetchUsers() {
     try {
-        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-            method: 'PUT',
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/users?select=*`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        return await res.json() || [];
+    } catch(e) {
+        console.log('⚠️ خطا در دریافت کاربران:', e.message);
+        return [];
+    }
+}
+
+async function savePost(post) {
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/posts`, {
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': API_KEY
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(post)
+        });
+        return await res.json();
+    } catch(e) {
+        console.log('⚠️ خطا در ذخیره مطلب:', e.message);
+        return null;
+    }
+}
+
+async function deletePostFromDB(id) {
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${id}`, {
+            method: 'DELETE',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        return true;
+    } catch(e) {
+        console.log('⚠️ خطا در حذف مطلب:', e.message);
+        return false;
+    }
+}
+
+async function updatePostInDB(id, data) {
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
-        console.log('✅ داده‌ها در سرور ذخیره شدند');
+        return true;
     } catch(e) {
-        console.log('⚠️ خطا در ذخیره‌سازی سرور');
+        console.log('⚠️ خطا در به‌روزرسانی مطلب:', e.message);
+        return false;
     }
 }
 
@@ -347,38 +388,26 @@ document.getElementById('cardUpload').addEventListener('change', async function(
 // ============================================================
 // دیتا و متغیرها
 // ============================================================
-let allData = { posts: [], users: {} };
 let allPosts = [];
-let allUsers = {};
+let allUsers = [];
 let currentUser = null;
 let currentUnit = '';
 let uploadedCardData = null;
 let isCardVerified = false;
 
 // ============================================================
-// بارگذاری از سرور
+// بارگذاری از Supabase
 // ============================================================
 async function loadData() {
-    allData = await loadFromServer();
-    allPosts = allData.posts || [];
-    allUsers = allData.users || {};
+    allPosts = await fetchPosts();
+    allUsers = await fetchUsers();
     updateMonitor();
     renderUsers();
     renderSenders();
 }
 
 // ============================================================
-// ذخیره در سرور و localStorage
-// ============================================================
-function saveData() {
-    allData.posts = allPosts;
-    allData.users = allUsers;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
-    saveToServer(allData);
-}
-
-// ============================================================
-// ورود (با دو راه)
+// ورود
 // ============================================================
 function checkAccess() {
     const unitInput = document.getElementById('cmdUnit').value.trim();
@@ -457,7 +486,7 @@ function updateMonitor() {
     document.getElementById('statPosts').textContent = allPosts.length;
     const cats = new Set(allPosts.map(p => p.cat));
     document.getElementById('statCats').textContent = cats.size;
-    document.getElementById('statUsers').textContent = Object.keys(allUsers).length;
+    document.getElementById('statUsers').textContent = allUsers.length;
     const today = new Date().toLocaleDateString('fa-IR');
     const todayPosts = allPosts.filter(p => p.date === today);
     document.getElementById('statToday').textContent = todayPosts.length || '—';
@@ -465,20 +494,16 @@ function updateMonitor() {
 
 function renderUsers() {
     const container = document.getElementById('userListContainer');
-    const userList = Object.keys(allUsers);
-    if (!userList.length) {
+    if (!allUsers.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هیچ کاربری ثبت‌نام نکرده است</div>';
         return;
     }
-    container.innerHTML = userList.map(u => {
-        const user = allUsers[u];
-        return `
-            <div class="user-item">
-                <span>👤 <span class="fullname">${user.fullname || u}</span></span>
-                <span class="phone">${user.phone || '—'}</span>
-            </div>
-        `;
-    }).join('');
+    container.innerHTML = allUsers.map(u => `
+        <div class="user-item">
+            <span>👤 <span class="fullname">${u.fullname || u.username}</span></span>
+            <span class="phone">${u.phone || '—'}</span>
+        </div>
+    `).join('');
 }
 
 function renderSenders() {
@@ -488,22 +513,20 @@ function renderSenders() {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
         return;
     }
-    container.innerHTML = cmdPosts.map((p, index) => {
-        return `
-            <div class="padafand-item">
-                <span class="sender-name">🛡️ ${p.sender}</span>
-                <span class="count">${p.shobe ? p.shobe.substring(0, 20) + '...' : 'بدون عنوان'}</span>
-                <span class="time">${p.date || ''} ${p.time || ''}</span>
-                <button class="del-btn" onclick="deletePost(${index})">🗑️</button>
-            </div>
-        `;
-    }).join('');
+    container.innerHTML = cmdPosts.map((p, index) => `
+        <div class="padafand-item">
+            <span class="sender-name">🛡️ ${p.sender}</span>
+            <span class="count">${p.shobe ? p.shobe.substring(0, 20) + '...' : 'بدون عنوان'}</span>
+            <span class="time">${p.date || ''} ${p.time || ''}</span>
+            <button class="del-btn" onclick="deletePost(${index})">🗑️</button>
+        </div>
+    `).join('');
 }
 
 // ============================================================
 // حذف مطلب
 // ============================================================
-function deletePost(index) {
+async function deletePost(index) {
     if (!currentUser) return;
     const post = allPosts[index];
     if (!post) return;
@@ -512,18 +535,20 @@ function deletePost(index) {
         return;
     }
     if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
-    allPosts.splice(index, 1);
-    saveData();
-    updateMonitor();
-    renderSenders();
-    document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت حذف شد';
-    setTimeout(() => document.getElementById('fireMsg').textContent = '', 3000);
+    const success = await deletePostFromDB(post.id);
+    if (success) {
+        allPosts.splice(index, 1);
+        updateMonitor();
+        renderSenders();
+        document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت حذف شد';
+        setTimeout(() => document.getElementById('fireMsg').textContent = '', 3000);
+    }
 }
 
 // ============================================================
 // ارسال مطلب جدید
 // ============================================================
-function firePost() {
+async function firePost() {
     if (!currentUser) {
         document.getElementById('fireMsg').textContent = '⚠️ ابتدا وارد شوید';
         return;
@@ -540,8 +565,7 @@ function firePost() {
     const dateStr = now.toLocaleDateString('fa-IR');
 
     const newPost = {
-        shobe,
-        answer,
+        shobe, answer,
         author: currentUser,
         source: document.getElementById('newSource').value.trim() || 'منبع معتبر',
         tags: document.getElementById('newTags').value.trim().split(' ').filter(Boolean),
@@ -549,18 +573,19 @@ function firePost() {
         date: dateStr,
         time: timeStr,
         sender: currentUser,
-        comments: [],
-        savedAt: new Date().toISOString()
+        comments: []
     };
 
-    allPosts.unshift(newPost);
-    saveData();
-
-    document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
-    ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
-
-    updateMonitor();
-    renderSenders();
+    const result = await savePost(newPost);
+    if (result) {
+        allPosts.unshift(result[0]);
+        document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
+        ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
+        updateMonitor();
+        renderSenders();
+    } else {
+        document.getElementById('fireMsg').textContent = '⚠️ خطا در ذخیره مطلب';
+    }
 }
 
 // ============================================================
@@ -571,4 +596,4 @@ updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-          </html> 
+        </html> 
