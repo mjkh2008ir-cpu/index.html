@@ -420,42 +420,70 @@ function updateTime() {
     document.getElementById('monitorTime').textContent = now.toLocaleTimeString('fa-IR');
 }
 
+// ============================================================
+// توابع اصلی مانیتور (به‌روز شده)
+// ============================================================
 function updateMonitor() {
-    // تعداد کل مطالب (همه، حتی اونایی که از فرماندهی نیومدن)
-    const allPostsCount = allPosts.length;
-    document.getElementById('statPosts').textContent = allPostsCount;
+    // بارگذاری مجدد دیتاها از localStorage برای اطمینان از به‌روز بودن
+    allPosts = loadData('padafand_posts') || [];
+    allUsers = loadData('padafand_users') || {};
+
+    // تعداد کل مطالب
+    document.getElementById('statPosts').textContent = allPosts.length;
+    
+    // تعداد دسته‌بندی‌ها
     const cats = new Set(allPosts.map(p => p.cat));
     document.getElementById('statCats').textContent = cats.size;
+    
+    // تعداد کاربران ثبت‌نام‌شده
     const users = Object.keys(allUsers);
     document.getElementById('statUsers').textContent = users.length;
+    
+    // تعداد مطالب امروز
     const today = new Date().toLocaleDateString('fa-IR');
     const todayPosts = allPosts.filter(p => p.date === today);
     document.getElementById('statToday').textContent = todayPosts.length || '—';
+
+    // به‌روزرسانی لیست کاربران و مطالب
+    renderUsers();
+    renderSenders();
 }
 
 function renderUsers() {
     const container = document.getElementById('userListContainer');
+    // دوباره از localStorage می‌خونیم تا مطمئن بشیم
+    allUsers = loadData('padafand_users') || {};
     const userList = Object.keys(allUsers);
+    
     if (!userList.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هیچ کاربری ثبت‌نام نکرده است</div>';
         return;
     }
-    container.innerHTML = userList.map(u => `
-        <div class="user-item">
-            <span>👤 <span class="fullname">${allUsers[u].fullname || u}</span></span>
-            <span class="phone">${allUsers[u].phone || '—'}</span>
-        </div>
-    `).join('');
+    
+    container.innerHTML = userList.map(u => {
+        const user = allUsers[u];
+        return `
+            <div class="user-item">
+                <span>👤 <span class="fullname">${user.fullname || u}</span></span>
+                <span class="phone">${user.phone || '—'}</span>
+            </div>
+        `;
+    }).join('');
 }
 
 function renderSenders() {
     const container = document.getElementById('padafandListContainer');
-    // نمایش مطالب ارسال‌شده از فرماندهی با قابلیت حذف
+    // دوباره از localStorage می‌خونیم
+    allPosts = loadData('padafand_posts') || [];
+    
+    // فقط مطالب ارسال‌شده از فرماندهی رو نشون بده (اونی که sender داره)
     const cmdPosts = allPosts.filter(p => p.sender && p.sender !== 'سیستم');
+    
     if (!cmdPosts.length) {
         container.innerHTML = '<div style="color:#7a9a55;font-size:.5rem;text-align:center;padding:.15rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
         return;
     }
+    
     container.innerHTML = cmdPosts.map((p, index) => {
         const actualIndex = allPosts.indexOf(p);
         return `
@@ -563,4 +591,4 @@ updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-        </html>
+          </html> 
