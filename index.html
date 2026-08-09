@@ -8,8 +8,9 @@
 <style>
 /* ===== RESET & BASE ===== */
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b}
-[data-theme="light"]{--bg:#f2f7ef;--bgm:#e0ebd8;--bgp:#d0dfc4;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#4a8a20;--g:#3a7a18;--am:#b09000}
+:root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#d4a017}
+/* ===== تم روز (طراحی جدید) ===== */
+[data-theme="light"]{--bg:#f5f8f2;--bgm:#e6efe0;--bgp:#d8e6ce;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000;--rd:#c0392b}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -27,7 +28,9 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .hdr-left .sub{font-size:.5rem;color:var(--ts);letter-spacing:0.5px;margin-top:-0.1rem}
 .hdr-actions{display:flex;gap:0.3rem;align-items:center}
 .hdr-actions .theme-toggle{background:none;border:1px solid var(--br);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tp);font-size:.8rem}
+.hdr-actions .theme-toggle:hover{border-color:var(--gl)}
 .hdr-actions .user-btn{background:var(--bgp);border:1px solid var(--br);border-radius:3px;padding:0.15rem 0.5rem;color:var(--tp);font-size:.6rem;cursor:pointer}
+.hdr-actions .user-btn:hover{background:var(--g);color:#fff}
 
 /* ===== SEARCH ===== */
 #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
@@ -35,6 +38,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.75rem;outline:none;min-height:28px}
 .search-wrap input:focus{border-color:var(--gl)}
 .search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.7rem;cursor:pointer;min-height:28px}
+.search-wrap button:hover{opacity:.85}
 
 /* ===== NAV ===== */
 #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
@@ -66,6 +70,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .post-body.show{display:block}
 .post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
 .post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.6rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
+.post-body .meta .rank{color:var(--gold);font-weight:700}
 .post-body .tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.3rem}
 .post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.55rem;color:var(--am)}
 .post-actions{display:flex;gap:0.4rem;margin-top:0.4rem;flex-wrap:wrap;align-items:center}
@@ -76,9 +81,26 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-msg{color:var(--gl);font-size:.6rem;margin-right:0.3rem}
 .comments-section{margin-top:0.4rem;border-top:1px solid var(--br);padding-top:0.3rem}
 .comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.2rem 0;font-size:.65rem;border-right:2px solid var(--gl)}
-.comments-section input{width:60%;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.65rem;outline:none}
-.comments-section input:focus{border-color:var(--gl)}
-.comments-section button{background:var(--g);border:none;color:var(--tp);padding:0.2rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.6rem}
+.comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
+.comments-section .cmt .cmt-rank{color:var(--gold);font-size:.5rem}
+.comments-section .cmt .cmt-text{color:var(--tp)}
+.comments-section .cmt .cmt-actions{display:flex;gap:0.3rem;margin-top:0.1rem}
+.comments-section .cmt .cmt-actions button{background:none;border:none;color:var(--ts);font-size:.5rem;cursor:pointer}
+.comments-section .cmt .cmt-actions button:hover{color:var(--gl)}
+.comments-section .cmt .replies{margin-right:1rem;border-right:1px solid var(--br);padding-right:0.3rem}
+.comments-section .cmt .reply-input{display:flex;gap:0.2rem;margin-top:0.2rem}
+.comments-section .cmt .reply-input input{flex:1;padding:0.15rem 0.3rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.55rem;outline:none}
+.comments-section .cmt .reply-input button{background:var(--g);border:none;color:#fff;padding:0.1rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
+.comments-section .cmt .reply-input input:focus{border-color:var(--gl)}
+.comments-section .cmt .like-btn{color:var(--rd);font-size:.55rem;cursor:pointer;background:none;border:none}
+.comments-section .cmt .like-btn:hover{opacity:.7}
+.comments-section .cmt .like-count{color:var(--ts);font-size:.5rem;margin-left:0.2rem}
+.comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
+.comments-section .comment-form input{flex:1;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.65rem;outline:none;min-width:100px}
+.comments-section .comment-form input:focus{border-color:var(--gl)}
+.comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.2rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.6rem}
+.comments-section .comment-form button:hover{opacity:.85}
+.comments-section .login-msg{color:var(--ts);font-size:.55rem;font-style:italic}
 
 .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.4rem;margin-top:0.3rem}
 .ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.4rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.7rem}
@@ -97,6 +119,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-item .saved-body.show{display:block}
 .saved-item .saved-body p{font-size:.65rem;color:var(--ts);line-height:1.6}
 .saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.1rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
+.saved-item .del-btn:hover{background:#a02020}
 
 /* ===== FOOTER ===== */
 #footer{border-top:1px solid var(--br);padding:0.4rem 0.8rem;background:var(--bgm);margin-top:0.8rem}
@@ -107,7 +130,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .foot-copy{color:var(--ts);font-size:.5rem;opacity:0.4}
 
 /* ===== USER PANEL ===== */
-#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:300px;background:var(--bgm);border-left:1px solid var(--br);padding:1.5rem 1.2rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
+#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.5rem 1.2rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
 #userPanel.show{display:block;animation:slideIn .25s}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
 #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
@@ -122,6 +145,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #userPanel .user-info{margin-top:0.5rem;padding:0.6rem;background:var(--bg);border-radius:4px;border:1px solid var(--br);text-align:center}
 #userPanel .user-info .avatar{font-size:2.5rem;display:block;margin-bottom:0.2rem}
 #userPanel .user-info .name{font-size:.85rem;font-weight:700}
+#userPanel .user-info .name .rank{color:var(--gold);font-size:.6rem}
 #userPanel .user-info .bio{font-size:.65rem;color:var(--ts);margin-top:0.1rem}
 #userPanel .user-info .phone{font-size:.65rem;color:var(--ts)}
 #userPanel .switch-link{color:var(--ts);font-size:.6rem;text-align:center;margin-top:0.3rem;cursor:pointer}
@@ -308,6 +332,15 @@ let allPosts = [];
 let allUsers = JSON.parse(localStorage.getItem('padafand_users') || '{}');
 let loggedUser = null;
 let currentCat = 'همه';
+let currentPage = 'home';
+const SPECIAL_USERS = ['محمد جواد خیاط زاده', 'محمد مهدی سعیدی', 'محمد باقر متوسل', 'محمد برزکار'];
+
+// ============================================================
+// درجه سرداری
+// ============================================================
+function getUserRank(username) {
+    return SPECIAL_USERS.includes(username) ? '⭐ سردار' : '';
+}
 
 // ============================================================
 // بارگذاری مطالب از سرور
@@ -373,9 +406,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   loadPosts();
+  
+  // همگام‌سازی خودکار هر ۵ ثانیه
+  setInterval(function() {
+    const newPosts = JSON.parse(localStorage.getItem('padafand_posts') || '[]');
+    if (JSON.stringify(newPosts) !== JSON.stringify(allPosts)) {
+      allPosts = newPosts;
+      renderAll();
+    }
+  }, 5000);
 });
 
 function switchPage(page) {
+  currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById(`page-${page}`);
   if (target) target.classList.add('active');
@@ -390,7 +433,7 @@ function switchPage(page) {
 }
 
 // ============================================================
-// پست‌ها (آکاردئونی)
+// پست‌ها
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
   const el = document.getElementById(containerId);
@@ -401,6 +444,7 @@ function renderPosts(list, containerId = 'postContainer') {
   }
   el.innerHTML = list.map((p, i) => {
     const uid = `pb-${containerId}-${i}`;
+    const rank = getUserRank(p.sender || p.author || '');
     const isOwner = loggedUser && p.sender === loggedUser;
     return `
       <div class="post">
@@ -411,7 +455,7 @@ function renderPosts(list, containerId = 'postContainer') {
         <div class="post-body" id="${uid}">
           <div class="ans">${(p.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>')}</div>
           <div class="meta">
-            <span><i class="fas fa-user-edit"></i> ${p.author || 'ناشناس'}</span>
+            <span><i class="fas fa-user-edit"></i> ${p.author || 'ناشناس'} ${rank ? `<span class="rank">${rank}</span>` : ''}</span>
             ${p.source ? `<span><i class="fas fa-book"></i> ${p.source}</span>` : ''}
             ${p.cat ? `<span><i class="fas fa-tag"></i> ${p.cat}</span>` : ''}
           </div>
@@ -424,14 +468,37 @@ function renderPosts(list, containerId = 'postContainer') {
           </div>
           <div class="comments-section">
             <div id="comments${i}">
-              ${(p.comments || []).map(c => `<div class="cmt">💬 ${c}</div>`).join('')}
+              ${(p.comments || []).map(c => `
+                <div class="cmt">
+                  <span class="cmt-user">${c.user || 'ناشناس'}</span>
+                  ${getUserRank(c.user) ? `<span class="cmt-rank">${getUserRank(c.user)}</span>` : ''}
+                  <span class="cmt-text">: ${c.text}</span>
+                  <div class="cmt-actions">
+                    <button onclick="likeComment(${i}, '${c.id || ''}')">❤️ <span class="like-count">${c.likes || 0}</span></button>
+                    <button onclick="showReplyInput(${i}, '${c.id || ''}')">💬 پاسخ</button>
+                  </div>
+                  <div class="replies" id="replies-${i}-${c.id || ''}">
+                    ${(c.replies || []).map(r => `
+                      <div class="cmt" style="border-right-color:var(--am);font-size:.6rem">
+                        <span class="cmt-user">${r.user || 'ناشناس'}</span>
+                        ${getUserRank(r.user) ? `<span class="cmt-rank">${getUserRank(r.user)}</span>` : ''}
+                        <span class="cmt-text">: ${r.text}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                  <div class="reply-input" id="replyInput-${i}-${c.id || ''}" style="display:none">
+                    <input type="text" placeholder="پاسخ..." id="replyText-${i}-${c.id || ''}">
+                    <button onclick="addReply(${i}, '${c.id || ''}')">ارسال</button>
+                  </div>
+                </div>
+              `).join('')}
             </div>
             ${loggedUser ? `
-              <div style="display:flex;gap:0.3rem;margin-top:0.2rem;flex-wrap:wrap;">
+              <div class="comment-form">
                 <input type="text" id="cmtInput${i}" placeholder="نظرت رو بنویس...">
                 <button onclick="addComment(${i})">ارسال</button>
               </div>
-            ` : `<p style="color:var(--ts);font-size:.55rem">🔒 برای نظر دادن وارد حساب خود شوید</p>`}
+            ` : `<p class="login-msg">🔒 برای نظر دادن وارد حساب خود شوید</p>`}
           </div>
         </div>
       </div>
@@ -476,7 +543,7 @@ function setCat(c) {
 }
 
 // ============================================================
-// حذف مطلب (فقط برای فرستنده)
+// حذف مطلب
 // ============================================================
 function deletePost(index) {
   if (!loggedUser) return;
@@ -493,7 +560,7 @@ function deletePost(index) {
 }
 
 // ============================================================
-// ۱. ذخیره در جعبه مهمات
+// ذخیره در جعبه مهمات
 // ============================================================
 function saveToBox(index) {
   if (!loggedUser) {
@@ -515,7 +582,7 @@ function saveToBox(index) {
 }
 
 // ============================================================
-// ۲. اشتراک‌گذاری
+// اشتراک‌گذاری
 // ============================================================
 function sharePost(index) {
   const post = allPosts[index];
@@ -531,7 +598,7 @@ function sharePost(index) {
 }
 
 // ============================================================
-// ۳. کامنت (فقط برای کاربران واردشده)
+// کامنت‌ها (با قابلیت لایک و پاسخ)
 // ============================================================
 function addComment(index) {
   if (!loggedUser) {
@@ -540,9 +607,56 @@ function addComment(index) {
   }
   const input = document.getElementById(`cmtInput${index}`);
   const text = input.value.trim();
-  if (!text) return alert('لطفاً یک نظر بنویس.');
+  if (!text) return;
   if (!allPosts[index].comments) allPosts[index].comments = [];
-  allPosts[index].comments.push(text + ' - ' + loggedUser);
+  const commentId = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
+  allPosts[index].comments.push({
+    id: commentId,
+    user: loggedUser,
+    text: text,
+    likes: 0,
+    replies: []
+  });
+  input.value = '';
+  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
+  saveToServer();
+  renderPosts(allPosts);
+}
+
+function likeComment(postIndex, commentId) {
+  if (!loggedUser) {
+    alert('⚠️ برای لایک کردن وارد حساب خود شوید.');
+    return;
+  }
+  const post = allPosts[postIndex];
+  if (!post) return;
+  const comment = post.comments.find(c => c.id === commentId);
+  if (!comment) return;
+  comment.likes = (comment.likes || 0) + 1;
+  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
+  saveToServer();
+  renderPosts(allPosts);
+}
+
+function showReplyInput(postIndex, commentId) {
+  const el = document.getElementById(`replyInput-${postIndex}-${commentId}`);
+  if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+}
+
+function addReply(postIndex, commentId) {
+  if (!loggedUser) {
+    alert('⚠️ برای پاسخ دادن وارد حساب خود شوید.');
+    return;
+  }
+  const input = document.getElementById(`replyText-${postIndex}-${commentId}`);
+  const text = input.value.trim();
+  if (!text) return;
+  const post = allPosts[postIndex];
+  if (!post) return;
+  const comment = post.comments.find(c => c.id === commentId);
+  if (!comment) return;
+  if (!comment.replies) comment.replies = [];
+  comment.replies.push({ user: loggedUser, text: text });
   input.value = '';
   localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
   saveToServer();
@@ -550,7 +664,7 @@ function addComment(index) {
 }
 
 // ============================================================
-// رندر جعبه مهمات (آکاردئونی)
+// جعبه مهمات (آکاردئونی)
 // ============================================================
 function renderSaved() {
   const container = document.getElementById('savedContainer');
@@ -603,10 +717,16 @@ function toggleUserPanel() {
   
   if (loggedUser) {
     const u = allUsers[loggedUser];
+    const rank = getUserRank(loggedUser);
     document.getElementById('displayName').textContent = u.fullname || loggedUser;
     document.getElementById('displayBio').textContent = u.bio || '—';
     document.getElementById('displayPhone').textContent = u.phone || '—';
     document.getElementById('displayDate').textContent = u.date || 'امروز';
+    // نمایش درجه در پروفایل
+    const nameEl = document.querySelector('#userInfo .name');
+    if (nameEl) {
+      nameEl.innerHTML = (u.fullname || loggedUser) + (rank ? ` <span class="rank">${rank}</span>` : '');
+    }
     document.getElementById('userLoginForm').style.display = 'none';
     document.getElementById('userRegisterForm').style.display = 'none';
     document.getElementById('userInfo').style.display = 'block';
@@ -699,19 +819,6 @@ function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   document.documentElement.setAttribute('data-theme', current === 'light' ? '' : 'light');
 }
-
-// ============================================================
-// همگام‌سازی با فرماندهی
-// ============================================================
-setInterval(function() {
-  const newPosts = JSON.parse(localStorage.getItem('padafand_posts') || '[]');
-  if (JSON.stringify(newPosts) !== JSON.stringify(allPosts)) {
-    allPosts = newPosts;
-    filterPosts();
-    renderPosts(allPosts.slice(0, 3), 'homePosts');
-    document.getElementById('postCount').textContent = allPosts.length;
-  }
-}, 5000);
 </script>
 </body>
-  </html> 
+  </html>
