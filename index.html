@@ -9,7 +9,7 @@
 /* ===== RESET & BASE ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b}
-[data-theme="light"]{--bg:#f0f5ec;--bgm:#dce8d4;--bgp:#c8d8bc;--br:#8aaa6a;--tp:#1a2a0a;--ts:#3a5a2a}
+[data-theme="light"]{--bg:#f2f7ef;--bgm:#e0ebd8;--bgp:#d0dfc4;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#4a8a20;--g:#3a7a18;--am:#b09000}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -54,7 +54,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .stat-item{color:var(--ts)}
 .stat-item b{color:var(--am)}
 
-/* ===== POSTS (آکاردئونی) ===== */
+/* ===== POSTS ===== */
 .post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden}
 .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:0.2s}
 .post-hdr:hover{background:var(--bgm)}
@@ -71,6 +71,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .post-actions{display:flex;gap:0.4rem;margin-top:0.4rem;flex-wrap:wrap;align-items:center}
 .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.6rem;transition:0.3s}
 .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
+.post-actions .del-btn{background:var(--rd);border-color:var(--rd);color:#fff}
+.post-actions .del-btn:hover{background:#a02020;color:#fff}
 .saved-msg{color:var(--gl);font-size:.6rem;margin-right:0.3rem}
 .comments-section{margin-top:0.4rem;border-top:1px solid var(--br);padding-top:0.3rem}
 .comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.2rem 0;font-size:.65rem;border-right:2px solid var(--gl)}
@@ -87,8 +89,13 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 /* ===== جعبه مهمات ===== */
 .saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am)}
-.saved-item h4{color:var(--am);font-size:.75rem}
-.saved-item p{font-size:.65rem;color:var(--ts)}
+.saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.saved-item .saved-hdr h4{color:var(--am);font-size:.75rem;flex:1}
+.saved-item .saved-hdr .arrow{color:var(--gl);font-size:.6rem;transition:.3s}
+.saved-item .saved-hdr .arrow.open{transform:rotate(180deg)}
+.saved-item .saved-body{display:none;padding-top:0.3rem;border-top:1px solid var(--br);margin-top:0.3rem}
+.saved-item .saved-body.show{display:block}
+.saved-item .saved-body p{font-size:.65rem;color:var(--ts);line-height:1.6}
 .saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.1rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
 
 /* ===== FOOTER ===== */
@@ -348,7 +355,7 @@ async function saveToServer() {
 }
 
 // ============================================================
-// منو (رفع باگ)
+// منو
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
@@ -383,7 +390,7 @@ function switchPage(page) {
 }
 
 // ============================================================
-// پست‌ها (آکاردئونی - فقط شبهه در هدر)
+// پست‌ها (آکاردئونی)
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
   const el = document.getElementById(containerId);
@@ -394,6 +401,7 @@ function renderPosts(list, containerId = 'postContainer') {
   }
   el.innerHTML = list.map((p, i) => {
     const uid = `pb-${containerId}-${i}`;
+    const isOwner = loggedUser && p.sender === loggedUser;
     return `
       <div class="post">
         <div class="post-hdr" onclick="togglePost('${uid}', this)">
@@ -411,16 +419,19 @@ function renderPosts(list, containerId = 'postContainer') {
           <div class="post-actions">
             <button onclick="saveToBox(${i})">📦 ذخیره در جعبه مهمات</button>
             <button onclick="sharePost(${i})">📤 اشتراک‌گذاری</button>
+            ${isOwner ? `<button class="del-btn" onclick="deletePost(${i})">🗑️ حذف</button>` : ''}
             <span id="savedMsg${i}" class="saved-msg"></span>
           </div>
           <div class="comments-section">
             <div id="comments${i}">
               ${(p.comments || []).map(c => `<div class="cmt">💬 ${c}</div>`).join('')}
             </div>
-            <div style="display:flex;gap:0.3rem;margin-top:0.2rem;flex-wrap:wrap;">
-              <input type="text" id="cmtInput${i}" placeholder="نظرت رو بنویس...">
-              <button onclick="addComment(${i})">ارسال</button>
-            </div>
+            ${loggedUser ? `
+              <div style="display:flex;gap:0.3rem;margin-top:0.2rem;flex-wrap:wrap;">
+                <input type="text" id="cmtInput${i}" placeholder="نظرت رو بنویس...">
+                <button onclick="addComment(${i})">ارسال</button>
+              </div>
+            ` : `<p style="color:var(--ts);font-size:.55rem">🔒 برای نظر دادن وارد حساب خود شوید</p>`}
           </div>
         </div>
       </div>
@@ -465,7 +476,24 @@ function setCat(c) {
 }
 
 // ============================================================
-// ۱. ذخیره در جعبه مهمات (فقط برای کاربران واردشده)
+// حذف مطلب (فقط برای فرستنده)
+// ============================================================
+function deletePost(index) {
+  if (!loggedUser) return;
+  const post = allPosts[index];
+  if (post.sender !== loggedUser) {
+    alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
+    return;
+  }
+  if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
+  allPosts.splice(index, 1);
+  localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
+  saveToServer();
+  renderAll();
+}
+
+// ============================================================
+// ۱. ذخیره در جعبه مهمات
 // ============================================================
 function saveToBox(index) {
   if (!loggedUser) {
@@ -503,14 +531,18 @@ function sharePost(index) {
 }
 
 // ============================================================
-// ۳. کامنت
+// ۳. کامنت (فقط برای کاربران واردشده)
 // ============================================================
 function addComment(index) {
+  if (!loggedUser) {
+    alert('⚠️ برای نظر دادن وارد حساب خود شوید.');
+    return;
+  }
   const input = document.getElementById(`cmtInput${index}`);
   const text = input.value.trim();
   if (!text) return alert('لطفاً یک نظر بنویس.');
   if (!allPosts[index].comments) allPosts[index].comments = [];
-  allPosts[index].comments.push(text);
+  allPosts[index].comments.push(text + ' - ' + loggedUser);
   input.value = '';
   localStorage.setItem('padafand_posts', JSON.stringify(allPosts));
   saveToServer();
@@ -518,7 +550,7 @@ function addComment(index) {
 }
 
 // ============================================================
-// رندر جعبه مهمات (مخصوص هر کاربر)
+// رندر جعبه مهمات (آکاردئونی)
 // ============================================================
 function renderSaved() {
   const container = document.getElementById('savedContainer');
@@ -533,12 +565,25 @@ function renderSaved() {
   }
   container.innerHTML = saved.map((p, i) => `
     <div class="saved-item">
-      <h4>❓ ${p.shobe || 'بدون عنوان'}</h4>
-      <p>${(p.answer || '').substring(0, 100)}${p.answer && p.answer.length > 100 ? '...' : ''}</p>
-      <div style="color:var(--ts);font-size:.55rem">📅 ذخیره شده: ${p.savedAt || 'تاریخ نامشخص'}</div>
-      <button class="del-btn" onclick="removeFromSaved(${i})">🗑️ حذف</button>
+      <div class="saved-hdr" onclick="toggleSaved(${i})">
+        <h4>❓ ${p.shobe || 'بدون عنوان'}</h4>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="saved-body" id="savedBody${i}">
+        <p>${(p.answer || '').replace(/\n/g, '<br>')}</p>
+        <div style="color:var(--ts);font-size:.55rem;margin-top:0.2rem">📅 ذخیره شده: ${p.savedAt || 'تاریخ نامشخص'}</div>
+        <button class="del-btn" onclick="removeFromSaved(${i})">🗑️ حذف</button>
+      </div>
     </div>
   `).join('');
+}
+
+function toggleSaved(index) {
+  const body = document.getElementById(`savedBody${index}`);
+  const arrow = body.parentElement.querySelector('.arrow');
+  if (!body) return;
+  body.classList.toggle('show');
+  arrow.classList.toggle('open');
 }
 
 function removeFromSaved(index) {
@@ -550,7 +595,7 @@ function removeFromSaved(index) {
 }
 
 // ============================================================
-// کاربران (رفع باگ)
+// کاربران
 // ============================================================
 function toggleUserPanel() {
   const panel = document.getElementById('userPanel');
@@ -648,7 +693,7 @@ function updateUserCount() {
 }
 
 // ============================================================
-// تم (حالت روز)
+// تم
 // ============================================================
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
