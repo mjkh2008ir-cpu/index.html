@@ -6,7 +6,7 @@
 <title>پدافند شبهات</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ===== تمام استایل‌های قبلی ===== */
+/* ===== تمام استایل‌های قبلی (همون چیزی که بود) ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#d4a017}
 [data-theme="light"]{--bg:#f5f8f2;--bgm:#e6efe0;--bgp:#d8e6ce;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000;--rd:#c0392b}
@@ -316,28 +316,53 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 <script>
 // ============================================================
-// یک کلید مشترک برای همه داده‌ها
+// کلیدهای ذخیره‌سازی
 // ============================================================
 const STORAGE_KEY = 'padafand_data';
+const BIN_ID = '6a771499da38895dfec99f53';
+const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
 
-function getData() {
+// ============================================================
+// توابع سرور (JSONBin)
+// ============================================================
+async function loadFromServer() {
     try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: { 'X-Master-Key': API_KEY }
+        });
+        const data = await res.json();
+        const serverData = data.record || { posts: [], users: {} };
+        // ذخیره در localStorage برای استفاده بعدی
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
+        return serverData;
     } catch(e) {
-        return { posts: [], users: {} };
+        console.log('⚠️ خطا در دریافت از سرور، استفاده از داده‌های محلی');
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
     }
 }
 
-function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+async function saveToServer(data) {
+    try {
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(data)
+        });
+        console.log('✅ داده‌ها در سرور ذخیره شدند');
+    } catch(e) {
+        console.log('⚠️ خطا در ذخیره‌سازی سرور');
+    }
 }
 
 // ============================================================
 // دیتا و متغیرها
 // ============================================================
-let allData = getData();
-let allPosts = allData.posts || [];
-let allUsers = allData.users || {};
+let allData = { posts: [], users: {} };
+let allPosts = [];
+let allUsers = {};
 let loggedUser = null;
 let currentCat = 'همه';
 let currentPage = 'home';
@@ -348,6 +373,26 @@ const SPECIAL_USERS = ['محمد جواد خیاط زاده', 'محمد مهدی
 // ============================================================
 function getUserRank(username) {
     return SPECIAL_USERS.includes(username) ? '⭐ سردار' : '';
+}
+
+// ============================================================
+// بارگذاری اصلی (از سرور)
+// ============================================================
+async function loadMainData() {
+    allData = await loadFromServer();
+    allPosts = allData.posts || [];
+    allUsers = allData.users || {};
+    renderAll();
+}
+
+// ============================================================
+// ذخیره (هم در localStorage و هم در سرور)
+// ============================================================
+function saveAllData() {
+    allData.posts = allPosts;
+    allData.users = allUsers;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+    saveToServer(allData);
 }
 
 // ============================================================
@@ -363,20 +408,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   const savedUser = localStorage.getItem('padafand_logged_user');
-  if (savedUser && allUsers[savedUser]) {
+  if (savedUser) {
     loggedUser = savedUser;
     document.getElementById('userBtnText').textContent = loggedUser;
   }
   
-  loadDataAndRender();
+  loadMainData();
 });
-
-function loadDataAndRender() {
-    allData = getData();
-    allPosts = allData.posts || [];
-    allUsers = allData.users || {};
-    renderAll();
-}
 
 function renderAll() {
   renderPosts(allPosts);
@@ -525,8 +563,7 @@ function deletePost(index) {
   }
   if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
   allPosts.splice(index, 1);
-  allData.posts = allPosts;
-  saveData(allData);
+  saveAllData();
   renderAll();
 }
 
@@ -589,8 +626,7 @@ function addComment(index) {
     replies: []
   });
   input.value = '';
-  allData.posts = allPosts;
-  saveData(allData);
+  saveAllData();
   renderPosts(allPosts);
 }
 
@@ -604,8 +640,7 @@ function likeComment(postIndex, commentId) {
   const comment = post.comments.find(c => c.id === commentId);
   if (!comment) return;
   comment.likes = (comment.likes || 0) + 1;
-  allData.posts = allPosts;
-  saveData(allData);
+  saveAllData();
   renderPosts(allPosts);
 }
 
@@ -629,8 +664,7 @@ function addReply(postIndex, commentId) {
   if (!comment.replies) comment.replies = [];
   comment.replies.push({ user: loggedUser, text: text });
   input.value = '';
-  allData.posts = allPosts;
-  saveData(allData);
+  saveAllData();
   renderPosts(allPosts);
 }
 
@@ -742,8 +776,7 @@ function userRegister() {
     fullname, phone, bio: bio || '—',
     password, date: new Date().toLocaleDateString('fa-IR')
   };
-  allData.users = allUsers;
-  saveData(allData);
+  saveAllData();
   document.getElementById('regMsg').textContent = '✅ ثبت‌نام موفق! وارد شوید.';
   showLogin();
   updateUserCount();
@@ -790,19 +823,6 @@ function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   document.documentElement.setAttribute('data-theme', current === 'light' ? '' : 'light');
 }
-
-// ============================================================
-// همگام‌سازی خودکار
-// ============================================================
-setInterval(function() {
-  const newData = getData();
-  if (JSON.stringify(newData) !== JSON.stringify(allData)) {
-    allData = newData;
-    allPosts = allData.posts || [];
-    allUsers = allData.users || {};
-    renderAll();
-  }
-}, 3000);
 </script>
 </body>
-      </html>
+                                                     </html>
