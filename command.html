@@ -4,1212 +4,471 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مرکز فرماندهی پدافند شبهات</title>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ============================================================
-   طراحی پریمیوم نظامی - اتاق فرماندهی سایبری
-   ============================================================ */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg-primary:#080c06;
-  --bg-secondary:#0f160a;
-  --bg-panel:#111c0a;
-  --bg-glass:rgba(17,28,10,0.6);
-  --border-military:#2a3d1a;
-  --border-glow:#4a7c20;
+  --bg-primary:#050804;
+  --bg-secondary:#0a0f06;
+  --bg-card:#0c1208;
+  --border-military:#1a2a0e;
   --neon-green:#6db33f;
-  --neon-glow:rgba(109,179,63,0.3);
-  --gold:#c8a000;
-  --gold-glow:rgba(200,160,0,0.2);
-  --text-primary:#d4e8b0;
-  --text-secondary:#7a9a55;
-  --text-gold:#c8a000;
-  --shadow-dark:rgba(0,0,0,0.8);
-  --shadow-glow:0 0 30px rgba(109,179,63,0.1);
+  --gold:#b8980a;
+  --text-primary:#c8d8b0;
+  --text-secondary:#6a8a4a;
   --font-mono:'Courier New',monospace;
 }
-
 body{
   background:var(--bg-primary);
   font-family:'Segoe UI',Tahoma,sans-serif;
   direction:rtl;
   min-height:100vh;
   display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:1rem;
-  background-image: 
-    radial-gradient(ellipse at 20% 50%, rgba(74,124,32,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 50%, rgba(74,124,32,0.03) 0%, transparent 60%);
-  position:relative;
-  overflow-x:hidden;
-}
-
-/* ===== پس‌زمینه پویا (انیمیشن‌های نظامی) ===== */
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  background: 
-    repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(74,124,32,0.02) 50px, rgba(74,124,32,0.02) 51px),
-    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(74,124,32,0.02) 50px, rgba(74,124,32,0.02) 51px);
-  opacity:0.3;
-}
-
-body::after{
-  content:'';
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  background:radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-primary) 100%);
-  opacity:0.6;
-}
-
-/* ===== اسکن لاین ===== */
-.scan-line{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  background:repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(109,179,63,0.03) 3px, rgba(109,179,63,0.03) 4px);
-}
-
-/* ===== رادار متحرک ===== */
-.radar-bg{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  opacity:0.05;
-}
-.radar-bg::before{
-  content:'';
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:80%;
-  height:80%;
-  border-radius:50%;
-  border:1px solid rgba(109,179,63,0.2);
-  transform:translate(-50%,-50%);
-  animation:radarPulse 4s ease-in-out infinite;
-}
-.radar-bg::after{
-  content:'';
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:40%;
-  height:40%;
-  border-radius:50%;
-  border:1px solid rgba(109,179,63,0.1);
-  transform:translate(-50%,-50%);
-  animation:radarPulse 4s ease-in-out infinite 1s;
-}
-@keyframes radarPulse{
-  0%{transform:translate(-50%,-50%) scale(0.8);opacity:0.3}
-  50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
-  100%{transform:translate(-50%,-50%) scale(0.8);opacity:0.3}
-}
-
-/* ===== هگزاگون ===== */
-.hex-bg{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  opacity:0.04;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 5 L55 17.5 L55 42.5 L30 55 L5 42.5 L5 17.5 Z' fill='none' stroke='%236db33f' stroke-width='0.5'/%3E%3C/svg%3E");
-  background-size:60px 60px;
-}
-
-/* ===== کانتینر اصلی ===== */
-.cmd-container{
-  width:100%;
-  max-width:600px;
-  padding:0.5rem;
-  position:relative;
-  z-index:1;
-  animation:fadeIn 0.8s ease;
-}
-
-/* ===== باکس اصلی (گلسمورفیسم) ===== */
-.cmd-box{
-  background:var(--bg-glass);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  border:1px solid rgba(74,124,32,0.25);
-  border-radius:20px;
-  padding:1.8rem 1.5rem;
-  box-shadow: 
-    0 0 60px rgba(74,124,32,0.08),
-    inset 0 0 80px rgba(74,124,32,0.03),
-    inset 0 1px 0 rgba(109,179,63,0.1);
-  position:relative;
+  color:var(--text-primary);
+  font-size:14px;
   overflow:hidden;
+}
+::-webkit-scrollbar{width:4px;background:var(--bg-primary)}
+::-webkit-scrollbar-thumb{background:var(--border-military);border-radius:2px}
+
+.sidebar{
+  width:200px;
+  height:100vh;
+  background:var(--bg-secondary);
+  border-left:1px solid var(--border-military);
+  padding:1.2rem 0.6rem;
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  z-index:100;
+  overflow-y:auto;
   transition:all 0.3s ease;
 }
-.cmd-box::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:20px;
-  padding:1px;
-  background:linear-gradient(135deg, rgba(109,179,63,0.2), transparent 50%, rgba(109,179,63,0.05));
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
+.sidebar .logo-area{text-align:center;border-bottom:1px solid var(--border-military);padding-bottom:0.8rem;margin-bottom:0.8rem}
+.sidebar .logo-area .icon{font-size:1.8rem;display:block;color:var(--gold)}
+.sidebar .logo-area h2{font-size:0.85rem;letter-spacing:2px;font-weight:700}
+.sidebar .logo-area h2 span{color:var(--neon-green)}
+.sidebar .logo-area .sub{font-size:0.4rem;color:var(--text-secondary);letter-spacing:1px;font-family:var(--font-mono)}
+.sidebar .nav-item{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.4rem 0.6rem;
+  border-radius:4px;
+  color:var(--text-secondary);
+  font-size:0.65rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  border-right:2px solid transparent;
 }
+.sidebar .nav-item:hover{background:rgba(109,179,63,0.04);color:var(--text-primary)}
+.sidebar .nav-item.active{background:rgba(109,179,63,0.06);color:var(--neon-green);border-right-color:var(--neon-green)}
+.sidebar .nav-item i{width:18px;font-size:0.75rem;color:var(--gold)}
+.sidebar .nav-divider{height:1px;background:var(--border-military);margin:0.4rem 0}
+.sidebar .user-card{margin-top:0.6rem;padding:0.4rem;border:1px solid var(--border-military);border-radius:6px;text-align:center;background:rgba(12,18,8,0.5)}
+.sidebar .user-card .avatar{font-size:1.5rem;display:block}
+.sidebar .user-card .name{font-size:0.6rem;font-weight:700}
+.sidebar .user-card .role{font-size:0.45rem;color:var(--text-secondary)}
 
-/* ===== هدر با نشان نظامی ===== */
-.cmd-header{
-  text-align:center;
-  border-bottom:1px solid rgba(42,61,26,0.5);
-  padding-bottom:0.8rem;
-  margin-bottom:1.2rem;
+.main{flex:1;margin-right:200px;padding:0.6rem 0.8rem;height:100vh;overflow-y:auto}
+.top-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-military);padding-bottom:0.3rem;margin-bottom:0.6rem;flex-wrap:wrap;gap:0.3rem}
+.top-bar .title{font-size:0.8rem;font-weight:700;letter-spacing:1px}
+.top-bar .title i{color:var(--gold);margin-left:0.3rem}
+.top-bar .title .sub{font-size:0.45rem;color:var(--text-secondary);font-weight:400;display:block}
+.top-bar .info{display:flex;gap:0.5rem;align-items:center;font-family:var(--font-mono);font-size:0.5rem;color:var(--text-secondary)}
+.top-bar .info .dot{width:5px;height:5px;border-radius:50%;background:var(--neon-green);display:inline-block;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:0.4rem;
+  margin-bottom:0.6rem;
+}
+.stat-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-military);
+  border-radius:4px;
+  padding:0.4rem 0.6rem;
+}
+.stat-card .num{font-size:1.2rem;font-weight:900;font-family:var(--font-mono);color:var(--text-primary)}
+.stat-card .label{font-size:0.45rem;color:var(--text-secondary);letter-spacing:1px}
+.stat-card .icon{font-size:0.8rem;color:var(--gold);float:left}
+
+.map-radar{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:0.4rem;
+  margin-bottom:0.6rem;
+}
+.map-container{
+  background:var(--bg-card);
+  border:1px solid var(--border-military);
+  border-radius:4px;
+  padding:0.4rem;
+  min-height:150px;
+}
+.map-container .map-title{font-size:0.4rem;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:2px;margin-bottom:0.2rem}
+.map-container .map-canvas{
+  width:100%;
+  height:120px;
+  background:radial-gradient(ellipse at 30% 40%, rgba(109,179,63,0.04), transparent 70%);
+  border-radius:4px;
+  border:1px solid rgba(26,42,14,0.3);
   position:relative;
+  overflow:hidden;
 }
-.cmd-header .logo{
-  font-size:2.5rem;
-  display:block;
-  margin-bottom:0.2rem;
-  filter:drop-shadow(0 0 20px rgba(109,179,63,0.2));
-}
-.cmd-header h1{
-  color:var(--text-primary);
-  font-size:1.2rem;
-  letter-spacing:4px;
-  font-weight:700;
-}
-.cmd-header h1 span{
-  color:var(--neon-green);
-  text-shadow:0 0 20px rgba(109,179,63,0.3);
-}
-.cmd-header .sub{
-  color:var(--text-secondary);
-  font-size:0.5rem;
-  letter-spacing:3px;
-  font-family:var(--font-mono);
-  margin-top:0.1rem;
-}
-.cmd-header .status-bar{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:0.8rem;
-  margin-top:0.4rem;
-  flex-wrap:wrap;
-}
-.cmd-header .status-bar .status-item{
-  display:flex;
-  align-items:center;
-  gap:0.3rem;
-  font-size:0.5rem;
-  color:var(--text-secondary);
-  font-family:var(--font-mono);
-}
-.cmd-header .status-bar .status-item .dot{
+.map-container .map-canvas .point{
+  position:absolute;
   width:5px;
   height:5px;
   border-radius:50%;
-  display:inline-block;
-  animation:blink 1.5s infinite;
+  background:var(--neon-green);
+  box-shadow:0 0 12px var(--neon-green);
+  animation:pulse 2s ease-in-out infinite;
 }
-.cmd-header .status-bar .status-item .dot.green{background:var(--neon-green);box-shadow:0 0 8px var(--neon-green);}
-.cmd-header .status-bar .status-item .dot.gold{background:var(--gold);box-shadow:0 0 8px var(--gold);}
-.cmd-header .status-bar .status-item .dot.red{background:#c0392b;box-shadow:0 0 8px #c0392b;}
-
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-
-/* ===== بخش امنیت ===== */
-#securityPage .input-group{margin-bottom:0.6rem;position:relative;z-index:2}
-#securityPage .input-group label{
-  color:var(--text-secondary);
-  font-size:0.55rem;
-  display:block;
-  margin-bottom:0.1rem;
-  letter-spacing:2px;
-  font-weight:600;
-}
-#securityPage .input-group input{
-  width:100%;
-  padding:0.4rem 0.7rem;
-  background:rgba(13,20,8,0.8);
-  border:1.5px solid rgba(42,61,26,0.6);
-  border-radius:8px;
-  color:var(--text-primary);
-  font-size:0.8rem;
-  outline:none;
-  text-align:center;
-  transition:all 0.3s ease;
-  font-family:var(--font-mono);
-}
-#securityPage .input-group input:focus{
-  border-color:var(--neon-green);
-  box-shadow:0 0 20px rgba(109,179,63,0.1), inset 0 0 20px rgba(109,179,63,0.05);
-}
-#securityPage .btn-cmd{
-  width:100%;
-  padding:0.6rem;
-  background:linear-gradient(135deg, #2a4a12, #1a3a0a);
-  border:1px solid var(--neon-green);
-  border-radius:10px;
-  color:#e8f5cc;
-  font-weight:700;
-  font-size:0.85rem;
-  cursor:pointer;
-  letter-spacing:3px;
-  transition:all 0.3s ease;
-  position:relative;
-  overflow:hidden;
-  margin-top:0.2rem;
-}
-#securityPage .btn-cmd:hover{
-  background:linear-gradient(135deg, #3a6a1a, #2a4a12);
-  box-shadow:0 0 40px rgba(109,179,63,0.15);
-  transform:scale(1.01);
-}
-#securityPage .btn-cmd::after{
-  content:'';
+.map-container .map-canvas .point:nth-child(1){top:15%;left:25%;animation-delay:0s}
+.map-container .map-canvas .point:nth-child(2){top:45%;left:55%;animation-delay:0.6s}
+.map-container .map-canvas .point:nth-child(3){top:65%;left:20%;animation-delay:1.2s}
+.map-container .map-canvas .point:nth-child(4){top:25%;left:70%;animation-delay:0.3s}
+.map-container .map-canvas .point:nth-child(5){top:75%;left:45%;animation-delay:0.9s}
+@keyframes pulse{0%,100%{opacity:0.4;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
+.map-container .map-canvas .line{
   position:absolute;
-  inset:0;
-  background:linear-gradient(90deg, transparent, rgba(109,179,63,0.1), transparent);
-  transform:translateX(-100%);
-  animation:shimmer 3s infinite;
-}
-@keyframes shimmer{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(100%)}
-}
-#securityPage .error{color:#c0392b;font-size:0.6rem;text-align:center;margin-top:0.2rem;min-height:1rem}
-.security-badge{
-  text-align:center;
-  margin-top:0.6rem;
-  border-top:1px solid rgba(42,61,26,0.3);
-  padding-top:0.5rem;
-}
-.security-badge span{
-  color:var(--text-secondary);
-  font-size:0.4rem;
-  letter-spacing:2px;
-  font-family:var(--font-mono);
-}
-
-/* ===== آپلود کارت ===== */
-.upload-area{
-  background:rgba(13,20,8,0.6);
-  border:1.5px dashed rgba(200,160,0,0.3);
-  border-radius:12px;
-  padding:1rem;
-  margin-bottom:0.8rem;
-  text-align:center;
-  transition:all 0.3s ease;
-  position:relative;
-  z-index:2;
-}
-.upload-area:hover{
-  border-color:rgba(200,160,0,0.6);
-  box-shadow:0 0 30px rgba(200,160,0,0.05);
-}
-.upload-area .icon{font-size:2.5rem;opacity:0.5}
-.upload-area .title{color:var(--gold);font-size:0.7rem;letter-spacing:2px;font-weight:700}
-.upload-area .sub{color:var(--text-secondary);font-size:0.45rem}
-.upload-area input[type="file"]{display:none}
-.upload-area .btn-upload{
-  background:var(--gold);
-  border:none;
-  border-radius:6px;
-  color:#1a1000;
-  padding:0.3rem 1.2rem;
-  font-size:0.65rem;
-  font-weight:700;
-  cursor:pointer;
-  margin-top:0.3rem;
-  transition:all 0.3s ease;
-}
-.upload-area .btn-upload:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(200,160,0,0.2)}
-.upload-area .preview{display:none;margin-top:0.4rem;padding:0.2rem;background:rgba(10,14,8,0.6);border-radius:6px;border:1px solid rgba(42,61,26,0.3)}
-.upload-area .preview img{max-width:100%;max-height:80px;border-radius:4px}
-.upload-area .preview .file-name{color:var(--text-primary);font-size:0.5rem}
-.upload-area .preview .card-info{color:var(--neon-green);font-size:0.45rem}
-
-/* ===== داشبورد ===== */
-#dashboardPage{display:none;animation:fadeIn 0.6s ease;position:relative;z-index:2}
-
-.dash-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid rgba(42,61,26,0.3);
-  padding-bottom:0.4rem;
-  margin-bottom:0.8rem;
-  flex-wrap:wrap;
-  gap:0.3rem;
-}
-.dash-header .title{
-  color:var(--neon-green);
-  font-size:0.75rem;
-  letter-spacing:2px;
-  font-weight:700;
-}
-.dash-header .title i{margin-left:0.2rem;color:var(--gold)}
-.dash-header .unit{color:var(--text-secondary);font-size:0.5rem;letter-spacing:1px}
-.dash-header .logout{
-  background:none;
-  border:1px solid rgba(192,57,43,0.4);
-  color:#c0392b;
-  padding:0.15rem 0.6rem;
-  border-radius:4px;
-  cursor:pointer;
-  font-size:0.5rem;
-  transition:all 0.3s ease;
-}
-.dash-header .logout:hover{background:rgba(192,57,43,0.1);border-color:#c0392b}
-
-/* ===== مانیتور هوشمند ===== */
-.monitor{
-  background:rgba(10,14,8,0.9);
-  border:1.5px solid rgba(42,61,26,0.4);
-  border-radius:12px;
-  padding:0.5rem;
-  margin-bottom:0.8rem;
-  position:relative;
-  overflow:hidden;
-  box-shadow:inset 0 0 40px rgba(0,0,0,0.5), 0 0 30px rgba(74,124,32,0.05);
-}
-.monitor::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:12px;
-  padding:1px;
-  background:linear-gradient(135deg, rgba(109,179,63,0.1), transparent 50%, rgba(109,179,63,0.05));
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.monitor .monitor-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0.2rem 0.5rem;
-  border-bottom:1px solid rgba(42,61,26,0.2);
-  margin-bottom:0.3rem;
-}
-.monitor .monitor-header .brand{
-  color:var(--neon-green);
-  font-size:0.45rem;
-  font-family:var(--font-mono);
-  letter-spacing:2px;
-}
-.monitor .monitor-header .brand i{margin-left:0.2rem}
-.monitor .monitor-header .leds{display:flex;gap:0.3rem}
-.monitor .monitor-header .leds span{
-  width:6px;
-  height:6px;
+  border:1px solid rgba(109,179,63,0.04);
   border-radius:50%;
-  display:inline-block;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:55%;
+  height:55%;
+  animation:rotate 25s linear infinite;
 }
-.monitor .monitor-header .leds .red{background:#c0392b;box-shadow:0 0 6px #c0392b;animation:blink 1.2s infinite}
-.monitor .monitor-header .leds .green{background:var(--neon-green);box-shadow:0 0 6px var(--neon-green);animation:blink 2s infinite}
-.monitor .monitor-header .leds .gold{background:var(--gold);box-shadow:0 0 6px var(--gold);animation:blink 1.8s infinite}
+@keyframes rotate{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
 
-.monitor .monitor-screen{
-  padding:0.3rem;
-  position:relative;
-  border-radius:6px;
-  background:rgba(8,12,6,0.5);
-}
-.monitor .monitor-screen .scan-line-m{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(109,179,63,0.04) 2px, rgba(109,179,63,0.04) 4px);
-  border-radius:6px;
-}
-
-.monitor-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0.3rem;
-  position:relative;
-  z-index:1;
-}
-.monitor-item{
-  background:rgba(8,12,6,0.6);
-  border:1px solid rgba(42,61,26,0.2);
-  border-radius:6px;
-  padding:0.3rem 0.2rem;
-  text-align:center;
-  transition:all 0.3s ease;
-}
-.monitor-item:hover{
-  border-color:rgba(109,179,63,0.3);
-  box-shadow:0 0 20px rgba(109,179,63,0.05);
-}
-.monitor-item .icon{font-size:0.8rem;color:var(--gold)}
-.monitor-item .num{
-  font-size:0.95rem;
-  font-weight:900;
-  color:var(--text-primary);
-  line-height:1.2;
-  font-family:var(--font-mono);
-}
-.monitor-item .label{color:var(--text-secondary);font-size:0.35rem;letter-spacing:1px}
-.monitor-item .sub-label{color:rgba(74,106,42,0.6);font-size:0.3rem;letter-spacing:0.5px}
-
-/* ===== لیست‌ها ===== */
-.user-list, .padafand-list{
-  background:rgba(13,20,8,0.6);
-  border:1px solid rgba(42,61,26,0.2);
-  border-radius:8px;
-  padding:0.3rem;
-  margin-bottom:0.5rem;
-  max-height:80px;
-  overflow-y:auto;
-}
-.user-list::-webkit-scrollbar, .padafand-list::-webkit-scrollbar{width:3px}
-.user-list::-webkit-scrollbar-track, .padafand-list::-webkit-scrollbar-track{background:rgba(13,20,8,0.3)}
-.user-list::-webkit-scrollbar-thumb, .padafand-list::-webkit-scrollbar-thumb{background:var(--neon-green);border-radius:3px}
-
-.user-item{
+.radar-container{
+  background:var(--bg-card);
+  border:1px solid var(--border-military);
+  border-radius:4px;
+  padding:0.4rem;
   display:flex;
-  justify-content:space-between;
+  flex-direction:column;
   align-items:center;
-  padding:0.1rem 0.3rem;
-  border-bottom:1px solid rgba(42,61,26,0.1);
-  font-size:0.55rem;
-  color:var(--text-primary);
+  justify-content:center;
+  min-height:150px;
 }
-.user-item .phone{color:var(--neon-green);font-size:0.45rem;direction:ltr;font-family:var(--font-mono)}
-.user-item .fullname{color:var(--gold);font-size:0.5rem;font-weight:700}
-
-.padafand-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0.1rem 0.3rem;
-  border-bottom:1px solid rgba(42,61,26,0.1);
-  font-size:0.5rem;
-  color:var(--text-primary);
-  flex-wrap:wrap;
-  gap:0.1rem;
-}
-.padafand-item .count{color:var(--neon-green);font-size:0.45rem;font-weight:700}
-.padafand-item .time{color:var(--text-secondary);font-size:0.35rem;font-family:var(--font-mono)}
-.padafand-item .del-btn{
-  background:rgba(192,57,43,0.3);
-  border:1px solid rgba(192,57,43,0.3);
-  color:#c0392b;
-  padding:0.05rem 0.4rem;
-  border-radius:3px;
-  cursor:pointer;
-  font-size:0.4rem;
-  transition:all 0.3s ease;
-}
-.padafand-item .del-btn:hover{background:rgba(192,57,43,0.5)}
-.padafand-item .sender-name{color:var(--text-primary);font-size:0.45rem}
-
-/* ===== دکمه آیین‌نامه ===== */
-.rule-btn{
-  width:100%;
-  padding:0.35rem;
-  background:linear-gradient(135deg, rgba(200,160,0,0.1), rgba(200,160,0,0.05));
-  border:1px solid rgba(200,160,0,0.3);
-  border-radius:8px;
-  color:var(--gold);
-  font-size:0.6rem;
-  font-weight:700;
-  cursor:pointer;
-  letter-spacing:2px;
-  transition:all 0.3s ease;
-  margin-bottom:0.4rem;
-}
-.rule-btn:hover{
-  background:rgba(200,160,0,0.15);
-  border-color:var(--gold);
-  box-shadow:0 0 30px rgba(200,160,0,0.05);
-}
-.rule-box{
-  display:none;
-  background:rgba(13,20,8,0.8);
-  border:1px solid rgba(200,160,0,0.2);
-  border-radius:8px;
-  padding:0.5rem;
-  margin-bottom:0.4rem;
-  max-height:180px;
-  overflow-y:auto;
-  font-size:0.5rem;
-  color:var(--text-primary);
-  line-height:1.8;
-}
-.rule-box.show{display:block}
-.rule-box .rule-title{
-  color:var(--gold);
-  font-weight:700;
-  font-size:0.6rem;
-  border-bottom:1px solid rgba(42,61,26,0.2);
-  padding-bottom:0.2rem;
-  margin-bottom:0.3rem;
-}
-.rule-box p{padding:0.1rem 0;border-bottom:1px solid rgba(42,61,26,0.05)}
-.rule-box .rule-num{color:var(--neon-green);font-weight:700;margin-left:0.2rem}
-
-/* ===== فرم پرتاب موشک (لانچر) ===== */
-.form-section{
-  background:rgba(13,20,8,0.6);
-  border:1px solid rgba(42,61,26,0.3);
-  border-radius:12px;
-  padding:0.6rem;
-  border-right:3px solid var(--gold);
+.radar-container .radar-title{font-size:0.4rem;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:2px;margin-bottom:0.2rem}
+.radar{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  border:1.5px solid rgba(109,179,63,0.1);
   position:relative;
-  overflow:hidden;
+  background:radial-gradient(circle, rgba(12,18,8,0.9) 0%, transparent 70%);
 }
-.form-section::before{
-  content:'';
+.radar .sweep{
   position:absolute;
   top:0;
   right:0;
-  width:100%;
-  height:2px;
-  background:linear-gradient(90deg, transparent, var(--gold), transparent);
-  animation:shimmerGold 3s infinite;
+  width:50%;
+  height:50%;
+  border-radius:50% 0 0 0;
+  border-top:1.5px solid rgba(109,179,63,0.15);
+  border-right:1.5px solid rgba(109,179,63,0.15);
+  animation:sweep 4s linear infinite;
+  transform-origin:100% 100%;
 }
-@keyframes shimmerGold{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(100%)}
-}
-
-.form-section .form-title{
-  display:flex;
-  align-items:center;
-  gap:0.4rem;
-  margin-bottom:0.2rem;
-}
-.form-section .form-title span{color:var(--gold);font-weight:700;font-size:0.65rem;letter-spacing:1px}
-.form-section .form-title .sub{color:var(--text-secondary);font-size:0.35rem;margin-right:auto;font-family:var(--font-mono)}
-
-.form-section input, .form-section textarea, .form-section select{
-  width:100%;
-  padding:0.3rem 0.5rem;
-  background:rgba(8,12,6,0.6);
-  border:1.5px solid rgba(42,61,26,0.3);
-  border-radius:6px;
-  color:var(--text-primary);
-  font-size:0.65rem;
-  outline:none;
-  font-family:inherit;
-  margin-bottom:0.15rem;
-  transition:all 0.3s ease;
-}
-.form-section input:focus, .form-section textarea:focus, .form-section select:focus{
-  border-color:var(--neon-green);
-  box-shadow:0 0 20px rgba(109,179,63,0.05);
-}
-.form-section textarea{resize:vertical;min-height:35px}
-.form-section .row{display:grid;grid-template-columns:1fr 1fr;gap:0.15rem}
-
-/* ===== دکمه پرتاب (موشکی) ===== */
-.btn-fire{
-  width:100%;
-  padding:0.5rem;
-  background:linear-gradient(135deg, #c8a000, #a08000);
-  border:none;
-  border-radius:8px;
-  color:#1a1000;
-  font-weight:700;
-  font-size:0.8rem;
-  cursor:pointer;
-  letter-spacing:3px;
-  transition:all 0.3s ease;
-  position:relative;
-  overflow:hidden;
-  margin-top:0.15rem;
-  box-shadow:0 0 30px rgba(200,160,0,0.1);
-}
-.btn-fire:hover{
-  transform:scale(1.02);
-  box-shadow:0 0 50px rgba(200,160,0,0.2);
-}
-.btn-fire:active{
-  transform:scale(0.98);
-}
-.btn-fire::after{
-  content:'🚀';
+@keyframes sweep{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.radar .center{
   position:absolute;
-  left:10px;
   top:50%;
-  transform:translateY(-50%);
-  font-size:1rem;
-  animation:rocketFloat 2s ease-in-out infinite;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:var(--neon-green);
+  box-shadow:0 0 12px var(--neon-green);
 }
-@keyframes rocketFloat{
-  0%,100%{transform:translateY(-50%) translateX(0)}
-  50%{transform:translateY(-60%) translateX(-5px)}
+.radar .rpoint{
+  position:absolute;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:var(--gold);
+  animation:pulse 1.8s infinite;
 }
-.btn-fire .fire-text{margin-left:1.5rem}
+.radar .rpoint:nth-child(3){top:10%;right:20%;animation-delay:0s}
+.radar .rpoint:nth-child(4){top:40%;right:55%;animation-delay:0.5s}
+.radar .rpoint:nth-child(5){top:65%;right:25%;animation-delay:1s}
+.radar .rpoint:nth-child(6){top:30%;right:75%;animation-delay:0.3s}
+.radar .ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(109,179,63,0.04);
+}
+.radar .ring:nth-child(7){width:60%;height:60%;top:20%;right:20%}
+.radar .ring:nth-child(8){width:80%;height:80%;top:10%;right:10%}
 
-.form-section .msg{
-  color:var(--neon-green);
+.members-section{
+  background:var(--bg-card);
+  border:1px solid var(--border-military);
+  border-radius:4px;
+  padding:0.4rem 0.5rem;
+  margin-top:0.4rem;
+}
+.members-section .members-title{font-size:0.45rem;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:2px}
+.members-section .members-title span{color:var(--gold)}
+.member-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.1rem 0.2rem;
+  border-bottom:1px solid rgba(26,42,14,0.15);
   font-size:0.5rem;
-  text-align:center;
-  min-height:0.7rem;
-  font-family:var(--font-mono);
 }
+.member-item .mname{color:var(--text-primary)}
+.member-item .mrole{color:var(--gold);font-size:0.4rem}
+.member-item .mstatus{font-size:0.3rem;color:var(--neon-green)}
 
-/* ===== ریسپانسیو ===== */
-@media(max-width:450px){
-  .cmd-box{padding:1rem 0.6rem}
-  .monitor-grid{grid-template-columns:1fr 1fr}
-  .cmd-header h1{font-size:1rem}
-  .form-section .row{grid-template-columns:1fr}
+.hamburger{display:none;position:fixed;top:8px;right:8px;z-index:200;background:var(--bg-secondary);border:1px solid var(--border-military);color:var(--text-primary);padding:0.2rem 0.5rem;border-radius:4px;font-size:1rem;cursor:pointer}
+@media(max-width:768px){
+  .sidebar{transform:translateX(100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-right:0}
+  .map-radar{grid-template-columns:1fr}
+  .hamburger{display:block}
 }
-@keyframes fadeIn{from{opacity:0;transform:scale(0.98)}to{opacity:1;transform:scale(1)}}
+@media(max-width:400px){.stats-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
-<!-- ===== المان‌های پس‌زمینه ===== -->
-<div class="scan-line"></div>
-<div class="radar-bg"></div>
-<div class="hex-bg"></div>
+<button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-<div class="cmd-container">
-<div class="cmd-box">
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <span class="icon">🎖️</span>
+    <h2>پدافند <span>شبهات</span></h2>
+    <div class="sub">مرکز فرماندهی</div>
+  </div>
+  <nav>
+    <div class="nav-item active" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i> داشبورد</div>
+    <div class="nav-item" onclick="switchTab('members')"><i class="fas fa-users"></i> کاربران</div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" onclick="switchTab('rules')"><i class="fas fa-scroll"></i> آیین‌نامه</div>
+    <div class="nav-item" onclick="window.location.href='./index.html'"><i class="fas fa-home"></i> بازگشت</div>
+  </nav>
+  <div class="user-card">
+    <span class="avatar" id="sideAvatar">👤</span>
+    <div class="name" id="sideName">فرمانده</div>
+    <div class="role" id="sideRole">شورای فرماندهی</div>
+  </div>
+</aside>
 
-  <!-- ===== هدر ===== -->
-  <div class="cmd-header">
-    <span class="logo">🎖️</span>
-    <h1>مرکز فرماندهی <span>پدافند</span></h1>
-    <div class="sub">══ سامانهٔ دسترسی سطح یک ══</div>
-    <div class="status-bar">
-      <span class="status-item"><span class="dot green"></span> سیستم فعال</span>
-      <span class="status-item"><span class="dot gold"></span> سطح عملیات: ۳</span>
-      <span class="status-item"><span class="dot red"></span> امنیت: بالا</span>
-    </div>
+<main class="main">
+  <div class="top-bar">
+    <div><div class="title" id="pageTitle"><i class="fas fa-chart-pie"></i> داشبورد <span class="sub">مرکز عملیات</span></div></div>
+    <div class="info"><span class="dot"></span><span id="timeDisplay">--:--</span><span id="dateDisplay">--</span></div>
   </div>
 
-  <!-- ===== صفحه امنیت ===== -->
-  <div id="securityPage">
-    <div class="upload-area">
-      <div class="icon">🪪</div>
-      <div class="title">ارائه کارت شناسایی</div>
-      <div class="sub">عکس کارت خود را آپلود کنید</div>
-      <input type="file" id="cardUpload" accept="image/*">
-      <button class="btn-upload" onclick="document.getElementById('cardUpload').click()">📤 انتخاب عکس</button>
-      <div class="preview" id="previewContainer">
-        <img id="previewImage" src="#" alt="پیش‌نمایش کارت">
-        <div class="file-name" id="fileName">—</div>
-        <div class="card-info" id="cardInfo"></div>
-      </div>
+  <div id="tab-dashboard" class="tab-content">
+    <div class="stats-grid">
+      <div class="stat-card"><span class="icon">📊</span><div class="num" id="statPosts">0</div><div class="label">مطالب</div></div>
+      <div class="stat-card"><span class="icon">👥</span><div class="num" id="statUsers">0</div><div class="label">کاربران</div></div>
+      <div class="stat-card"><span class="icon">📅</span><div class="num" id="statToday">0</div><div class="label">امروز</div></div>
+      <div class="stat-card"><span class="icon">🌐</span><div class="num" id="statChannels">3</div><div class="label">شبکه‌ها</div></div>
     </div>
 
-    <div class="input-group">
-      <label>واحد عملیاتی (دقیقاً تایپ کنید)</label>
-      <input type="text" id="cmdUnit" placeholder="شورای فرماندهی یا اطلاعات عملیات">
-    </div>
-
-    <button class="btn-cmd" id="cmdBtn" onclick="checkAccess()">🔓 تأیید هویت</button>
-    <div class="error" id="cmdError"></div>
-    <div class="security-badge">
-      <span>● امنیت سطح یک • ورود با کارت شناسایی</span>
-    </div>
-  </div>
-
-  <!-- ===== داشبورد ===== -->
-  <div id="dashboardPage">
-    <div class="dash-header">
-      <div>
-        <div class="title"><i class="fas fa-shield-alt"></i> اتاق فرماندهی</div>
-        <div class="unit">واحد: <span id="dashUnit">—</span> | کاربر: <span id="dashUser">—</span></div>
-      </div>
-      <button class="logout" onclick="logoutCmd()">🚪 خروج</button>
-    </div>
-
-    <!-- ===== مانیتور ===== -->
-    <div class="monitor">
-      <div class="monitor-header">
-        <span class="brand"><i class="fas fa-desktop"></i> PADAFAND-CMD</span>
-        <div class="leds">
-          <span class="red"></span>
-          <span class="green"></span>
-          <span class="gold"></span>
+    <div class="map-radar">
+      <div class="map-container">
+        <div class="map-title">🌍 نقشه فعالیت‌ها</div>
+        <div class="map-canvas">
+          <div class="point"></div><div class="point"></div><div class="point"></div><div class="point"></div><div class="point"></div>
+          <div class="line"></div>
         </div>
       </div>
-      <div class="monitor-screen">
-        <div class="scan-line-m"></div>
-        <div class="monitor-grid">
-          <div class="monitor-item">
-            <div class="icon"><i class="fas fa-file-alt"></i></div>
-            <div class="num" id="statPosts">0</div>
-            <div class="label">شبهه پاسخ داده شد</div>
-          </div>
-          <div class="monitor-item">
-            <div class="icon"><i class="fas fa-tags"></i></div>
-            <div class="num" id="statCats">0</div>
-            <div class="label">دسته‌بندی</div>
-          </div>
-          <div class="monitor-item">
-            <div class="icon"><i class="fas fa-users"></i></div>
-            <div class="num" id="statUsers">0</div>
-            <div class="label">کاربران ثبت‌نام‌شده</div>
-          </div>
-          <div class="monitor-item">
-            <div class="icon"><i class="fas fa-calendar-day"></i></div>
-            <div class="num" id="statToday">0</div>
-            <div class="label">مطلب امروز</div>
-          </div>
+      <div class="radar-container">
+        <div class="radar-title">📡 رادار</div>
+        <div class="radar">
+          <div class="sweep"></div><div class="center"></div>
+          <div class="rpoint"></div><div class="rpoint"></div><div class="rpoint"></div><div class="rpoint"></div>
+          <div class="ring"></div><div class="ring"></div>
         </div>
       </div>
     </div>
 
-    <!-- ===== آیین‌نامه ===== -->
-    <button class="rule-btn" onclick="toggleRule()"><i class="fas fa-scroll"></i> آیین‌نامه پدافند شبهات</button>
-    <div class="rule-box" id="ruleBox">
-      <div class="rule-title">📋 آیین‌نامه کانال «پدافند شبهات» (۱۳ بند)</div>
-      <p><span class="rule-num">۱.</span> کانال با هدف پاسخگویی مستند و به‌روز به شبهات دینی، اعتقادی و سیاسی فعالیت می‌کند.</p>
-      <p><span class="rule-num">۲.</span> لحن رسمی، روان و غیرخطابی با رعایت احترام به همه مخاطبان.</p>
-      <p><span class="rule-num">۳.</span> هر مطلب شامل: شبهه، پاسخ، نویسنده، منبع و هشتگ است.</p>
-      <p><span class="rule-num">۴.</span> انتشار مطالب حداقل ۳ پست در روز با فاصله ۱ ساعت.</p>
-      <p><span class="rule-num">۵.</span> پاسخ به شبهات دریافتی حداکثر ۴۸ ساعت.</p>
-      <p><span class="rule-num">۶.</span> استفاده از منابع معتبر مانند قرآن، روایات و اندیشکده سعداء.</p>
-      <p><span class="rule-num">۷.</span> شورای فرماندهی متشکل از مستشاران، نظارت بر اجرای قوانین را بر عهده دارد.</p>
-      <p><span class="rule-num">۸.</span> کاربران می‌توانند با ثبت‌نام، مطالب را ذخیره و نظر بدهند.</p>
-      <p><span class="rule-num">۹.</span> مطالب ویدئویی و صوتی در صورت تأیید شورا قابل انتشار است.</p>
-      <p><span class="rule-num">۱۰.</span> هرگونه توهین یا فحش در کامنت‌ها حذف می‌شود.</p>
-      <p><span class="rule-num">۱۱.</span> اعضای تیم موظف به مطالعه کتب دفع شبهات هستند.</p>
-      <p><span class="rule-num">۱۲.</span> تغییرات آیین‌نامه با ۴ رأی مثبت فرماندهان انجام می‌شود.</p>
-      <p><span class="rule-num">۱۳.</span> این آیین‌نامه در تاریخ ۱۴۰۴/۰۴/۰۳ تصویب شده است.</p>
-      <p style="color:var(--gold);font-size:0.45rem;margin-top:0.2rem;border-top:1px solid rgba(42,61,26,0.2);padding-top:0.2rem">📅 تاریخ تصویب: ۱۴۰۴/۰۴/۰۳</p>
-    </div>
-
-    <!-- ===== لیست کاربران ===== -->
-    <div style="background:rgba(13,20,8,0.4);border:1px solid rgba(42,61,26,0.2);border-radius:8px;padding:0.2rem;margin-bottom:0.4rem">
-      <div style="display:flex;justify-content:space-between;color:var(--text-secondary);font-size:0.35rem;letter-spacing:1px;padding-bottom:0.05rem;border-bottom:1px solid rgba(42,61,26,0.1);margin-bottom:0.05rem">
-        <span>👥 کاربران ثبت‌نام‌شده</span>
-        <span>شماره تلفن</span>
-      </div>
-      <div class="user-list" id="userListContainer">
-        <div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div>
-      </div>
-    </div>
-
-    <!-- ===== لیست مطالب ارسال‌شده ===== -->
-    <div class="padafand-list">
-      <div style="display:flex;justify-content:space-between;color:var(--gold);font-size:0.35rem;letter-spacing:1px;padding-bottom:0.05rem;border-bottom:1px solid rgba(42,61,26,0.1);margin-bottom:0.05rem">
-        <span>🛡️ مطالب ارسال‌شده از فرماندهی</span>
-        <span>عملیات</span>
-      </div>
-      <div id="padafandListContainer">
-        <div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div>
-      </div>
-    </div>
-
-    <!-- ===== فرم پرتاب (لانچر) ===== -->
-    <div class="form-section">
-      <div class="form-title">
-        <span>📝 ایجاد عملیات جدید</span>
-        <span class="sub">فرم ارسال شبهه</span>
-      </div>
-      <input type="text" id="newShobe" placeholder="📌 عنوان مأموریت (شبهه)...">
-      <textarea id="newAnswer" placeholder="💡 شرح عملیات (پاسخ)..."></textarea>
-      <div class="row">
-        <input type="text" id="newSource" placeholder="📚 منبع (اختیاری)">
-        <input type="text" id="newTags" placeholder="#هشتگ1 #هشتگ2 #هشتگ3">
-      </div>
-      <select id="newCategory">
-        <option value="اعتقادی">اعتقادی</option>
-        <option value="مذهبی">مذهبی</option>
-        <option value="سیاسی">سیاسی</option>
-        <option value="اجتماعی">اجتماعی</option>
-        <option value="نظامی">نظامی</option>
-        <option value="تاریخی">تاریخی</option>
-      </select>
-      <button class="btn-fire" onclick="firePost()">
-        <span class="fire-text">🚀 شلیک مطلب</span>
-      </button>
-      <div class="msg" id="fireMsg"></div>
+    <div class="members-section">
+      <div class="members-title">👥 کاربران <span id="memberCount">0</span></div>
+      <div id="membersList"><div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.2rem">در حال بارگذاری...</div></div>
     </div>
   </div>
 
-</div>
-</div>
+  <div id="tab-members" class="tab-content" style="display:none">
+    <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.5rem">
+      <div style="display:flex;justify-content:space-between;color:var(--text-secondary);font-size:0.4rem;border-bottom:1px solid var(--border-military);padding-bottom:0.2rem">
+        <span>نام</span><span>نام کامل</span><span>نقش</span>
+      </div>
+      <div id="membersFullList"><div style="color:var(--text-secondary);font-size:0.5rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div></div>
+    </div>
+  </div>
+
+  <div id="tab-rules" class="tab-content" style="display:none">
+    <div style="background:var(--bg-card);border:1px solid rgba(184,152,10,0.1);border-radius:4px;padding:0.6rem;max-height:60vh;overflow-y:auto">
+      <div style="color:var(--gold);font-size:0.65rem;font-weight:700;border-bottom:1px solid var(--border-military);padding-bottom:0.3rem;margin-bottom:0.4rem">📋 آیین‌نامه (۱۳ بند)</div>
+      <div style="font-size:0.5rem;color:var(--text-primary);line-height:2">
+        <p><b>۱.</b> پاسخگویی مستند به شبهات دینی، اعتقادی و سیاسی</p>
+        <p><b>۲.</b> لحن رسمی، روان و غیرخطابی</p>
+        <p><b>۳.</b> هر مطلب: شبهه، پاسخ، نویسنده، منبع و هشتگ</p>
+        <p><b>۴.</b> حداقل ۳ پست در روز با فاصله ۱ ساعت</p>
+        <p><b>۵.</b> پاسخ به شبهات حداکثر ۴۸ ساعت</p>
+        <p><b>۶.</b> استفاده از منابع معتبر مانند قرآن و روایات</p>
+        <p><b>۷.</b> شورای فرماندهی نظارت بر اجرای قوانین</p>
+        <p><b>۸.</b> کاربران با ثبت‌نام می‌توانند مطالب را ذخیره کنند</p>
+        <p><b>۹.</b> مطالب ویدئویی با تأیید شورا قابل انتشار</p>
+        <p><b>۱۰.</b> توهین یا فحش در کامنت‌ها حذف می‌شود</p>
+        <p><b>۱۱.</b> اعضای تیم موظف به مطالعه کتب دفع شبهات</p>
+        <p><b>۱۲.</b> تغییرات با ۴ رأی مثبت فرماندهان</p>
+        <p><b>۱۳.</b> تصویب: ۱۴۰۴/۰۴/۰۳</p>
+      </div>
+    </div>
+  </div>
+</main>
 
 <script>
 // ============================================================
-// اتصال به Supabase
+// امنیت: کلید با Base64
 // ============================================================
 const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
+const SUPABASE_KEY = atob('ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKc2RHRnVaM0poYkdsbmFIUWlMQ0oyYVdRaU9pSmxkMkZ5YkR0a2RHa3RMa1psYml3dGNtRjBkR3h0Y2pKckxDSXBhVzFpSWpveE56ZzJNekEzTWpFc0lteHZhMlJpSWpveU1URXdNRGN5TkM0eE9EQTNPVGN5T1M1d2NpSjkuXzRGZjRVREk3Mlllb1YzQWhnalBLWEtjWlFjRVRWS3N0NGNaUl9wZDBxYw==');
+
+// ============================================================
+// توابع کمکی
+// ============================================================
+function escapeHTML(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ============================================================
+// API
+// ============================================================
+async function callAPI(endpoint, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+    ...options,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      ...options.headers
+    }
+  });
+  return res;
+}
 
 async function fetchPosts() {
-    try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=*&order=id.desc`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        return await res.json() || [];
-    } catch(e) { return []; }
+  try {
+    const res = await callAPI('posts?select=*&order=id.desc');
+    return await res.json() || [];
+  } catch(e) { return []; }
 }
-
 async function fetchUsers() {
-    try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/users?select=*`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        return await res.json() || [];
-    } catch(e) { return []; }
-}
-
-async function savePost(post) {
-    try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/posts`, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(post)
-        });
-        return await res.json();
-    } catch(e) { return null; }
-}
-
-async function deletePostFromDB(id) {
-    try {
-        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${id}`, {
-            method: 'DELETE',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        return true;
-    } catch(e) { return false; }
+  try {
+    const res = await callAPI('users?select=*');
+    return await res.json() || [];
+  } catch(e) { return []; }
 }
 
 // ============================================================
-// اعضای شورای فرماندهی
-// ============================================================
-const commandMembers = {
-  "khayyatzadeh": { name: "محمد جواد خیاط زاده", code: "101", role: "شورای فرماندهی_مستشار ایتا", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456789" },
-  "motavassel": { name: "محمد باقر متوسل", code: "102", role: "شورای فرماندهی_معاون عملیات", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456788" },
-  "barzkar": { name: "محمد برزکار", code: "103", role: "شورای فرماندهی_مشاور", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456787" },
-  "saeedi": { name: "محمد مهدی سعیدی", code: "104", role: "واحد اطلاعات عملیات", rank: "سردار", unit: "واحد اطلاعات عملیات", phone: "09123456786" }
-};
-
-// ============================================================
-// تشخیص متن از روی عکس (OCR)
-// ============================================================
-async function scanCardImage(imageData) {
-    try {
-        const result = await Tesseract.recognize(imageData, 'fas', { logger: m => console.log(m) });
-        const text = result.data.text;
-        let foundKey = null;
-        for (let key in commandMembers) {
-            if (text.includes(key) || text.includes(commandMembers[key].name)) {
-                foundKey = key;
-                break;
-            }
-        }
-        if (foundKey) {
-            const member = commandMembers[foundKey];
-            document.getElementById('cardInfo').textContent = '✅ کارت شناسایی معتبر: ' + member.name;
-            document.getElementById('cardInfo').style.color = '#6db33f';
-            return member;
-        } else {
-            document.getElementById('cardInfo').textContent = '⚠️ متن روی کارت شناسایی خوانده نشد';
-            document.getElementById('cardInfo').style.color = '#c0392b';
-            return null;
-        }
-    } catch (e) {
-        document.getElementById('cardInfo').textContent = '⚠️ خطا در خواندن کارت: ' + e.message;
-        document.getElementById('cardInfo').style.color = '#c0392b';
-        return null;
-    }
-}
-
-document.getElementById('cardUpload').addEventListener('change', async function(e) {
-    const file = this.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async function(event) {
-        const preview = document.getElementById('previewContainer');
-        const img = document.getElementById('previewImage');
-        const name = document.getElementById('fileName');
-        img.src = event.target.result;
-        name.textContent = file.name;
-        preview.style.display = 'block';
-        document.getElementById('cmdError').textContent = '⏳ در حال خواندن کارت...';
-        document.getElementById('cmdError').style.color = '#c8a000';
-        
-        let member = await scanCardImage(event.target.result);
-        if (!member) {
-            const fileName = file.name.toLowerCase();
-            for (let key in commandMembers) {
-                if (fileName.includes(key.toLowerCase())) {
-                    member = commandMembers[key];
-                    document.getElementById('cardInfo').textContent = '✅ کارت شناسایی (از روی اسم فایل): ' + member.name;
-                    document.getElementById('cardInfo').style.color = '#6db33f';
-                    break;
-                }
-            }
-        }
-        if (member) {
-            uploadedCardData = member;
-            isCardVerified = true;
-            document.getElementById('cmdError').textContent = '✅ کارت خوانده شد. برای ورود کلیک کنید.';
-            document.getElementById('cmdError').style.color = '#6db33f';
-            document.getElementById('cmdBtn').classList.add('active');
-        } else {
-            uploadedCardData = null;
-            isCardVerified = false;
-            document.getElementById('cmdError').textContent = '⚠️ کارت شناسایی نامعتبر است';
-            document.getElementById('cmdError').style.color = '#c0392b';
-            document.getElementById('cmdBtn').classList.remove('active');
-        }
-    };
-    reader.readAsDataURL(file);
-});
-
-// ============================================================
-// دیتا و متغیرها
+// داده‌ها
 // ============================================================
 let allPosts = [];
 let allUsers = [];
-let currentUser = null;
-let currentUnit = '';
-let uploadedCardData = null;
-let isCardVerified = false;
+let currentTab = 'dashboard';
 
 // ============================================================
-// بارگذاری از Supabase
+// بارگذاری
 // ============================================================
 async function loadData() {
-    allPosts = await fetchPosts();
-    allUsers = await fetchUsers();
-    updateMonitor();
-    renderUsers();
-    renderSenders();
+  allPosts = await fetchPosts();
+  allUsers = await fetchUsers();
+  updateStats();
+  updateMembers();
 }
 
-function updateMonitor() {
-    document.getElementById('statPosts').textContent = allPosts.length;
-    const cats = new Set(allPosts.map(p => p.cat));
-    document.getElementById('statCats').textContent = cats.size;
-    document.getElementById('statUsers').textContent = allUsers.length;
-    const today = new Date().toLocaleDateString('fa-IR');
-    const todayPosts = allPosts.filter(p => p.date === today);
-    document.getElementById('statToday').textContent = todayPosts.length || '—';
+function updateStats() {
+  document.getElementById('statPosts').textContent = allPosts.length;
+  document.getElementById('statUsers').textContent = allUsers.length;
+  const today = new Date().toLocaleDateString('fa-IR');
+  document.getElementById('statToday').textContent = allPosts.filter(p => p.date === today).length;
+  document.getElementById('statChannels').textContent = 3;
+  document.getElementById('memberCount').textContent = allUsers.length;
 }
 
-function renderUsers() {
-    const container = document.getElementById('userListContainer');
-    if (!allUsers.length) {
-        container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">هیچ کاربری ثبت‌نام نکرده است</div>';
-        return;
-    }
-    container.innerHTML = allUsers.map(u => `
-        <div class="user-item">
-            <span>👤 <span class="fullname">${u.fullname || u.username}</span></span>
-            <span class="phone">${u.phone || '—'}</span>
-        </div>
-    `).join('');
-}
-
-function renderSenders() {
-    const container = document.getElementById('padafandListContainer');
-    const cmdPosts = allPosts.filter(p => p.sender && p.sender !== 'سیستم');
-    if (!cmdPosts.length) {
-        container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
-        return;
-    }
-    container.innerHTML = cmdPosts.map((p, index) => {
-        const actualIndex = allPosts.indexOf(p);
-        return `
-            <div class="padafand-item">
-                <span class="sender-name">🛡️ ${p.sender}</span>
-                <span class="count">${p.shobe ? p.shobe.substring(0, 18) + '...' : 'بدون عنوان'}</span>
-                <span class="time">${p.date || ''} ${p.time || ''}</span>
-                <button class="del-btn" onclick="deletePost(${actualIndex})">🗑️</button>
-            </div>
-        `;
-    }).join('');
+function updateMembers() {
+  const container = document.getElementById('membersList');
+  const fullContainer = document.getElementById('membersFullList');
+  if (!allUsers.length) {
+    container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.2rem">هیچ کاربری ثبت‌نام نکرده</div>';
+    fullContainer.innerHTML = '<div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.3rem">هیچ کاربری ثبت‌نام نکرده</div>';
+    return;
+  }
+  container.innerHTML = allUsers.slice(0, 4).map(u => `
+    <div class="member-item">
+      <span class="mname">${escapeHTML(u.fullname || u.username)}</span>
+      <span class="mrole">${escapeHTML(u.role || 'کاربر')}</span>
+      <span class="mstatus">🟢 آنلاین</span>
+    </div>
+  `).join('');
+  fullContainer.innerHTML = allUsers.map(u => `
+    <div style="display:flex;justify-content:space-between;padding:0.1rem 0.2rem;border-bottom:1px solid rgba(26,42,14,0.1);font-size:0.5rem;color:var(--text-primary)">
+      <span>${escapeHTML(u.username)}</span>
+      <span>${escapeHTML(u.fullname || '—')}</span>
+      <span style="color:var(--gold)">${escapeHTML(u.role || 'کاربر')}</span>
+    </div>
+  `).join('');
 }
 
 // ============================================================
-// حذف مطلب
+// سایدبار و تب‌ها
 // ============================================================
-async function deletePost(index) {
-    if (!currentUser) return;
-    const post = allPosts[index];
-    if (!post) return;
-    if (post.sender !== currentUser && currentUser !== 'محمد جواد خیاط زاده') {
-        alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
-        return;
-    }
-    if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
-    const success = await deletePostFromDB(post.id);
-    if (success) {
-        allPosts.splice(index, 1);
-        updateMonitor();
-        renderSenders();
-        document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت حذف شد';
-        setTimeout(() => document.getElementById('fireMsg').textContent = '', 3000);
-    }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'block';
+  document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+  const items = document.querySelectorAll('.sidebar .nav-item');
+  const map = {dashboard:0, members:1, rules:3};
+  if (map[tab] !== undefined && items[map[tab]]) items[map[tab]].classList.add('active');
+  const title = document.getElementById('pageTitle');
+  const icons = {dashboard:'fa-chart-pie', members:'fa-users', rules:'fa-scroll'};
+  const names = {dashboard:'داشبورد', members:'کاربران', rules:'آیین‌نامه'};
+  title.innerHTML = `<i class="fas ${icons[tab]}"></i> ${names[tab]} <span class="sub">مرکز عملیات</span>`;
+  if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
 }
 
 // ============================================================
-// ارسال مطلب جدید
+// زمان
 // ============================================================
-async function firePost() {
-    if (!currentUser) {
-        document.getElementById('fireMsg').textContent = '⚠️ ابتدا وارد شوید';
-        return;
-    }
-    const shobe = document.getElementById('newShobe').value.trim();
-    const answer = document.getElementById('newAnswer').value.trim();
-    if (!shobe || !answer) {
-        document.getElementById('fireMsg').textContent = '⚠️ شبهه و پاسخ را وارد کنید';
-        return;
-    }
-
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('fa-IR');
-    const dateStr = now.toLocaleDateString('fa-IR');
-
-    const newPost = {
-        shobe, answer,
-        author: currentUser,
-        source: document.getElementById('newSource').value.trim() || 'منبع معتبر',
-        tags: document.getElementById('newTags').value.trim().split(' ').filter(Boolean),
-        cat: document.getElementById('newCategory').value,
-        date: dateStr,
-        time: timeStr,
-        sender: currentUser,
-        comments: []
-    };
-
-    // انیمیشن پرتاب (شبیه‌سازی)
-    const btn = document.querySelector('.btn-fire');
-    btn.innerHTML = '⏳ در حال پرتاب...';
-    btn.style.opacity = '0.7';
-    btn.style.transform = 'scale(0.98)';
-
-    const result = await savePost(newPost);
-    
-    setTimeout(() => {
-        btn.style.opacity = '1';
-        btn.style.transform = 'scale(1)';
-        if (result && result.length > 0) {
-            allPosts.unshift(result[0]);
-            btn.innerHTML = '✅ پرتاب موفق! 🚀';
-            document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
-            ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
-            updateMonitor();
-            renderSenders();
-            setTimeout(() => {
-                btn.innerHTML = '<span class="fire-text">🚀 شلیک مطلب</span>';
-            }, 2000);
-        } else {
-            btn.innerHTML = '❌ خطا در پرتاب';
-            document.getElementById('fireMsg').textContent = '⚠️ خطا در ذخیره مطلب';
-            setTimeout(() => {
-                btn.innerHTML = '<span class="fire-text">🚀 شلیک مطلب</span>';
-            }, 2000);
-        }
-    }, 800);
-}
-
-// ============================================================
-// ورود
-// ============================================================
-function checkAccess() {
-    const unitInput = document.getElementById('cmdUnit').value.trim();
-    const validUnits = ['شورای فرماندهی', 'واحد اطلاعات عملیات'];
-    
-    if (unitInput === 'Khayyatzadeh') {
-        currentUser = 'محمد جواد خیاط زاده';
-        currentUnit = 'شورای فرماندهی';
-        document.getElementById('securityPage').style.display = 'none';
-        document.getElementById('dashboardPage').style.display = 'block';
-        document.getElementById('dashUnit').textContent = 'شورای فرماندهی';
-        document.getElementById('dashUser').textContent = 'محمد جواد خیاط زاده';
-        document.getElementById('cmdError').textContent = '';
-        loadData();
-        updateTime();
-        setInterval(updateTime, 1000);
-        return;
-    }
-    
-    if (!unitInput || !validUnits.includes(unitInput)) {
-        document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید (شورای فرماندهی یا اطلاعات عملیات)';
-        document.getElementById('cmdError').style.color = '#c0392b';
-        return;
-    }
-    if (!isCardVerified || !uploadedCardData) {
-        document.getElementById('cmdError').textContent = '⚠️ لطفاً عکس کارت شناسایی معتبر آپلود کنید';
-        document.getElementById('cmdError').style.color = '#c0392b';
-        return;
-    }
-    if (unitInput === 'شورای فرماندهی' && !uploadedCardData.role.includes('شورای فرماندهی')) {
-        document.getElementById('cmdError').textContent = '⛔ این کارت برای شورای فرماندهی مجاز نیست';
-        document.getElementById('cmdError').style.color = '#c0392b';
-        return;
-    }
-    if (unitInput === 'واحد اطلاعات عملیات' && !uploadedCardData.role.includes('اطلاعات عملیات')) {
-        document.getElementById('cmdError').textContent = '⛔ این کارت برای واحد اطلاعات عملیات مجاز نیست';
-        document.getElementById('cmdError').style.color = '#c0392b';
-        return;
-    }
-    
-    currentUser = uploadedCardData.name;
-    currentUnit = unitInput;
-    document.getElementById('securityPage').style.display = 'none';
-    document.getElementById('dashboardPage').style.display = 'block';
-    document.getElementById('dashUnit').textContent = unitInput;
-    document.getElementById('dashUser').textContent = uploadedCardData.name;
-    document.getElementById('cmdError').textContent = '';
-    loadData();
-    updateTime();
-    setInterval(updateTime, 1000);
-}
-
-function logoutCmd() {
-    currentUser = null;
-    currentUnit = null;
-    uploadedCardData = null;
-    isCardVerified = false;
-    document.getElementById('securityPage').style.display = 'block';
-    document.getElementById('dashboardPage').style.display = 'none';
-    document.getElementById('cardUpload').value = '';
-    document.getElementById('previewContainer').style.display = 'none';
-    document.getElementById('cmdUnit').value = '';
-    document.getElementById('cmdError').textContent = '';
-    document.getElementById('cmdBtn').classList.remove('active');
-}
-
 function updateTime() {
-    const now = new Date();
-    document.getElementById('monitorTime').textContent = now.toLocaleTimeString('fa-IR');
+  const now = new Date();
+  document.getElementById('timeDisplay').textContent = now.toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'});
+  document.getElementById('dateDisplay').textContent = now.toLocaleDateString('fa-IR', {day:'2-digit',month:'2-digit',year:'numeric'});
 }
-
-// ============================================================
-// آیین‌نامه
-// ============================================================
-function toggleRule() {
-    document.getElementById('ruleBox').classList.toggle('show');
-}
+setInterval(updateTime, 1000);
+updateTime();
 
 // ============================================================
 // بارگذاری اولیه
 // ============================================================
 loadData();
-updateTime();
-setInterval(updateTime, 1000);
 </script>
 </body>
-  </html>
+   </html> 
