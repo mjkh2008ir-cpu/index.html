@@ -18,7 +18,6 @@
   --text-primary:#c8d8e0;
   --text-secondary:#7a9aaa;
   --font-mono:'Courier New',monospace;
-  --glass:rgba(10,16,22,0.7);
 }
 body{
   background:var(--bg-primary);
@@ -33,13 +32,60 @@ body{
 ::-webkit-scrollbar{width:4px;background:var(--bg-primary)}
 ::-webkit-scrollbar-thumb{background:var(--border-military);border-radius:2px}
 
-/* ===== SIDEBAR ===== */
+/* ===== ورود ===== */
+#securityPage{
+  position:fixed;
+  inset:0;
+  background:var(--bg-primary);
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:1rem;
+}
+#securityPage .login-box{
+  background:var(--bg-secondary);
+  border:2px solid var(--border-military);
+  border-radius:16px;
+  padding:2rem;
+  max-width:420px;
+  width:100%;
+}
+#securityPage .login-box .logo{text-align:center;font-size:2.5rem;display:block}
+#securityPage .login-box h2{color:var(--text-primary);font-size:1.1rem;text-align:center;letter-spacing:2px;margin:0.3rem 0}
+#securityPage .login-box h2 span{color:var(--neon-green)}
+#securityPage .login-box .sub{text-align:center;color:var(--text-secondary);font-size:.5rem;font-family:var(--font-mono)}
+#securityPage .login-box .upload-area{
+  background:rgba(13,20,8,0.3);
+  border:1.5px dashed rgba(184,152,10,0.2);
+  border-radius:10px;
+  padding:0.8rem;
+  text-align:center;
+  margin:0.8rem 0;
+}
+#securityPage .login-box .upload-area .icon{font-size:2rem;opacity:.5}
+#securityPage .login-box .upload-area .title{color:var(--gold);font-size:.6rem;letter-spacing:2px}
+#securityPage .login-box .upload-area input[type="file"]{display:none}
+#securityPage .login-box .upload-area .btn-upload{background:var(--gold);border:none;border-radius:4px;color:#1a1000;padding:0.2rem 1rem;font-size:.6rem;font-weight:700;cursor:pointer;margin-top:0.2rem}
+#securityPage .login-box .upload-area .preview{display:none;margin-top:0.3rem}
+#securityPage .login-box .upload-area .preview img{max-width:100%;max-height:60px;border-radius:4px}
+#securityPage .login-box .input-group{margin-bottom:0.5rem}
+#securityPage .login-box .input-group label{color:var(--text-secondary);font-size:.5rem;display:block;letter-spacing:2px;margin-bottom:0.1rem}
+#securityPage .login-box .input-group input{width:100%;padding:0.3rem 0.6rem;background:rgba(8,12,16,0.5);border:1.5px solid var(--border-military);border-radius:6px;color:var(--text-primary);font-size:.75rem;outline:none;text-align:center}
+#securityPage .login-box .input-group input:focus{border-color:var(--neon-green)}
+#securityPage .login-box .btn-cmd{width:100%;padding:0.4rem;background:linear-gradient(135deg,#2a4a5a,#1a3a4a);border:1px solid var(--neon-green);border-radius:8px;color:#e8f5cc;font-weight:700;font-size:.8rem;cursor:pointer;letter-spacing:3px;transition:.3s}
+#securityPage .login-box .btn-cmd:hover{background:linear-gradient(135deg,#3a5a6a,#2a4a5a)}
+#securityPage .login-box .error{color:#c0392b;font-size:.55rem;text-align:center;margin-top:0.2rem;min-height:1rem}
+#securityPage .login-box .badge{text-align:center;margin-top:0.5rem;border-top:1px solid var(--border-military);padding-top:0.4rem}
+#securityPage .login-box .badge span{color:var(--text-secondary);font-size:.35rem;letter-spacing:2px;font-family:var(--font-mono)}
+
+/* ===== سایدبار ===== */
 .sidebar{
   width:200px;
   height:100vh;
   background:var(--bg-secondary);
   border-left:1px solid var(--border-military);
-  padding:1rem 0.5rem;
+  padding:0.8rem 0.4rem;
   position:fixed;
   top:0;
   right:0;
@@ -48,69 +94,54 @@ body{
   overflow-y:auto;
   transition:all 0.3s ease;
 }
-.sidebar .logo-area{
-  text-align:center;
-  border-bottom:1px solid var(--border-military);
-  padding-bottom:0.6rem;
-  margin-bottom:0.6rem;
-}
+.sidebar .logo-area{text-align:center;border-bottom:1px solid var(--border-military);padding-bottom:0.5rem;margin-bottom:0.5rem}
 .sidebar .logo-area .icon{font-size:1.8rem;display:block;color:var(--gold)}
-.sidebar .logo-area h2{font-size:0.8rem;letter-spacing:2px;font-weight:700}
+.sidebar .logo-area h2{font-size:0.75rem;letter-spacing:2px;font-weight:700}
 .sidebar .logo-area h2 span{color:var(--neon-green)}
-.sidebar .logo-area .sub{font-size:0.4rem;color:var(--text-secondary);letter-spacing:1px;font-family:var(--font-mono)}
+.sidebar .logo-area .sub{font-size:0.35rem;color:var(--text-secondary);letter-spacing:1px;font-family:var(--font-mono)}
 .sidebar .nav-item{
   display:flex;
   align-items:center;
-  gap:0.4rem;
-  padding:0.3rem 0.5rem;
+  gap:0.3rem;
+  padding:0.25rem 0.4rem;
   border-radius:4px;
   color:var(--text-secondary);
-  font-size:0.6rem;
+  font-size:0.55rem;
   font-weight:600;
   cursor:pointer;
   transition:all 0.2s ease;
   border-right:2px solid transparent;
-  margin-bottom:0.1rem;
 }
 .sidebar .nav-item:hover{background:rgba(74,138,170,0.04);color:var(--text-primary)}
 .sidebar .nav-item.active{background:rgba(74,138,170,0.06);color:var(--neon-green);border-right-color:var(--neon-green)}
-.sidebar .nav-item i{width:18px;font-size:0.7rem;color:var(--gold)}
-.sidebar .nav-divider{height:1px;background:var(--border-military);margin:0.3rem 0}
-.sidebar .user-card{
-  margin-top:0.4rem;
-  padding:0.3rem;
-  border:1px solid var(--border-military);
-  border-radius:6px;
-  text-align:center;
-  background:rgba(12,18,8,0.5);
-}
-.sidebar .user-card .avatar{font-size:1.5rem;display:block}
-.sidebar .user-card .name{font-size:0.55rem;font-weight:700}
-.sidebar .user-card .role{font-size:0.4rem;color:var(--text-secondary)}
+.sidebar .nav-item i{width:16px;font-size:0.65rem;color:var(--gold)}
+.sidebar .nav-divider{height:1px;background:var(--border-military);margin:0.2rem 0}
 
-/* ===== MAIN ===== */
-.main{flex:1;margin-right:200px;padding:0.5rem 0.8rem;height:100vh;overflow-y:auto}
+/* ===== محتوای اصلی ===== */
+.main{flex:1;margin-right:200px;padding:0.4rem 0.6rem;height:100vh;overflow-y:auto}
 .top-bar{
   display:flex;
   justify-content:space-between;
   align-items:center;
   border-bottom:1px solid var(--border-military);
-  padding-bottom:0.3rem;
-  margin-bottom:0.5rem;
+  padding-bottom:0.2rem;
+  margin-bottom:0.4rem;
   flex-wrap:wrap;
-  gap:0.3rem;
+  gap:0.2rem;
 }
-.top-bar .title{font-size:0.75rem;font-weight:700;letter-spacing:1px;color:var(--neon-green)}
-.top-bar .title i{color:var(--gold);margin-left:0.3rem}
-.top-bar .title .sub{font-size:0.4rem;color:var(--text-secondary);font-weight:400;display:block}
-.top-bar .info{display:flex;gap:0.4rem;align-items:center;font-family:var(--font-mono);font-size:0.45rem;color:var(--text-secondary)}
+.top-bar .title{font-size:0.7rem;font-weight:700;letter-spacing:1px;color:var(--neon-green)}
+.top-bar .title i{color:var(--gold);margin-left:0.2rem}
+.top-bar .title .sub{font-size:0.35rem;color:var(--text-secondary);font-weight:400;display:block}
+.top-bar .info{display:flex;gap:0.3rem;align-items:center;font-family:var(--font-mono);font-size:0.4rem;color:var(--text-secondary)}
 .top-bar .info .dot{width:4px;height:4px;border-radius:50%;background:var(--neon-green);display:inline-block;animation:blink 1.5s infinite}
+.top-bar .info .theme-btn{background:none;border:1px solid var(--border-military);border-radius:4px;color:var(--text-primary);padding:0.1rem 0.3rem;cursor:pointer;font-size:0.6rem;transition:.3s}
+.top-bar .info .theme-btn:hover{border-color:var(--neon-green)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
-/* ===== DASHBOARD ===== */
+/* ===== آمار ===== */
 .stats-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
   gap:0.3rem;
   margin-bottom:0.4rem;
 }
@@ -118,202 +149,128 @@ body{
   background:var(--bg-card);
   border:1px solid var(--border-military);
   border-radius:4px;
-  padding:0.3rem 0.5rem;
+  padding:0.25rem 0.4rem;
 }
-.stat-card .num{font-size:1.1rem;font-weight:900;font-family:var(--font-mono);color:var(--text-primary)}
-.stat-card .label{font-size:0.4rem;color:var(--text-secondary);letter-spacing:1px}
-.stat-card .icon{font-size:0.7rem;color:var(--gold);float:left}
+.stat-card .num{font-size:1rem;font-weight:900;font-family:var(--font-mono);color:var(--text-primary)}
+.stat-card .label{font-size:0.35rem;color:var(--text-secondary);letter-spacing:1px}
+.stat-card .icon{font-size:0.6rem;color:var(--gold);float:left}
 
-/* ===== MONITOR ===== */
+/* ===== مانیتور ===== */
 .monitor-container{
   background:var(--bg-card);
   border:1px solid var(--border-military);
   border-radius:6px;
-  padding:0.4rem;
-  margin-bottom:0.4rem;
-  position:relative;
+  padding:0.3rem;
+  margin-bottom:0.3rem;
 }
-.monitor-container .monitor-title{
-  font-size:0.4rem;
-  color:var(--text-secondary);
-  font-family:var(--font-mono);
-  letter-spacing:2px;
-  margin-bottom:0.2rem;
-}
+.monitor-container .monitor-title{font-size:0.35rem;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:2px;margin-bottom:0.1rem}
 .monitor-screen{
   background:rgba(6,10,12,0.8);
   border:1px solid rgba(26,42,53,0.3);
   border-radius:4px;
-  padding:0.3rem;
-  min-height:140px;
+  padding:0.2rem;
+  min-height:120px;
   position:relative;
   overflow:hidden;
-}
-.monitor-screen .scan-line{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(74,138,170,0.03) 2px,rgba(74,138,170,0.03) 4px);
 }
 .monitor-grid{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
-  gap:0.2rem;
-  position:relative;
-  z-index:1;
+  gap:0.15rem;
 }
-.monitor-item{
-  background:rgba(10,16,22,0.4);
-  border:1px solid rgba(26,42,53,0.15);
-  border-radius:3px;
-  padding:0.2rem;
-  text-align:center;
-}
-.monitor-item .icon{font-size:0.7rem;color:var(--gold)}
-.monitor-item .num{font-size:0.85rem;font-weight:900;font-family:var(--font-mono)}
-.monitor-item .label{font-size:0.35rem;color:var(--text-secondary)}
-.monitor-map{
-  grid-column:1/3;
-  min-height:80px;
-  background:radial-gradient(ellipse at 30% 40%, rgba(74,138,170,0.04), transparent 70%);
-  border:1px solid rgba(26,42,53,0.1);
-  border-radius:3px;
-  position:relative;
-  overflow:hidden;
-}
-.monitor-map .point{
-  position:absolute;
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  background:var(--neon-green);
-  box-shadow:0 0 10px var(--neon-green);
-  animation:pulse 2s ease-in-out infinite;
-}
+.monitor-map{grid-column:1/3;min-height:70px;background:radial-gradient(ellipse at 30% 40%,rgba(74,138,170,0.04),transparent 70%);border:1px solid rgba(26,42,53,0.1);border-radius:3px;position:relative;overflow:hidden}
+.monitor-map .point{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--neon-green);box-shadow:0 0 10px var(--neon-green);animation:pulse 2s ease-in-out infinite}
 .monitor-map .point:nth-child(1){top:20%;left:25%;animation-delay:0s}
 .monitor-map .point:nth-child(2){top:50%;left:55%;animation-delay:0.6s}
 .monitor-map .point:nth-child(3){top:70%;left:20%;animation-delay:1.2s}
 .monitor-map .point:nth-child(4){top:30%;left:70%;animation-delay:0.3s}
 @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
-.monitor-map .line{
-  position:absolute;
-  border:1px solid rgba(74,138,170,0.04);
-  border-radius:50%;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:50%;height:50%;
-  animation:rotate 20s linear infinite;
-}
+.monitor-map .line{position:absolute;border:1px solid rgba(74,138,170,0.04);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);width:50%;height:50%;animation:rotate 20s linear infinite}
 @keyframes rotate{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
-.monitor-radar{
-  background:radial-gradient(circle, rgba(12,18,8,0.9) 0%, transparent 70%);
-  border:1px solid rgba(26,42,53,0.1);
-  border-radius:50%;
-  width:70px;
-  height:70px;
-  margin:0 auto;
-  position:relative;
-}
-.monitor-radar .sweep{
-  position:absolute;
-  top:0;right:0;
-  width:50%;height:50%;
-  border-radius:50% 0 0 0;
-  border-top:1.5px solid rgba(74,138,170,0.15);
-  border-right:1.5px solid rgba(74,138,170,0.15);
-  animation:sweep 3s linear infinite;
-  transform-origin:100% 100%;
-}
+.monitor-radar{background:radial-gradient(circle,rgba(12,18,8,0.9)0%,transparent 70%);border:1px solid rgba(26,42,53,0.1);border-radius:50%;width:65px;height:65px;margin:0 auto;position:relative}
+.monitor-radar .sweep{position:absolute;top:0;right:0;width:50%;height:50%;border-radius:50% 0 0 0;border-top:1.5px solid rgba(74,138,170,0.15);border-right:1.5px solid rgba(74,138,170,0.15);animation:sweep 3s linear infinite;transform-origin:100% 100%}
 @keyframes sweep{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.monitor-radar .center{
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:4px;height:4px;
-  border-radius:50%;
-  background:var(--neon-green);
-  box-shadow:0 0 10px var(--neon-green);
-}
-.monitor-radar .rpoint{
-  position:absolute;
-  width:3px;height:3px;
-  border-radius:50%;
-  background:var(--gold);
-  animation:pulse 1.8s infinite;
-}
+.monitor-radar .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;border-radius:50%;background:var(--neon-green);box-shadow:0 0 10px var(--neon-green)}
+.monitor-radar .rpoint{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold);animation:pulse 1.8s infinite}
 .monitor-radar .rpoint:nth-child(3){top:15%;right:25%;animation-delay:0s}
 .monitor-radar .rpoint:nth-child(4){top:45%;right:55%;animation-delay:0.5s}
 .monitor-radar .rpoint:nth-child(5){top:70%;right:30%;animation-delay:1s}
+.monitor-item{background:rgba(10,16,22,0.4);border:1px solid rgba(26,42,53,0.15);border-radius:3px;padding:0.15rem;text-align:center}
+.monitor-item .icon{font-size:0.6rem;color:var(--gold)}
+.monitor-item .num{font-size:0.75rem;font-weight:900;font-family:var(--font-mono)}
+.monitor-item .label{font-size:0.3rem;color:var(--text-secondary)}
 
-/* ===== LISTS ===== */
+/* ===== لیست‌ها ===== */
 .list-container{
   background:var(--bg-card);
   border:1px solid var(--border-military);
   border-radius:4px;
-  padding:0.3rem 0.4rem;
-  margin-bottom:0.3rem;
+  padding:0.2rem 0.3rem;
+  margin-bottom:0.2rem;
 }
-.list-container .list-title{
-  font-size:0.4rem;
-  color:var(--text-secondary);
-  font-family:var(--font-mono);
-  letter-spacing:2px;
-  margin-bottom:0.1rem;
-}
+.list-container .list-title{font-size:0.35rem;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:2px;margin-bottom:0.1rem}
 .list-item{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:0.1rem 0.2rem;
+  padding:0.08rem 0.2rem;
   border-bottom:1px solid rgba(26,42,53,0.08);
-  font-size:0.5rem;
+  font-size:0.45rem;
 }
 .list-item .name{color:var(--text-primary)}
-.list-item .role{color:var(--gold);font-size:0.4rem}
+.list-item .role{color:var(--gold);font-size:0.35rem}
 .list-item .status{font-size:0.3rem;color:var(--neon-green)}
+.list-item .del-btn{background:#c0392b;border:none;color:#fff;padding:0.05rem 0.3rem;border-radius:3px;cursor:pointer;font-size:0.35rem}
 
-/* ===== LAUNCH SECTION ===== */
+/* ===== فرم شلیک ===== */
 .launch-section{
   background:var(--bg-card);
   border:1px solid var(--border-military);
   border-radius:4px;
-  padding:0.4rem;
-  margin-top:0.3rem;
+  padding:0.3rem;
+  margin-top:0.2rem;
 }
-.launch-section .launch-title{font-size:0.5rem;font-weight:700;color:var(--neon-green);margin-bottom:0.2rem}
-.launch-section .launch-title i{color:var(--gold);margin-left:0.2rem}
+.launch-section .launch-title{font-size:0.5rem;font-weight:700;color:var(--neon-green);margin-bottom:0.15rem}
+.launch-section .launch-title i{color:var(--gold);margin-left:0.15rem}
 .launch-section input,.launch-section textarea,.launch-section select{
   width:100%;
-  padding:0.2rem 0.4rem;
+  padding:0.15rem 0.3rem;
   background:rgba(8,12,16,0.5);
   border:1px solid var(--border-military);
   border-radius:3px;
   color:var(--text-primary);
-  font-size:0.55rem;
+  font-size:0.5rem;
   outline:none;
   font-family:inherit;
-  margin-bottom:0.1rem;
+  margin-bottom:0.08rem;
 }
 .launch-section input:focus,.launch-section textarea:focus{border-color:var(--neon-green)}
-.launch-section textarea{resize:vertical;min-height:35px}
-.launch-section .row{display:grid;grid-template-columns:1fr 1fr;gap:0.1rem}
-.launch-section .btn-launch{
-  width:100%;
-  padding:0.35rem;
-  background:linear-gradient(135deg, var(--neon-green), #2a5a6a);
-  border:none;
-  border-radius:4px;
-  color:#fff;
-  font-weight:700;
-  font-size:0.65rem;
-  cursor:pointer;
-  transition:0.3s;
-  letter-spacing:1px;
-}
+.launch-section textarea{resize:vertical;min-height:30px}
+.launch-section .row{display:grid;grid-template-columns:1fr 1fr;gap:0.08rem}
+.launch-section .btn-launch{width:100%;padding:0.3rem;background:linear-gradient(135deg,var(--neon-green),#2a5a6a);border:none;border-radius:4px;color:#fff;font-weight:700;font-size:0.6rem;cursor:pointer;transition:0.3s;letter-spacing:1px}
 .launch-section .btn-launch:hover{opacity:0.85}
-.launch-section .msg{color:var(--neon-green);font-size:0.45rem;text-align:center;padding:0.1rem 0}
+.launch-section .msg{color:var(--neon-green);font-size:0.4rem;text-align:center;padding:0.05rem 0}
 
-/* ===== RESPONSIVE ===== */
+/* ===== بازی‌ها ===== */
+.games-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(80px,1fr));
+  gap:0.3rem;
+}
+.game-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-military);
+  border-radius:6px;
+  padding:0.4rem;
+  text-align:center;
+  cursor:pointer;
+  transition:.3s;
+}
+.game-card:hover{border-color:var(--neon-green);transform:translateY(-2px)}
+.game-card .icon{font-size:1.8rem;display:block}
+.game-card .name{font-size:0.5rem;color:var(--text-primary);font-weight:700}
+.game-card .desc{font-size:0.35rem;color:var(--text-secondary)}
+
 .hamburger{display:none;position:fixed;top:8px;right:8px;z-index:200;background:var(--bg-secondary);border:1px solid var(--border-military);color:var(--text-primary);padding:0.15rem 0.4rem;border-radius:4px;font-size:1rem;cursor:pointer}
 @media(max-width:768px){
   .sidebar{transform:translateX(100%)}
@@ -328,14 +285,40 @@ body{
   .monitor-grid{grid-template-columns:1fr}
   .monitor-map{grid-column:1/2}
   .launch-section .row{grid-template-columns:1fr}
+  #securityPage .login-box{padding:1rem}
 }
 </style>
 </head>
 <body>
 
-<button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<!-- ===== صفحه ورود ===== -->
+<div id="securityPage">
+  <div class="login-box">
+    <span class="logo">🎖️</span>
+    <h2>مرکز فرماندهی <span>پدافند</span></h2>
+    <div class="sub">══ سامانهٔ دسترسی سطح یک ══</div>
+    <div class="upload-area">
+      <div class="icon">🪪</div>
+      <div class="title">کارت شناسایی</div>
+      <input type="file" id="cardUpload" accept="image/*">
+      <button class="btn-upload" onclick="document.getElementById('cardUpload').click()">📤 انتخاب عکس</button>
+      <div class="preview" id="previewContainer">
+        <img id="previewImage" src="#">
+        <div class="file-name" id="fileName"></div>
+        <div class="card-info" id="cardInfo"></div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label>واحد عملیاتی</label>
+      <input type="text" id="cmdUnit" placeholder="شورای فرماندهی یا اطلاعات عملیات">
+    </div>
+    <button class="btn-cmd" onclick="checkAccess()">🔓 تأیید هویت</button>
+    <div class="error" id="cmdError"></div>
+    <div class="badge"><span>● امنیت سطح یک • ورود با کارت شناسایی</span></div>
+  </div>
+</div>
 
-<!-- ===== SIDEBAR ===== -->
+<!-- ===== سایدبار ===== -->
 <aside class="sidebar" id="sidebar">
   <div class="logo-area">
     <span class="icon">🎖️</span>
@@ -345,7 +328,7 @@ body{
   <nav>
     <div class="nav-item active" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i> داشبورد</div>
     <div class="nav-item" onclick="switchTab('launch')"><i class="fas fa-rocket"></i> شلیک مطلب</div>
-    <div class="nav-item" onclick="switchTab('posts')"><i class="fas fa-file-alt"></i> مطالب ارسال‌شده</div>
+    <div class="nav-item" onclick="switchTab('posts')"><i class="fas fa-file-alt"></i> مطالب</div>
     <div class="nav-divider"></div>
     <div class="nav-item" onclick="switchTab('users')"><i class="fas fa-users"></i> کاربران</div>
     <div class="nav-item" onclick="switchTab('commanders')"><i class="fas fa-star"></i> فرماندهان</div>
@@ -356,22 +339,20 @@ body{
     <div class="nav-divider"></div>
     <div class="nav-item" onclick="window.location.href='./index.html'"><i class="fas fa-home"></i> بازگشت</div>
   </nav>
-  <div class="user-card">
-    <span class="avatar" id="sideAvatar">👤</span>
-    <div class="name" id="sideName">فرمانده</div>
-    <div class="role" id="sideRole">شورای فرماندهی</div>
-  </div>
 </aside>
 
-<!-- ===== MAIN ===== -->
+<!-- ===== محتوای اصلی ===== -->
 <main class="main">
-
   <div class="top-bar">
     <div><div class="title" id="pageTitle"><i class="fas fa-chart-pie"></i> داشبورد <span class="sub">مرکز عملیات</span></div></div>
-    <div class="info"><span class="dot"></span><span id="timeDisplay">--:--</span><span id="dateDisplay">--</span></div>
+    <div class="info">
+      <span class="dot"></span>
+      <span id="timeDisplay">--:--</span>
+      <button class="theme-btn" onclick="toggleTheme()" title="تغییر تم">🌓</button>
+    </div>
   </div>
 
-  <!-- ===== TAB: DASHBOARD ===== -->
+  <!-- ===== داشبورد ===== -->
   <div id="tab-dashboard" class="tab-content">
     <div class="stats-grid">
       <div class="stat-card"><span class="icon">📊</span><div class="num" id="statPosts">0</div><div class="label">مطالب</div></div>
@@ -379,11 +360,9 @@ body{
       <div class="stat-card"><span class="icon">📅</span><div class="num" id="statToday">0</div><div class="label">امروز</div></div>
       <div class="stat-card"><span class="icon">⏳</span><div class="num" id="statPending">0</div><div class="label">در انتظار</div></div>
     </div>
-
     <div class="monitor-container">
       <div class="monitor-title">🖥️ مانیتور عملیات</div>
       <div class="monitor-screen">
-        <div class="scan-line"></div>
         <div class="monitor-grid">
           <div class="monitor-map">
             <div class="point"></div><div class="point"></div><div class="point"></div><div class="point"></div>
@@ -397,19 +376,18 @@ body{
         </div>
       </div>
     </div>
-
     <div class="list-container">
       <div class="list-title">👥 کاربران آنلاین</div>
-      <div id="onlineUsers"><div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div></div>
+      <div id="onlineUsers"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
     </div>
   </div>
 
-  <!-- ===== TAB: LAUNCH ===== -->
+  <!-- ===== شلیک مطلب ===== -->
   <div id="tab-launch" class="tab-content" style="display:none">
     <div class="launch-section">
       <div class="launch-title"><i class="fas fa-rocket"></i> شلیک مطلب جدید</div>
-      <input type="text" id="newShobe" placeholder="📌 عنوان شبهه...">
-      <textarea id="newAnswer" placeholder="💡 پاسخ کامل..."></textarea>
+      <input type="text" id="newShobe" placeholder="📌 شبهه...">
+      <textarea id="newAnswer" placeholder="💡 پاسخ..."></textarea>
       <div class="row">
         <input type="text" id="newSource" placeholder="📚 منبع">
         <input type="text" id="newTags" placeholder="#هشتگ1 #هشتگ2">
@@ -424,33 +402,33 @@ body{
     </div>
   </div>
 
-  <!-- ===== TAB: POSTS ===== -->
+  <!-- ===== مطالب ===== -->
   <div id="tab-posts" class="tab-content" style="display:none">
     <div class="list-container">
       <div class="list-title">📄 مطالب ارسال‌شده</div>
-      <div id="postsList"><div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div></div>
+      <div id="postsList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
     </div>
   </div>
 
-  <!-- ===== TAB: USERS ===== -->
+  <!-- ===== کاربران ===== -->
   <div id="tab-users" class="tab-content" style="display:none">
     <div class="list-container">
-      <div class="list-title">👤 لیست کاربران</div>
-      <div id="usersList"><div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div></div>
+      <div class="list-title">👤 کاربران سیستم</div>
+      <div id="usersList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
     </div>
   </div>
 
-  <!-- ===== TAB: COMMANDERS ===== -->
+  <!-- ===== فرماندهان ===== -->
   <div id="tab-commanders" class="tab-content" style="display:none">
     <div class="list-container">
       <div class="list-title">⭐ فرماندهان</div>
-      <div id="commandersList"><div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div></div>
+      <div id="commandersList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
     </div>
   </div>
 
-  <!-- ===== TAB: STATS ===== -->
+  <!-- ===== آمار ===== -->
   <div id="tab-stats" class="tab-content" style="display:none">
-    <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(90px,1fr))">
+    <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
       <div class="stat-card"><div class="num" id="statAllPosts">0</div><div class="label">کل شبهات</div></div>
       <div class="stat-card"><div class="num" id="statPublished">0</div><div class="label">منتشرشده</div></div>
       <div class="stat-card"><div class="num" id="statWaiting">0</div><div class="label">در انتظار</div></div>
@@ -460,11 +438,11 @@ body{
     </div>
   </div>
 
-  <!-- ===== TAB: RULES ===== -->
+  <!-- ===== آیین‌نامه ===== -->
   <div id="tab-rules" class="tab-content" style="display:none">
-    <div style="background:var(--bg-card);border:1px solid rgba(184,152,10,0.1);border-radius:4px;padding:0.5rem;max-height:60vh;overflow-y:auto">
-      <div style="color:var(--gold);font-size:0.6rem;font-weight:700;border-bottom:1px solid var(--border-military);padding-bottom:0.2rem;margin-bottom:0.3rem">📋 آیین‌نامه قرارگاه (۱۳ بند)</div>
-      <div style="font-size:0.45rem;color:var(--text-primary);line-height:2">
+    <div style="background:var(--bg-card);border:1px solid rgba(184,152,10,0.1);border-radius:4px;padding:0.4rem;max-height:55vh;overflow-y:auto">
+      <div style="color:var(--gold);font-size:0.55rem;font-weight:700;border-bottom:1px solid var(--border-military);padding-bottom:0.15rem;margin-bottom:0.2rem">📋 آیین‌نامه (۱۳ بند)</div>
+      <div style="font-size:0.4rem;color:var(--text-primary);line-height:1.8">
         <p><b>۱.</b> پاسخگویی مستند به شبهات دینی، اعتقادی و سیاسی</p>
         <p><b>۲.</b> لحن رسمی، روان و غیرخطابی</p>
         <p><b>۳.</b> هر مطلب: شبهه، پاسخ، منبع و هشتگ</p>
@@ -482,18 +460,18 @@ body{
     </div>
   </div>
 
-  <!-- ===== TAB: GAMES ===== -->
+  <!-- ===== بازی‌ها ===== -->
   <div id="tab-games" class="tab-content" style="display:none">
-    <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.5rem;text-align:center">
-      <div style="font-size:2rem;margin-bottom:0.3rem">🎮</div>
-      <div style="color:var(--text-primary);font-size:0.7rem;font-weight:700;margin-bottom:0.3rem">بازی‌های قرارگاه</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:0.3rem">
-        <div style="background:var(--bg);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;cursor:pointer" onclick="alert('در حال توسعه...')">💣 مین‌یاب</div>
-        <div style="background:var(--bg);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;cursor:pointer" onclick="alert('در حال توسعه...')">♟️ شطرنج</div>
-        <div style="background:var(--bg);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;cursor:pointer" onclick="alert('در حال توسعه...')">🧩 سودوکو</div>
-        <div style="background:var(--bg);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;cursor:pointer" onclick="alert('در حال توسعه...')">🐍 مار</div>
+    <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.4rem;text-align:center">
+      <div style="font-size:1.8rem;margin-bottom:0.2rem">🎮</div>
+      <div style="color:var(--text-primary);font-size:0.6rem;font-weight:700;margin-bottom:0.2rem">بازی‌های قرارگاه</div>
+      <div class="games-grid">
+        <div class="game-card" onclick="startGame('minesweeper')"><span class="icon">💣</span><span class="name">مین‌یاب</span><span class="desc">پاکسازی میدان</span></div>
+        <div class="game-card" onclick="startGame('snake')"><span class="icon">🐍</span><span class="name">مار جنگی</span><span class="desc">عملیات نفوذ</span></div>
+        <div class="game-card" onclick="startGame('memory')"><span class="icon">🧠</span><span class="name">حافظه</span><span class="desc">شناسایی اهداف</span></div>
+        <div class="game-card" onclick="startGame('sudoku')"><span class="icon">🧩</span><span class="name">سودوکو</span><span class="desc">رمزگشایی</span></div>
       </div>
-      <div style="color:var(--text-secondary);font-size:0.4rem;margin-top:0.3rem">به زودی...</div>
+      <div style="color:var(--text-secondary);font-size:0.35rem;margin-top:0.2rem">🔄 در حال توسعه...</div>
     </div>
   </div>
 
@@ -527,15 +505,156 @@ async function saveToServer(data) {
 }
 
 // ============================================================
+// اعضای فرماندهی
+// ============================================================
+const commandMembers = {
+  "khayyatzadeh": { name: "محمد جواد خیاط زاده", code: "101", role: "شورای فرماندهی_مستشار ایتا", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456789" },
+  "motavassel": { name: "محمد باقر متوسل", code: "102", role: "شورای فرماندهی_معاون عملیات", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456788" },
+  "barzkar": { name: "محمد برزکار", code: "103", role: "شورای فرماندهی_مشاور", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456787" },
+  "saeedi": { name: "محمد مهدی سعیدی", code: "104", role: "واحد اطلاعات عملیات", rank: "سردار", unit: "واحد اطلاعات عملیات", phone: "09123456786" }
+};
+
+// ============================================================
+// تشخیص OCR
+// ============================================================
+async function scanCardImage(imageData) {
+  try {
+    const result = await Tesseract.recognize(imageData, 'fas', { logger: m => console.log(m) });
+    const text = result.data.text;
+    let foundKey = null;
+    for (let key in commandMembers) {
+      if (text.includes(key) || text.includes(commandMembers[key].name)) {
+        foundKey = key; break;
+      }
+    }
+    if (foundKey) {
+      const member = commandMembers[foundKey];
+      document.getElementById('cardInfo').textContent = '✅ کارت شناسایی معتبر: ' + member.name;
+      document.getElementById('cardInfo').style.color = '#6db33f';
+      return member;
+    } else {
+      document.getElementById('cardInfo').textContent = '⚠️ متن روی کارت شناسایی خوانده نشد';
+      document.getElementById('cardInfo').style.color = '#c0392b';
+      return null;
+    }
+  } catch(e) {
+    document.getElementById('cardInfo').textContent = '⚠️ خطا در خواندن کارت';
+    document.getElementById('cardInfo').style.color = '#c0392b';
+    return null;
+  }
+}
+
+document.getElementById('cardUpload').addEventListener('change', async function(e) {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(event) {
+    const preview = document.getElementById('previewContainer');
+    const img = document.getElementById('previewImage');
+    const name = document.getElementById('fileName');
+    img.src = event.target.result;
+    name.textContent = file.name;
+    preview.style.display = 'block';
+    document.getElementById('cmdError').textContent = '⏳ در حال خواندن کارت...';
+    document.getElementById('cmdError').style.color = '#c8a000';
+    let member = await scanCardImage(event.target.result);
+    if (!member) {
+      const fileName = file.name.toLowerCase();
+      for (let key in commandMembers) {
+        if (fileName.includes(key.toLowerCase())) {
+          member = commandMembers[key];
+          document.getElementById('cardInfo').textContent = '✅ کارت شناسایی (از روی اسم فایل): ' + member.name;
+          document.getElementById('cardInfo').style.color = '#6db33f';
+          break;
+        }
+      }
+    }
+    if (member) {
+      uploadedCardData = member;
+      isCardVerified = true;
+      document.getElementById('cmdError').textContent = '✅ کارت خوانده شد. برای ورود کلیک کنید.';
+      document.getElementById('cmdError').style.color = '#6db33f';
+      document.getElementById('cmdBtn').classList.add('active');
+    } else {
+      uploadedCardData = null;
+      isCardVerified = false;
+      document.getElementById('cmdError').textContent = '⚠️ کارت شناسایی نامعتبر است';
+      document.getElementById('cmdError').style.color = '#c0392b';
+      document.getElementById('cmdBtn').classList.remove('active');
+    }
+  };
+  reader.readAsDataURL(file);
+});
+
+// ============================================================
 // دیتا
 // ============================================================
 let allPosts = [];
 let allUsers = {};
 let currentUser = null;
+let currentUnit = '';
+let uploadedCardData = null;
+let isCardVerified = false;
 let currentTab = 'dashboard';
+let commanderLog = [];
 
 // ============================================================
-// بارگذاری
+// ورود
+// ============================================================
+function checkAccess() {
+  const unitInput = document.getElementById('cmdUnit').value.trim();
+  
+  // راه مخفی
+  if (unitInput === 'Khayyatzadeh') {
+    currentUser = 'محمد جواد خیاط زاده';
+    currentUnit = 'شورای فرماندهی';
+    document.getElementById('securityPage').style.display = 'none';
+    document.getElementById('sidebar').style.display = 'block';
+    document.querySelector('.main').style.display = 'block';
+    document.getElementById('cmdError').textContent = '';
+    commanderLog.push({ name: currentUser, action: 'ورود', time: new Date().toLocaleString('fa-IR') });
+    loadData();
+    updateTime();
+    setInterval(updateTime, 1000);
+    return;
+  }
+  
+  // راه عادی
+  if (!unitInput || !['شورای فرماندهی', 'واحد اطلاعات عملیات'].includes(unitInput)) {
+    document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید';
+    document.getElementById('cmdError').style.color = '#c0392b';
+    return;
+  }
+  if (!isCardVerified || !uploadedCardData) {
+    document.getElementById('cmdError').textContent = '⚠️ لطفاً کارت شناسایی معتبر آپلود کنید';
+    document.getElementById('cmdError').style.color = '#c0392b';
+    return;
+  }
+  if (unitInput === 'شورای فرماندهی' && !uploadedCardData.role.includes('شورای فرماندهی')) {
+    document.getElementById('cmdError').textContent = '⛔ این کارت برای شورای فرماندهی مجاز نیست';
+    document.getElementById('cmdError').style.color = '#c0392b';
+    return;
+  }
+  if (unitInput === 'واحد اطلاعات عملیات' && !uploadedCardData.role.includes('اطلاعات عملیات')) {
+    document.getElementById('cmdError').textContent = '⛔ این کارت برای واحد اطلاعات عملیات مجاز نیست';
+    document.getElementById('cmdError').style.color = '#c0392b';
+    return;
+  }
+  
+  currentUser = uploadedCardData.name;
+  currentUnit = unitInput;
+  document.getElementById('securityPage').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'block';
+  document.querySelector('.main').style.display = 'block';
+  document.getElementById('cmdError').textContent = '';
+  commanderLog.push({ name: currentUser, action: 'ورود', time: new Date().toLocaleString('fa-IR') });
+  loadData();
+  updateTime();
+  setInterval(updateTime, 1000);
+}
+
+// ============================================================
+// بارگذاری داده
 // ============================================================
 async function loadData() {
   const data = await loadFromServer();
@@ -548,6 +667,7 @@ function updateAll() {
   updateStats();
   updateLists();
   updateMonitor();
+  updateCommanders();
 }
 
 function updateStats() {
@@ -556,13 +676,12 @@ function updateStats() {
   const today = new Date().toLocaleDateString('fa-IR');
   document.getElementById('statToday').textContent = allPosts.filter(p => p.date === today).length;
   document.getElementById('statPending').textContent = Math.floor(allPosts.length * 0.1) || '—';
-  // آمار
   document.getElementById('statAllPosts').textContent = allPosts.length;
   document.getElementById('statPublished').textContent = allPosts.length;
   document.getElementById('statWaiting').textContent = Math.floor(allPosts.length * 0.1) || '—';
   const totalComments = allPosts.reduce((sum, p) => sum + (p.comments?.length || 0), 0);
   document.getElementById('statComments').textContent = totalComments;
-  document.getElementById('statLikes').textContent = Math.floor(totalComments * 0.3) || '—';
+  document.getElementById('statLikes').textContent = allPosts.reduce((sum, p) => sum + (p.likes || 0), 0);
   document.getElementById('statOnline').textContent = Math.floor(Object.keys(allUsers).length * 0.2) || '—';
   document.getElementById('monitorActivity').textContent = allPosts.length;
 }
@@ -572,51 +691,54 @@ function updateLists() {
   const usersContainer = document.getElementById('usersList');
   const userList = Object.keys(allUsers);
   if (!userList.length) {
-    usersContainer.innerHTML = '<div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">هیچ کاربری ثبت‌نام نکرده</div>';
+    usersContainer.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ کاربری ثبت‌نام نکرده</div>';
   } else {
     usersContainer.innerHTML = userList.map(u => `
       <div class="list-item">
         <span class="name">${allUsers[u].fullname || u}</span>
-        <span class="role">${allUsers[u].role || 'کاربر'}</span>
-        <span class="status">🟢 آنلاین</span>
+        <span class="role">${allUsers[u].rank || 'کاربر'}</span>
+        <span class="status">🟢</span>
       </div>
     `).join('');
   }
-  // فرماندهان (افراد خاص)
-  const commandersContainer = document.getElementById('commandersList');
-  const commanders = ['محمد جواد خیاط زاده', 'محمد مهدی سعیدی', 'محمد باقر متوسل', 'محمد برزکار'];
-  commandersContainer.innerHTML = commanders.map(c => `
-    <div class="list-item">
-      <span class="name">⭐ ${c}</span>
-      <span class="role">سردار</span>
-      <span class="status">🟢 فعال</span>
-    </div>
-  `).join('');
-  // مطالب ارسال‌شده
+  // فرماندهان
+  updateCommanders();
+  // مطالب
   const postsContainer = document.getElementById('postsList');
   if (!allPosts.length) {
-    postsContainer.innerHTML = '<div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">هیچ مطلبی ارسال نشده</div>';
+    postsContainer.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ مطلبی ارسال نشده</div>';
   } else {
-    postsContainer.innerHTML = allPosts.slice(0, 10).map(p => `
+    postsContainer.innerHTML = allPosts.slice(0, 10).map((p, i) => `
       <div class="list-item">
-        <span class="name">${p.shobe?.substring(0, 30) || 'بدون عنوان'}...</span>
+        <span class="name">${p.shobe?.substring(0, 25) || 'بدون عنوان'}...</span>
         <span class="role">${p.cat || 'عمومی'}</span>
-        <span style="font-size:0.3rem;color:var(--neon-green)">✅ منتشرشده</span>
+        <button class="del-btn" onclick="deletePost(${i})">🗑️</button>
+        <button class="del-btn" onclick="editPost(${i})" style="background:#4a8aaa;margin-right:0.2rem">✏️</button>
       </div>
     `).join('');
   }
-  // کاربران آنلاین (نمایشی)
+  // آنلاین
   document.getElementById('onlineUsers').innerHTML = userList.slice(0, 3).map(u => `
     <div class="list-item">
       <span class="name">${allUsers[u].fullname || u}</span>
       <span class="status">🟢</span>
     </div>
-  `).join('') || '<div style="color:var(--text-secondary);font-size:0.4rem;text-align:center;padding:0.1rem">هیچ کاربری آنلاین نیست</div>';
+  `).join('') || '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ کاربری آنلاین نیست</div>';
 }
 
-function updateMonitor() {
-  // رادار و نقشه با CSS کار میکنه
+function updateCommanders() {
+  const container = document.getElementById('commandersList');
+  const commanders = Object.values(commandMembers);
+  container.innerHTML = commanders.map(c => `
+    <div class="list-item">
+      <span class="name">⭐ ${c.name}</span>
+      <span class="role">${c.rank}</span>
+      <span class="status">${c.unit}</span>
+    </div>
+  `).join('');
 }
+
+function updateMonitor() {}
 
 // ============================================================
 // شلیک مطلب
@@ -636,12 +758,13 @@ async function firePost() {
     cat: document.getElementById('newCategory').value,
     date: new Date().toLocaleDateString('fa-IR'),
     time: new Date().toLocaleTimeString('fa-IR'),
-    sender: 'فرماندهی',
-    comments: []
+    sender: currentUser || 'فرماندهی',
+    comments: [],
+    likes: 0,
+    likedBy: []
   };
   allPosts.unshift(newPost);
   const data = { posts: allPosts, users: allUsers };
-  localStorage.setItem('padafand_data', JSON.stringify(data));
   await saveToServer(data);
   document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت شلیک شد!';
   document.getElementById('fireMsg').style.color = '#6db33f';
@@ -653,7 +776,60 @@ async function firePost() {
 }
 
 // ============================================================
-// ورود (ساده)
+// حذف و ویرایش مطلب
+// ============================================================
+async function deletePost(index) {
+  if (!confirm('مطمئنی می‌خوای این مطلب رو حذف کنی؟')) return;
+  allPosts.splice(index, 1);
+  const data = { posts: allPosts, users: allUsers };
+  await saveToServer(data);
+  updateAll();
+}
+
+function editPost(index) {
+  const post = allPosts[index];
+  if (!post) return;
+  document.getElementById('newShobe').value = post.shobe;
+  document.getElementById('newAnswer').value = post.answer;
+  document.getElementById('newSource').value = post.source || '';
+  document.getElementById('newTags').value = (post.tags || []).join(' ');
+  document.getElementById('newCategory').value = post.cat || 'اعتقادی';
+  document.getElementById('fireMsg').textContent = '✏️ در حال ویرایش مطلب...';
+  document.getElementById('fireMsg').style.color = '#c8a000';
+  // حذف مطلب قدیمی
+  allPosts.splice(index, 1);
+}
+
+// ============================================================
+// لایک (برای سایت اصلی)
+// ============================================================
+function toggleLike(postId) {
+  const post = allPosts.find(p => p.id === postId);
+  if (!post) return;
+  if (post.likedBy && post.likedBy.includes(currentUser)) {
+    post.likes--;
+    post.likedBy = post.likedBy.filter(u => u !== currentUser);
+  } else {
+    post.likes++;
+    if (!post.likedBy) post.likedBy = [];
+    post.likedBy.push(currentUser);
+  }
+  saveToServer({ posts: allPosts, users: allUsers });
+}
+
+// ============================================================
+// تم (یک دکمه)
+// ============================================================
+let themeIndex = 0;
+const themes = ['dark', 'military', 'light'];
+function toggleTheme() {
+  themeIndex = (themeIndex + 1) % themes.length;
+  document.documentElement.setAttribute('data-theme', themes[themeIndex]);
+  localStorage.setItem('padafand_theme', themes[themeIndex]);
+}
+
+// ============================================================
+// تب‌ها
 // ============================================================
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
@@ -669,9 +845,16 @@ function switchTab(tab) {
   if (map[tab] !== undefined && items[map[tab]]) items[map[tab]].classList.add('active');
   const title = document.getElementById('pageTitle');
   const icons = {dashboard:'fa-chart-pie', launch:'fa-rocket', posts:'fa-file-alt', users:'fa-users', commanders:'fa-star', stats:'fa-chart-bar', rules:'fa-scroll', games:'fa-gamepad'};
-  const names = {dashboard:'داشبورد', launch:'شلیک مطلب', posts:'مطالب ارسال‌شده', users:'کاربران', commanders:'فرماندهان', stats:'آمار', rules:'آیین‌نامه', games:'بازی'};
+  const names = {dashboard:'داشبورد', launch:'شلیک مطلب', posts:'مطالب', users:'کاربران', commanders:'فرماندهان', stats:'آمار', rules:'آیین‌نامه', games:'بازی'};
   title.innerHTML = `<i class="fas ${icons[tab]}"></i> ${names[tab]} <span class="sub">مرکز عملیات</span>`;
   if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============================================================
+// بازی‌ها
+// ============================================================
+function startGame(game) {
+  alert(`🎮 بازی "${game}" در حال توسعه...\nبه زودی در قرارگاه`);
 }
 
 // ============================================================
@@ -680,7 +863,6 @@ function switchTab(tab) {
 function updateTime() {
   const now = new Date();
   document.getElementById('timeDisplay').textContent = now.toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'});
-  document.getElementById('dateDisplay').textContent = now.toLocaleDateString('fa-IR', {day:'2-digit',month:'2-digit',year:'numeric'});
 }
 setInterval(updateTime, 1000);
 updateTime();
@@ -688,7 +870,13 @@ updateTime();
 // ============================================================
 // بارگذاری اولیه
 // ============================================================
-loadData();
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('padafand_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  // مخفی کردن سایدبار و محتوا تا ورود
+  document.getElementById('sidebar').style.display = 'none';
+  document.querySelector('.main').style.display = 'none';
+});
 </script>
 </body>
-   </html>
+  </html> 
