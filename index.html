@@ -19,7 +19,6 @@
   --ts:#7a9a55;
   --rd:#c0392b;
   --gold:#c8a000;
-  --glass:rgba(17,28,10,0.6);
 }
 [data-theme="dark"]{
   --bg:#080c0a;
@@ -49,54 +48,70 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heartBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--gl)}50%{box-shadow:0 0 20px var(--gl)}}
 
-/* ===== HEADER ===== */
+.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:50px;height:50px;font-size:1.3rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl);animation:glowPulse 2s infinite}
+.floating-btn:hover{transform:scale(1.1)}
+.hamburger{position:fixed;top:8px;right:8px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.2rem;padding:0.2rem 0.5rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl);transition:.3s}
+.hamburger:hover{background:var(--gl);transform:rotate(90deg)}
+.side-menu{position:fixed;top:0;right:0;width:240px;height:100%;background:var(--bgm);border-left:2px solid var(--g);z-index:1000;padding:1.5rem 1rem;transform:translateX(100%);transition:.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.6)}
+.side-menu.open{transform:translateX(0)}
+.side-menu .close-btn{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
+.side-menu .menu-title{color:var(--gl);font-size:.85rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.6rem}
+.side-menu .menu-item{display:block;padding:0.3rem 0.4rem;color:var(--tp);font-size:.7rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
+.side-menu .menu-item:hover{background:var(--bgp);color:var(--gl);padding-right:0.6rem}
+.side-menu .menu-item i{margin-left:0.4rem;width:18px;color:var(--am)}
+
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
 .hdr-top .online{display:flex;gap:.2rem;align-items:center}
 .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--gl);animation:blink 1.5s infinite}
 .hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem;margin-top:0.1rem}
 .hdr-left{display:flex;align-items:center;gap:0.4rem}
-.hdr-left .icon{font-size:1.5rem}
+.hdr-left .icon{font-size:1.5rem;transition:.3s}
+.hdr-left .icon:hover{transform:rotate(-10deg)}
 .hdr-left h1{font-size:.95rem;font-weight:900;letter-spacing:1px}
 .hdr-left h1 span{color:var(--gl)}
 .hdr-left .sub{font-size:.45rem;color:var(--ts);letter-spacing:0.5px}
 .hdr-right{display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap}
 .hdr-right .theme-btn{background:none;border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--tp);font-size:.6rem;cursor:pointer;transition:.3s}
-.hdr-right .theme-btn:hover{border-color:var(--gl)}
-.hdr-right .theme-btn.active{border-color:var(--gl);background:rgba(109,179,63,0.1)}
-.hdr-right .user-badge{display:flex;align-items:center;gap:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;cursor:pointer;font-size:.6rem}
-.hdr-right .user-badge .avatar{font-size:1rem}
+.hdr-right .theme-btn:hover{border-color:var(--gl);transform:scale(1.05)}
+.hdr-right .user-badge{display:flex;align-items:center;gap:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;cursor:pointer;font-size:.6rem;transition:.3s}
+.hdr-right .user-badge:hover{border-color:var(--gl)}
+.hdr-right .user-badge .avatar{font-size:1rem;transition:.3s}
+.hdr-right .user-badge .avatar:hover{transform:scale(1.1)}
 .hdr-right .user-badge .level{color:var(--gold);font-size:.45rem}
 
-/* ===== SEARCH ===== */
 #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
 .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
-.search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px}
-.search-wrap input:focus{border-color:var(--gl)}
-.search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;min-height:28px}
+.search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
+.search-wrap input:focus{border-color:var(--gl);box-shadow:0 0 10px rgba(109,179,63,0.1)}
+.search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;min-height:28px;transition:.3s}
+.search-wrap button:hover{transform:scale(1.05)}
 
-/* ===== NAV ===== */
 #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
 .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
-.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit}
+.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.3s}
+.nav-btn:hover{color:var(--tp);border-bottom-color:var(--ts)}
 .nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
 
-/* ===== CONTENT ===== */
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
-.page{display:none}
+.page{display:none;animation:fadeIn .4s ease}
 .page.active{display:block}
 .page-title{font-size:.8rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem}
 .page-title i{margin-left:0.3rem}
 
-/* ===== POSTS (بدون نام نویسنده) ===== */
-.post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden}
-.post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem}
+.post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden;transition:.3s;animation:fadeIn .3s ease}
+.post:hover{border-color:var(--g);box-shadow:0 0 20px rgba(74,124,32,0.05)}
+.post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:.2s}
+.post-hdr:hover{background:var(--bgm)}
 .post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
 .post-hdr .title i{color:var(--am);margin-left:0.2rem}
 .post-hdr .arrow{color:var(--gl);transition:.3s;font-size:.7rem}
 .post-hdr .arrow.open{transform:rotate(180deg)}
-.post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br)}
+.post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br);animation:fadeIn .3s ease}
 .post-body.show{display:block}
 .post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
 .post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.55rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
@@ -104,26 +119,28 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.5rem;color:var(--am)}
 .post-actions{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
 .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s;display:flex;align-items:center;gap:0.15rem}
-.post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
+.post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl);transform:translateY(-2px)}
 .post-actions .liked{color:var(--rd);border-color:var(--rd);background:rgba(192,57,43,0.1)}
 .post-actions .liked:hover{background:rgba(192,57,43,0.2)}
-.saved-msg{color:var(--gl);font-size:.55rem}
+.post-actions .liked i{animation:heartBeat .3s ease}
+.saved-msg{color:var(--gl);font-size:.55rem;animation:fadeIn .3s ease}
+
 .comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
-.comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--gl)}
+.comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--gl);animation:fadeIn .3s ease}
 .comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
 .comments-section .cmt .cmt-text{color:var(--tp)}
 .comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
-.comments-section .comment-form input{flex:1;min-width:100px;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.6rem;outline:none}
-.comments-section .comment-form input:focus{border-color:var(--gl)}
-.comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.15rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.55rem}
-.comments-section .login-msg{color:var(--ts);font-size:.55rem;font-style:italic}
+.comments-section .comment-form input{flex:1;min-width:100px;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.6rem;outline:none;transition:.3s}
+.comments-section .comment-form input:focus{border-color:var(--gl);box-shadow:0 0 10px rgba(109,179,63,0.05)}
+.comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.15rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s}
+.comments-section .comment-form button:hover{transform:scale(1.05)}
 
 .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.3rem}
 .ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.65rem;transition:.3s}
-.ai-card:hover{border-color:var(--gl)}
+.ai-card:hover{border-color:var(--gl);transform:translateY(-5px);box-shadow:0 5px 20px rgba(74,124,32,0.1)}
 .ai-card .ai-icon{font-size:1.2rem;display:block}
 
-.saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am)}
+.saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am);animation:fadeIn .3s ease}
 .saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .saved-item .saved-hdr h4{color:var(--am);font-size:.7rem;flex:1}
 .saved-item .saved-hdr .arrow{color:var(--gl);transition:.3s;font-size:.6rem}
@@ -131,32 +148,18 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-item .saved-body{display:none;padding-top:0.3rem;border-top:1px solid var(--br);margin-top:0.3rem}
 .saved-item .saved-body.show{display:block}
 .saved-item .saved-body p{font-size:.6rem;color:var(--ts);line-height:1.6}
-.saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.05rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
+.saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.05rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem;transition:.3s}
+.saved-item .del-btn:hover{transform:scale(1.05)}
 
 #footer{border-top:1px solid var(--br);padding:0.3rem 0.6rem;background:var(--bgm);margin-top:0.5rem}
 .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem}
 .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
-.foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none}
-.foot-links a:hover{color:var(--gl);border-color:var(--gl)}
+.foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
+.foot-links a:hover{color:var(--gl);border-color:var(--gl);transform:translateY(-2px)}
 .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
 
-/* ===== HAMBURGER ===== */
-.hamburger{position:fixed;top:8px;right:8px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.2rem;padding:0.2rem 0.5rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
-.hamburger:hover{background:var(--gl)}
-.side-menu{position:fixed;top:0;right:0;width:240px;height:100%;background:var(--bgm);border-left:2px solid var(--g);z-index:1000;padding:1.5rem 1rem;transform:translateX(100%);transition:.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.6)}
-.side-menu.open{transform:translateX(0)}
-.side-menu .close-btn{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
-.side-menu .menu-title{color:var(--gl);font-size:.85rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.6rem}
-.side-menu .menu-item{display:block;padding:0.3rem 0.4rem;color:var(--tp);font-size:.7rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
-.side-menu .menu-item:hover{background:var(--bgp);color:var(--gl)}
-.side-menu .menu-item i{margin-left:0.4rem;width:18px;color:var(--am)}
-
-.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:45px;height:45px;font-size:1.2rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
-.floating-btn:hover{transform:scale(1.1)}
-
-/* ===== USER PANEL ===== */
-#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
-#userPanel.show{display:block;animation:slideIn .25s}
+#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4);animation:slideIn .25s}
+#userPanel.show{display:block}
 #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
 #userPanel .profile-header{text-align:center;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:0.5rem}
 #userPanel .profile-header .avatar{font-size:3rem;display:block;margin-bottom:0.1rem}
@@ -164,21 +167,32 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #userPanel .profile-header .level{color:var(--gold);font-size:.6rem;display:block}
 #userPanel .profile-header .xp{color:var(--ts);font-size:.5rem;display:block}
 #userPanel .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.2rem;margin-bottom:0.5rem}
-#userPanel .profile-stats .stat{background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:0.2rem;text-align:center}
+#userPanel .profile-stats .stat{background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:0.2rem;text-align:center;transition:.3s}
+#userPanel .profile-stats .stat:hover{border-color:var(--gl)}
 #userPanel .profile-stats .stat .num{font-size:.85rem;font-weight:900;color:var(--tp);font-family:monospace}
 #userPanel .profile-stats .stat .label{font-size:.4rem;color:var(--ts)}
 #userPanel .avatar-select{display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center;margin:0.3rem 0}
 #userPanel .avatar-select .av-item{font-size:1.8rem;cursor:pointer;border:2px solid transparent;border-radius:50%;padding:0.05rem;transition:.3s}
-#userPanel .avatar-select .av-item:hover{border-color:var(--gl)}
+#userPanel .avatar-select .av-item:hover{border-color:var(--gl);transform:scale(1.1)}
 #userPanel .avatar-select .av-item.active{border-color:var(--am)}
-#userPanel .profile-edit{width:100%;padding:0.2rem;background:var(--am);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.6rem;cursor:pointer}
-#userPanel .profile-edit:hover{opacity:.8}
+#userPanel .profile-edit{width:100%;padding:0.2rem;background:var(--am);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.6rem;cursor:pointer;transition:.3s}
+#userPanel .profile-edit:hover{transform:scale(1.02)}
 #userPanel .form-group{margin-bottom:0.3rem}
 #userPanel .form-group label{display:block;font-size:.5rem;color:var(--ts);margin-bottom:0.05rem}
-#userPanel .form-group input{width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none}
-#userPanel .form-group input:focus{border-color:var(--gl)}
-#userPanel .switch-link{color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer}
+#userPanel .form-group input{width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none;transition:.3s}
+#userPanel .form-group input:focus{border-color:var(--gl);box-shadow:0 0 10px rgba(109,179,63,0.05)}
+#userPanel .switch-link{color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer;transition:.3s}
 #userPanel .switch-link:hover{color:var(--gl)}
+
+/* بازی‌ها */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem;margin-top:0.5rem}
+.game-card{background:var(--bgp);border:2px solid var(--br);border-radius:8px;padding:0.8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+.game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--gl),transparent);opacity:0;transition:.3s}
+.game-card:hover::before{opacity:0.05}
+.game-card:hover{border-color:var(--gl);transform:translateY(-5px) scale(1.02);box-shadow:0 8px 30px rgba(74,124,32,0.15)}
+.game-card .icon{font-size:2.2rem;display:block;margin-bottom:0.2rem}
+.game-card .name{font-size:.65rem;font-weight:700;color:var(--tp)}
+.game-card .desc{font-size:.45rem;color:var(--ts)}
 
 @media(max-width:600px){
   .hdr-left h1{font-size:.8rem}
@@ -190,6 +204,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   .floating-btn{width:40px;height:40px;font-size:1rem;bottom:12px;left:12px}
   .hamburger{font-size:1rem;padding:0.15rem 0.4rem;top:6px;right:6px}
   .side-menu{width:200px}
+  .games-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
 }
 </style>
 </head>
@@ -204,10 +219,9 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   <a class="menu-item" onclick="switchPage('posts');toggleSideMenu()"><i class="fas fa-list"></i> شبهات</a>
   <a class="menu-item" onclick="switchPage('ai');toggleSideMenu()"><i class="fas fa-robot"></i> هوش مصنوعی</a>
   <a class="menu-item" onclick="switchPage('saved');toggleSideMenu()"><i class="fas fa-box"></i> جعبه مهمات</a>
+  <a class="menu-item" onclick="switchPage('games');toggleSideMenu()"><i class="fas fa-gamepad"></i> بازی‌ها</a>
   <a class="menu-item" onclick="toggleUserPanel();toggleSideMenu()"><i class="fas fa-user"></i> حساب کاربری</a>
   <a class="menu-item" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-paper-plane"></i> ارسال شبهه</a>
-  <a class="menu-item" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-comment"></i> انتقادات و پیشنهادات</a>
-  <a class="menu-item" href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه پدافند</a>
   <a class="menu-item" href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> مرکز فرماندهی</a>
 </div>
 
@@ -216,7 +230,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 <header id="header">
   <div style="max-width:800px;margin:0 auto">
     <div class="hdr-top">
-      <span>SYS // PADAFAND v6.0</span>
+      <span>SYS // PADAFAND v7.0</span>
       <div class="online"><span class="dot"></span><span>آنلاین</span></div>
     </div>
     <div class="hdr-main">
@@ -253,6 +267,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     <button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button>
     <button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button>
     <button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button>
+    <button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button>
   </div>
 </nav>
 
@@ -265,7 +280,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
       <span>👥 <b id="userCount">0</b> کاربر</span>
       <span>🚀 عملیات ۳۶۵</span>
     </div>
-    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem">
+    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;animation:fadeIn .5s ease">
       <div style="font-size:1.8rem">🛡️</div>
       <p style="color:var(--ts);font-size:.7rem;line-height:1.6">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید.</p>
     </div>
@@ -302,6 +317,21 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     <div id="savedContainer"></div>
   </div>
 
+  <div id="page-games" class="page">
+    <div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div>
+    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center">
+      <p style="font-size:.6rem;color:var(--ts)">🎯 بازی‌های نظامی و پدافندی</p>
+    </div>
+    <div class="games-grid">
+      <div class="game-card" onclick="startGame('minesweeper')"><span class="icon">💣</span><span class="name">مین‌یاب</span><span class="desc">پاکسازی میدان</span></div>
+      <div class="game-card" onclick="startGame('snake')"><span class="icon">🐍</span><span class="name">مار جنگی</span><span class="desc">عملیات نفوذ</span></div>
+      <div class="game-card" onclick="startGame('memory')"><span class="icon">🧠</span><span class="name">حافظه</span><span class="desc">شناسایی اهداف</span></div>
+      <div class="game-card" onclick="startGame('sudoku')"><span class="icon">🧩</span><span class="name">سودوکو</span><span class="desc">رمزگشایی</span></div>
+      <div class="game-card" onclick="startGame('chess')"><span class="icon">♟️</span><span class="name">شطرنج</span><span class="desc">استراتژی</span></div>
+    </div>
+    <div style="text-align:center;color:var(--ts);font-size:.4rem;margin-top:0.3rem">🔄 بازی‌ها در حال توسعه...</div>
+  </div>
+
 </div>
 
 <footer id="footer">
@@ -311,7 +341,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
       <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
       <a href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> فرماندهی</a>
     </div>
-    <div class="foot-copy">PADAFAND v6.0</div>
+    <div class="foot-copy">PADAFAND v7.0</div>
   </div>
 </footer>
 
@@ -320,7 +350,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   <div class="profile-header">
     <span class="avatar" id="profileAvatar">👤</span>
     <div class="name" id="profileName">کاربر مهمان</div>
-    <span class="level" id="profileLevel">سطح ۱</span>
+    <span class="level" id="profileLevel">سرباز</span>
     <span class="xp" id="profileXP">XP: 0</span>
   </div>
   <div class="avatar-select" id="avatarSelect">
@@ -396,12 +426,12 @@ let loggedUser = null;
 let selectedAvatar = '👤';
 const LEVELS = [
   { name: 'سرباز', xp: 0 },
-  { name: 'سرجوخه', xp: 50 },
-  { name: 'گروهبان', xp: 150 },
-  { name: 'سروان', xp: 300 },
-  { name: 'سرگرد', xp: 500 },
-  { name: 'سرهنگ', xp: 800 },
-  { name: 'سردار', xp: 1200 }
+  { name: 'سرجوخه', xp: 30 },
+  { name: 'گروهبان', xp: 80 },
+  { name: 'سروان', xp: 150 },
+  { name: 'سرگرد', xp: 250 },
+  { name: 'سرهنگ', xp: 400 },
+  { name: 'سردار', xp: 600 }
 ];
 
 function getUserLevel(xp) {
@@ -412,11 +442,15 @@ function getUserLevel(xp) {
   return level;
 }
 
-function getUserRank(username) {
-  const user = allUsers[username];
-  if (!user) return '';
-  const level = getUserLevel(user.xp || 0);
-  return level.name;
+// ============================================================
+// تم
+// ============================================================
+const themes = ['dark', 'light'];
+let themeIndex = 0;
+function cycleTheme() {
+  themeIndex = (themeIndex + 1) % themes.length;
+  document.documentElement.setAttribute('data-theme', themes[themeIndex]);
+  localStorage.setItem('padafand_theme', themes[themeIndex]);
 }
 
 // ============================================================
@@ -439,25 +473,30 @@ function renderAll() {
   updateProfile();
 }
 
-// ============================================================
-// منو
-// ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('padafand_theme') || 'dark';
+  themeIndex = themes.indexOf(savedTheme);
+  if (themeIndex === -1) themeIndex = 0;
+  document.documentElement.setAttribute('data-theme', themes[themeIndex]);
   const savedUser = localStorage.getItem('padafand_logged_user');
-  if (savedUser && allUsers[savedUser]) {
+  if (savedUser) {
     loggedUser = savedUser;
     updateHeader();
     updateProfile();
   }
   loadAllData();
 });
+
+// ============================================================
+// منو
+// ============================================================
 function toggleSideMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
 function switchPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(`page-${page}`).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const btns = document.querySelectorAll('.nav-btn');
-  const map = {home:0, posts:1, ai:2, saved:3};
+  const map = {home:0, posts:1, ai:2, saved:3, games:4};
   if (btns[map[page]]) btns[map[page]].classList.add('active');
   if (page === 'posts') filterPosts();
   if (page === 'home') renderPosts(allPosts.slice(0, 3), 'homePosts');
@@ -465,24 +504,7 @@ function switchPage(page) {
 }
 
 // ============================================================
-// تم (چرخشی)
-// ============================================================
-const themes = ['dark', 'light', 'military'];
-let themeIndex = 0;
-function cycleTheme() {
-  themeIndex = (themeIndex + 1) % themes.length;
-  document.documentElement.setAttribute('data-theme', themes[themeIndex]);
-  localStorage.setItem('padafand_theme', themes[themeIndex]);
-}
-document.addEventListener('DOMContentLoaded', function() {
-  const savedTheme = localStorage.getItem('padafand_theme') || 'dark';
-  themeIndex = themes.indexOf(savedTheme);
-  if (themeIndex === -1) themeIndex = 0;
-  document.documentElement.setAttribute('data-theme', themes[themeIndex]);
-});
-
-// ============================================================
-// پست‌ها (بدون نام نویسنده)
+// پست‌ها
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
   const el = document.getElementById(containerId);
@@ -556,7 +578,7 @@ function filterPosts() {
 }
 
 // ============================================================
-// لایک (یکبار)
+// لایک
 // ============================================================
 async function toggleLike(index) {
   if (!loggedUser) { alert('⚠️ برای لایک کردن وارد حساب خود شوید.'); return; }
@@ -569,10 +591,7 @@ async function toggleLike(index) {
   } else {
     post.likes++;
     post.likedBy.push(loggedUser);
-  }
-  // به‌روزرسانی XP کاربر
-  if (allUsers[loggedUser]) {
-    allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
+    if (allUsers[loggedUser]) allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
   }
   allData.posts = allPosts;
   allData.users = allUsers;
@@ -582,7 +601,7 @@ async function toggleLike(index) {
 }
 
 // ============================================================
-// کامنت‌ها
+// کامنت
 // ============================================================
 async function addComment(index) {
   if (!loggedUser) { alert('⚠️ برای نظر دادن وارد حساب خود شوید.'); return; }
@@ -591,10 +610,7 @@ async function addComment(index) {
   if (!text) return;
   if (!allPosts[index].comments) allPosts[index].comments = [];
   allPosts[index].comments.push({ user: loggedUser, text: text });
-  // افزایش XP
-  if (allUsers[loggedUser]) {
-    allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 2;
-  }
+  if (allUsers[loggedUser]) allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 2;
   input.value = '';
   allData.posts = allPosts;
   allData.users = allUsers;
@@ -626,6 +642,7 @@ function saveToBox(index) {
   if (!saved.some(p => p.shobe === post.shobe && p.answer === post.answer)) {
     saved.push({ ...post, savedAt: new Date().toLocaleDateString('fa-IR') });
     localStorage.setItem('padafand_saved_' + loggedUser, JSON.stringify(saved));
+    if (allUsers[loggedUser]) allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
     document.getElementById(`savedMsg${index}`).textContent = '✅ ذخیره شد!';
     setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 2000);
   }
@@ -700,8 +717,8 @@ function updateHeader() {
     const u = allUsers[loggedUser];
     nameEl.textContent = u?.fullname || loggedUser;
     avatarEl.textContent = u?.avatar || '👤';
-    const rank = getUserRank(loggedUser);
-    levelEl.textContent = rank;
+    const level = getUserLevel(u?.xp || 0);
+    levelEl.textContent = level.name;
   } else {
     nameEl.textContent = 'ورود';
     avatarEl.textContent = '👤';
@@ -713,8 +730,8 @@ function updateProfile() {
   const u = allUsers[loggedUser];
   document.getElementById('profileAvatar').textContent = u?.avatar || '👤';
   document.getElementById('profileName').textContent = u?.fullname || loggedUser;
-  const rank = getUserRank(loggedUser);
-  document.getElementById('profileLevel').textContent = rank;
+  const level = getUserLevel(u?.xp || 0);
+  document.getElementById('profileLevel').textContent = level.name;
   document.getElementById('profileXP').textContent = `XP: ${u?.xp || 0}`;
   const comments = allPosts.filter(p => p.comments?.some(c => c.user === loggedUser)).length;
   document.getElementById('statComments').textContent = comments;
@@ -788,6 +805,13 @@ function userLogout() {
 function updateUserCount() {
   document.getElementById('userCount').textContent = Object.keys(allUsers).length;
 }
+
+// ============================================================
+// بازی‌ها
+// ============================================================
+function startGame(game) {
+  alert(`🎮 بازی "${game}" در حال توسعه...\nبه زودی در قرارگاه`);
+}
 </script>
 </body>
-           </html>
+  </html>
