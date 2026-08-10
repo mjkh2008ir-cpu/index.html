@@ -6,197 +6,214 @@
 <title>پدافند شبهات</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ===== استایل‌های ساده و کاربردی ===== */
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b}
-[data-theme="light"]{--bg:#f2f7ef;--bgm:#e0ebd8;--bgp:#d0dfc4;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000}
+/* ============================================================
+   سه تم: تیره | سبز نظامی | روشن
+   ============================================================ */
+:root{
+  --bg:#0d1408;
+  --bgm:#1a2410;
+  --bgp:#111c0a;
+  --g:#4a7c20;
+  --gl:#6db33f;
+  --am:#c8a000;
+  --br:#2e4018;
+  --tp:#d4e8b0;
+  --ts:#7a9a55;
+  --rd:#c0392b;
+  --gold:#c8a000;
+  --glass:rgba(17,28,10,0.6);
+}
+[data-theme="dark"]{
+  --bg:#080c0a;
+  --bgm:#0c1410;
+  --bgp:#0a100e;
+  --g:#2a4a3a;
+  --gl:#4a8a7a;
+  --br:#1a2a25;
+  --tp:#b0c8c0;
+  --ts:#6a8a7a;
+  --am:#b09840;
+  --gold:#b09840;
+  --glass:rgba(10,16,14,0.6);
+}
+[data-theme="light"]{
+  --bg:#f2f7ef;
+  --bgm:#e0ebd8;
+  --bgp:#d0dfc4;
+  --g:#3a7a2a;
+  --gl:#4a8a3a;
+  --br:#8aaa6a;
+  --tp:#1a2a0a;
+  --ts:#4a6a3a;
+  --am:#b09000;
+  --gold:#b09000;
+  --glass:rgba(208,223,196,0.6);
+}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px;line-height:1.8}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
 
-#header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.4rem 0.8rem 0.3rem;position:sticky;top:0;z-index:100}
-.hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);font-family:monospace;margin-bottom:0.1rem}
+/* ===== HEADER ===== */
+#header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
 .hdr-top .online{display:flex;gap:.2rem;align-items:center}
 .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--gl);animation:blink 1.5s infinite}
-.hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem}
+.hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem;margin-top:0.1rem}
 .hdr-left{display:flex;align-items:center;gap:0.4rem}
-.hdr-left .icon{font-size:1.6rem}
-.hdr-left h1{font-size:1rem;font-weight:900;letter-spacing:1px}
+.hdr-left .icon{font-size:1.5rem}
+.hdr-left h1{font-size:.95rem;font-weight:900;letter-spacing:1px}
 .hdr-left h1 span{color:var(--gl)}
-.hdr-left .sub{font-size:.5rem;color:var(--ts);letter-spacing:0.5px;margin-top:-0.1rem}
-.hdr-actions{display:flex;gap:0.3rem;align-items:center}
-.hdr-actions .theme-toggle{background:none;border:1px solid var(--br);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tp);font-size:.8rem}
-.hdr-actions .user-btn{background:var(--bgp);border:1px solid var(--br);border-radius:3px;padding:0.15rem 0.5rem;color:var(--tp);font-size:.6rem;cursor:pointer}
-.hdr-actions .user-btn:hover{background:var(--g);color:#fff}
+.hdr-left .sub{font-size:.45rem;color:var(--ts);letter-spacing:0.5px}
+.hdr-right{display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap}
+.hdr-right .theme-btn{background:none;border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--tp);font-size:.6rem;cursor:pointer;transition:.3s}
+.hdr-right .theme-btn:hover{border-color:var(--gl)}
+.hdr-right .theme-btn.active{border-color:var(--gl);background:rgba(109,179,63,0.1)}
+.hdr-right .user-badge{display:flex;align-items:center;gap:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;cursor:pointer;font-size:.6rem}
+.hdr-right .user-badge .avatar{font-size:1rem}
+.hdr-right .user-badge .level{color:var(--gold);font-size:.45rem}
 
+/* ===== SEARCH ===== */
 #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
 .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
-.search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.75rem;outline:none;min-height:28px}
+.search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px}
 .search-wrap input:focus{border-color:var(--gl)}
-.search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.7rem;cursor:pointer;min-height:28px}
+.search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;min-height:28px}
 
+/* ===== NAV ===== */
 #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
 .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
-.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.7rem;cursor:pointer;white-space:nowrap;font-family:inherit}
+.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit}
 .nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
-.nav-btn:hover{color:var(--tp)}
 
+/* ===== CONTENT ===== */
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
 .page{display:none}
 .page.active{display:block}
-.page-title{font-size:.85rem;font-weight:700;color:var(--gl);letter-spacing:1px;margin-bottom:0.4rem;border-bottom:1px solid var(--br);padding-bottom:0.2rem}
+.page-title{font-size:.8rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem}
 .page-title i{margin-left:0.3rem}
 
-.stats{display:flex;gap:0.5rem;background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--gl);border-radius:4px;padding:0.3rem 0.6rem;margin-bottom:0.5rem;flex-wrap:wrap;font-size:.65rem}
-.stat-item{color:var(--ts)}
-.stat-item b{color:var(--am)}
-
+/* ===== POSTS (بدون نام نویسنده) ===== */
 .post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden}
-.post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:0.2s}
-.post-hdr:hover{background:var(--bgm)}
+.post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem}
 .post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
 .post-hdr .title i{color:var(--am);margin-left:0.2rem}
-.post-hdr .arrow{color:var(--gl);font-size:.7rem;transition:.3s}
+.post-hdr .arrow{color:var(--gl);transition:.3s;font-size:.7rem}
 .post-hdr .arrow.open{transform:rotate(180deg)}
 .post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br)}
 .post-body.show{display:block}
 .post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
-.post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.6rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
-.post-body .meta .rank{color:#c8a000;font-weight:700}
+.post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.55rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
 .post-body .tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.3rem}
-.post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.55rem;color:var(--am)}
-.post-actions{display:flex;gap:0.4rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
-.post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.6rem;transition:0.3s}
+.post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.5rem;color:var(--am)}
+.post-actions{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
+.post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s}
 .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
-.post-actions .del-btn{background:var(--rd);border-color:var(--rd);color:#fff}
-.post-actions .del-btn:hover{background:#a02020;color:#fff}
-.saved-msg{color:var(--gl);font-size:.6rem;margin-right:0.3rem}
+.saved-msg{color:var(--gl);font-size:.55rem}
 .comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
-.comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.2rem 0;font-size:.65rem;border-right:2px solid var(--gl)}
+.comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--gl)}
 .comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
-.comments-section .cmt .cmt-rank{color:var(--am);font-size:.5rem}
 .comments-section .cmt .cmt-text{color:var(--tp)}
-.comments-section .cmt .cmt-actions{display:flex;gap:0.3rem;margin-top:0.1rem;flex-wrap:wrap}
-.comments-section .cmt .cmt-actions button{background:none;border:none;color:var(--ts);font-size:.5rem;cursor:pointer;display:flex;align-items:center;gap:0.1rem}
-.comments-section .cmt .cmt-actions button:hover{color:var(--gl)}
-.comments-section .cmt .cmt-actions .like-btn{color:var(--rd)}
-.comments-section .cmt .cmt-actions .like-btn:hover{color:#a02020}
-.comments-section .cmt .cmt-actions .like-count{color:var(--ts);font-size:.5rem}
-.comments-section .cmt .replies{margin-right:1rem;border-right:1px solid var(--br);padding-right:0.3rem}
-.comments-section .cmt .reply-input{display:flex;gap:0.2rem;margin-top:0.2rem;flex-wrap:wrap}
-.comments-section .cmt .reply-input input{flex:1;padding:0.15rem 0.3rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.55rem;outline:none;min-width:80px}
-.comments-section .cmt .reply-input button{background:var(--g);border:none;color:#fff;padding:0.1rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
 .comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
-.comments-section .comment-form input{flex:1;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.65rem;outline:none;min-width:100px}
+.comments-section .comment-form input{flex:1;min-width:100px;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.6rem;outline:none}
 .comments-section .comment-form input:focus{border-color:var(--gl)}
-.comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.2rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.6rem}
-.comments-section .comment-form button:hover{opacity:.85}
+.comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.15rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.55rem}
 .comments-section .login-msg{color:var(--ts);font-size:.55rem;font-style:italic}
 
-.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.4rem;margin-top:0.3rem}
-.ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.4rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.7rem}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.3rem}
+.ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.65rem;transition:.3s}
 .ai-card:hover{border-color:var(--gl)}
 .ai-card .ai-icon{font-size:1.2rem;display:block}
-.ai-card .ai-name{font-weight:700;font-size:.7rem}
-.ai-card .ai-desc{font-size:.55rem;color:var(--ts)}
 
 .saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am)}
 .saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.saved-item .saved-hdr h4{color:var(--am);font-size:.75rem;flex:1}
-.saved-item .saved-hdr .arrow{color:var(--gl);font-size:.6rem;transition:.3s}
+.saved-item .saved-hdr h4{color:var(--am);font-size:.7rem;flex:1}
+.saved-item .saved-hdr .arrow{color:var(--gl);transition:.3s;font-size:.6rem}
 .saved-item .saved-hdr .arrow.open{transform:rotate(180deg)}
 .saved-item .saved-body{display:none;padding-top:0.3rem;border-top:1px solid var(--br);margin-top:0.3rem}
 .saved-item .saved-body.show{display:block}
-.saved-item .saved-body p{font-size:.65rem;color:var(--ts);line-height:1.6}
-.saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.1rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
-.saved-item .del-btn:hover{background:#a02020}
+.saved-item .saved-body p{font-size:.6rem;color:var(--ts);line-height:1.6}
+.saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.05rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
 
 #footer{border-top:1px solid var(--br);padding:0.3rem 0.6rem;background:var(--bgm);margin-top:0.5rem}
 .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem}
 .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
-.foot-links a{color:var(--ts);text-decoration:none;font-size:.55rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer}
+.foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none}
 .foot-links a:hover{color:var(--gl);border-color:var(--gl)}
-.foot-copy{color:var(--ts);font-size:.45rem;opacity:0.4}
+.foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
 
-.hamburger{position:fixed;top:10px;right:10px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.3rem;padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
-.hamburger:hover{background:var(--gl);color:#0d1408}
+/* ===== HAMBURGER MENU ===== */
+.hamburger{position:fixed;top:8px;right:8px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.2rem;padding:0.2rem 0.5rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
+.hamburger:hover{background:var(--gl)}
 .side-menu{position:fixed;top:0;right:0;width:240px;height:100%;background:var(--bgm);border-left:2px solid var(--g);z-index:1000;padding:1.5rem 1rem;transform:translateX(100%);transition:.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.6)}
 .side-menu.open{transform:translateX(0)}
-.side-menu .close-menu{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
-.side-menu .menu-title{color:var(--gl);font-size:.9rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.4rem;margin-bottom:0.8rem}
-.side-menu .menu-item{display:block;padding:0.4rem 0.5rem;color:var(--tp);text-decoration:none;font-size:.75rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
+.side-menu .close-btn{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
+.side-menu .menu-title{color:var(--gl);font-size:.85rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.6rem}
+.side-menu .menu-item{display:block;padding:0.3rem 0.4rem;color:var(--tp);font-size:.7rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
 .side-menu .menu-item:hover{background:var(--bgp);color:var(--gl)}
-.side-menu .menu-item i{margin-left:0.5rem;width:20px;color:var(--am)}
+.side-menu .menu-item i{margin-left:0.4rem;width:18px;color:var(--am)}
 
-.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:50px;height:50px;font-size:1.3rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
+.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:45px;height:45px;font-size:1.2rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
 .floating-btn:hover{transform:scale(1.1)}
 
-#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:300px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
+/* ===== USER PANEL (پروفایل کامل) ===== */
+#userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
 #userPanel.show{display:block;animation:slideIn .25s}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
 #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
-#userPanel .user-title{font-size:.9rem;font-weight:700;color:var(--gl);margin-bottom:0.6rem;border-bottom:1px solid var(--br);padding-bottom:0.3rem}
-#userPanel .form-group{margin-bottom:0.4rem}
-#userPanel .form-group label{display:block;font-size:.55rem;color:var(--ts);margin-bottom:0.1rem}
-#userPanel .form-group input,#userPanel .form-group textarea{width:100%;padding:0.3rem 0.5rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.7rem;outline:none;font-family:inherit}
-#userPanel .form-group input:focus,#userPanel .form-group textarea:focus{border-color:var(--gl)}
-#userPanel .form-group textarea{resize:vertical;min-height:35px}
-#userPanel .btn-primary{background:linear-gradient(135deg,var(--g),#355c16);color:#e8f5cc;border:1px solid var(--gl);border-radius:3px;padding:0.3rem;font-weight:700;cursor:pointer;width:100%;font-size:.7rem}
-#userPanel .btn-primary:hover{opacity:0.85}
-#userPanel .switch-link{color:var(--ts);font-size:.55rem;text-align:center;margin-top:0.2rem;cursor:pointer}
-#userPanel .switch-link:hover{color:var(--gl)}
-#userPanel .user-info{margin-top:0.4rem;padding:0.5rem;background:var(--bg);border-radius:4px;border:1px solid var(--br);text-align:center}
-#userPanel .user-info .avatar{font-size:2.5rem;display:block}
-#userPanel .user-info .name{font-size:.8rem;font-weight:700}
-#userPanel .user-info .name .rank{color:#c8a000;font-size:.55rem}
-#userPanel .user-info .bio{font-size:.6rem;color:var(--ts)}
-#userPanel .user-info .phone{font-size:.6rem;color:var(--ts)}
-#userPanel .user-info .edit-btn{background:var(--am);border:none;color:#1a1000;padding:0.15rem 0.8rem;border-radius:3px;cursor:pointer;font-size:.55rem;margin-top:0.2rem}
-#userPanel .user-info .edit-btn:hover{opacity:.8}
-#userPanel .avatar-select{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.2rem}
-#userPanel .avatar-select .av-item{font-size:1.8rem;cursor:pointer;border:2px solid transparent;border-radius:50%;padding:0.05rem;transition:.3s}
-#userPanel .avatar-select .av-item:hover{border-color:var(--gl)}
-#userPanel .avatar-select .av-item.active{border-color:var(--am)}
+#userPanel .profile-header{text-align:center;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:0.5rem}
+#userPanel .profile-header .avatar{font-size:3rem;display:block}
+#userPanel .profile-header .name{font-size:.9rem;font-weight:700}
+#userPanel .profile-header .level{color:var(--gold);font-size:.6rem;display:block}
+#userPanel .profile-header .xp{color:var(--ts);font-size:.5rem;display:block}
+#userPanel .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.2rem;margin-bottom:0.5rem}
+#userPanel .profile-stats .stat{background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:0.2rem;text-align:center}
+#userPanel .profile-stats .stat .num{font-size:.85rem;font-weight:900;color:var(--tp);font-family:monospace}
+#userPanel .profile-stats .stat .label{font-size:.4rem;color:var(--ts)}
+#userPanel .profile-edit{width:100%;padding:0.2rem;background:var(--am);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.6rem;cursor:pointer}
+#userPanel .profile-edit:hover{opacity:.8}
 
 @media(max-width:600px){
-  .hdr-left h1{font-size:.85rem}
-  .hdr-left .sub{font-size:.45rem}
+  .hdr-left h1{font-size:.8rem}
+  .hdr-left .sub{font-size:.4rem}
   #content{padding:0.4rem}
-  .stats{font-size:.55rem;padding:0.2rem 0.4rem;gap:0.3rem}
   .post-hdr .title{font-size:.7rem}
-  .post-body .ans{font-size:.68rem}
-  .foot-inner{flex-direction:column;text-align:center}
   #userPanel{width:100%}
-  .ai-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
-  .floating-btn{width:45px;height:45px;font-size:1.2rem;bottom:15px;left:15px}
-  .hamburger{font-size:1.2rem;padding:0.2rem 0.5rem;top:8px;right:8px}
+  .ai-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+  .floating-btn{width:40px;height:40px;font-size:1rem;bottom:12px;left:12px}
+  .hamburger{font-size:1rem;padding:0.15rem 0.4rem;top:6px;right:6px}
   .side-menu{width:200px}
 }
 </style>
 </head>
 <body>
 
+<!-- ===== HAMBURGER ===== -->
 <button class="hamburger" onclick="toggleSideMenu()"><i class="fas fa-bars"></i></button>
 
+<!-- ===== SIDE MENU ===== -->
 <div class="side-menu" id="sideMenu">
-  <button class="close-menu" onclick="toggleSideMenu()">✕</button>
+  <button class="close-btn" onclick="toggleSideMenu()">✕</button>
   <div class="menu-title">🛡️ منو</div>
   <a class="menu-item" onclick="switchPage('home');toggleSideMenu()"><i class="fas fa-home"></i> خانه</a>
   <a class="menu-item" onclick="switchPage('posts');toggleSideMenu()"><i class="fas fa-list"></i> شبهات</a>
   <a class="menu-item" onclick="switchPage('ai');toggleSideMenu()"><i class="fas fa-robot"></i> هوش مصنوعی</a>
   <a class="menu-item" onclick="switchPage('saved');toggleSideMenu()"><i class="fas fa-box"></i> جعبه مهمات</a>
   <a class="menu-item" onclick="toggleUserPanel();toggleSideMenu()"><i class="fas fa-user"></i> حساب کاربری</a>
-  <a class="menu-item" href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> فرماندهی</a>
-  <a class="menu-item" href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-paper-plane"></i> ارسال شبهه</a>
+  <a class="menu-item" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-paper-plane"></i> ارسال شبهه</a>
+  <a class="menu-item" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-comment"></i> انتقادات و پیشنهادات</a>
+  <a class="menu-item" href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه پدافند شبهات</a>
+  <a class="menu-item" href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> مرکز فرماندهی</a>
 </div>
 
+<!-- ===== FLOATING BUTTON ===== -->
 <div class="floating-btn" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-paper-plane"></i></div>
 
+<!-- ===== HEADER ===== -->
 <header id="header">
   <div style="max-width:800px;margin:0 auto">
     <div class="hdr-top">
-      <span>SYS // PADAFAND v5.0</span>
-      <div class="online"><span class="dot"></span><span class="txt">آنلاین</span></div>
+      <span>SYS // PADAFAND v6.0</span>
+      <div class="online"><span class="dot"></span><span>آنلاین</span></div>
     </div>
     <div class="hdr-main">
       <div class="hdr-left">
@@ -206,22 +223,30 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
           <div class="sub">قرارگاه پاسخگویی به شبهات</div>
         </div>
       </div>
-      <div class="hdr-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" title="تغییر تم">🌓</button>
-        <button class="user-btn" onclick="toggleUserPanel()"><i class="fas fa-user"></i> <span id="userBtnText">ورود</span></button>
+      <div class="hdr-right">
+        <button class="theme-btn active" data-theme="dark" onclick="setTheme('dark')">🌑</button>
+        <button class="theme-btn" data-theme="military" onclick="setTheme('military')">🟢</button>
+        <button class="theme-btn" data-theme="light" onclick="setTheme('light')">☀️</button>
+        <div class="user-badge" onclick="toggleUserPanel()">
+          <span class="avatar" id="headerAvatar">👤</span>
+          <span id="headerName">ورود</span>
+          <span class="level" id="headerLevel"></span>
+        </div>
       </div>
     </div>
   </div>
 </header>
 
+<!-- ===== SEARCH ===== -->
 <div id="search-section">
   <div class="search-wrap">
-    <i class="fas fa-search" style="color:var(--ts);font-size:.7rem"></i>
+    <i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i>
     <input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()">
     <button onclick="filterPosts()">جستجو</button>
   </div>
 </div>
 
+<!-- ===== NAV ===== -->
 <nav id="main-nav">
   <div class="nav-inner">
     <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
@@ -231,26 +256,26 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </nav>
 
+<!-- ===== CONTENT ===== -->
 <div id="content">
 
   <div id="page-home" class="page active">
     <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
-    <div class="stats">
-      <span class="stat-item">🎯 <b id="postCount">0</b> شبهه</span>
-      <span class="stat-item">👥 <b id="userCount">0</b> کاربر</span>
-      <span class="stat-item">🚀 عملیات ۳۶۵</span>
+    <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem">
+      <span>🎯 <b id="postCount">0</b> شبهه</span>
+      <span>👥 <b id="userCount">0</b> کاربر</span>
+      <span>🚀 عملیات ۳۶۵</span>
     </div>
-    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.5rem">
+    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem">
       <div style="font-size:1.8rem">🛡️</div>
-      <p style="color:var(--ts);font-size:.75rem;line-height:1.6">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید.<br>پاسخ به شبهات با زبانی مستند و روان.</p>
-      <p style="color:var(--ts);font-size:.65rem;font-style:italic">«وَ مَا النَّصْرُ إِلَّا مِنْ عِندِ اللَّهِ»</p>
+      <p style="color:var(--ts);font-size:.7rem;line-height:1.6">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید.</p>
     </div>
-    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.5rem">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem">
-        <span style="color:var(--ts);font-size:.65rem">📌 آخرین مطالب</span>
-        <button class="nav-btn" onclick="switchPage('posts')" style="font-size:.6rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.1rem 0.3rem">مشاهده همه</button>
+    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem">
+        <span style="color:var(--ts);font-size:.6rem">📌 آخرین مطالب</span>
+        <button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button>
       </div>
-      <div id="homePosts" style="margin-top:0.3rem"></div>
+      <div id="homePosts" style="margin-top:0.2rem"></div>
     </div>
   </div>
 
@@ -261,29 +286,26 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
   <div id="page-ai" class="page">
     <div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div>
-    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.6rem;margin-bottom:0.5rem;border-right:2px solid var(--am)">
-      <p style="font-size:.7rem;color:var(--ts);line-height:1.6"><i class="fas fa-info-circle" style="color:var(--am)"></i> تا زمان راه‌اندازی سامانه اختصاصی، از هوش مصنوعی‌های زیر استفاده کنید.</p>
+    <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.4rem;border-right:2px solid var(--am)">
+      <p style="font-size:.65rem;color:var(--ts);line-height:1.6"><i class="fas fa-info-circle" style="color:var(--am)"></i> تا زمان راه‌اندازی سامانه اختصاصی، از هوش مصنوعی‌های زیر استفاده کنید.</p>
     </div>
     <div class="ai-grid">
-      <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon">🤖</span><span class="ai-name">ChatGPT</span><span class="ai-desc">OpenAI</span></a>
-      <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon">🧠</span><span class="ai-name">DeepSeek</span><span class="ai-desc">چینی</span></a>
-      <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon">🕌</span><span class="ai-name">نور AI</span><span class="ai-desc">اسلامی</span></a>
-      <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon">💬</span><span class="ai-name">Claude</span><span class="ai-desc">Anthropic</span></a>
-      <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon">🌟</span><span class="ai-name">Gemini</span><span class="ai-desc">Google</span></a>
-      <a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon">🔍</span><span class="ai-name">Perplexity</span><span class="ai-desc">جستجو</span></a>
+      <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon">🤖</span><span class="ai-name">ChatGPT</span></a>
+      <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon">🧠</span><span class="ai-name">DeepSeek</span></a>
+      <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon">💬</span><span class="ai-name">Claude</span></a>
+      <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon">🌟</span><span class="ai-name">Gemini</span></a>
+      <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon">🕌</span><span class="ai-name">نور AI</span></a>
     </div>
   </div>
 
   <div id="page-saved" class="page">
     <div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div>
-    <div style="background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;border-radius:4px;margin-bottom:0.5rem;border-right:2px solid var(--am)">
-      <p style="color:var(--am);font-size:.7rem">📦 مطالب ذخیره‌شده شما</p>
-    </div>
     <div id="savedContainer"></div>
   </div>
 
 </div>
 
+<!-- ===== FOOTER ===== -->
 <footer id="footer">
   <div class="foot-inner">
     <div class="foot-links">
@@ -291,98 +313,60 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
       <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
       <a href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> فرماندهی</a>
     </div>
-    <div class="foot-copy">PADAFAND v5.0 // پاسخ به شبهات با مستندات معتبر</div>
+    <div class="foot-copy">PADAFAND v6.0</div>
   </div>
 </footer>
 
+<!-- ===== USER PANEL (پروفایل کامل) ===== -->
 <div id="userPanel">
   <button class="close" onclick="toggleUserPanel()">✕</button>
-  <div class="user-title"><i class="fas fa-user-shield"></i> حساب کاربری</div>
-  
+  <div class="profile-header">
+    <span class="avatar" id="profileAvatar">👤</span>
+    <div class="name" id="profileName">کاربر مهمان</div>
+    <span class="level" id="profileLevel">سطح ۱</span>
+    <span class="xp" id="profileXP">XP: 0</span>
+  </div>
+  <div class="profile-stats">
+    <div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div>
+    <div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div>
+    <div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div>
+    <div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div>
+  </div>
   <div id="userLoginForm">
-    <div class="form-group"><label>نام کاربری</label><input type="text" id="loginUsername" placeholder="نام کاربری..."></div>
-    <div class="form-group"><label>رمز عبور</label><input type="password" id="loginPassword" placeholder="رمز عبور..."></div>
-    <button class="btn-primary" onclick="userLogin()">ورود</button>
-    <div class="switch-link" onclick="showRegister()">ثبت‌نام جدید</div>
-    <div id="userMsg" style="color:var(--rd);font-size:.6rem;text-align:center;margin-top:0.2rem"></div>
+    <div class="form-group" style="margin-bottom:0.3rem"><label style="font-size:.5rem;color:var(--ts);display:block">نام کاربری</label><input type="text" id="loginUsername" placeholder="نام کاربری..." style="width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none"></div>
+    <div class="form-group" style="margin-bottom:0.3rem"><label style="font-size:.5rem;color:var(--ts);display:block">رمز عبور</label><input type="password" id="loginPassword" placeholder="رمز عبور..." style="width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none"></div>
+    <button class="profile-edit" onclick="userLogin()">ورود</button>
+    <div class="switch-link" onclick="showRegister()" style="color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer">ثبت‌نام جدید</div>
+    <div id="userMsg" style="color:var(--rd);font-size:.5rem;text-align:center;margin-top:0.1rem"></div>
   </div>
-
   <div id="userRegisterForm" style="display:none">
-    <div class="form-group"><label>نام و نام خانوادگی</label><input type="text" id="regFullname" placeholder="نام کامل..."></div>
-    <div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div>
-    <div class="form-group"><label>بیوگرافی (اختیاری)</label><textarea id="regBio" placeholder="درباره خودت..." rows="2"></textarea></div>
-    <div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری..."></div>
-    <div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور..."></div>
-    <div class="form-group"><label>پروفایل</label>
-      <div class="avatar-select" id="avatarSelect">
-        <span class="av-item" data-avatar="👤" onclick="selectAvatar(this)">👤</span>
-        <span class="av-item" data-avatar="👩" onclick="selectAvatar(this)">👩</span>
-        <span class="av-item" data-avatar="👨" onclick="selectAvatar(this)">👨</span>
-        <span class="av-item" data-avatar="👨‍🦰" onclick="selectAvatar(this)">👨‍🦰</span>
-        <span class="av-item" data-avatar="👩‍🦰" onclick="selectAvatar(this)">👩‍🦰</span>
-        <span class="av-item" data-avatar="🧕" onclick="selectAvatar(this)">🧕</span>
-        <span class="av-item" data-avatar="👳‍♂️" onclick="selectAvatar(this)">👳‍♂️</span>
-      </div>
-    </div>
-    <button class="btn-primary" onclick="userRegister()">ثبت‌نام</button>
-    <div class="switch-link" onclick="showLogin()">قبلاً ثبت‌نام کردی؟ وارد شو</div>
-    <div id="regMsg" style="color:var(--gl);font-size:.6rem;text-align:center;margin-top:0.2rem"></div>
+    <div class="form-group" style="margin-bottom:0.2rem"><label style="font-size:.5rem;color:var(--ts);display:block">نام و نام خانوادگی</label><input type="text" id="regFullname" placeholder="نام کامل..." style="width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none"></div>
+    <div class="form-group" style="margin-bottom:0.2rem"><label style="font-size:.5rem;color:var(--ts);display:block">شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789" style="width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none"></div>
+    <div class="form-group" style="margin-bottom:0.2rem"><label style="font-size:.5rem;color:var(--ts);display:block">نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری..." style="width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none"></div>
+    <div class="form-group" style="margin-bottom:0.2rem"><label style="font-size:.5rem;color:var(--ts);display:block">رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور..." style="width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none"></div>
+    <button class="profile-edit" onclick="userRegister()">ثبت‌نام</button>
+    <div class="switch-link" onclick="showLogin()" style="color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer">قبلاً ثبت‌نام کردی؟ وارد شو</div>
+    <div id="regMsg" style="color:var(--gl);font-size:.5rem;text-align:center;margin-top:0.1rem"></div>
   </div>
-
-  <div id="userInfo" style="display:none">
-    <div class="user-info">
-      <span class="avatar" id="displayAvatar">👤</span>
-      <div class="name" id="displayName"></div>
-      <div class="bio" id="displayBio">—</div>
-      <div class="phone" id="displayPhone">—</div>
-      <div style="font-size:.55rem;color:var(--ts);margin-top:0.1rem">عضو از <span id="displayDate"></span></div>
-      <button class="edit-btn" onclick="showEditProfile()">✏️ ویرایش</button>
-    </div>
-    <button class="btn-primary" onclick="userLogout()" style="margin-top:0.3rem;background:var(--rd)">خروج</button>
-  </div>
-
-  <div id="userEditForm" style="display:none">
-    <div class="form-group"><label>نام کامل</label><input type="text" id="editFullname" placeholder="نام کامل..."></div>
-    <div class="form-group"><label>بیوگرافی</label><textarea id="editBio" rows="2"></textarea></div>
-    <div class="form-group"><label>شماره تلفن</label><input type="tel" id="editPhone" placeholder="شماره تلفن..."></div>
-    <div class="form-group"><label>رمز جدید (اختیاری)</label><input type="password" id="editPassword" placeholder="رمز جدید..."></div>
-    <div class="form-group"><label>پروفایل</label>
-      <div class="avatar-select" id="editAvatarSelect">
-        <span class="av-item" data-avatar="👤" onclick="selectEditAvatar(this)">👤</span>
-        <span class="av-item" data-avatar="👩" onclick="selectEditAvatar(this)">👩</span>
-        <span class="av-item" data-avatar="👨" onclick="selectEditAvatar(this)">👨</span>
-        <span class="av-item" data-avatar="👨‍🦰" onclick="selectEditAvatar(this)">👨‍🦰</span>
-        <span class="av-item" data-avatar="👩‍🦰" onclick="selectEditAvatar(this)">👩‍🦰</span>
-        <span class="av-item" data-avatar="🧕" onclick="selectEditAvatar(this)">🧕</span>
-        <span class="av-item" data-avatar="👳‍♂️" onclick="selectEditAvatar(this)">👳‍♂️</span>
-      </div>
-    </div>
-    <button class="btn-primary" onclick="saveEditProfile()">ذخیره تغییرات</button>
-    <div class="switch-link" onclick="cancelEditProfile()">انصراف</div>
-    <div id="editMsg" style="color:var(--gl);font-size:.6rem;text-align:center;margin-top:0.2rem"></div>
+  <div id="userInfo" style="display:none;margin-top:0.4rem">
+    <button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff">خروج</button>
   </div>
 </div>
 
 <script>
 // ============================================================
-// یک کلید مشترک برای همه داده‌ها
+// کلید ذخیره‌سازی
 // ============================================================
 const STORAGE_KEY = 'padafand_data';
 
 function getData() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} };
-  } catch(e) {
-    return { posts: [], users: {} };
-  }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { posts: [], users: {} }; }
+  catch(e) { return { posts: [], users: {} }; }
 }
-
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
+function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 
 // ============================================================
-// دیتا و متغیرها
+// دیتا
 // ============================================================
 let allData = getData();
 let allPosts = allData.posts || [];
@@ -391,24 +375,24 @@ let loggedUser = null;
 let currentCat = 'همه';
 const SPECIAL_USERS = ['محمد جواد خیاط زاده', 'محمد مهدی سعیدی', 'محمد باقر متوسل', 'محمد برزکار'];
 
-// ============================================================
-// توابع
-// ============================================================
-function getUserRank(username) {
-  return SPECIAL_USERS.includes(username) ? '⭐ سردار' : '';
-}
-
-function getUserAvatar(username) {
-  const user = allUsers[username];
-  return user?.avatar || '👤';
-}
-
-function isLoggedIn() {
-  return loggedUser !== null;
-}
+function getUserRank(username) { return SPECIAL_USERS.includes(username) ? '⭐ سردار' : ''; }
+function isLoggedIn() { return loggedUser !== null; }
 
 // ============================================================
-// بارگذاری اولیه
+// تم‌ها
+// ============================================================
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+  localStorage.setItem('padafand_theme', theme);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('padafand_theme') || 'dark';
+  setTheme(savedTheme);
+});
+
+// ============================================================
+// بارگذاری
 // ============================================================
 function loadAllData() {
   allData = getData();
@@ -416,14 +400,14 @@ function loadAllData() {
   allUsers = allData.users || {};
   renderAll();
 }
-
 function renderAll() {
   renderPosts(allPosts);
   renderPosts(allPosts.slice(0, 3), 'homePosts');
   document.getElementById('postCount').textContent = allPosts.length;
   renderSaved();
   updateUserCount();
-  renderChips();
+  updateHeader();
+  updateProfile();
 }
 
 // ============================================================
@@ -433,19 +417,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const savedUser = localStorage.getItem('padafand_logged_user');
   if (savedUser && allUsers[savedUser]) {
     loggedUser = savedUser;
-    document.getElementById('userBtnText').textContent = loggedUser;
+    updateHeader();
+    updateProfile();
   }
   loadAllData();
 });
-
-function toggleSideMenu() {
-  document.getElementById('sideMenu').classList.toggle('open');
-}
-
+function toggleSideMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
 function switchPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(`page-${page}`);
-  if (target) target.classList.add('active');
+  document.getElementById(`page-${page}`).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const btns = document.querySelectorAll('.nav-btn');
   const map = {home:0, posts:1, ai:2, saved:3};
@@ -455,26 +435,18 @@ function switchPage(page) {
   if (page === 'saved') renderSaved();
 }
 
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', current === 'light' ? '' : 'light');
-}
-
 // ============================================================
-// پست‌ها
+// پست‌ها (بدون نام نویسنده)
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (!list || !list.length) {
-    el.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.7rem">🔍 مطلبی یافت نشد</div>';
+    el.innerHTML = '<div style="text-align:center;padding:0.4rem;color:var(--ts);font-size:.6rem">🔍 مطلبی یافت نشد</div>';
     return;
   }
   el.innerHTML = list.map((p, i) => {
     const uid = `pb-${containerId}-${i}`;
-    const rank = getUserRank(p.sender || p.author || '');
-    const isOwner = loggedUser && p.sender === loggedUser;
-    const avatar = getUserAvatar(p.sender || p.author || '');
     return `
       <div class="post">
         <div class="post-hdr" onclick="togglePost('${uid}', this)">
@@ -484,7 +456,6 @@ function renderPosts(list, containerId = 'postContainer') {
         <div class="post-body" id="${uid}">
           <div class="ans">${(p.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>')}</div>
           <div class="meta">
-            <span><i class="fas fa-user-edit"></i> ${p.author || 'ناشناس'} ${rank ? `<span class="rank">${rank}</span>` : ''}</span>
             ${p.source ? `<span><i class="fas fa-book"></i> ${p.source}</span>` : ''}
             ${p.cat ? `<span><i class="fas fa-tag"></i> ${p.cat}</span>` : ''}
           </div>
@@ -492,7 +463,6 @@ function renderPosts(list, containerId = 'postContainer') {
           <div class="post-actions">
             <button onclick="saveToBox(${i})">📦 ذخیره</button>
             <button onclick="sharePost(${i})">📤 اشتراک</button>
-            ${isOwner ? `<button class="del-btn" onclick="deletePost(${i})">🗑️ حذف</button>` : ''}
             <span id="savedMsg${i}" class="saved-msg"></span>
           </div>
           <div class="comments-section">
@@ -500,24 +470,7 @@ function renderPosts(list, containerId = 'postContainer') {
               ${(p.comments || []).map(c => `
                 <div class="cmt">
                   <span class="cmt-user">${c.user || 'ناشناس'}</span>
-                  ${getUserRank(c.user) ? `<span class="cmt-rank">${getUserRank(c.user)}</span>` : ''}
                   <span class="cmt-text">: ${c.text}</span>
-                  <div class="cmt-actions">
-                    <button onclick="showReplyInput(${i}, '${c.id || ''}')">💬 پاسخ</button>
-                  </div>
-                  <div class="replies" id="replies-${i}-${c.id || ''}">
-                    ${(c.replies || []).map(r => `
-                      <div class="cmt" style="border-right-color:var(--am);font-size:.6rem">
-                        <span class="cmt-user">${r.user || 'ناشناس'}</span>
-                        ${getUserRank(r.user) ? `<span class="cmt-rank">${getUserRank(r.user)}</span>` : ''}
-                        <span class="cmt-text">: ${r.text}</span>
-                      </div>
-                    `).join('')}
-                  </div>
-                  <div class="reply-input" id="replyInput-${i}-${c.id || ''}" style="display:none">
-                    <input type="text" placeholder="پاسخ..." id="replyText-${i}-${c.id || ''}">
-                    <button onclick="addReply(${i}, '${c.id || ''}')">ارسال</button>
-                  </div>
                 </div>
               `).join('')}
             </div>
@@ -534,7 +487,6 @@ function renderPosts(list, containerId = 'postContainer') {
   }).join('');
   document.getElementById('postCount').textContent = allPosts.length;
 }
-
 function togglePost(id, hdr) {
   const body = document.getElementById(id);
   const arrow = hdr.querySelector('.arrow');
@@ -542,7 +494,6 @@ function togglePost(id, hdr) {
   body.classList.toggle('show');
   arrow.classList.toggle('open');
 }
-
 function filterPosts() {
   const s = document.getElementById('searchInput').value.trim().toLowerCase();
   let list = allPosts;
@@ -555,111 +506,22 @@ function filterPosts() {
   renderPosts(list);
 }
 
-function renderChips() {
-  const el = document.getElementById('filterChips');
-  if (!el) return;
-  const cats = ['همه', ...new Set(allPosts.map(p => p.cat || 'عمومی'))];
-  el.innerHTML = cats.map(c => 
-    `<span class="chip ${c === currentCat ? 'active' : ''}" onclick="setCat('${c}')">${c}</span>`
-  ).join('');
-}
-
-function setCat(c) {
-  currentCat = c;
-  renderChips();
-  filterPosts();
-}
-
 // ============================================================
 // کامنت‌ها
 // ============================================================
 function addComment(index) {
-  if (!isLoggedIn()) {
-    alert('⚠️ برای نظر دادن وارد حساب خود شوید.');
-    return;
-  }
+  if (!isLoggedIn()) { alert('⚠️ برای نظر دادن وارد حساب خود شوید.'); return; }
   const input = document.getElementById(`cmtInput${index}`);
   const text = input.value.trim();
   if (!text) return;
   if (!allPosts[index].comments) allPosts[index].comments = [];
-  const commentId = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
-  allPosts[index].comments.push({
-    id: commentId,
-    user: loggedUser,
-    text: text,
-    replies: []
-  });
+  allPosts[index].comments.push({ user: loggedUser, text: text });
   input.value = '';
   allData.posts = allPosts;
   saveData(allData);
   renderPosts(allPosts);
+  updateProfile();
 }
-
-function showReplyInput(postIndex, commentId) {
-  const el = document.getElementById(`replyInput-${postIndex}-${commentId}`);
-  if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
-}
-
-function addReply(postIndex, commentId) {
-  if (!isLoggedIn()) {
-    alert('⚠️ برای پاسخ دادن وارد حساب خود شوید.');
-    return;
-  }
-  const input = document.getElementById(`replyText-${postIndex}-${commentId}`);
-  const text = input.value.trim();
-  if (!text) return;
-  const post = allPosts[postIndex];
-  if (!post) return;
-  const comment = post.comments.find(c => c.id === commentId);
-  if (!comment) return;
-  if (!comment.replies) comment.replies = [];
-  comment.replies.push({ user: loggedUser, text: text });
-  input.value = '';
-  allData.posts = allPosts;
-  saveData(allData);
-  renderPosts(allPosts);
-}
-
-// ============================================================
-// حذف مطلب
-// ============================================================
-function deletePost(index) {
-  if (!isLoggedIn()) return;
-  const post = allPosts[index];
-  if (!post) return;
-  if (post.sender !== loggedUser && loggedUser !== 'محمد جواد خیاط زاده') {
-    alert('⚠️ شما اجازه حذف این مطلب را ندارید.');
-    return;
-  }
-  if (!confirm('مطمئنی می‌خوای این مطلب رو پاک کنی؟')) return;
-  allPosts.splice(index, 1);
-  allData.posts = allPosts;
-  saveData(allData);
-  renderAll();
-}
-
-// ============================================================
-// جعبه مهمات
-// ============================================================
-function saveToBox(index) {
-  if (!isLoggedIn()) {
-    alert('⚠️ برای ذخیره مطالب ابتدا وارد حساب کاربری خود شوید.');
-    return;
-  }
-  const post = allPosts[index];
-  if (!post) return;
-  let saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
-  if (!saved.some(p => p.shobe === post.shobe && p.answer === post.answer)) {
-    saved.push({ ...post, savedAt: new Date().toLocaleDateString('fa-IR') });
-    localStorage.setItem('padafand_saved_' + loggedUser, JSON.stringify(saved));
-    document.getElementById(`savedMsg${index}`).textContent = '✅ ذخیره شد!';
-    setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 2500);
-  } else {
-    document.getElementById(`savedMsg${index}`).textContent = '⚠️ قبلاً ذخیره شده';
-    setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 2500);
-  }
-}
-
 function sharePost(index) {
   const post = allPosts[index];
   if (!post) return;
@@ -673,15 +535,30 @@ function sharePost(index) {
   }
 }
 
+// ============================================================
+// جعبه مهمات
+// ============================================================
+function saveToBox(index) {
+  if (!isLoggedIn()) { alert('⚠️ برای ذخیره مطالب ابتدا وارد حساب خود شوید.'); return; }
+  const post = allPosts[index];
+  if (!post) return;
+  let saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
+  if (!saved.some(p => p.shobe === post.shobe && p.answer === post.answer)) {
+    saved.push({ ...post, savedAt: new Date().toLocaleDateString('fa-IR') });
+    localStorage.setItem('padafand_saved_' + loggedUser, JSON.stringify(saved));
+    document.getElementById(`savedMsg${index}`).textContent = '✅ ذخیره شد!';
+    setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 2000);
+  }
+}
 function renderSaved() {
   const container = document.getElementById('savedContainer');
   if (!isLoggedIn()) {
-    container.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts);font-size:.7rem">🔒 وارد حساب خود شوید.</div>';
+    container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem">🔒 وارد حساب خود شوید.</div>';
     return;
   }
   const saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
   if (!saved.length) {
-    container.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts);font-size:.7rem">📦 جعبه مهمات خالی است</div>';
+    container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem">📦 جعبه مهمات خالی است</div>';
     return;
   }
   container.innerHTML = saved.map((p, i) => `
@@ -692,13 +569,12 @@ function renderSaved() {
       </div>
       <div class="saved-body" id="savedBody${i}">
         <p>${(p.answer || '').replace(/\n/g, '<br>')}</p>
-        <div style="color:var(--ts);font-size:.55rem;margin-top:0.2rem">📅 ${p.savedAt || 'تاریخ نامشخص'}</div>
+        <div style="color:var(--ts);font-size:.5rem">📅 ${p.savedAt || 'تاریخ نامشخص'}</div>
         <button class="del-btn" onclick="removeFromSaved(${i})">🗑️ حذف</button>
       </div>
     </div>
   `).join('');
 }
-
 function toggleSaved(index) {
   const body = document.getElementById(`savedBody${index}`);
   const arrow = body.parentElement.querySelector('.arrow');
@@ -706,7 +582,6 @@ function toggleSaved(index) {
   body.classList.toggle('show');
   arrow.classList.toggle('open');
 }
-
 function removeFromSaved(index) {
   if (!confirm('مطمئنی حذف کنی؟')) return;
   let saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
@@ -719,110 +594,56 @@ function removeFromSaved(index) {
 // کاربران
 // ============================================================
 function toggleUserPanel() {
-  const panel = document.getElementById('userPanel');
-  panel.classList.toggle('show');
-  if (isLoggedIn()) {
-    const u = allUsers[loggedUser];
-    const rank = getUserRank(loggedUser);
-    document.getElementById('displayAvatar').textContent = u?.avatar || '👤';
-    document.getElementById('displayName').innerHTML = (u?.fullname || loggedUser) + (rank ? ` <span class="rank">${rank}</span>` : '');
-    document.getElementById('displayBio').textContent = u?.bio || '—';
-    document.getElementById('displayPhone').textContent = u?.phone || '—';
-    document.getElementById('displayDate').textContent = u?.date || 'امروز';
-    document.getElementById('userLoginForm').style.display = 'none';
-    document.getElementById('userRegisterForm').style.display = 'none';
-    document.getElementById('userEditForm').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'block';
-  } else {
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('userLoginForm').style.display = 'block';
-    document.getElementById('userRegisterForm').style.display = 'none';
-    document.getElementById('userEditForm').style.display = 'none';
-  }
+  document.getElementById('userPanel').classList.toggle('show');
+  if (isLoggedIn()) { updateProfile(); }
 }
-
 function showRegister() {
   document.getElementById('userLoginForm').style.display = 'none';
   document.getElementById('userRegisterForm').style.display = 'block';
   document.getElementById('userInfo').style.display = 'none';
-  document.getElementById('userEditForm').style.display = 'none';
 }
-
 function showLogin() {
   document.getElementById('userLoginForm').style.display = 'block';
   document.getElementById('userRegisterForm').style.display = 'none';
   document.getElementById('userInfo').style.display = 'none';
-  document.getElementById('userEditForm').style.display = 'none';
 }
-
-function selectAvatar(el) {
-  document.querySelectorAll('#avatarSelect .av-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  selectedAvatar = el.dataset.avatar;
-}
-
-function selectEditAvatar(el) {
-  document.querySelectorAll('#editAvatarSelect .av-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  selectedEditAvatar = el.dataset.avatar;
-}
-
-function showEditProfile() {
-  const u = allUsers[loggedUser];
-  document.getElementById('editFullname').value = u?.fullname || '';
-  document.getElementById('editBio').value = u?.bio || '';
-  document.getElementById('editPhone').value = u?.phone || '';
-  document.getElementById('editPassword').value = '';
-  selectedEditAvatar = u?.avatar || '👤';
-  document.querySelectorAll('#editAvatarSelect .av-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.avatar === selectedEditAvatar);
-  });
-  document.getElementById('userInfo').style.display = 'none';
-  document.getElementById('userEditForm').style.display = 'block';
-}
-
-function cancelEditProfile() {
-  document.getElementById('userEditForm').style.display = 'none';
-  showUserInfo();
-}
-
-function saveEditProfile() {
-  const fullname = document.getElementById('editFullname').value.trim();
-  const bio = document.getElementById('editBio').value.trim();
-  const phone = document.getElementById('editPhone').value.trim();
-  const password = document.getElementById('editPassword').value.trim();
-  const avatar = selectedEditAvatar;
-  
-  if (!fullname || !phone) {
-    document.getElementById('editMsg').textContent = '⚠️ نام و شماره تلفن اجباری است';
-    document.getElementById('editMsg').style.color = '#c0392b';
-    return;
+function updateHeader() {
+  const nameEl = document.getElementById('headerName');
+  const avatarEl = document.getElementById('headerAvatar');
+  if (isLoggedIn()) {
+    const u = allUsers[loggedUser];
+    nameEl.textContent = u?.fullname || loggedUser;
+    avatarEl.textContent = u?.avatar || '👤';
+    document.getElementById('headerLevel').textContent = getUserRank(loggedUser) || '';
+  } else {
+    nameEl.textContent = 'ورود';
+    avatarEl.textContent = '👤';
+    document.getElementById('headerLevel').textContent = '';
   }
-  
-  allUsers[loggedUser] = {
-    ...allUsers[loggedUser],
-    fullname, bio, phone, avatar
-  };
-  if (password) allUsers[loggedUser].password = password;
-  
-  allData.users = allUsers;
-  saveData(allData);
-  document.getElementById('editMsg').textContent = '✅ تغییرات ذخیره شد!';
-  document.getElementById('editMsg').style.color = '#6db33f';
-  setTimeout(() => {
-    document.getElementById('editMsg').textContent = '';
-    document.getElementById('userEditForm').style.display = 'none';
-    showUserInfo();
-  }, 1500);
 }
-
+function updateProfile() {
+  if (!isLoggedIn()) return;
+  const u = allUsers[loggedUser];
+  document.getElementById('profileAvatar').textContent = u?.avatar || '👤';
+  document.getElementById('profileName').textContent = u?.fullname || loggedUser;
+  document.getElementById('profileLevel').textContent = getUserRank(loggedUser) || 'سطح ۱';
+  const xp = u?.xp || 0;
+  document.getElementById('profileXP').textContent = `XP: ${xp}`;
+  const comments = allPosts.filter(p => p.comments?.some(c => c.user === loggedUser)).length;
+  document.getElementById('statComments').textContent = comments;
+  document.getElementById('statLikes').textContent = u?.likes || 0;
+  const saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
+  document.getElementById('statSaved').textContent = saved.length;
+  document.getElementById('statDate').textContent = u?.date || '—';
+  document.getElementById('userLoginForm').style.display = 'none';
+  document.getElementById('userRegisterForm').style.display = 'none';
+  document.getElementById('userInfo').style.display = 'block';
+}
 function userRegister() {
   const fullname = document.getElementById('regFullname').value.trim();
   const phone = document.getElementById('regPhone').value.trim();
-  const bio = document.getElementById('regBio').value.trim();
   const username = document.getElementById('regUsername').value.trim();
   const password = document.getElementById('regPassword').value.trim();
-  
   if (!fullname || !phone || !username || !password) {
     document.getElementById('regMsg').textContent = '⚠️ همه فیلدها را پر کنید';
     return;
@@ -835,11 +656,7 @@ function userRegister() {
     document.getElementById('regMsg').textContent = '⚠️ این نام کاربری قبلاً ثبت شده';
     return;
   }
-  allUsers[username] = {
-    fullname, phone, bio: bio || '—',
-    password, date: new Date().toLocaleDateString('fa-IR'),
-    avatar: selectedAvatar || '👤'
-  };
+  allUsers[username] = { fullname, phone, password, date: new Date().toLocaleDateString('fa-IR'), avatar: '👤', xp: 0, likes: 0 };
   allData.users = allUsers;
   saveData(allData);
   document.getElementById('regMsg').textContent = '✅ ثبت‌نام موفق! وارد شوید.';
@@ -847,11 +664,9 @@ function userRegister() {
   showLogin();
   updateUserCount();
 }
-
 function userLogin() {
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
-  
   if (!allUsers[username]) {
     document.getElementById('userMsg').textContent = '⚠️ کاربری با این نام وجود ندارد';
     return;
@@ -860,24 +675,23 @@ function userLogin() {
     document.getElementById('userMsg').textContent = '⚠️ رمز عبور اشتباه است';
     return;
   }
-  
   loggedUser = username;
   localStorage.setItem('padafand_logged_user', username);
-  document.getElementById('userBtnText').textContent = username;
+  updateHeader();
   toggleUserPanel();
   updateUserCount();
   renderSaved();
+  renderAll();
 }
-
 function userLogout() {
   loggedUser = null;
   localStorage.removeItem('padafand_logged_user');
-  document.getElementById('userBtnText').textContent = 'ورود';
+  updateHeader();
   toggleUserPanel();
   updateUserCount();
   renderSaved();
+  renderAll();
 }
-
 function updateUserCount() {
   document.getElementById('userCount').textContent = Object.keys(allUsers).length;
 }
