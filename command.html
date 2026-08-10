@@ -5,128 +5,697 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مرکز فرماندهی پدافند شبهات</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
+/* ============================================================
+   طراحی پریمیوم نظامی - اتاق فرماندهی سایبری
+   ============================================================ */
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;justify-content:center;align-items:center;background-image:radial-gradient(circle at 20% 30%,#1a2a0e 0%,#0a0e08 80%);padding:1rem}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
-@keyframes glowPulse{0%,100%{opacity:0.4}50%{opacity:1}}
+:root{
+  --bg-primary:#080c06;
+  --bg-secondary:#0f160a;
+  --bg-panel:#111c0a;
+  --bg-glass:rgba(17,28,10,0.6);
+  --border-military:#2a3d1a;
+  --border-glow:#4a7c20;
+  --neon-green:#6db33f;
+  --neon-glow:rgba(109,179,63,0.3);
+  --gold:#c8a000;
+  --gold-glow:rgba(200,160,0,0.2);
+  --text-primary:#d4e8b0;
+  --text-secondary:#7a9a55;
+  --text-gold:#c8a000;
+  --shadow-dark:rgba(0,0,0,0.8);
+  --shadow-glow:0 0 30px rgba(109,179,63,0.1);
+  --font-mono:'Courier New',monospace;
+}
 
-.cmd-container{width:100%;max-width:550px;padding:0.5rem}
-.cmd-box{background:linear-gradient(145deg,#0f1a0a,#1a2a0e);border:2px solid #4a7c20;border-radius:20px;padding:1.5rem 1.2rem;box-shadow:0 0 60px rgba(74,124,32,.2);animation:fadeIn .5s ease;position:relative;overflow:hidden}
-/* خطوط اسکن روی کل صفحه */
-.cmd-box::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(74,124,32,.04) 2px,rgba(74,124,32,.04) 4px);z-index:1}
+body{
+  background:var(--bg-primary);
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  direction:rtl;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:1rem;
+  background-image: 
+    radial-gradient(ellipse at 20% 50%, rgba(74,124,32,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(74,124,32,0.03) 0%, transparent 60%);
+  position:relative;
+  overflow-x:hidden;
+}
 
-.cmd-header{text-align:center;border-bottom:2px solid #2e4018;padding-bottom:0.6rem;margin-bottom:1rem;position:relative;z-index:2}
-.cmd-header .logo{font-size:2.2rem}
-.cmd-header h1{color:#d4e8b0;font-size:1.1rem;letter-spacing:4px}
-.cmd-header h1 span{color:#6db33f}
-.cmd-header .sub{color:#7a9a55;font-size:.45rem;letter-spacing:3px;font-family:monospace}
-.cmd-header .status{display:flex;justify-content:center;gap:.5rem;margin-top:.2rem}
-.cmd-header .status .dot{width:6px;height:6px;border-radius:50%;background:#6db33f;animation:blink 1.2s infinite}
-.cmd-header .status span{color:#6db33f;font-size:.45rem;letter-spacing:1px;font-family:monospace}
+/* ===== پس‌زمینه پویا (انیمیشن‌های نظامی) ===== */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(74,124,32,0.02) 50px, rgba(74,124,32,0.02) 51px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(74,124,32,0.02) 50px, rgba(74,124,32,0.02) 51px);
+  opacity:0.3;
+}
 
-.upload-area{background:linear-gradient(145deg,#0d1408,#1a240e);border:2px dashed #c8a000;border-radius:12px;padding:1rem;margin-bottom:0.8rem;text-align:center;position:relative;z-index:2}
-.upload-area .icon{font-size:2.5rem;opacity:.5}
-.upload-area .title{color:#c8a000;font-size:.65rem;letter-spacing:2px;font-weight:700}
-.upload-area .sub{color:#7a9a55;font-size:.45rem}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-primary) 100%);
+  opacity:0.6;
+}
+
+/* ===== اسکن لاین ===== */
+.scan-line{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(109,179,63,0.03) 3px, rgba(109,179,63,0.03) 4px);
+}
+
+/* ===== رادار متحرک ===== */
+.radar-bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.05;
+}
+.radar-bg::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:80%;
+  height:80%;
+  border-radius:50%;
+  border:1px solid rgba(109,179,63,0.2);
+  transform:translate(-50%,-50%);
+  animation:radarPulse 4s ease-in-out infinite;
+}
+.radar-bg::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:40%;
+  height:40%;
+  border-radius:50%;
+  border:1px solid rgba(109,179,63,0.1);
+  transform:translate(-50%,-50%);
+  animation:radarPulse 4s ease-in-out infinite 1s;
+}
+@keyframes radarPulse{
+  0%{transform:translate(-50%,-50%) scale(0.8);opacity:0.3}
+  50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(0.8);opacity:0.3}
+}
+
+/* ===== هگزاگون ===== */
+.hex-bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 5 L55 17.5 L55 42.5 L30 55 L5 42.5 L5 17.5 Z' fill='none' stroke='%236db33f' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size:60px 60px;
+}
+
+/* ===== کانتینر اصلی ===== */
+.cmd-container{
+  width:100%;
+  max-width:600px;
+  padding:0.5rem;
+  position:relative;
+  z-index:1;
+  animation:fadeIn 0.8s ease;
+}
+
+/* ===== باکس اصلی (گلسمورفیسم) ===== */
+.cmd-box{
+  background:var(--bg-glass);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(74,124,32,0.25);
+  border-radius:20px;
+  padding:1.8rem 1.5rem;
+  box-shadow: 
+    0 0 60px rgba(74,124,32,0.08),
+    inset 0 0 80px rgba(74,124,32,0.03),
+    inset 0 1px 0 rgba(109,179,63,0.1);
+  position:relative;
+  overflow:hidden;
+  transition:all 0.3s ease;
+}
+.cmd-box::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:20px;
+  padding:1px;
+  background:linear-gradient(135deg, rgba(109,179,63,0.2), transparent 50%, rgba(109,179,63,0.05));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+
+/* ===== هدر با نشان نظامی ===== */
+.cmd-header{
+  text-align:center;
+  border-bottom:1px solid rgba(42,61,26,0.5);
+  padding-bottom:0.8rem;
+  margin-bottom:1.2rem;
+  position:relative;
+}
+.cmd-header .logo{
+  font-size:2.5rem;
+  display:block;
+  margin-bottom:0.2rem;
+  filter:drop-shadow(0 0 20px rgba(109,179,63,0.2));
+}
+.cmd-header h1{
+  color:var(--text-primary);
+  font-size:1.2rem;
+  letter-spacing:4px;
+  font-weight:700;
+}
+.cmd-header h1 span{
+  color:var(--neon-green);
+  text-shadow:0 0 20px rgba(109,179,63,0.3);
+}
+.cmd-header .sub{
+  color:var(--text-secondary);
+  font-size:0.5rem;
+  letter-spacing:3px;
+  font-family:var(--font-mono);
+  margin-top:0.1rem;
+}
+.cmd-header .status-bar{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:0.8rem;
+  margin-top:0.4rem;
+  flex-wrap:wrap;
+}
+.cmd-header .status-bar .status-item{
+  display:flex;
+  align-items:center;
+  gap:0.3rem;
+  font-size:0.5rem;
+  color:var(--text-secondary);
+  font-family:var(--font-mono);
+}
+.cmd-header .status-bar .status-item .dot{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  display:inline-block;
+  animation:blink 1.5s infinite;
+}
+.cmd-header .status-bar .status-item .dot.green{background:var(--neon-green);box-shadow:0 0 8px var(--neon-green);}
+.cmd-header .status-bar .status-item .dot.gold{background:var(--gold);box-shadow:0 0 8px var(--gold);}
+.cmd-header .status-bar .status-item .dot.red{background:#c0392b;box-shadow:0 0 8px #c0392b;}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* ===== بخش امنیت ===== */
+#securityPage .input-group{margin-bottom:0.6rem;position:relative;z-index:2}
+#securityPage .input-group label{
+  color:var(--text-secondary);
+  font-size:0.55rem;
+  display:block;
+  margin-bottom:0.1rem;
+  letter-spacing:2px;
+  font-weight:600;
+}
+#securityPage .input-group input{
+  width:100%;
+  padding:0.4rem 0.7rem;
+  background:rgba(13,20,8,0.8);
+  border:1.5px solid rgba(42,61,26,0.6);
+  border-radius:8px;
+  color:var(--text-primary);
+  font-size:0.8rem;
+  outline:none;
+  text-align:center;
+  transition:all 0.3s ease;
+  font-family:var(--font-mono);
+}
+#securityPage .input-group input:focus{
+  border-color:var(--neon-green);
+  box-shadow:0 0 20px rgba(109,179,63,0.1), inset 0 0 20px rgba(109,179,63,0.05);
+}
+#securityPage .btn-cmd{
+  width:100%;
+  padding:0.6rem;
+  background:linear-gradient(135deg, #2a4a12, #1a3a0a);
+  border:1px solid var(--neon-green);
+  border-radius:10px;
+  color:#e8f5cc;
+  font-weight:700;
+  font-size:0.85rem;
+  cursor:pointer;
+  letter-spacing:3px;
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+  margin-top:0.2rem;
+}
+#securityPage .btn-cmd:hover{
+  background:linear-gradient(135deg, #3a6a1a, #2a4a12);
+  box-shadow:0 0 40px rgba(109,179,63,0.15);
+  transform:scale(1.01);
+}
+#securityPage .btn-cmd::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(109,179,63,0.1), transparent);
+  transform:translateX(-100%);
+  animation:shimmer 3s infinite;
+}
+@keyframes shimmer{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+#securityPage .error{color:#c0392b;font-size:0.6rem;text-align:center;margin-top:0.2rem;min-height:1rem}
+.security-badge{
+  text-align:center;
+  margin-top:0.6rem;
+  border-top:1px solid rgba(42,61,26,0.3);
+  padding-top:0.5rem;
+}
+.security-badge span{
+  color:var(--text-secondary);
+  font-size:0.4rem;
+  letter-spacing:2px;
+  font-family:var(--font-mono);
+}
+
+/* ===== آپلود کارت ===== */
+.upload-area{
+  background:rgba(13,20,8,0.6);
+  border:1.5px dashed rgba(200,160,0,0.3);
+  border-radius:12px;
+  padding:1rem;
+  margin-bottom:0.8rem;
+  text-align:center;
+  transition:all 0.3s ease;
+  position:relative;
+  z-index:2;
+}
+.upload-area:hover{
+  border-color:rgba(200,160,0,0.6);
+  box-shadow:0 0 30px rgba(200,160,0,0.05);
+}
+.upload-area .icon{font-size:2.5rem;opacity:0.5}
+.upload-area .title{color:var(--gold);font-size:0.7rem;letter-spacing:2px;font-weight:700}
+.upload-area .sub{color:var(--text-secondary);font-size:0.45rem}
 .upload-area input[type="file"]{display:none}
-.upload-area .btn-upload{background:#c8a000;border:none;border-radius:6px;color:#1a1000;padding:.3rem 1.2rem;font-size:.65rem;font-weight:700;cursor:pointer;margin-top:.3rem}
-.upload-area .btn-upload:hover{background:#d4b000}
-.upload-area .preview{display:none;margin-top:.4rem;padding:.2rem;background:#0a0e08;border-radius:6px;border:1px solid #2e4018}
+.upload-area .btn-upload{
+  background:var(--gold);
+  border:none;
+  border-radius:6px;
+  color:#1a1000;
+  padding:0.3rem 1.2rem;
+  font-size:0.65rem;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:0.3rem;
+  transition:all 0.3s ease;
+}
+.upload-area .btn-upload:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(200,160,0,0.2)}
+.upload-area .preview{display:none;margin-top:0.4rem;padding:0.2rem;background:rgba(10,14,8,0.6);border-radius:6px;border:1px solid rgba(42,61,26,0.3)}
 .upload-area .preview img{max-width:100%;max-height:80px;border-radius:4px}
-.upload-area .preview .file-name{color:#d4e8b0;font-size:.5rem}
-.upload-area .preview .card-info{color:#6db33f;font-size:.45rem}
+.upload-area .preview .file-name{color:var(--text-primary);font-size:0.5rem}
+.upload-area .preview .card-info{color:var(--neon-green);font-size:0.45rem}
 
-#securityPage .input-group{margin-bottom:.5rem;position:relative;z-index:2}
-#securityPage label{color:#7a9a55;font-size:.5rem;display:block;margin-bottom:.1rem;letter-spacing:2px}
-#securityPage input{width:100%;padding:.35rem .6rem;background:#0d1408;border:1.5px solid #2e4018;border-radius:6px;color:#d4e8b0;font-size:.75rem;outline:none;text-align:center}
-#securityPage input:focus{border-color:#6db33f}
-#securityPage .btn-cmd{width:100%;padding:.5rem;background:linear-gradient(135deg,#4a7c20,#2a4a12);border:1px solid #6db33f;border-radius:8px;color:#e8f5cc;font-weight:700;font-size:.8rem;cursor:pointer;letter-spacing:3px;transition:.3s;margin-top:.2rem;position:relative;z-index:2}
-#securityPage .btn-cmd:hover{background:linear-gradient(135deg,#3a6a1a,#1a3a0a);box-shadow:0 0 30px rgba(74,124,32,.2)}
-#securityPage .error{color:#c0392b;font-size:.55rem;min-height:1rem;text-align:center;margin-top:.1rem}
-.security-badge{text-align:center;margin-top:.5rem;border-top:1px solid #2e4018;padding-top:.4rem;position:relative;z-index:2}
-.security-badge span{color:#7a9a55;font-size:.35rem;letter-spacing:2px;font-family:monospace}
+/* ===== داشبورد ===== */
+#dashboardPage{display:none;animation:fadeIn 0.6s ease;position:relative;z-index:2}
 
-#dashboardPage{display:none;animation:fadeIn .5s ease;position:relative;z-index:2}
-.dash-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #2e4018;padding-bottom:.3rem;margin-bottom:.5rem;flex-wrap:wrap}
-.dash-header .title{color:#6db33f;font-size:.7rem;letter-spacing:2px;font-weight:700}
-.dash-header .title i{margin-left:.2rem}
-.dash-header .unit{color:#7a9a55;font-size:.45rem;letter-spacing:1px}
-.dash-header .logout{background:none;border:1px solid #c0392b;color:#c0392b;padding:.1rem .5rem;border-radius:4px;cursor:pointer;font-size:.5rem}
-.dash-header .logout:hover{background:#c0392b;color:#fff}
+.dash-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(42,61,26,0.3);
+  padding-bottom:0.4rem;
+  margin-bottom:0.8rem;
+  flex-wrap:wrap;
+  gap:0.3rem;
+}
+.dash-header .title{
+  color:var(--neon-green);
+  font-size:0.75rem;
+  letter-spacing:2px;
+  font-weight:700;
+}
+.dash-header .title i{margin-left:0.2rem;color:var(--gold)}
+.dash-header .unit{color:var(--text-secondary);font-size:0.5rem;letter-spacing:1px}
+.dash-header .logout{
+  background:none;
+  border:1px solid rgba(192,57,43,0.4);
+  color:#c0392b;
+  padding:0.15rem 0.6rem;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:0.5rem;
+  transition:all 0.3s ease;
+}
+.dash-header .logout:hover{background:rgba(192,57,43,0.1);border-color:#c0392b}
 
-/* ===== مانیتور واقعی ===== */
-.monitor{background:#0a0e08;border:3px solid #2e4018;border-radius:10px;padding:0.4rem;margin-bottom:0.6rem;position:relative;overflow:hidden;box-shadow:inset 0 0 30px rgba(0,0,0,.6),0 0 20px rgba(74,124,32,.1)}
-.monitor::before{content:'';position:absolute;inset:4px;border:1px solid #1a2a0e;border-radius:6px;pointer-events:none}
-.monitor .monitor-header{display:flex;justify-content:space-between;align-items:center;background:#0d1408;padding:0.2rem 0.6rem;border-radius:4px 4px 0 0;border-bottom:1px solid #1a2a0e}
-.monitor .monitor-header .brand{color:#6db33f;font-size:.45rem;font-family:monospace;letter-spacing:2px}
-.monitor .monitor-header .led{display:flex;gap:0.2rem}
-.monitor .monitor-header .led span{width:6px;height:6px;border-radius:50%;display:inline-block}
-.monitor .monitor-header .led .red{background:#c0392b;animation:blink 1.5s infinite}
-.monitor .monitor-header .led .green{background:#6db33f;animation:blink 2s infinite}
-.monitor .monitor-header .led .yellow{background:#c8a000;animation:blink 1s infinite}
-.monitor .monitor-screen{background:#0d1408;padding:0.4rem 0.5rem;min-height:80px;border-radius:0 0 6px 6px;position:relative}
-.monitor .monitor-screen .scan-line{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(74,124,32,.05) 2px,rgba(74,124,32,.05) 4px);border-radius:0 0 6px 6px}
-.monitor-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;position:relative;z-index:1}
-.monitor-item{background:#0a0e08;border:1px solid #1a2a0e;border-radius:4px;padding:0.2rem 0.2rem;text-align:center}
-.monitor-item .icon{font-size:.7rem}
-.monitor-item .num{font-size:.85rem;font-weight:900;color:#d4e8b0;line-height:1.2;font-family:monospace}
-.monitor-item .label{color:#7a9a55;font-size:.3rem;letter-spacing:1px}
-.monitor-item .sub-label{color:#4a6a2a;font-size:.25rem;letter-spacing:.5px}
+/* ===== مانیتور هوشمند ===== */
+.monitor{
+  background:rgba(10,14,8,0.9);
+  border:1.5px solid rgba(42,61,26,0.4);
+  border-radius:12px;
+  padding:0.5rem;
+  margin-bottom:0.8rem;
+  position:relative;
+  overflow:hidden;
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.5), 0 0 30px rgba(74,124,32,0.05);
+}
+.monitor::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  padding:1px;
+  background:linear-gradient(135deg, rgba(109,179,63,0.1), transparent 50%, rgba(109,179,63,0.05));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.monitor .monitor-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.2rem 0.5rem;
+  border-bottom:1px solid rgba(42,61,26,0.2);
+  margin-bottom:0.3rem;
+}
+.monitor .monitor-header .brand{
+  color:var(--neon-green);
+  font-size:0.45rem;
+  font-family:var(--font-mono);
+  letter-spacing:2px;
+}
+.monitor .monitor-header .brand i{margin-left:0.2rem}
+.monitor .monitor-header .leds{display:flex;gap:0.3rem}
+.monitor .monitor-header .leds span{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  display:inline-block;
+}
+.monitor .monitor-header .leds .red{background:#c0392b;box-shadow:0 0 6px #c0392b;animation:blink 1.2s infinite}
+.monitor .monitor-header .leds .green{background:var(--neon-green);box-shadow:0 0 6px var(--neon-green);animation:blink 2s infinite}
+.monitor .monitor-header .leds .gold{background:var(--gold);box-shadow:0 0 6px var(--gold);animation:blink 1.8s infinite}
+
+.monitor .monitor-screen{
+  padding:0.3rem;
+  position:relative;
+  border-radius:6px;
+  background:rgba(8,12,6,0.5);
+}
+.monitor .monitor-screen .scan-line-m{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(109,179,63,0.04) 2px, rgba(109,179,63,0.04) 4px);
+  border-radius:6px;
+}
+
+.monitor-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.3rem;
+  position:relative;
+  z-index:1;
+}
+.monitor-item{
+  background:rgba(8,12,6,0.6);
+  border:1px solid rgba(42,61,26,0.2);
+  border-radius:6px;
+  padding:0.3rem 0.2rem;
+  text-align:center;
+  transition:all 0.3s ease;
+}
+.monitor-item:hover{
+  border-color:rgba(109,179,63,0.3);
+  box-shadow:0 0 20px rgba(109,179,63,0.05);
+}
+.monitor-item .icon{font-size:0.8rem;color:var(--gold)}
+.monitor-item .num{
+  font-size:0.95rem;
+  font-weight:900;
+  color:var(--text-primary);
+  line-height:1.2;
+  font-family:var(--font-mono);
+}
+.monitor-item .label{color:var(--text-secondary);font-size:0.35rem;letter-spacing:1px}
+.monitor-item .sub-label{color:rgba(74,106,42,0.6);font-size:0.3rem;letter-spacing:0.5px}
 
 /* ===== لیست‌ها ===== */
-.user-list,.padafand-list{background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:0.2rem;margin-bottom:0.4rem;max-height:80px;overflow-y:auto}
-.user-list::-webkit-scrollbar,.padafand-list::-webkit-scrollbar{width:3px}
-.user-list::-webkit-scrollbar-thumb,.padafand-list::-webkit-scrollbar-thumb{background:#4a7c20}
-.user-item{display:flex;justify-content:space-between;align-items:center;padding:0.08rem 0.2rem;border-bottom:1px solid #1a2a0e;font-size:.5rem;color:#d4e8b0}
-.user-item .phone{color:#6db33f;font-size:.4rem;direction:ltr}
-.user-item .fullname{color:#c8a000;font-size:.45rem;font-weight:700}
-.padafand-item{display:flex;justify-content:space-between;align-items:center;padding:0.08rem 0.2rem;border-bottom:1px solid #1a2a0e;font-size:.5rem;color:#d4e8b0;flex-wrap:wrap;gap:.1rem}
-.padafand-item .count{color:#6db33f;font-size:.4rem;font-weight:700}
-.padafand-item .time{color:#7a9a55;font-size:.35rem}
-.padafand-item .del-btn{background:#c0392b;border:none;color:#fff;padding:0.05rem 0.3rem;border-radius:3px;cursor:pointer;font-size:.4rem}
-.padafand-item .del-btn:hover{background:#a02020}
-.padafand-item .sender-name{color:#d4e8b0;font-size:.45rem}
+.user-list, .padafand-list{
+  background:rgba(13,20,8,0.6);
+  border:1px solid rgba(42,61,26,0.2);
+  border-radius:8px;
+  padding:0.3rem;
+  margin-bottom:0.5rem;
+  max-height:80px;
+  overflow-y:auto;
+}
+.user-list::-webkit-scrollbar, .padafand-list::-webkit-scrollbar{width:3px}
+.user-list::-webkit-scrollbar-track, .padafand-list::-webkit-scrollbar-track{background:rgba(13,20,8,0.3)}
+.user-list::-webkit-scrollbar-thumb, .padafand-list::-webkit-scrollbar-thumb{background:var(--neon-green);border-radius:3px}
+
+.user-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.1rem 0.3rem;
+  border-bottom:1px solid rgba(42,61,26,0.1);
+  font-size:0.55rem;
+  color:var(--text-primary);
+}
+.user-item .phone{color:var(--neon-green);font-size:0.45rem;direction:ltr;font-family:var(--font-mono)}
+.user-item .fullname{color:var(--gold);font-size:0.5rem;font-weight:700}
+
+.padafand-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.1rem 0.3rem;
+  border-bottom:1px solid rgba(42,61,26,0.1);
+  font-size:0.5rem;
+  color:var(--text-primary);
+  flex-wrap:wrap;
+  gap:0.1rem;
+}
+.padafand-item .count{color:var(--neon-green);font-size:0.45rem;font-weight:700}
+.padafand-item .time{color:var(--text-secondary);font-size:0.35rem;font-family:var(--font-mono)}
+.padafand-item .del-btn{
+  background:rgba(192,57,43,0.3);
+  border:1px solid rgba(192,57,43,0.3);
+  color:#c0392b;
+  padding:0.05rem 0.4rem;
+  border-radius:3px;
+  cursor:pointer;
+  font-size:0.4rem;
+  transition:all 0.3s ease;
+}
+.padafand-item .del-btn:hover{background:rgba(192,57,43,0.5)}
+.padafand-item .sender-name{color:var(--text-primary);font-size:0.45rem}
 
 /* ===== دکمه آیین‌نامه ===== */
-.rule-btn{background:#c8a000;border:none;border-radius:4px;color:#1a1000;padding:0.2rem 0.8rem;font-size:.55rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:.3s;width:100%;margin-bottom:0.3rem}
-.rule-btn:hover{background:#d4b000}
-.rule-box{display:none;background:#0d1408;border:1px solid #c8a000;border-radius:6px;padding:0.5rem;margin-bottom:0.4rem;max-height:150px;overflow-y:auto;font-size:.55rem;color:#d4e8b0;line-height:1.8;border-right:2px solid #c8a000}
+.rule-btn{
+  width:100%;
+  padding:0.35rem;
+  background:linear-gradient(135deg, rgba(200,160,0,0.1), rgba(200,160,0,0.05));
+  border:1px solid rgba(200,160,0,0.3);
+  border-radius:8px;
+  color:var(--gold);
+  font-size:0.6rem;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:2px;
+  transition:all 0.3s ease;
+  margin-bottom:0.4rem;
+}
+.rule-btn:hover{
+  background:rgba(200,160,0,0.15);
+  border-color:var(--gold);
+  box-shadow:0 0 30px rgba(200,160,0,0.05);
+}
+.rule-box{
+  display:none;
+  background:rgba(13,20,8,0.8);
+  border:1px solid rgba(200,160,0,0.2);
+  border-radius:8px;
+  padding:0.5rem;
+  margin-bottom:0.4rem;
+  max-height:180px;
+  overflow-y:auto;
+  font-size:0.5rem;
+  color:var(--text-primary);
+  line-height:1.8;
+}
 .rule-box.show{display:block}
-.rule-box .rule-title{color:#c8a000;font-weight:700;font-size:.6rem;border-bottom:1px solid #2e4018;padding-bottom:0.2rem;margin-bottom:0.3rem}
+.rule-box .rule-title{
+  color:var(--gold);
+  font-weight:700;
+  font-size:0.6rem;
+  border-bottom:1px solid rgba(42,61,26,0.2);
+  padding-bottom:0.2rem;
+  margin-bottom:0.3rem;
+}
+.rule-box p{padding:0.1rem 0;border-bottom:1px solid rgba(42,61,26,0.05)}
+.rule-box .rule-num{color:var(--neon-green);font-weight:700;margin-left:0.2rem}
 
-/* ===== فرم ===== */
-.form-section{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:0.4rem;border-right:3px solid #c8a000}
-.form-section .form-title{display:flex;align-items:center;gap:.3rem;margin-bottom:.1rem}
-.form-section .form-title span{color:#c8a000;font-weight:700;font-size:.6rem;letter-spacing:1px}
-.form-section .form-title .sub{color:#7a9a55;font-size:.3rem;margin-right:auto}
-.form-section input,.form-section textarea,.form-section select{width:100%;padding:.25rem .4rem;background:#0a0e08;border:1.5px solid #2e4018;border-radius:4px;color:#d4e8b0;font-size:.6rem;outline:none;font-family:inherit;margin-bottom:.1rem}
-.form-section input:focus,.form-section textarea:focus,.form-section select:focus{border-color:#6db33f}
-.form-section textarea{resize:vertical;min-height:30px}
-.form-section .row{display:grid;grid-template-columns:1fr 1fr;gap:.1rem}
-.form-section .btn-fire{width:100%;padding:.3rem;background:linear-gradient(135deg,#c8a000,#a08000);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;letter-spacing:1px;margin-top:.1rem}
-.form-section .btn-fire:hover{background:linear-gradient(135deg,#d4b000,#b09000)}
-.form-section .msg{color:#6db33f;font-size:.5rem;text-align:center;min-height:.7rem}
+/* ===== فرم پرتاب موشک (لانچر) ===== */
+.form-section{
+  background:rgba(13,20,8,0.6);
+  border:1px solid rgba(42,61,26,0.3);
+  border-radius:12px;
+  padding:0.6rem;
+  border-right:3px solid var(--gold);
+  position:relative;
+  overflow:hidden;
+}
+.form-section::before{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation:shimmerGold 3s infinite;
+}
+@keyframes shimmerGold{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
 
-.scan-line-bg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;background:repeating-linear-gradient(0deg,transparent,transparent 3px,#6db33f 3px,#6db33f 4px)}
-@media(max-width:450px){.cmd-box{padding:0.8rem 0.5rem}}
+.form-section .form-title{
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+  margin-bottom:0.2rem;
+}
+.form-section .form-title span{color:var(--gold);font-weight:700;font-size:0.65rem;letter-spacing:1px}
+.form-section .form-title .sub{color:var(--text-secondary);font-size:0.35rem;margin-right:auto;font-family:var(--font-mono)}
+
+.form-section input, .form-section textarea, .form-section select{
+  width:100%;
+  padding:0.3rem 0.5rem;
+  background:rgba(8,12,6,0.6);
+  border:1.5px solid rgba(42,61,26,0.3);
+  border-radius:6px;
+  color:var(--text-primary);
+  font-size:0.65rem;
+  outline:none;
+  font-family:inherit;
+  margin-bottom:0.15rem;
+  transition:all 0.3s ease;
+}
+.form-section input:focus, .form-section textarea:focus, .form-section select:focus{
+  border-color:var(--neon-green);
+  box-shadow:0 0 20px rgba(109,179,63,0.05);
+}
+.form-section textarea{resize:vertical;min-height:35px}
+.form-section .row{display:grid;grid-template-columns:1fr 1fr;gap:0.15rem}
+
+/* ===== دکمه پرتاب (موشکی) ===== */
+.btn-fire{
+  width:100%;
+  padding:0.5rem;
+  background:linear-gradient(135deg, #c8a000, #a08000);
+  border:none;
+  border-radius:8px;
+  color:#1a1000;
+  font-weight:700;
+  font-size:0.8rem;
+  cursor:pointer;
+  letter-spacing:3px;
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+  margin-top:0.15rem;
+  box-shadow:0 0 30px rgba(200,160,0,0.1);
+}
+.btn-fire:hover{
+  transform:scale(1.02);
+  box-shadow:0 0 50px rgba(200,160,0,0.2);
+}
+.btn-fire:active{
+  transform:scale(0.98);
+}
+.btn-fire::after{
+  content:'🚀';
+  position:absolute;
+  left:10px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:1rem;
+  animation:rocketFloat 2s ease-in-out infinite;
+}
+@keyframes rocketFloat{
+  0%,100%{transform:translateY(-50%) translateX(0)}
+  50%{transform:translateY(-60%) translateX(-5px)}
+}
+.btn-fire .fire-text{margin-left:1.5rem}
+
+.form-section .msg{
+  color:var(--neon-green);
+  font-size:0.5rem;
+  text-align:center;
+  min-height:0.7rem;
+  font-family:var(--font-mono);
+}
+
+/* ===== ریسپانسیو ===== */
+@media(max-width:450px){
+  .cmd-box{padding:1rem 0.6rem}
+  .monitor-grid{grid-template-columns:1fr 1fr}
+  .cmd-header h1{font-size:1rem}
+  .form-section .row{grid-template-columns:1fr}
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.98)}to{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body>
-<div class="scan-line-bg"></div>
+
+<!-- ===== المان‌های پس‌زمینه ===== -->
+<div class="scan-line"></div>
+<div class="radar-bg"></div>
+<div class="hex-bg"></div>
 
 <div class="cmd-container">
 <div class="cmd-box">
 
+  <!-- ===== هدر ===== -->
   <div class="cmd-header">
-    <div class="logo">🎖️</div>
+    <span class="logo">🎖️</span>
     <h1>مرکز فرماندهی <span>پدافند</span></h1>
     <div class="sub">══ سامانهٔ دسترسی سطح یک ══</div>
-    <div class="status"><span class="dot"></span><span>سیستم فعال</span></div>
+    <div class="status-bar">
+      <span class="status-item"><span class="dot green"></span> سیستم فعال</span>
+      <span class="status-item"><span class="dot gold"></span> سطح عملیات: ۳</span>
+      <span class="status-item"><span class="dot red"></span> امنیت: بالا</span>
+    </div>
   </div>
 
+  <!-- ===== صفحه امنیت ===== -->
   <div id="securityPage">
     <div class="upload-area">
       <div class="icon">🪪</div>
@@ -153,6 +722,7 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
     </div>
   </div>
 
+  <!-- ===== داشبورد ===== -->
   <div id="dashboardPage">
     <div class="dash-header">
       <div>
@@ -162,36 +732,36 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
       <button class="logout" onclick="logoutCmd()">🚪 خروج</button>
     </div>
 
-    <!-- ===== مانیتور واقعی ===== -->
+    <!-- ===== مانیتور ===== -->
     <div class="monitor">
       <div class="monitor-header">
-        <span class="brand">🖥️ PADAFAND-CMD</span>
-        <div class="led">
+        <span class="brand"><i class="fas fa-desktop"></i> PADAFAND-CMD</span>
+        <div class="leds">
           <span class="red"></span>
           <span class="green"></span>
-          <span class="yellow"></span>
+          <span class="gold"></span>
         </div>
       </div>
       <div class="monitor-screen">
-        <div class="scan-line"></div>
+        <div class="scan-line-m"></div>
         <div class="monitor-grid">
           <div class="monitor-item">
-            <div class="icon">📊</div>
+            <div class="icon"><i class="fas fa-file-alt"></i></div>
             <div class="num" id="statPosts">0</div>
             <div class="label">شبهه پاسخ داده شد</div>
           </div>
           <div class="monitor-item">
-            <div class="icon">📁</div>
+            <div class="icon"><i class="fas fa-tags"></i></div>
             <div class="num" id="statCats">0</div>
             <div class="label">دسته‌بندی</div>
           </div>
           <div class="monitor-item">
-            <div class="icon">👥</div>
+            <div class="icon"><i class="fas fa-users"></i></div>
             <div class="num" id="statUsers">0</div>
             <div class="label">کاربران ثبت‌نام‌شده</div>
           </div>
           <div class="monitor-item">
-            <div class="icon">📅</div>
+            <div class="icon"><i class="fas fa-calendar-day"></i></div>
             <div class="num" id="statToday">0</div>
             <div class="label">مطلب امروز</div>
           </div>
@@ -199,54 +769,59 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
       </div>
     </div>
 
-    <!-- ===== دکمه آیین‌نامه ===== -->
-    <button class="rule-btn" onclick="toggleRule()">📜 آیین‌نامه پدافند شبهات</button>
+    <!-- ===== آیین‌نامه ===== -->
+    <button class="rule-btn" onclick="toggleRule()"><i class="fas fa-scroll"></i> آیین‌نامه پدافند شبهات</button>
     <div class="rule-box" id="ruleBox">
-      <div class="rule-title">📋 آیین‌نامه کانال «پدافند شبهات»</div>
-      <p><b>ماده ۱:</b> کانال با هدف پاسخگویی مستند و به‌روز به شبهات دینی، اعتقادی و سیاسی فعالیت می‌کند.</p>
-      <p><b>ماده ۲:</b> لحن رسمی، روان و غیرخطابی با رعایت احترام به همه مخاطبان.</p>
-      <p><b>ماده ۳:</b> هر مطلب شامل: شبهه، پاسخ، نویسنده، منبع و هشتگ است.</p>
-      <p><b>ماده ۴:</b> انتشار مطالب حداقل ۳ پست در روز با فاصله ۱ ساعت.</p>
-      <p><b>ماده ۵:</b> پاسخ به شبهات دریافتی حداکثر ۴۸ ساعت.</p>
-      <p><b>ماده ۶:</b> استفاده از منابع معتبر مانند قرآن، روایات و اندیشکده سعداء.</p>
-      <p><b>ماده ۷:</b> شورای فرماندهی متشکل از مستشاران، نظارت بر اجرای قوانین را بر عهده دارد.</p>
-      <p><b>ماده ۸:</b> کاربران می‌توانند با ثبت‌نام، مطالب را ذخیره و نظر بدهند.</p>
-      <p style="color:#c8a000;font-size:.5rem;margin-top:0.2rem">📅 تاریخ تصویب: ۱۴۰۴/۰۴/۰۳</p>
+      <div class="rule-title">📋 آیین‌نامه کانال «پدافند شبهات» (۱۳ بند)</div>
+      <p><span class="rule-num">۱.</span> کانال با هدف پاسخگویی مستند و به‌روز به شبهات دینی، اعتقادی و سیاسی فعالیت می‌کند.</p>
+      <p><span class="rule-num">۲.</span> لحن رسمی، روان و غیرخطابی با رعایت احترام به همه مخاطبان.</p>
+      <p><span class="rule-num">۳.</span> هر مطلب شامل: شبهه، پاسخ، نویسنده، منبع و هشتگ است.</p>
+      <p><span class="rule-num">۴.</span> انتشار مطالب حداقل ۳ پست در روز با فاصله ۱ ساعت.</p>
+      <p><span class="rule-num">۵.</span> پاسخ به شبهات دریافتی حداکثر ۴۸ ساعت.</p>
+      <p><span class="rule-num">۶.</span> استفاده از منابع معتبر مانند قرآن، روایات و اندیشکده سعداء.</p>
+      <p><span class="rule-num">۷.</span> شورای فرماندهی متشکل از مستشاران، نظارت بر اجرای قوانین را بر عهده دارد.</p>
+      <p><span class="rule-num">۸.</span> کاربران می‌توانند با ثبت‌نام، مطالب را ذخیره و نظر بدهند.</p>
+      <p><span class="rule-num">۹.</span> مطالب ویدئویی و صوتی در صورت تأیید شورا قابل انتشار است.</p>
+      <p><span class="rule-num">۱۰.</span> هرگونه توهین یا فحش در کامنت‌ها حذف می‌شود.</p>
+      <p><span class="rule-num">۱۱.</span> اعضای تیم موظف به مطالعه کتب دفع شبهات هستند.</p>
+      <p><span class="rule-num">۱۲.</span> تغییرات آیین‌نامه با ۴ رأی مثبت فرماندهان انجام می‌شود.</p>
+      <p><span class="rule-num">۱۳.</span> این آیین‌نامه در تاریخ ۱۴۰۴/۰۴/۰۳ تصویب شده است.</p>
+      <p style="color:var(--gold);font-size:0.45rem;margin-top:0.2rem;border-top:1px solid rgba(42,61,26,0.2);padding-top:0.2rem">📅 تاریخ تصویب: ۱۴۰۴/۰۴/۰۳</p>
     </div>
 
-    <!-- لیست کاربران -->
-    <div style="background:#0d1408;border:1px solid #2e4018;border-radius:6px;padding:0.2rem;margin-bottom:0.4rem">
-      <div style="display:flex;justify-content:space-between;color:#7a9a55;font-size:.35rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
+    <!-- ===== لیست کاربران ===== -->
+    <div style="background:rgba(13,20,8,0.4);border:1px solid rgba(42,61,26,0.2);border-radius:8px;padding:0.2rem;margin-bottom:0.4rem">
+      <div style="display:flex;justify-content:space-between;color:var(--text-secondary);font-size:0.35rem;letter-spacing:1px;padding-bottom:0.05rem;border-bottom:1px solid rgba(42,61,26,0.1);margin-bottom:0.05rem">
         <span>👥 کاربران ثبت‌نام‌شده</span>
         <span>شماره تلفن</span>
       </div>
       <div class="user-list" id="userListContainer">
-        <div style="color:#7a9a55;font-size:.45rem;text-align:center;padding:.1rem">در حال بارگذاری...</div>
+        <div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div>
       </div>
     </div>
 
-    <!-- لیست مطالب ارسال‌شده -->
+    <!-- ===== لیست مطالب ارسال‌شده ===== -->
     <div class="padafand-list">
-      <div style="display:flex;justify-content:space-between;color:#c8a000;font-size:.35rem;letter-spacing:1px;padding-bottom:.05rem;border-bottom:1px solid #1a2a0e;margin-bottom:.05rem">
+      <div style="display:flex;justify-content:space-between;color:var(--gold);font-size:0.35rem;letter-spacing:1px;padding-bottom:0.05rem;border-bottom:1px solid rgba(42,61,26,0.1);margin-bottom:0.05rem">
         <span>🛡️ مطالب ارسال‌شده از فرماندهی</span>
         <span>عملیات</span>
       </div>
       <div id="padafandListContainer">
-        <div style="color:#7a9a55;font-size:.45rem;text-align:center;padding:.1rem">در حال بارگذاری...</div>
+        <div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">در حال بارگذاری...</div>
       </div>
     </div>
 
-    <!-- فرم -->
+    <!-- ===== فرم پرتاب (لانچر) ===== -->
     <div class="form-section">
       <div class="form-title">
         <span>📝 ایجاد عملیات جدید</span>
         <span class="sub">فرم ارسال شبهه</span>
       </div>
-      <input type="text" id="newShobe" placeholder="📌 شبهه را وارد کنید...">
-      <textarea id="newAnswer" placeholder="💡 پاسخ کامل را وارد کنید..."></textarea>
+      <input type="text" id="newShobe" placeholder="📌 عنوان مأموریت (شبهه)...">
+      <textarea id="newAnswer" placeholder="💡 شرح عملیات (پاسخ)..."></textarea>
       <div class="row">
         <input type="text" id="newSource" placeholder="📚 منبع (اختیاری)">
-        <input type="text" id="newTags" placeholder="#هشتگ1 #هشتگ2">
+        <input type="text" id="newTags" placeholder="#هشتگ1 #هشتگ2 #هشتگ3">
       </div>
       <select id="newCategory">
         <option value="اعتقادی">اعتقادی</option>
@@ -256,7 +831,9 @@ body{background:#0a0e08;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;m
         <option value="نظامی">نظامی</option>
         <option value="تاریخی">تاریخی</option>
       </select>
-      <button class="btn-fire" onclick="firePost()">🚀 شلیک مطلب</button>
+      <button class="btn-fire" onclick="firePost()">
+        <span class="fire-text">🚀 شلیک مطلب</span>
+      </button>
       <div class="msg" id="fireMsg"></div>
     </div>
   </div>
@@ -432,7 +1009,7 @@ function updateMonitor() {
 function renderUsers() {
     const container = document.getElementById('userListContainer');
     if (!allUsers.length) {
-        container.innerHTML = '<div style="color:#7a9a55;font-size:.4rem;text-align:center;padding:.1rem">هیچ کاربری ثبت‌نام نکرده است</div>';
+        container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">هیچ کاربری ثبت‌نام نکرده است</div>';
         return;
     }
     container.innerHTML = allUsers.map(u => `
@@ -447,17 +1024,20 @@ function renderSenders() {
     const container = document.getElementById('padafandListContainer');
     const cmdPosts = allPosts.filter(p => p.sender && p.sender !== 'سیستم');
     if (!cmdPosts.length) {
-        container.innerHTML = '<div style="color:#7a9a55;font-size:.4rem;text-align:center;padding:.1rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
+        container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.45rem;text-align:center;padding:0.1rem">هنوز مطلبی از فرماندهی ارسال نشده</div>';
         return;
     }
-    container.innerHTML = cmdPosts.map((p, index) => `
-        <div class="padafand-item">
-            <span class="sender-name">🛡️ ${p.sender}</span>
-            <span class="count">${p.shobe ? p.shobe.substring(0, 20) + '...' : 'بدون عنوان'}</span>
-            <span class="time">${p.date || ''} ${p.time || ''}</span>
-            <button class="del-btn" onclick="deletePost(${index})">🗑️</button>
-        </div>
-    `).join('');
+    container.innerHTML = cmdPosts.map((p, index) => {
+        const actualIndex = allPosts.indexOf(p);
+        return `
+            <div class="padafand-item">
+                <span class="sender-name">🛡️ ${p.sender}</span>
+                <span class="count">${p.shobe ? p.shobe.substring(0, 18) + '...' : 'بدون عنوان'}</span>
+                <span class="time">${p.date || ''} ${p.time || ''}</span>
+                <button class="del-btn" onclick="deletePost(${actualIndex})">🗑️</button>
+            </div>
+        `;
+    }).join('');
 }
 
 // ============================================================
@@ -513,16 +1093,35 @@ async function firePost() {
         comments: []
     };
 
+    // انیمیشن پرتاب (شبیه‌سازی)
+    const btn = document.querySelector('.btn-fire');
+    btn.innerHTML = '⏳ در حال پرتاب...';
+    btn.style.opacity = '0.7';
+    btn.style.transform = 'scale(0.98)';
+
     const result = await savePost(newPost);
-    if (result && result.length > 0) {
-        allPosts.unshift(result[0]);
-        document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
-        ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
-        updateMonitor();
-        renderSenders();
-    } else {
-        document.getElementById('fireMsg').textContent = '⚠️ خطا در ذخیره مطلب';
-    }
+    
+    setTimeout(() => {
+        btn.style.opacity = '1';
+        btn.style.transform = 'scale(1)';
+        if (result && result.length > 0) {
+            allPosts.unshift(result[0]);
+            btn.innerHTML = '✅ پرتاب موفق! 🚀';
+            document.getElementById('fireMsg').textContent = '✅ عملیات موفق! مطلب اضافه شد.';
+            ['newShobe', 'newAnswer', 'newSource', 'newTags'].forEach(id => document.getElementById(id).value = '');
+            updateMonitor();
+            renderSenders();
+            setTimeout(() => {
+                btn.innerHTML = '<span class="fire-text">🚀 شلیک مطلب</span>';
+            }, 2000);
+        } else {
+            btn.innerHTML = '❌ خطا در پرتاب';
+            document.getElementById('fireMsg').textContent = '⚠️ خطا در ذخیره مطلب';
+            setTimeout(() => {
+                btn.innerHTML = '<span class="fire-text">🚀 شلیک مطلب</span>';
+            }, 2000);
+        }
+    }, 800);
 }
 
 // ============================================================
@@ -613,4 +1212,4 @@ updateTime();
 setInterval(updateTime, 1000);
 </script>
 </body>
-        </html> 
+  </html>
