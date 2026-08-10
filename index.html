@@ -8,10 +8,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0a0f06;--bgm:#111c0a;--bgp:#0d1408;--g:#3a6a1a;--gl:#6db33f;--am:#c8a000;--br:#2a3d1a;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#c8a000}
-[data-theme="light"]{--bg:#f2f7ef;--bgm:#e0ebd8;--bgp:#d0dfc4;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--gl:#3a7a18;--g:#2a6a10;--am:#b09000}
+[data-theme="dark"]{--bg:#060a0c;--bgm:#0c141a;--bgp:#0a1016;--br:#1a2a35;--tp:#c8d8e0;--ts:#7a9aaa;--gl:#4a8aaa;--g:#2a5a6a;--am:#c8a000}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:15px;line-height:1.8}
 ::-webkit-scrollbar{width:5px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:3px}
-a{color:var(--gl);text-decoration:none}
 #header{background:linear-gradient(180deg,#060a04,var(--bgm));border-bottom:2px solid var(--g);padding:0.5rem 1rem;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);font-family:monospace}
 .hdr-top .online{display:flex;gap:.3rem;align-items:center}
@@ -55,8 +54,6 @@ a{color:var(--gl);text-decoration:none}
 .post-body .meta{display:flex;flex-wrap:wrap;gap:0.3rem 1rem;font-size:.7rem;color:var(--ts);padding-top:0.5rem;border-top:1px solid var(--br)}
 .post-body .tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.5rem}
 .post-body .tags span{background:var(--bgm);padding:0.1rem 0.5rem;border-radius:10px;font-size:.65rem;color:var(--am)}
-.post-body .source-box{background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:0.4rem 0.6rem;margin-top:0.5rem;font-size:.7rem;color:var(--ts)}
-.post-body .reading-time{font-size:.6rem;color:var(--ts);margin-top:0.3rem}
 .post-actions{display:flex;gap:0.4rem;margin-top:0.5rem;flex-wrap:wrap;align-items:center}
 .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;font-size:.65rem;transition:.3s;display:flex;align-items:center;gap:0.2rem}
 .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
@@ -98,6 +95,17 @@ a{color:var(--gl);text-decoration:none}
 .foot-links a{color:var(--ts);font-size:.6rem;padding:0.15rem 0.5rem;border:1px solid var(--br);border-radius:4px;cursor:pointer;transition:.3s}
 .foot-links a:hover{color:var(--gl);border-color:var(--gl)}
 .foot-copy{color:var(--ts);font-size:.5rem;opacity:0.5}
+.hamburger{position:fixed;top:10px;right:10px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.5rem;padding:0.3rem 0.7rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
+.hamburger:hover{background:var(--gl);color:#0d1408}
+.side-menu{position:fixed;top:0;right:0;width:260px;height:100%;background:var(--bgm);border-left:2px solid var(--g);z-index:1000;padding:2rem 1.2rem;transform:translateX(100%);transition:.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.6)}
+.side-menu.open{transform:translateX(0)}
+.side-menu .close-menu{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.3rem;cursor:pointer}
+.side-menu .menu-title{color:var(--gl);font-size:1rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:1rem}
+.side-menu .menu-item{display:block;padding:0.5rem 0.5rem;color:var(--tp);text-decoration:none;font-size:.8rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
+.side-menu .menu-item:hover{background:var(--bgp);color:var(--gl)}
+.side-menu .menu-item i{margin-left:0.5rem;width:20px;color:var(--am)}
+.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:55px;height:55px;font-size:1.5rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
+.floating-btn:hover{transform:scale(1.1)}
 #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.5rem 1.2rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 30px rgba(0,0,0,.5)}
 #userPanel.show{display:block;animation:slideIn .25s}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
@@ -129,10 +137,28 @@ a{color:var(--gl);text-decoration:none}
   #userPanel{width:100%}
   .ai-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
   .search-wrap input{min-width:120px;font-size:.8rem}
+  .hamburger{font-size:1.2rem;padding:0.2rem 0.5rem;top:8px;right:8px}
+  .side-menu{width:220px}
 }
 </style>
 </head>
 <body>
+
+<button class="hamburger" onclick="toggleSideMenu()"><i class="fas fa-bars"></i></button>
+
+<div class="side-menu" id="sideMenu">
+  <button class="close-menu" onclick="toggleSideMenu()">✕</button>
+  <div class="menu-title">🛡️ منو</div>
+  <a class="menu-item" onclick="switchPage('home');toggleSideMenu()"><i class="fas fa-home"></i> خانه</a>
+  <a class="menu-item" onclick="switchPage('posts');toggleSideMenu()"><i class="fas fa-list"></i> شبهات</a>
+  <a class="menu-item" onclick="switchPage('ai');toggleSideMenu()"><i class="fas fa-robot"></i> هوش مصنوعی</a>
+  <a class="menu-item" onclick="switchPage('saved');toggleSideMenu()"><i class="fas fa-box"></i> جعبه مهمات</a>
+  <a class="menu-item" onclick="toggleUserPanel();toggleSideMenu()"><i class="fas fa-user"></i> حساب کاربری</a>
+  <a class="menu-item" href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> فرماندهی</a>
+  <a class="menu-item" href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-paper-plane"></i> ارسال شبهه</a>
+</div>
+
+<div class="floating-btn" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-paper-plane"></i></div>
 
 <header id="header">
   <div style="max-width:900px;margin:0 auto">
@@ -178,12 +204,11 @@ a{color:var(--gl);text-decoration:none}
     <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
     <button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button>
     <button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button>
-    <button class="nav-btn" data-page="saved"><i class="fas fa-bookmark"></i> ذخیره‌شده</button>
+    <button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button>
   </div>
 </nav>
 
 <div id="content">
-
   <div id="page-home" class="page active">
     <div class="page-title" style="font-size:.95rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.8rem"><i class="fas fa-home"></i> صفحه اصلی</div>
     <div style="display:flex;gap:0.5rem;background:var(--bgp);border:1px solid var(--br);border-radius:6px;padding:0.3rem 0.6rem;margin-bottom:0.8rem;flex-wrap:wrap;font-size:.7rem">
@@ -218,18 +243,17 @@ a{color:var(--gl);text-decoration:none}
     <div class="ai-grid">
       <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon">🤖</span><span class="ai-name">ChatGPT</span><span class="ai-desc">OpenAI</span></a>
       <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon">🧠</span><span class="ai-name">DeepSeek</span><span class="ai-desc">چینی</span></a>
+      <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon">🕌</span><span class="ai-name">نور AI</span><span class="ai-desc">اسلامی</span></a>
       <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon">💬</span><span class="ai-name">Claude</span><span class="ai-desc">Anthropic</span></a>
       <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon">🌟</span><span class="ai-name">Gemini</span><span class="ai-desc">Google</span></a>
       <a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon">🔍</span><span class="ai-name">Perplexity</span><span class="ai-desc">جستجو</span></a>
-      <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon">🕌</span><span class="ai-name">نور AI</span><span class="ai-desc">اسلامی</span></a>
     </div>
   </div>
 
   <div id="page-saved" class="page">
-    <div class="page-title" style="font-size:.95rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.8rem"><i class="fas fa-bookmark"></i> مطالب ذخیره‌شده</div>
+    <div class="page-title" style="font-size:.95rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.8rem"><i class="fas fa-box"></i> جعبه مهمات</div>
     <div id="savedContainer"></div>
   </div>
-
 </div>
 
 <footer id="footer">
@@ -313,38 +337,25 @@ a{color:var(--gl);text-decoration:none}
 
 <script>
 // ============================================================
-// امنیت: کلید با Base64
+// امنیت
 // ============================================================
 const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
 const SUPABASE_KEY = atob('ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKc2RHRnVaM0poYkdsbmFIUWlMQ0oyYVdRaU9pSmxkMkZ5YkR0a2RHa3RMa1psYml3dGNtRjBkR3h0Y2pKckxDSXBhVzFpSWpveE56ZzJNekEzTWpFc0lteHZhMlJpSWpveU1URXdNRGN5TkM0eE9EQTNPVGN5T1M1d2NpSjkuXzRGZjRVREk3Mlllb1YzQWhnalBLWEtjWlFjRVRWS3N0NGNaUl9wZDBxYw==');
 
-// ============================================================
-// توابع کمکی امنیتی
-// ============================================================
 function escapeHTML(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
-function validateInput(text) {
-  if (!text || typeof text !== 'string') return '';
-  return text.trim().slice(0, 2000);
-}
-
 // ============================================================
-// توابع API (با محدودیت Rate Limit)
+// API
 // ============================================================
 let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL = 1000;
-
 async function callAPI(endpoint, options = {}) {
   const now = Date.now();
-  if (now - lastRequestTime < MIN_REQUEST_INTERVAL) {
-    throw new Error('لطفاً کمی صبر کنید و دوباره تلاش کنید');
-  }
+  if (now - lastRequestTime < 1000) throw new Error('لطفاً کمی صبر کنید');
   lastRequestTime = now;
-  
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
     ...options,
     headers: {
@@ -357,42 +368,17 @@ async function callAPI(endpoint, options = {}) {
   return res;
 }
 
-// ============================================================
-// دیتا و متغیرها
-// ============================================================
-let allPosts = [];
-let allUsers = [];
-let loggedUser = null;
-let currentCat = 'همه';
-let selectedAvatar = '👤';
-let selectedEditAvatar = '👤';
-
-// ============================================================
-// توابع Supabase
-// ============================================================
 async function fetchPosts() {
   try {
     const res = await callAPI('posts?select=*&order=id.desc');
     return await res.json() || [];
-  } catch(e) { console.log('⚠️ خطا:', e.message); return []; }
+  } catch(e) { return []; }
 }
 async function fetchUsers() {
   try {
     const res = await callAPI('users?select=*');
     return await res.json() || [];
-  } catch(e) { console.log('⚠️ خطا:', e.message); return []; }
-}
-async function saveUser(user) {
-  try {
-    const res = await callAPI('users', { method: 'POST', body: JSON.stringify(user) });
-    return await res.json();
-  } catch(e) { return null; }
-}
-async function updateUser(username, data) {
-  try {
-    const res = await callAPI(`users?username=eq.${username}`, { method: 'PATCH', body: JSON.stringify(data) });
-    return res.ok;
-  } catch(e) { return false; }
+  } catch(e) { return []; }
 }
 async function deletePostFromDB(id) {
   try {
@@ -408,7 +394,17 @@ async function updatePostInDB(id, data) {
 }
 
 // ============================================================
-// بارگذاری اولیه
+// دیتا و متغیرها
+// ============================================================
+let allPosts = [];
+let allUsers = [];
+let loggedUser = null;
+let currentCat = 'همه';
+let selectedAvatar = '👤';
+let selectedEditAvatar = '👤';
+
+// ============================================================
+// بارگذاری
 // ============================================================
 async function loadAllData() {
   allPosts = await fetchPosts();
@@ -445,6 +441,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 5000);
 });
 
+function toggleSideMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+}
+
 function switchPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById(`page-${page}`);
@@ -459,7 +459,7 @@ function switchPage(page) {
 }
 
 // ============================================================
-// پست‌ها (با Escape امن)
+// پست‌ها
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
   const el = document.getElementById(containerId);
@@ -584,7 +584,7 @@ async function addComment(index) {
     return;
   }
   const input = document.getElementById(`cmtInput${index}`);
-  const text = validateInput(input.value);
+  const text = input.value.trim();
   if (!text) return;
   if (!allPosts[index].comments) allPosts[index].comments = [];
   const commentId = 'c' + Date.now() + Math.random().toString(36).slice(2, 6);
@@ -610,7 +610,7 @@ async function addReply(postIndex, commentId) {
     return;
   }
   const input = document.getElementById(`replyText-${postIndex}-${commentId}`);
-  const text = validateInput(input.value);
+  const text = input.value.trim();
   if (!text) return;
   const post = allPosts[postIndex];
   if (!post) return;
@@ -787,10 +787,10 @@ function cancelEditProfile() {
 }
 
 async function saveEditProfile() {
-  const fullname = validateInput(document.getElementById('editFullname').value);
-  const bio = validateInput(document.getElementById('editBio').value);
-  const phone = validateInput(document.getElementById('editPhone').value);
-  const password = validateInput(document.getElementById('editPassword').value);
+  const fullname = document.getElementById('editFullname').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  const phone = document.getElementById('editPhone').value.trim();
+  const password = document.getElementById('editPassword').value.trim();
   const avatar = selectedEditAvatar;
   
   const updateData = { fullname, bio, phone, avatar };
@@ -812,11 +812,11 @@ async function saveEditProfile() {
 }
 
 async function userRegister() {
-  const fullname = validateInput(document.getElementById('regFullname').value);
-  const phone = validateInput(document.getElementById('regPhone').value);
-  const bio = validateInput(document.getElementById('regBio').value);
-  const username = validateInput(document.getElementById('regUsername').value);
-  const password = validateInput(document.getElementById('regPassword').value);
+  const fullname = document.getElementById('regFullname').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const bio = document.getElementById('regBio').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value.trim();
   
   if (!fullname || !phone || !username || !password) {
     document.getElementById('regMsg').textContent = '⚠️ همه فیلدها را پر کنید';
@@ -848,9 +848,23 @@ async function userRegister() {
   }
 }
 
+async function saveUser(user) {
+  try {
+    const res = await callAPI('users', { method: 'POST', body: JSON.stringify(user) });
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+async function updateUser(username, data) {
+  try {
+    const res = await callAPI(`users?username=eq.${username}`, { method: 'PATCH', body: JSON.stringify(data) });
+    return res.ok;
+  } catch(e) { return false; }
+}
+
 async function userLogin() {
-  const username = validateInput(document.getElementById('loginUsername').value);
-  const password = validateInput(document.getElementById('loginPassword').value);
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
   
   const user = allUsers.find(u => u.username === username);
   if (!user) {
@@ -888,8 +902,8 @@ function updateUserCount() {
 // ============================================================
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', current === 'light' ? '' : 'light');
+  document.documentElement.setAttribute('data-theme', current === 'dark' ? '' : 'dark');
 }
 </script>
 </body>
-      </html>
+  </html>
