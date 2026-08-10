@@ -51,19 +51,10 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes heartBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--gl)}50%{box-shadow:0 0 20px var(--gl)}}
+@keyframes rocketFly{0%{transform:translateY(0)}100%{transform:translateY(-100px) opacity:0}}
+@keyframes radarSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 
-.floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:50px;height:50px;font-size:1.3rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl);animation:glowPulse 2s infinite}
-.floating-btn:hover{transform:scale(1.1)}
-.hamburger{position:fixed;top:8px;right:8px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.2rem;padding:0.2rem 0.5rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl);transition:.3s}
-.hamburger:hover{background:var(--gl);transform:rotate(90deg)}
-.side-menu{position:fixed;top:0;right:0;width:240px;height:100%;background:var(--bgm);border-left:2px solid var(--g);z-index:1000;padding:1.5rem 1rem;transform:translateX(100%);transition:.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.6)}
-.side-menu.open{transform:translateX(0)}
-.side-menu .close-btn{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
-.side-menu .menu-title{color:var(--gl);font-size:.85rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.6rem}
-.side-menu .menu-item{display:block;padding:0.3rem 0.4rem;color:var(--tp);font-size:.7rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
-.side-menu .menu-item:hover{background:var(--bgp);color:var(--gl);padding-right:0.6rem}
-.side-menu .menu-item i{margin-left:0.4rem;width:18px;color:var(--am)}
-
+/* ===== HEADER ===== */
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
 .hdr-top .online{display:flex;gap:.2rem;align-items:center}
@@ -78,12 +69,14 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .hdr-right{display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap}
 .hdr-right .theme-btn{background:none;border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--tp);font-size:.6rem;cursor:pointer;transition:.3s}
 .hdr-right .theme-btn:hover{border-color:var(--gl);transform:scale(1.05)}
+.hdr-right .theme-btn.active{border-color:var(--gl);background:rgba(109,179,63,0.1)}
 .hdr-right .user-badge{display:flex;align-items:center;gap:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;cursor:pointer;font-size:.6rem;transition:.3s}
 .hdr-right .user-badge:hover{border-color:var(--gl)}
 .hdr-right .user-badge .avatar{font-size:1rem;transition:.3s}
 .hdr-right .user-badge .avatar:hover{transform:scale(1.1)}
 .hdr-right .user-badge .level{color:var(--gold);font-size:.45rem}
 
+/* ===== SEARCH ===== */
 #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
 .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
 .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
@@ -91,18 +84,21 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;min-height:28px;transition:.3s}
 .search-wrap button:hover{transform:scale(1.05)}
 
+/* ===== NAV ===== */
 #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
 .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
 .nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.3s}
 .nav-btn:hover{color:var(--tp);border-bottom-color:var(--ts)}
 .nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
 
+/* ===== CONTENT ===== */
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
 .page{display:none;animation:fadeIn .4s ease}
 .page.active{display:block}
 .page-title{font-size:.8rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem}
 .page-title i{margin-left:0.3rem}
 
+/* ===== POSTS ===== */
 .post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden;transition:.3s;animation:fadeIn .3s ease}
 .post:hover{border-color:var(--g);box-shadow:0 0 20px rgba(74,124,32,0.05)}
 .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:.2s}
@@ -135,11 +131,20 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.15rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s}
 .comments-section .comment-form button:hover{transform:scale(1.05)}
 
+/* ===== SIDEBAR (منوی پایین) ===== */
+.sidebar-nav{position:fixed;bottom:0;right:0;left:0;background:var(--bgm);border-top:2px solid var(--g);display:flex;justify-content:space-around;padding:0.3rem 0.5rem;z-index:99;display:none}
+.sidebar-nav .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--ts);font-size:.5rem;cursor:pointer;transition:.3s}
+.sidebar-nav .nav-item i{font-size:1.1rem;margin-bottom:0.1rem}
+.sidebar-nav .nav-item.active{color:var(--gl)}
+.sidebar-nav .nav-item:hover{color:var(--gl)}
+
+/* ===== AI ===== */
 .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.3rem}
 .ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.65rem;transition:.3s}
 .ai-card:hover{border-color:var(--gl);transform:translateY(-5px);box-shadow:0 5px 20px rgba(74,124,32,0.1)}
 .ai-card .ai-icon{font-size:1.2rem;display:block}
 
+/* ===== SAVED ===== */
 .saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am);animation:fadeIn .3s ease}
 .saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .saved-item .saved-hdr h4{color:var(--am);font-size:.7rem;flex:1}
@@ -151,6 +156,23 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.05rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem;transition:.3s}
 .saved-item .del-btn:hover{transform:scale(1.05)}
 
+/* ===== GAMES ===== */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem;margin-top:0.5rem}
+.game-card{background:var(--bgp);border:2px solid var(--br);border-radius:8px;padding:0.8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+.game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--gl),transparent);opacity:0;transition:.3s}
+.game-card:hover::before{opacity:0.05}
+.game-card:hover{border-color:var(--gl);transform:translateY(-5px) scale(1.02);box-shadow:0 8px 30px rgba(74,124,32,0.15)}
+.game-card .icon{font-size:2.2rem;display:block;margin-bottom:0.2rem;color:var(--gold)}
+.game-card .name{font-size:.65rem;font-weight:700;color:var(--tp)}
+.game-card .desc{font-size:.45rem;color:var(--ts)}
+
+/* ===== RANDOM SHOBHE ===== */
+.random-box{background:var(--bgp);border:2px solid var(--am);border-radius:8px;padding:0.6rem;margin-bottom:0.5rem;text-align:center;cursor:pointer;transition:.3s;animation:glowPulse 2s infinite}
+.random-box:hover{border-color:var(--gl);transform:scale(1.01)}
+.random-box .title{color:var(--gold);font-size:.65rem;font-weight:700}
+.random-box .shobe{color:var(--tp);font-size:.8rem;margin:0.2rem 0}
+
+/* ===== FOOTER ===== */
 #footer{border-top:1px solid var(--br);padding:0.3rem 0.6rem;background:var(--bgm);margin-top:0.5rem}
 .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem}
 .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
@@ -158,6 +180,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .foot-links a:hover{color:var(--gl);border-color:var(--gl);transform:translateY(-2px)}
 .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
 
+/* ===== USER PANEL ===== */
 #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4);animation:slideIn .25s}
 #userPanel.show{display:block}
 #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
@@ -184,16 +207,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #userPanel .switch-link{color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer;transition:.3s}
 #userPanel .switch-link:hover{color:var(--gl)}
 
-/* بازی‌ها */
-.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem;margin-top:0.5rem}
-.game-card{background:var(--bgp);border:2px solid var(--br);border-radius:8px;padding:0.8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
-.game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--gl),transparent);opacity:0;transition:.3s}
-.game-card:hover::before{opacity:0.05}
-.game-card:hover{border-color:var(--gl);transform:translateY(-5px) scale(1.02);box-shadow:0 8px 30px rgba(74,124,32,0.15)}
-.game-card .icon{font-size:2.2rem;display:block;margin-bottom:0.2rem}
-.game-card .name{font-size:.65rem;font-weight:700;color:var(--tp)}
-.game-card .desc{font-size:.45rem;color:var(--ts)}
-
+/* ===== RESPONSIVE ===== */
 @media(max-width:600px){
   .hdr-left h1{font-size:.8rem}
   .hdr-left .sub{font-size:.4rem}
@@ -201,63 +215,44 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   .post-hdr .title{font-size:.7rem}
   #userPanel{width:100%}
   .ai-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
-  .floating-btn{width:40px;height:40px;font-size:1rem;bottom:12px;left:12px}
-  .hamburger{font-size:1rem;padding:0.15rem 0.4rem;top:6px;right:6px}
-  .side-menu{width:200px}
   .games-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
+  .sidebar-nav{display:flex}
 }
 </style>
 </head>
 <body>
 
-<button class="hamburger" onclick="toggleSideMenu()"><i class="fas fa-bars"></i></button>
-
-<div class="side-menu" id="sideMenu">
-  <button class="close-btn" onclick="toggleSideMenu()">✕</button>
-  <div class="menu-title">🛡️ منو</div>
-  <a class="menu-item" onclick="switchPage('home');toggleSideMenu()"><i class="fas fa-home"></i> خانه</a>
-  <a class="menu-item" onclick="switchPage('posts');toggleSideMenu()"><i class="fas fa-list"></i> شبهات</a>
-  <a class="menu-item" onclick="switchPage('ai');toggleSideMenu()"><i class="fas fa-robot"></i> هوش مصنوعی</a>
-  <a class="menu-item" onclick="switchPage('saved');toggleSideMenu()"><i class="fas fa-box"></i> جعبه مهمات</a>
-  <a class="menu-item" onclick="switchPage('games');toggleSideMenu()"><i class="fas fa-gamepad"></i> بازی‌ها</a>
-  <a class="menu-item" onclick="toggleUserPanel();toggleSideMenu()"><i class="fas fa-user"></i> حساب کاربری</a>
-  <a class="menu-item" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-paper-plane"></i> ارسال شبهه</a>
-  <a class="menu-item" href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> مرکز فرماندهی</a>
-</div>
-
-<div class="floating-btn" onclick="window.open('http://eitaayar.ir/anonymous/uW79.B16eQ8','_blank')"><i class="fas fa-paper-plane"></i></div>
-
-<header id="header">
+<div id="header">
   <div style="max-width:800px;margin:0 auto">
     <div class="hdr-top">
-      <span>SYS // PADAFAND v7.0</span>
+      <span>SYS // PADAFAND v8.0</span>
       <div class="online"><span class="dot"></span><span>آنلاین</span></div>
     </div>
     <div class="hdr-main">
       <div class="hdr-left">
-        <span class="icon">🛡️</span>
+        <span class="icon"><i class="fas fa-shield-alt"></i></span>
         <div>
           <h1><span>پدافند</span> شبهات</h1>
           <div class="sub">قرارگاه پاسخگویی به شبهات</div>
         </div>
       </div>
       <div class="hdr-right">
-        <button class="theme-btn" onclick="cycleTheme()" title="تغییر تم">🌓</button>
+        <button class="theme-btn" onclick="cycleTheme()" title="تغییر تم"><i class="fas fa-adjust"></i></button>
         <div class="user-badge" onclick="toggleUserPanel()">
-          <span class="avatar" id="headerAvatar">👤</span>
+          <span class="avatar"><i class="fas fa-user"></i></span>
           <span id="headerName">ورود</span>
           <span class="level" id="headerLevel"></span>
         </div>
       </div>
     </div>
   </div>
-</header>
+</div>
 
 <div id="search-section">
   <div class="search-wrap">
     <i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i>
     <input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()">
-    <button onclick="filterPosts()">جستجو</button>
+    <button onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button>
   </div>
 </div>
 
@@ -271,22 +266,36 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </nav>
 
+<!-- ===== SIDEBAR NAV (موبایل) ===== -->
+<div class="sidebar-nav" id="sidebarNav">
+  <div class="nav-item active" onclick="switchPage('home')"><i class="fas fa-home"></i><span>خانه</span></div>
+  <div class="nav-item" onclick="switchPage('posts')"><i class="fas fa-list"></i><span>شبهات</span></div>
+  <div class="nav-item" onclick="switchPage('ai')"><i class="fas fa-robot"></i><span>AI</span></div>
+  <div class="nav-item" onclick="switchPage('saved')"><i class="fas fa-box"></i><span>ذخیره</span></div>
+  <div class="nav-item" onclick="switchPage('games')"><i class="fas fa-gamepad"></i><span>بازی</span></div>
+  <div class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></div>
+</div>
+
 <div id="content">
 
   <div id="page-home" class="page active">
     <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
     <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem">
-      <span>🎯 <b id="postCount">0</b> شبهه</span>
-      <span>👥 <b id="userCount">0</b> کاربر</span>
-      <span>🚀 عملیات ۳۶۵</span>
+      <span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span>
+      <span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span>
+      <span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span>
+    </div>
+    <div class="random-box" onclick="showRandomShobe()">
+      <div class="title"><i class="fas fa-random"></i> شبهه تصادفی</div>
+      <div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div>
     </div>
     <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;animation:fadeIn .5s ease">
-      <div style="font-size:1.8rem">🛡️</div>
+      <div style="font-size:1.8rem"><i class="fas fa-shield-alt"></i></div>
       <p style="color:var(--ts);font-size:.7rem;line-height:1.6">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید.</p>
     </div>
     <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem">
-        <span style="color:var(--ts);font-size:.6rem">📌 آخرین مطالب</span>
+        <span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span>
         <button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button>
       </div>
       <div id="homePosts" style="margin-top:0.2rem"></div>
@@ -304,11 +313,11 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
       <p style="font-size:.65rem;color:var(--ts);line-height:1.6"><i class="fas fa-info-circle" style="color:var(--am)"></i> از هوش مصنوعی‌های زیر برای پاسخ به شبهات استفاده کنید.</p>
     </div>
     <div class="ai-grid">
-      <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon">🤖</span><span class="ai-name">ChatGPT</span></a>
-      <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon">🧠</span><span class="ai-name">DeepSeek</span></a>
-      <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon">💬</span><span class="ai-name">Claude</span></a>
-      <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon">🌟</span><span class="ai-name">Gemini</span></a>
-      <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon">🕌</span><span class="ai-name">نور AI</span></a>
+      <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span><span class="ai-name">ChatGPT</span></a>
+      <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span><span class="ai-name">DeepSeek</span></a>
+      <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span><span class="ai-name">Claude</span></a>
+      <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span><span class="ai-name">Gemini</span></a>
+      <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span><span class="ai-name">نور AI</span></a>
     </div>
   </div>
 
@@ -320,16 +329,14 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   <div id="page-games" class="page">
     <div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div>
     <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center">
-      <p style="font-size:.6rem;color:var(--ts)">🎯 بازی‌های نظامی و پدافندی</p>
+      <p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> بازی‌های نظامی و پدافندی</p>
     </div>
     <div class="games-grid">
-      <div class="game-card" onclick="startGame('minesweeper')"><span class="icon">💣</span><span class="name">مین‌یاب</span><span class="desc">پاکسازی میدان</span></div>
-      <div class="game-card" onclick="startGame('snake')"><span class="icon">🐍</span><span class="name">مار جنگی</span><span class="desc">عملیات نفوذ</span></div>
-      <div class="game-card" onclick="startGame('memory')"><span class="icon">🧠</span><span class="name">حافظه</span><span class="desc">شناسایی اهداف</span></div>
-      <div class="game-card" onclick="startGame('sudoku')"><span class="icon">🧩</span><span class="name">سودوکو</span><span class="desc">رمزگشایی</span></div>
-      <div class="game-card" onclick="startGame('chess')"><span class="icon">♟️</span><span class="name">شطرنج</span><span class="desc">استراتژی</span></div>
+      <div class="game-card" onclick="startGame('minesweeper')"><span class="icon"><i class="fas fa-bomb"></i></span><span class="name">مین‌یاب</span><span class="desc">پاکسازی میدان</span></div>
+      <div class="game-card" onclick="startGame('snake')"><span class="icon"><i class="fas fa-crown"></i></span><span class="name">مار جنگی</span><span class="desc">عملیات نفوذ</span></div>
+      <div class="game-card" onclick="startGame('memory')"><span class="icon"><i class="fas fa-brain"></i></span><span class="name">حافظه</span><span class="desc">شناسایی اهداف</span></div>
+      <div class="game-card" onclick="startGame('sudoku')"><span class="icon"><i class="fas fa-th"></i></span><span class="name">سودوکو</span><span class="desc">رمزگشایی</span></div>
     </div>
-    <div style="text-align:center;color:var(--ts);font-size:.4rem;margin-top:0.3rem">🔄 بازی‌ها در حال توسعه...</div>
   </div>
 
 </div>
@@ -339,28 +346,27 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     <div class="foot-links">
       <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a>
       <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
-      <a href="command.html" target="_blank"><i class="fas fa-shield-alt"></i> فرماندهی</a>
+      <a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a>
     </div>
-    <div class="foot-copy">PADAFAND v7.0</div>
+    <div class="foot-copy">PADAFAND v8.0</div>
   </div>
-</footer>
+</div>
 
 <div id="userPanel">
-  <button class="close" onclick="toggleUserPanel()">✕</button>
+  <button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button>
   <div class="profile-header">
-    <span class="avatar" id="profileAvatar">👤</span>
+    <span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span>
     <div class="name" id="profileName">کاربر مهمان</div>
     <span class="level" id="profileLevel">سرباز</span>
     <span class="xp" id="profileXP">XP: 0</span>
   </div>
   <div class="avatar-select" id="avatarSelect">
-    <span class="av-item active" data-avatar="👤" onclick="selectAvatar(this)">👤</span>
-    <span class="av-item" data-avatar="👩" onclick="selectAvatar(this)">👩</span>
-    <span class="av-item" data-avatar="👨" onclick="selectAvatar(this)">👨</span>
-    <span class="av-item" data-avatar="👨‍🦰" onclick="selectAvatar(this)">👨‍🦰</span>
-    <span class="av-item" data-avatar="👩‍🦰" onclick="selectAvatar(this)">👩‍🦰</span>
-    <span class="av-item" data-avatar="🧕" onclick="selectAvatar(this)">🧕</span>
-    <span class="av-item" data-avatar="👳‍♂️" onclick="selectAvatar(this)">👳‍♂️</span>
+    <span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span>
+    <span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span>
+    <span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span>
+    <span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span>
+    <span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span>
+    <span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span>
   </div>
   <div class="profile-stats">
     <div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div>
@@ -385,7 +391,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     <div id="regMsg" style="color:var(--gl);font-size:.5rem;text-align:center;margin-top:0.1rem"></div>
   </div>
   <div id="userInfo" style="display:none;margin-top:0.4rem">
-    <button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff">خروج</button>
+    <button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff"><i class="fas fa-sign-out-alt"></i> خروج</button>
   </div>
 </div>
 
@@ -423,7 +429,7 @@ let allData = { posts: [], users: {} };
 let allPosts = [];
 let allUsers = {};
 let loggedUser = null;
-let selectedAvatar = '👤';
+let selectedAvatar = 'fa-user';
 const LEVELS = [
   { name: 'سرباز', xp: 0 },
   { name: 'سرجوخه', xp: 30 },
@@ -442,10 +448,16 @@ function getUserLevel(xp) {
   return level;
 }
 
+function getAvatarIcon(name) {
+  const user = allUsers[name];
+  if (user && user.avatar) return user.avatar;
+  return 'fa-user';
+}
+
 // ============================================================
 // تم
 // ============================================================
-const themes = ['dark', 'light'];
+const themes = ['dark', 'light', 'military'];
 let themeIndex = 0;
 function cycleTheme() {
   themeIndex = (themeIndex + 1) % themes.length;
@@ -461,6 +473,7 @@ async function loadAllData() {
   allPosts = allData.posts || [];
   allUsers = allData.users || {};
   renderAll();
+  document.getElementById('userCount').textContent = Object.keys(allUsers).length;
 }
 
 function renderAll() {
@@ -468,9 +481,9 @@ function renderAll() {
   renderPosts(allPosts.slice(0, 3), 'homePosts');
   document.getElementById('postCount').textContent = allPosts.length;
   renderSaved();
-  updateUserCount();
   updateHeader();
   updateProfile();
+  updateRandomShobe();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -485,19 +498,30 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProfile();
   }
   loadAllData();
+  
+  // لینک فرماندهی با بازگشت به برگه قبلی
+  document.getElementById('cmdLink').addEventListener('click', function(e) {
+    e.preventDefault();
+    const win = window.open(this.href, '_blank');
+    win.focus();
+  });
 });
 
 // ============================================================
 // منو
 // ============================================================
-function toggleSideMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
 function switchPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(`page-${page}`).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const btns = document.querySelectorAll('.nav-btn');
+  document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll('.nav-btn[data-page]');
   const map = {home:0, posts:1, ai:2, saved:3, games:4};
   if (btns[map[page]]) btns[map[page]].classList.add('active');
+  // سایدبار موبایل
+  document.querySelectorAll('.sidebar-nav .nav-item').forEach(b => b.classList.remove('active'));
+  const sMap = {home:0, posts:1, ai:2, saved:3, games:4};
+  const sItems = document.querySelectorAll('.sidebar-nav .nav-item');
+  if (sItems[sMap[page]]) sItems[sMap[page]].classList.add('active');
   if (page === 'posts') filterPosts();
   if (page === 'home') renderPosts(allPosts.slice(0, 3), 'homePosts');
   if (page === 'saved') renderSaved();
@@ -510,17 +534,18 @@ function renderPosts(list, containerId = 'postContainer') {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (!list || !list.length) {
-    el.innerHTML = '<div style="text-align:center;padding:0.4rem;color:var(--ts);font-size:.6rem">🔍 مطلبی یافت نشد</div>';
+    el.innerHTML = '<div style="text-align:center;padding:0.4rem;color:var(--ts);font-size:.6rem"><i class="fas fa-search"></i> مطلبی یافت نشد</div>';
     return;
   }
   el.innerHTML = list.map((p, i) => {
     const uid = `pb-${containerId}-${i}`;
     const isLiked = loggedUser && (p.likedBy || []).includes(loggedUser);
+    const avatar = getAvatarIcon(p.sender || '');
     return `
       <div class="post">
         <div class="post-hdr" onclick="togglePost('${uid}', this)">
           <span class="title"><i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}</span>
-          <span class="arrow">▼</span>
+          <span class="arrow"><i class="fas fa-chevron-down"></i></span>
         </div>
         <div class="post-body" id="${uid}">
           <div class="ans">${(p.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>')}</div>
@@ -533,15 +558,15 @@ function renderPosts(list, containerId = 'postContainer') {
             <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike(${i})">
               <i class="fas fa-heart"></i> <span id="likeCount${i}">${p.likes || 0}</span>
             </button>
-            <button onclick="saveToBox(${i})">📦 ذخیره</button>
-            <button onclick="sharePost(${i})">📤 اشتراک</button>
+            <button onclick="saveToBox(${i})"><i class="fas fa-box"></i> ذخیره</button>
+            <button onclick="sharePost(${i})"><i class="fas fa-share-alt"></i> اشتراک</button>
             <span id="savedMsg${i}" class="saved-msg"></span>
           </div>
           <div class="comments-section">
             <div id="comments${i}">
               ${(p.comments || []).map(c => `
                 <div class="cmt">
-                  <span class="cmt-user">${c.user || 'ناشناس'}</span>
+                  <span class="cmt-user"><i class="${getAvatarIcon(c.user)}"></i> ${c.user || 'ناشناس'}</span>
                   <span class="cmt-text">: ${c.text}</span>
                 </div>
               `).join('')}
@@ -549,9 +574,9 @@ function renderPosts(list, containerId = 'postContainer') {
             ${loggedUser ? `
               <div class="comment-form">
                 <input type="text" id="cmtInput${i}" placeholder="نظرت رو بنویس...">
-                <button onclick="addComment(${i})">ارسال</button>
+                <button onclick="addComment(${i})"><i class="fas fa-paper-plane"></i> ارسال</button>
               </div>
-            ` : `<p class="login-msg">🔒 برای نظر دادن وارد حساب خود شوید</p>`}
+            ` : `<p class="login-msg"><i class="fas fa-lock"></i> برای نظر دادن وارد حساب خود شوید</p>`}
           </div>
         </div>
       </div>
@@ -559,6 +584,7 @@ function renderPosts(list, containerId = 'postContainer') {
   }).join('');
   document.getElementById('postCount').textContent = allPosts.length;
 }
+
 function togglePost(id, hdr) {
   const body = document.getElementById(id);
   const arrow = hdr.querySelector('.arrow');
@@ -566,6 +592,7 @@ function togglePost(id, hdr) {
   body.classList.toggle('show');
   arrow.classList.toggle('open');
 }
+
 function filterPosts() {
   const s = document.getElementById('searchInput').value.trim().toLowerCase();
   let list = allPosts;
@@ -578,7 +605,7 @@ function filterPosts() {
 }
 
 // ============================================================
-// لایک
+// لایک (بدون تازه‌سازی)
 // ============================================================
 async function toggleLike(index) {
   if (!loggedUser) { alert('⚠️ برای لایک کردن وارد حساب خود شوید.'); return; }
@@ -601,7 +628,7 @@ async function toggleLike(index) {
 }
 
 // ============================================================
-// کامنت
+// کامنت (بدون تازه‌سازی)
 // ============================================================
 async function addComment(index) {
   if (!loggedUser) { alert('⚠️ برای نظر دادن وارد حساب خود شوید.'); return; }
@@ -618,6 +645,7 @@ async function addComment(index) {
   renderPosts(allPosts);
   updateProfile();
 }
+
 function sharePost(index) {
   const post = allPosts[index];
   if (!post) return;
@@ -647,31 +675,33 @@ function saveToBox(index) {
     setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 2000);
   }
 }
+
 function renderSaved() {
   const container = document.getElementById('savedContainer');
   if (!loggedUser) {
-    container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem">🔒 وارد حساب خود شوید.</div>';
+    container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem"><i class="fas fa-lock"></i> وارد حساب خود شوید.</div>';
     return;
   }
   const saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
   if (!saved.length) {
-    container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem">📦 جعبه مهمات خالی است</div>';
+    container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem"><i class="fas fa-box-open"></i> جعبه مهمات خالی است</div>';
     return;
   }
   container.innerHTML = saved.map((p, i) => `
     <div class="saved-item">
       <div class="saved-hdr" onclick="toggleSaved(${i})">
-        <h4>❓ ${p.shobe || 'بدون عنوان'}</h4>
-        <span class="arrow">▼</span>
+        <h4><i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}</h4>
+        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
       </div>
       <div class="saved-body" id="savedBody${i}">
         <p>${(p.answer || '').replace(/\n/g, '<br>')}</p>
-        <div style="color:var(--ts);font-size:.5rem">📅 ${p.savedAt || 'تاریخ نامشخص'}</div>
-        <button class="del-btn" onclick="removeFromSaved(${i})">🗑️ حذف</button>
+        <div style="color:var(--ts);font-size:.5rem"><i class="fas fa-calendar-alt"></i> ${p.savedAt || 'تاریخ نامشخص'}</div>
+        <button class="del-btn" onclick="removeFromSaved(${i})"><i class="fas fa-trash"></i> حذف</button>
       </div>
     </div>
   `).join('');
 }
+
 function toggleSaved(index) {
   const body = document.getElementById(`savedBody${index}`);
   const arrow = body.parentElement.querySelector('.arrow');
@@ -679,6 +709,7 @@ function toggleSaved(index) {
   body.classList.toggle('show');
   arrow.classList.toggle('open');
 }
+
 function removeFromSaved(index) {
   if (!confirm('مطمئنی حذف کنی؟')) return;
   let saved = JSON.parse(localStorage.getItem('padafand_saved_' + loggedUser) || '[]');
@@ -688,47 +719,70 @@ function removeFromSaved(index) {
 }
 
 // ============================================================
+// شبهه تصادفی
+// ============================================================
+function updateRandomShobe() {
+  if (allPosts.length > 0) {
+    const random = allPosts[Math.floor(Math.random() * allPosts.length)];
+    document.getElementById('randomShobe').textContent = random.shobe || 'شبهه‌ای یافت نشد';
+  } else {
+    document.getElementById('randomShobe').textContent = 'هنوز شبهه‌ای ثبت نشده است';
+  }
+}
+
+function showRandomShobe() {
+  if (allPosts.length > 0) {
+    const random = allPosts[Math.floor(Math.random() * allPosts.length)];
+    alert(`❓ ${random.shobe}\n\n💡 ${random.answer}`);
+  } else {
+    alert('هنوز شبهه‌ای برای نمایش وجود ندارد');
+  }
+}
+
+// ============================================================
 // کاربران
 // ============================================================
 function toggleUserPanel() {
   document.getElementById('userPanel').classList.toggle('show');
   if (loggedUser) updateProfile();
 }
+
 function showRegister() {
   document.getElementById('userLoginForm').style.display = 'none';
   document.getElementById('userRegisterForm').style.display = 'block';
   document.getElementById('userInfo').style.display = 'none';
 }
+
 function showLogin() {
   document.getElementById('userLoginForm').style.display = 'block';
   document.getElementById('userRegisterForm').style.display = 'none';
   document.getElementById('userInfo').style.display = 'none';
 }
+
 function selectAvatar(el) {
   document.querySelectorAll('.avatar-select .av-item').forEach(a => a.classList.remove('active'));
   el.classList.add('active');
   selectedAvatar = el.dataset.avatar;
 }
+
 function updateHeader() {
   const nameEl = document.getElementById('headerName');
-  const avatarEl = document.getElementById('headerAvatar');
   const levelEl = document.getElementById('headerLevel');
   if (loggedUser) {
     const u = allUsers[loggedUser];
     nameEl.textContent = u?.fullname || loggedUser;
-    avatarEl.textContent = u?.avatar || '👤';
     const level = getUserLevel(u?.xp || 0);
     levelEl.textContent = level.name;
   } else {
     nameEl.textContent = 'ورود';
-    avatarEl.textContent = '👤';
     levelEl.textContent = '';
   }
 }
+
 function updateProfile() {
   if (!loggedUser) return;
   const u = allUsers[loggedUser];
-  document.getElementById('profileAvatar').textContent = u?.avatar || '👤';
+  document.getElementById('profileAvatar').innerHTML = `<i class="fas ${u?.avatar || 'fa-user'}"></i>`;
   document.getElementById('profileName').textContent = u?.fullname || loggedUser;
   const level = getUserLevel(u?.xp || 0);
   document.getElementById('profileLevel').textContent = level.name;
@@ -743,6 +797,7 @@ function updateProfile() {
   document.getElementById('userRegisterForm').style.display = 'none';
   document.getElementById('userInfo').style.display = 'block';
 }
+
 async function userRegister() {
   const fullname = document.getElementById('regFullname').value.trim();
   const phone = document.getElementById('regPhone').value.trim();
@@ -772,8 +827,9 @@ async function userRegister() {
   document.getElementById('regMsg').textContent = '✅ ثبت‌نام موفق! وارد شوید.';
   document.getElementById('regMsg').style.color = '#6db33f';
   showLogin();
-  updateUserCount();
+  document.getElementById('userCount').textContent = Object.keys(allUsers).length;
 }
+
 async function userLogin() {
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
@@ -789,29 +845,45 @@ async function userLogin() {
   localStorage.setItem('padafand_logged_user', username);
   updateHeader();
   toggleUserPanel();
-  updateUserCount();
   renderSaved();
   renderAll();
 }
+
 function userLogout() {
   loggedUser = null;
   localStorage.removeItem('padafand_logged_user');
   updateHeader();
   toggleUserPanel();
-  updateUserCount();
   renderSaved();
   renderAll();
-}
-function updateUserCount() {
-  document.getElementById('userCount').textContent = Object.keys(allUsers).length;
 }
 
 // ============================================================
 // بازی‌ها
 // ============================================================
 function startGame(game) {
-  alert(`🎮 بازی "${game}" در حال توسعه...\nبه زودی در قرارگاه`);
+  let gameWindow = window.open('', '_blank', 'width=600,height=400');
+  if (!gameWindow) {
+    alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.');
+    return;
+  }
+  
+  let html = `<html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
+    <head><title>بازی ${game}</title></head>
+    <body>
+      <h1 style="color:#6db33f">🎮 ${game}</h1>
+      <p style="color:#7a9a55">بازی در حال اجرا...</p>
+      <div style="margin:20px auto;border:1px solid #2e4018;padding:20px;border-radius:8px;background:#111c0a;max-width:400px">
+        <p style="font-size:20px;color:#c8a000">🕹️</p>
+        <p style="color:#d4e8b0;font-size:14px;line-height:1.8">این بازی با تم نظامی و پدافندی طراحی شده است.<br>نسخه کامل آن به زودی در قرارگاه ارائه خواهد شد.</p>
+        <button onclick="window.close()" style="background:#4a7c20;border:none;color:#fff;padding:8px 20px;border-radius:4px;cursor:pointer;margin-top:10px">بازگشت</button>
+      </div>
+    </body>
+  </html>`;
+  
+  gameWindow.document.write(html);
+  gameWindow.document.close();
 }
 </script>
 </body>
-  </html>
+</html>
