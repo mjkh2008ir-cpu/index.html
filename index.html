@@ -13,16 +13,19 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 @keyframes slideMenu{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== منوی همبرگری ===== */
-.hamburger{position:fixed;top:10px;left:10px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.5rem;padding:0.3rem 0.7rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
-.side-menu{position:fixed;top:0;left:0;width:260px;height:100%;background:var(--bgm);border-right:2px solid var(--g);z-index:1000;padding:2rem 1.2rem;transform:translateX(-100%);transition:.3s;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.6)}
+/* ===== منوی همبرگری (راست) ===== */
+.hamburger{position:fixed;top:10px;right:10px;z-index:999;background:var(--g);border:none;color:#fff;font-size:1.5rem;padding:0.3rem 0.7rem;border-radius:4px;cursor:pointer;border:1px solid var(--gl)}
+.hamburger:hover{background:var(--gl);color:#0d1408}
+.side-menu{position:fixed;top:0;right:0;width:260px;height:100%;background:var(--bgm);border-left:2px solid var(--g);z-index:1000;padding:2rem 1.2rem;transform:translateX(100%);transition:.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.6)}
 .side-menu.open{transform:translateX(0)}
-.side-menu .close-menu{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--ts);font-size:1.3rem;cursor:pointer}
+.side-menu .close-menu{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--ts);font-size:1.3rem;cursor:pointer}
 .side-menu .menu-title{color:var(--gl);font-size:1rem;font-weight:700;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:1rem}
 .side-menu .menu-item{display:block;padding:0.5rem 0.5rem;color:var(--tp);text-decoration:none;font-size:.8rem;border-bottom:1px solid var(--br);cursor:pointer;transition:.2s}
 .side-menu .menu-item:hover{background:var(--bgp);color:var(--gl)}
 .side-menu .menu-item i{margin-left:0.5rem;width:20px;color:var(--am)}
+.side-menu .menu-item .badge{background:var(--am);color:#1a1000;font-size:.5rem;padding:0.05rem 0.3rem;border-radius:2px;margin-right:0.3rem}
 
 .floating-btn{position:fixed;bottom:20px;left:20px;background:var(--g);color:#fff;border:none;border-radius:50%;width:55px;height:55px;font-size:1.5rem;box-shadow:0 4px 15px rgba(74,124,32,.4);cursor:pointer;z-index:998;display:flex;align-items:center;justify-content:center;transition:.3s;border:2px solid var(--gl)}
 .floating-btn:hover{transform:scale(1.1)}
@@ -54,7 +57,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 /* ===== CONTENT ===== */
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem}
 .page{display:none}
-.page.active{display:block}
+.page.active{display:block;animation:fadeInUp .3s ease}
 .page-title{font-size:.85rem;font-weight:700;color:var(--gl);letter-spacing:1px;margin-bottom:0.4rem;border-bottom:1px solid var(--br);padding-bottom:0.2rem}
 .page-title i{margin-left:0.3rem}
 
@@ -62,11 +65,13 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .stat-item{color:var(--ts)}
 .stat-item b{color:var(--am)}
 
-.post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden}
+/* ===== POSTS ===== */
+.post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden;animation:fadeInUp .3s ease}
 .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:0.2s}
 .post-hdr:hover{background:var(--bgm)}
 .post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
 .post-hdr .title i{color:var(--am);margin-left:0.2rem}
+.post-hdr .title .user-avatar{font-size:.9rem;margin-left:0.2rem}
 .post-hdr .arrow{color:var(--gl);font-size:.7rem;transition:.3s}
 .post-hdr .arrow.open{transform:rotate(180deg)}
 .post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br)}
@@ -74,17 +79,24 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
 .post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.6rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding-bottom:0.3rem}
 .post-body .meta .rank{color:var(--gold);font-weight:700}
+.post-body .meta .user-avatar-small{font-size:.7rem;margin-left:0.2rem}
 .post-body .tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.3rem}
 .post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.55rem;color:var(--am)}
 .post-actions{display:flex;gap:0.4rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
 .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.5rem;border-radius:3px;cursor:pointer;font-size:.6rem;transition:0.3s}
 .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
+.post-actions button.liked{color:var(--rd);background:rgba(192,57,43,0.1);border-color:var(--rd)}
 .post-actions .del-btn{background:var(--rd);border-color:var(--rd);color:#fff}
 .post-actions .del-btn:hover{background:#a02020;color:#fff}
+.post-actions .like-btn i{transition:.2s}
+.post-actions .like-btn.liked i{animation:likeAnim .3s ease}
+@keyframes likeAnim{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 .saved-msg{color:var(--gl);font-size:.6rem;margin-right:0.3rem}
+.like-count{font-size:.55rem;color:var(--ts);margin-left:0.1rem}
 .comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
 .comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.2rem 0;font-size:.65rem;border-right:2px solid var(--gl)}
 .comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
+.comments-section .cmt .cmt-user .cmt-avatar{font-size:.7rem;margin-left:0.15rem}
 .comments-section .cmt .cmt-rank{color:var(--gold);font-size:.5rem}
 .comments-section .cmt .cmt-text{color:var(--tp)}
 .comments-section .cmt .cmt-actions{display:flex;gap:0.3rem;margin-top:0.1rem;flex-wrap:wrap}
@@ -92,12 +104,10 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .comments-section .cmt .cmt-actions button:hover{color:var(--gl)}
 .comments-section .cmt .cmt-actions .like-btn{color:var(--rd)}
 .comments-section .cmt .cmt-actions .like-btn:hover{color:#a02020}
-.comments-section .cmt .cmt-actions .like-count{color:var(--ts);font-size:.5rem}
 .comments-section .cmt .replies{margin-right:1rem;border-right:1px solid var(--br);padding-right:0.3rem}
 .comments-section .cmt .reply-input{display:flex;gap:0.2rem;margin-top:0.2rem;flex-wrap:wrap}
 .comments-section .cmt .reply-input input{flex:1;padding:0.15rem 0.3rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.55rem;outline:none;min-width:80px}
 .comments-section .cmt .reply-input button{background:var(--g);border:none;color:#fff;padding:0.1rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem}
-.comments-section .cmt .reply-input input:focus{border-color:var(--gl)}
 .comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
 .comments-section .comment-form input{flex:1;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.65rem;outline:none;min-width:100px}
 .comments-section .comment-form input:focus{border-color:var(--gl)}
@@ -106,13 +116,13 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .comments-section .login-msg{color:var(--ts);font-size:.55rem;font-style:italic}
 
 .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.4rem;margin-top:0.3rem}
-.ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.4rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.7rem}
-.ai-card:hover{border-color:var(--gl)}
+.ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.4rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.7rem;transition:.3s}
+.ai-card:hover{border-color:var(--gl);transform:translateY(-2px)}
 .ai-card .ai-icon{font-size:1.2rem;display:block}
 .ai-card .ai-name{font-weight:700;font-size:.7rem}
 .ai-card .ai-desc{font-size:.55rem;color:var(--ts)}
 
-.saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am)}
+.saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am);animation:fadeInUp .3s ease}
 .saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .saved-item .saved-hdr h4{color:var(--am);font-size:.75rem;flex:1}
 .saved-item .saved-hdr .arrow{color:var(--gl);font-size:.6rem;transition:.3s}
@@ -132,9 +142,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 /* ===== PANEL USER ===== */
 #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4)}
-#userPanel.show{display:block;animation:slideIn .25s}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
-#userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer}
+#userPanel.show{display:block;animation:slideMenu .25s}
+#userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer;z-index:10}
 #userPanel .user-title{font-size:.9rem;font-weight:700;color:var(--gl);margin-bottom:0.6rem;border-bottom:1px solid var(--br);padding-bottom:0.3rem}
 #userPanel .form-group{margin-bottom:0.4rem}
 #userPanel .form-group label{display:block;font-size:.55rem;color:var(--ts);margin-bottom:0.1rem}
@@ -169,14 +178,14 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   #userPanel{width:100%}
   .ai-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
   .floating-btn{width:45px;height:45px;font-size:1.2rem;bottom:15px;left:15px}
-  .hamburger{font-size:1.2rem;padding:0.2rem 0.5rem;top:8px;left:8px}
+  .hamburger{font-size:1.2rem;padding:0.2rem 0.5rem;top:8px;right:8px}
   .side-menu{width:220px}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== دکمه همبرگری ===== -->
+<!-- ===== دکمه همبرگری (راست) ===== -->
 <button class="hamburger" onclick="toggleSideMenu()"><i class="fas fa-bars"></i></button>
 
 <!-- ===== منوی کناری ===== -->
@@ -232,6 +241,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 <!-- CONTENT -->
 <div id="content">
 
+  <!-- HOME -->
   <div id="page-home" class="page active">
     <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
     <div class="stats">
@@ -253,12 +263,14 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     </div>
   </div>
 
+  <!-- POSTS -->
   <div id="page-posts" class="page">
     <div class="page-title"><i class="fas fa-list"></i> شبهات</div>
     <div id="filterChips" style="display:flex;flex-wrap:wrap;gap:0.2rem;margin-bottom:0.4rem"></div>
     <div id="postContainer"></div>
   </div>
 
+  <!-- AI -->
   <div id="page-ai" class="page">
     <div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div>
     <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem 0.6rem;margin-bottom:0.5rem;border-right:2px solid var(--am)">
@@ -274,6 +286,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     </div>
   </div>
 
+  <!-- SAVED -->
   <div id="page-saved" class="page">
     <div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div>
     <div style="background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;border-radius:4px;margin-bottom:0.5rem;border-right:2px solid var(--am)">
@@ -331,6 +344,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
         <span class="av-item" data-avatar="👨" onclick="selectAvatar(this)">👨</span>
         <span class="av-item" data-avatar="👨‍🦰" onclick="selectAvatar(this)">👨‍🦰</span>
         <span class="av-item" data-avatar="👩‍🦰" onclick="selectAvatar(this)">👩‍🦰</span>
+        <span class="av-item" data-avatar="🧕" onclick="selectAvatar(this)">🧕</span>
+        <span class="av-item" data-avatar="👳‍♂️" onclick="selectAvatar(this)">👳‍♂️</span>
       </div>
     </div>
     <button class="btn-primary" onclick="userRegister()">ثبت‌نام</button>
@@ -365,6 +380,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
         <span class="av-item" data-avatar="👨" onclick="selectEditAvatar(this)">👨</span>
         <span class="av-item" data-avatar="👨‍🦰" onclick="selectEditAvatar(this)">👨‍🦰</span>
         <span class="av-item" data-avatar="👩‍🦰" onclick="selectEditAvatar(this)">👩‍🦰</span>
+        <span class="av-item" data-avatar="🧕" onclick="selectEditAvatar(this)">🧕</span>
+        <span class="av-item" data-avatar="👳‍♂️" onclick="selectEditAvatar(this)">👳‍♂️</span>
       </div>
     </div>
     <button class="btn-primary" onclick="saveEditProfile()">ذخیره تغییرات</button>
@@ -389,10 +406,7 @@ async function fetchPosts() {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         return await res.json() || [];
-    } catch(e) {
-        console.log('⚠️ خطا در دریافت مطالب:', e.message);
-        return [];
-    }
+    } catch(e) { return []; }
 }
 
 async function fetchUsers() {
@@ -401,10 +415,7 @@ async function fetchUsers() {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         return await res.json() || [];
-    } catch(e) {
-        console.log('⚠️ خطا در دریافت کاربران:', e.message);
-        return [];
-    }
+    } catch(e) { return []; }
 }
 
 async function saveUser(user) {
@@ -419,10 +430,7 @@ async function saveUser(user) {
             body: JSON.stringify(user)
         });
         return await res.json();
-    } catch(e) {
-        console.log('⚠️ خطا در ذخیره کاربر:', e.message);
-        return null;
-    }
+    } catch(e) { return null; }
 }
 
 async function updateUserInDB(username, data) {
@@ -437,10 +445,21 @@ async function updateUserInDB(username, data) {
             body: JSON.stringify(data)
         });
         return true;
-    } catch(e) {
-        console.log('⚠️ خطا در ویرایش کاربر:', e.message);
-        return false;
-    }
+    } catch(e) { return false; }
+}
+
+async function updatePostToServer(post) {
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${post.id}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ comments: post.comments })
+        });
+    } catch(e) { console.log('⚠️ خطا در به‌روزرسانی کامنت'); }
 }
 
 // ============================================================
@@ -453,6 +472,7 @@ let currentCat = 'همه';
 let selectedAvatar = '👤';
 let selectedEditAvatar = '👤';
 const SPECIAL_USERS = ['محمد جواد خیاط زاده', 'محمد مهدی سعیدی', 'محمد باقر متوسل', 'محمد برزکار'];
+let likedPosts = JSON.parse(localStorage.getItem('padafand_liked') || '{}');
 
 // ============================================================
 // توابع کمکی
@@ -521,7 +541,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     loadAllData();
     
-    // همگام‌سازی خودکار هر 5 ثانیه
     setInterval(async function() {
         const newPosts = await fetchPosts();
         if (JSON.stringify(newPosts) !== JSON.stringify(allPosts)) {
@@ -541,7 +560,7 @@ function switchPage(page) {
 }
 
 // ============================================================
-// پست‌ها (حذف اسم از پایین)
+// پست‌ها (با آواتار و لایک)
 // ============================================================
 function renderPosts(list, containerId = 'postContainer') {
     const el = document.getElementById(containerId);
@@ -555,23 +574,31 @@ function renderPosts(list, containerId = 'postContainer') {
         const rank = getUserRank(p.sender || p.author || '');
         const isOwner = loggedUser && p.sender === loggedUser;
         const avatar = getUserAvatar(p.sender || p.author || '');
+        const postId = p.id || i;
+        const isLiked = likedPosts[postId] || false;
         return `
             <div class="post">
                 <div class="post-hdr" onclick="togglePost('${uid}', this)">
-                    <span class="title"><i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}</span>
+                    <span class="title">
+                        <span class="user-avatar">${avatar}</span>
+                        <i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}
+                    </span>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="post-body" id="${uid}">
                     <div class="ans">${(p.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>')}</div>
                     <div class="meta">
-                        <span><i class="fas fa-user-edit"></i> ${p.author || 'ناشناس'} ${rank ? `<span class="rank">${rank}</span>` : ''}</span>
+                        <span><span class="user-avatar-small">${avatar}</span> ${p.author || 'ناشناس'} ${rank ? `<span class="rank">${rank}</span>` : ''}</span>
                         ${p.source ? `<span><i class="fas fa-book"></i> ${p.source}</span>` : ''}
                         ${p.cat ? `<span><i class="fas fa-tag"></i> ${p.cat}</span>` : ''}
                     </div>
                     <div class="tags">${(p.tags || []).map(t => `<span>#${t}</span>`).join('')}</div>
                     <div class="post-actions">
-                        <button onclick="saveToBox(${i})">📦 ذخیره در جعبه مهمات</button>
-                        <button onclick="sharePost(${i})">📤 اشتراک‌گذاری</button>
+                        <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${i})">
+                            <i class="fas fa-heart"></i> <span class="like-count">${p.likes || 0}</span>
+                        </button>
+                        <button onclick="saveToBox(${i})">📦 ذخیره</button>
+                        <button onclick="sharePost(${i})">📤 اشتراک</button>
                         ${isOwner ? `<button class="del-btn" onclick="deletePost(${i})">🗑️ حذف</button>` : ''}
                         <span id="savedMsg${i}" class="saved-msg"></span>
                     </div>
@@ -579,17 +606,17 @@ function renderPosts(list, containerId = 'postContainer') {
                         <div id="comments${i}">
                             ${(p.comments || []).map(c => `
                                 <div class="cmt">
-                                    <span class="cmt-user">${c.user || 'ناشناس'}</span>
+                                    <span class="cmt-user"><span class="cmt-avatar">${getUserAvatar(c.user)}</span> ${c.user || 'ناشناس'}</span>
                                     ${getUserRank(c.user) ? `<span class="cmt-rank">${getUserRank(c.user)}</span>` : ''}
                                     <span class="cmt-text">: ${c.text}</span>
                                     <div class="cmt-actions">
-                                        <button class="like-btn" onclick="likeComment(${i}, '${c.id || ''}')">❤️ <span class="like-count">${c.likes || 0}</span></button>
+                                        <button onclick="likeComment(${i}, '${c.id || ''}')">❤️ <span class="like-count">${c.likes || 0}</span></button>
                                         <button onclick="showReplyInput(${i}, '${c.id || ''}')">💬 پاسخ</button>
                                     </div>
                                     <div class="replies" id="replies-${i}-${c.id || ''}">
                                         ${(c.replies || []).map(r => `
                                             <div class="cmt" style="border-right-color:var(--am);font-size:.6rem">
-                                                <span class="cmt-user">${r.user || 'ناشناس'}</span>
+                                                <span class="cmt-user"><span class="cmt-avatar">${getUserAvatar(r.user)}</span> ${r.user || 'ناشناس'}</span>
                                                 ${getUserRank(r.user) ? `<span class="cmt-rank">${getUserRank(r.user)}</span>` : ''}
                                                 <span class="cmt-text">: ${r.text}</span>
                                             </div>
@@ -649,6 +676,30 @@ function setCat(c) {
     currentCat = c;
     renderChips();
     filterPosts();
+}
+
+// ============================================================
+// لایک (با ذخیره در localStorage)
+// ============================================================
+function toggleLike(index) {
+    if (!isLoggedIn()) {
+        alert('⚠️ برای لایک کردن وارد حساب خود شوید.');
+        return;
+    }
+    const post = allPosts[index];
+    if (!post) return;
+    const postId = post.id || index;
+    const isLiked = likedPosts[postId] || false;
+    
+    if (isLiked) {
+        post.likes = (post.likes || 1) - 1;
+        delete likedPosts[postId];
+    } else {
+        post.likes = (post.likes || 0) + 1;
+        likedPosts[postId] = true;
+    }
+    localStorage.setItem('padafand_liked', JSON.stringify(likedPosts));
+    renderPosts(allPosts);
 }
 
 // ============================================================
@@ -714,22 +765,6 @@ async function addReply(postIndex, commentId) {
     renderPosts(allPosts);
 }
 
-async function updatePostToServer(post) {
-    try {
-        await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${post.id}`, {
-            method: 'PATCH',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ comments: post.comments })
-        });
-    } catch(e) {
-        console.log('⚠️ خطا در به‌روزرسانی کامنت');
-    }
-}
-
 // ============================================================
 // حذف مطلب
 // ============================================================
@@ -749,9 +784,7 @@ async function deletePost(index) {
         });
         allPosts.splice(index, 1);
         renderAll();
-    } catch(e) {
-        alert('⚠️ خطا در حذف مطلب');
-    }
+    } catch(e) { alert('⚠️ خطا در حذف مطلب'); }
 }
 
 // ============================================================
@@ -906,7 +939,6 @@ async function saveEditProfile() {
     
     const success = await updateUserInDB(loggedUser, updateData);
     if (success) {
-        // به‌روزرسانی لیست کاربران
         allUsers = await fetchUsers();
         document.getElementById('editMsg').textContent = '✅ تغییرات ذخیره شد!';
         setTimeout(() => {
