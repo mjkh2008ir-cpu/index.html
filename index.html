@@ -7,15 +7,12 @@
     <meta name="description" content="پاسخ به شبهات دینی، اعتقادی و سیاسی با زبانی ساده و مستند">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* ===== RESET & ROOT ===== */
         *{box-sizing:border-box;margin:0;padding:0}
         :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#c8a000;--neon:#39ff14;--font:'Segoe UI',Tahoma,sans-serif}
         [data-theme="dark"]{--bg:#080c0a;--bgm:#0c1410;--bgp:#0a100e;--g:#2a4a3a;--gl:#4a8a7a;--br:#1a2a25;--tp:#b0c8c0;--ts:#6a8a7a;--am:#b09840;--gold:#b09840;--neon:#39ff14}
         [data-theme="light"]{--bg:#f2f7ef;--bgm:#e0ebd8;--bgp:#d0dfc4;--g:#3a7a2a;--gl:#4a8a3a;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--am:#b09000;--gold:#b09000;--neon:#2a8a1a}
         body{background:var(--bg);font-family:var(--font);direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px;line-height:1.8}
         ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
-
-        /* ===== ANIMATIONS ===== */
         @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
         @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
         @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -27,6 +24,7 @@
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
         @keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon),0 0 10px var(--neon)}50%{text-shadow:0 0 20px var(--neon),0 0 40px var(--neon)}}
         @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
         /* ===== HEADER ===== */
         #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
@@ -114,7 +112,7 @@
         .sidebar-nav .nav-item.active{color:var(--neon)}
         .sidebar-nav .nav-item:hover{color:var(--neon)}
 
-        /* ===== AI PAGE ===== */
+        /* ===== AI ===== */
         .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.3rem}
         .ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.65rem;transition:.3s}
         .ai-card:hover{border-color:var(--neon);transform:translateY(-5px);box-shadow:0 5px 20px rgba(57,255,20,0.1)}
@@ -193,6 +191,7 @@
         .btn-block{width:100%;justify-content:center}
         .btn-neon{background:var(--neon);color:#000;border:1px solid var(--neon);animation:neonPulse 2s infinite}
         .btn-neon:hover{background:#2a8a1a;color:#fff}
+        .btn-sm{padding:0.15rem 0.5rem;font-size:.55rem}
 
         /* ===== INBOX ===== */
         .inbox-item{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.3rem;cursor:pointer;transition:.3s}
@@ -248,7 +247,7 @@
         #userPanel .form-group input{width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none}
         #userPanel .form-group input:focus{border-color:var(--neon)}
 
-        /* ===== PIE LAUNCHER (Tutorial) ===== */
+        /* ===== PIE LAUNCHER ===== */
         .pie-launcher{display:none;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
         .pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
         .pie-launcher .content{flex:1}
@@ -297,7 +296,7 @@
     <!-- ===== FAB ===== -->
     <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
 
-    <!-- ===== SIDEBAR NAV (Mobile) ===== -->
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar-nav" id="sidebarNav">
         <button class="nav-item active" onclick="switchPage('home')"><i class="fas fa-home"></i><span>خانه</span></button>
         <button class="nav-item" onclick="switchPage('posts')"><i class="fas fa-list"></i><span>شبهات</span></button>
@@ -314,15 +313,10 @@
         <!-- HOME -->
         <div id="page-home" class="page active">
             <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
-            <!-- Pie Launcher -->
             <div class="pie-launcher" id="pieLauncher"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
-            <!-- Stats -->
             <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span><span><i class="fas fa-star"></i> <b id="specialCount">0</b> سردار</span></div>
-            <!-- Random Shobe -->
             <div class="random-box" onclick="showRandomShobe()"><div class="title"><i class="fas fa-random"></i> شبهه تصادفی</div><div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div></div>
-            <!-- Welcome -->
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)"><div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div><p style="color:var(--ts);font-size:.7rem;line-height:1.8">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br><span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span></p></div>
-            <!-- Latest Posts -->
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div><div id="homePosts" style="margin-top:0.2rem"></div></div>
         </div>
 
@@ -341,16 +335,12 @@
     </div>
 
     <!-- ===== MODALS ===== -->
-    <!-- Send to Command -->
     <div class="modal" id="sendToCommandModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3><button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button></div><div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div><div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"><div class="form-group"><label>دسته‌بندی</label><select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select></div><div class="form-group"><label>اولویت</label><select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div></div><button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button><div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div></div></div>
 
-    <!-- Login -->
     <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور"></div><button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button><div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div></div><div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div></div></div>
 
-    <!-- Inbox -->
     <div class="modal" id="inboxModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-envelope"></i> صندوق پیام‌ها <span id="inboxCount" style="font-size:.5rem;color:var(--ts)"></span></h3><button class="modal-close" onclick="closeModal('inboxModal')">×</button></div><div id="inboxContainer" style="max-height:400px;overflow-y:auto"></div></div></div>
 
-    <!-- Tutorial -->
     <div class="modal" id="tutorialModal"><div class="modal-content" style="max-width:600px"><div class="modal-header"><h3><i class="fas fa-graduation-cap"></i> آموزش قرارگاه</h3><button class="modal-close" onclick="closeModal('tutorialModal')">×</button></div><div id="tutorialContent" style="min-height:200px"><div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div></div></div></div>
 
     <!-- ===== USER PANEL ===== -->
@@ -360,62 +350,41 @@
     <footer id="footer"><div class="foot-inner"><div class="foot-links"><a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a><a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a><a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a></div><div class="foot-copy">PADAFAND v10.0</div></div><div class="defense-anim"><div class="car">🚛<span>پدافند شبهات</span></div><div class="missile">🚀</div><div class="missile">🚀</div><div class="missile">🚀</div><div class="radar">📡</div><div class="jet">✈️</div><div class="jet">✈️</div><div class="neon-line"></div></div></footer>
 
     <script>
-        // ============================================================
-        // 🔗 SUPABASE CONFIG
-        // ============================================================
+        // ===== SUPABASE CONFIG =====
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
-        // ============================================================
-        // 📦 SUPABASE HELPERS
-        // ============================================================
         async function loadFromSupabase(table) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, { headers: { 'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
                 return await res.json();
-            } catch (e) { console.error('❌ خطا در بارگذاری:', e); return []; }
+            } catch (e) { console.error(e); return []; }
         }
-
         async function saveToSupabase(table, data) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-                    method: 'POST',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data) });
                 return await res.json();
-            } catch (e) { console.error('❌ خطا در ذخیره:', e); return null; }
+            } catch (e) { console.error(e); return null; }
         }
-
         async function updateInSupabase(table, id, data) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-                    method: 'PATCH',
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'PATCH',
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                        'Content-Type': 'application/json' }, body: JSON.stringify(data) });
                 return await res.json();
-            } catch (e) { console.error('❌ خطا در بروزرسانی:', e); return null; }
+            } catch (e) { console.error(e); return null; }
         }
-
         async function deleteFromSupabase(table, id) {
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                return true;
-            } catch (e) { console.error('❌ خطا در حذف:', e); return false; }
+            try { await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'DELETE', headers: { 'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
+                return true; } catch (e) { console.error(e); return false; }
         }
 
-        // ============================================================
-        // 👤 SPECIAL USERS
-        // ============================================================
+        // ===== SPECIAL USERS =====
         const SPECIAL_USERS = {
             "09945740006": { name: "محمد جواد خیاط زاده", rank: "سردار", xp: 1000 },
             "09332933736": { name: "محمد برزکار", rank: "سردار", xp: 1000 },
@@ -429,9 +398,7 @@
             return null;
         }
 
-        // ============================================================
-        // 📊 DATA
-        // ============================================================
+        // ===== DATA =====
         let allPosts = [],
             allUsers = {},
             allMessages = [],
@@ -439,10 +406,9 @@
             allSaved = [];
         let loggedUser = null,
             selectedAvatar = 'fa-user',
-            tutorialStep = 0,
-            tutorialActive = false;
+            tutorialStep = 0;
         const LEVELS = [{ name: 'سرباز', xp: 0 }, { name: 'سرجوخه', xp: 30 }, { name: 'گروهبان', xp: 80 },
-        { name: 'سروان', xp: 150 }, { name: 'سرگرد', xp: 250 }, { name: 'سرهنگ', xp: 400 }, { name: 'سردار', xp: 600 }];
+        { name: 'سروان', xp: 150 }, { name: 'سرگرد', xp: 250 }, { name: 'سرهنگ', xp: 400 }, { name: 'سردار', xp: 600 } ];
 
         function getUserLevel(xp, isSpecial) {
             if (isSpecial) return { name: '🎖️ سردار', xp: 0 };
@@ -451,9 +417,7 @@
             return level;
         }
 
-        // ============================================================
-        // 🎨 THEME
-        // ============================================================
+        // ===== THEME =====
         const themes = ['dark', 'light', ''];
         let themeIndex = 0;
 
@@ -463,30 +427,22 @@
             localStorage.setItem('padafand_theme', themes[themeIndex]);
         }
 
-        // ============================================================
-        // 📥 LOAD DATA
-        // ============================================================
+        // ===== LOAD DATA =====
         async function loadAllData() {
             const users = await loadFromSupabase('users');
             allUsers = {};
             users.forEach(u => { allUsers[u.username] = u; });
-
             const posts = await loadFromSupabase('posts');
             allPosts = posts || [];
-
             const messages = await loadFromSupabase('messages');
             allMessages = messages || [];
-
             const inbox = await loadFromSupabase('inbox');
             allInbox = {};
             inbox.forEach(i => { if (!allInbox[i.user]) allInbox[i.user] = []; allInbox[i.user].push(i); });
-
             const saved = await loadFromSupabase('saved');
             allSaved = saved || [];
-
             const savedUser = localStorage.getItem('padafand_logged_user');
             if (savedUser && allUsers[savedUser]) { loggedUser = savedUser; }
-
             renderAll();
             document.getElementById('userCount').textContent = Object.keys(allUsers).length;
             const specialCount = Object.keys(allUsers).filter(u => allUsers[u].is_special).length;
@@ -517,9 +473,7 @@
             setTimeout(showWelcomeMessage, 1500);
         });
 
-        // ============================================================
-        // 🤖 PIE LAUNCHER (Tutorial)
-        // ============================================================
+        // ===== PIE LAUNCHER =====
         function checkTutorialMessage() {
             if (!loggedUser) return;
             const tutorialSent = localStorage.getItem('padafand_tutorial_sent_' + loggedUser);
@@ -580,14 +534,12 @@
         ];
 
         function startTutorialSteps() { tutorialStep = 0;
-            tutorialActive = true;
             showTutorialStep(); }
 
         function showTutorialStep() {
             if (tutorialStep >= tutorialSteps.length) {
                 document.getElementById('tutorialContent').innerHTML =
                     `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🎖️</div><h3 style="color:var(--gold)">آموزش کامل شد!</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">حالا با همه بخش‌های قرارگاه آشنا شدی.<br>برو و از امکانات استفاده کن. موفق باشی سرباز! 💪</p><button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button></div>`;
-                tutorialActive = false;
                 return;
             }
             const step = tutorialSteps[tutorialStep];
@@ -597,9 +549,7 @@
 
         function closePieLauncher() { document.getElementById('pieLauncher').style.display = 'none'; }
 
-        // ============================================================
-        // 🧭 NAVIGATION
-        // ============================================================
+        // ===== NAVIGATION =====
         function switchPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(`page-${page}`).classList.add('active');
@@ -619,9 +569,7 @@
 
         function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
-        // ============================================================
-        // 📝 POSTS
-        // ============================================================
+        // ===== POSTS =====
         function renderPosts(list, containerId = 'postContainer') {
             const el = document.getElementById(containerId);
             if (!el) return;
@@ -707,9 +655,7 @@
             renderPosts(list);
         }
 
-        // ============================================================
-        // ❤️ LIKE & 💬 COMMENT (No Refresh)
-        // ============================================================
+        // ===== LIKE & COMMENT =====
         async function toggleLike(index) {
             if (!loggedUser) { alert('⚠️ برای لایک کردن وارد حساب خود شوید.'); return; }
             const post = allPosts[index];
@@ -762,9 +708,7 @@
             }
         }
 
-        // ============================================================
-        // 📦 SAVED (با Supabase)
-        // ============================================================
+        // ===== SAVED =====
         async function saveToBox(index) {
             if (!loggedUser) { alert('⚠️ برای ذخیره مطالب وارد حساب خود شوید.'); return; }
             const post = allPosts[index];
@@ -834,9 +778,7 @@
                 renderSaved(); }
         }
 
-        // ============================================================
-        // 🎲 RANDOM SHOBE
-        // ============================================================
+        // ===== RANDOM SHOBE =====
         function updateRandomShobe() {
             if (allPosts.length > 0) {
                 const random = allPosts[Math.floor(Math.random() * allPosts.length)];
@@ -863,9 +805,7 @@
             document.getElementById('sendToCommandModal').classList.add('show');
         }
 
-        // ============================================================
-        // 📨 INBOX
-        // ============================================================
+        // ===== INBOX =====
         function updateInboxBadge() {
             if (!loggedUser) { document.getElementById('inboxBadge').style.display = 'none'; return; }
             const msgs = allInbox[loggedUser] || [];
@@ -937,9 +877,7 @@
             }
         }
 
-        // ============================================================
-        // 📨 SEND TO COMMAND
-        // ============================================================
+        // ===== SEND TO COMMAND =====
         function openSendToCommand() {
             if (!loggedUser) { alert('⚠️ لطفاً وارد حساب خود شوید'); return; }
             document.querySelector('#sendToCommandModal .modal-header h3').innerHTML =
@@ -976,9 +914,7 @@
                 document.getElementById('sendMsg').textContent = ''; }, 1500);
         }
 
-        // ============================================================
-        // 👤 USER MANAGEMENT
-        // ============================================================
+        // ===== USER MANAGEMENT =====
         function toggleUserPanel() { document.getElementById('userPanel').classList.toggle('show'); if (loggedUser)
             updateProfile(); }
 
@@ -1058,9 +994,7 @@
             document.getElementById('authMsg').textContent = '';
         }
 
-        // ============================================================
-        // 📝 REGISTER / LOGIN
-        // ============================================================
+        // ===== REGISTER / LOGIN =====
         async function userRegister() {
             const fullname = document.getElementById('regFullname').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
@@ -1165,9 +1099,7 @@
             renderAll();
         }
 
-        // ============================================================
-        // 🎮 GAMES (Serious)
-        // ============================================================
+        // ===== GAMES =====
         function initGames() {
             const grid = document.getElementById('gamesGrid');
             if (!grid) return;
@@ -1475,9 +1407,7 @@
             updateHeader();
         }
 
-        // ============================================================
-        // 🎬 WELCOME MESSAGE
-        // ============================================================
+        // ===== WELCOME =====
         function showWelcomeMessage() {
             if (localStorage.getItem('padafand_welcome_shown')) return;
             const win = window.open('', '_blank', 'width=600,height=480');
@@ -1509,17 +1439,10 @@
             }
         }
 
-        // ============================================================
-        // 📌 CLOSE MODAL ON OUTSIDE CLICK
-        // ============================================================
         document.addEventListener('click', function(e) { if (e.target.classList.contains('modal')) { e.target.classList
                     .remove('show'); } });
-
-        // ============================================================
-        // 🔗 COMMAND LINK
-        // ============================================================
         document.getElementById('cmdLink').addEventListener('click', function(e) { e.preventDefault();
             window.open(this.href, '_blank'); });
     </script>
 </body>
-    </html>
+                                                          </html>
