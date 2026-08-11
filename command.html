@@ -8,15 +8,12 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* ============================================================
-        🎨 RESET & ROOT VARIABLES
-        ============================================================ */
+        /* ===== RESET & ROOT ===== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
         :root {
             --bg-primary: #060a0c;
             --bg-secondary: #0c141a;
@@ -29,7 +26,6 @@
             --font-mono: 'Courier New', monospace;
             --neon: #39ff14;
         }
-
         [data-theme="light"] {
             --bg-primary: #e8eef0;
             --bg-secondary: #d0d8dc;
@@ -40,7 +36,6 @@
             --text-secondary: #4a5a5e;
             --neon: #2a8a1a;
         }
-
         body {
             background: var(--bg-primary);
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -51,7 +46,6 @@
             font-size: 14px;
             overflow: hidden;
         }
-
         ::-webkit-scrollbar {
             width: 4px;
             background: var(--bg-primary);
@@ -61,9 +55,7 @@
             border-radius: 2px;
         }
 
-        /* ============================================================
-        🎬 ANIMATIONS
-        ============================================================ */
+        /* ===== ANIMATIONS ===== */
         @keyframes blink {
             0%,
             100% {
@@ -131,9 +123,7 @@
             }
         }
 
-        /* ============================================================
-        🔐 SECURITY PAGE (Login)
-        ============================================================ */
+        /* ===== SECURITY PAGE (Login) ===== */
         #securityPage {
             position: fixed;
             inset: 0;
@@ -145,7 +135,6 @@
             padding: 1rem;
             animation: fadeIn .5s ease;
         }
-
         #securityPage .login-box {
             background: var(--bg-secondary);
             border: 2px solid var(--border-military);
@@ -155,7 +144,6 @@
             width: 100%;
             box-shadow: 0 0 60px rgba(74, 138, 170, 0.05);
         }
-
         #securityPage .login-box .logo {
             text-align: center;
             font-size: 2.5rem;
@@ -163,7 +151,6 @@
             color: var(--gold);
             animation: neonPulse 2s infinite;
         }
-
         #securityPage .login-box h2 {
             color: var(--text-primary);
             font-size: 1.1rem;
@@ -171,18 +158,15 @@
             letter-spacing: 2px;
             margin: 0.3rem 0;
         }
-
         #securityPage .login-box h2 span {
             color: var(--neon-green);
         }
-
         #securityPage .login-box .sub {
             text-align: center;
             color: var(--text-secondary);
             font-size: .5rem;
             font-family: var(--font-mono);
         }
-
         #securityPage .login-box .upload-area {
             background: rgba(13, 20, 8, 0.3);
             border: 1.5px dashed rgba(184, 152, 10, 0.2);
@@ -192,27 +176,22 @@
             margin: 0.8rem 0;
             transition: .3s;
         }
-
         #securityPage .login-box .upload-area:hover {
             border-color: var(--gold);
         }
-
         #securityPage .login-box .upload-area .icon {
             font-size: 2rem;
             opacity: .5;
             color: var(--gold);
         }
-
         #securityPage .login-box .upload-area .title {
             color: var(--gold);
             font-size: .6rem;
             letter-spacing: 2px;
         }
-
         #securityPage .login-box .upload-area input[type="file"] {
             display: none;
         }
-
         #securityPage .login-box .upload-area .btn-upload {
             background: var(--gold);
             border: none;
@@ -225,26 +204,21 @@
             margin-top: 0.2rem;
             transition: .3s;
         }
-
         #securityPage .login-box .upload-area .btn-upload:hover {
             transform: scale(1.05);
         }
-
         #securityPage .login-box .upload-area .preview {
             display: none;
             margin-top: 0.3rem;
         }
-
         #securityPage .login-box .upload-area .preview img {
             max-width: 100%;
             max-height: 60px;
             border-radius: 4px;
         }
-
         #securityPage .login-box .input-group {
             margin-bottom: 0.5rem;
         }
-
         #securityPage .login-box .input-group label {
             color: var(--text-secondary);
             font-size: .5rem;
@@ -252,7 +226,6 @@
             letter-spacing: 2px;
             margin-bottom: 0.1rem;
         }
-
         #securityPage .login-box .input-group input {
             width: 100%;
             padding: 0.3rem 0.6rem;
@@ -265,12 +238,10 @@
             text-align: center;
             transition: .3s;
         }
-
         #securityPage .login-box .input-group input:focus {
             border-color: var(--neon-green);
             box-shadow: 0 0 20px rgba(74, 138, 170, 0.05);
         }
-
         #securityPage .login-box .btn-cmd {
             width: 100%;
             padding: 0.4rem;
@@ -284,26 +255,22 @@
             letter-spacing: 3px;
             transition: .3s;
         }
-
         #securityPage .login-box .btn-cmd:hover {
             background: linear-gradient(135deg, #3a5a6a, #2a4a5a);
             box-shadow: 0 0 30px rgba(74, 138, 170, 0.1);
         }
-
         #securityPage .login-box .error {
             color: #c0392b;
             font-size: .55rem;
             text-align: center;
             min-height: 1rem;
         }
-
         #securityPage .login-box .badge {
             text-align: center;
             margin-top: 0.5rem;
             border-top: 1px solid var(--border-military);
             padding-top: 0.4rem;
         }
-
         #securityPage .login-box .badge span {
             color: var(--text-secondary);
             font-size: .35rem;
@@ -311,9 +278,7 @@
             font-family: var(--font-mono);
         }
 
-        /* ============================================================
-        📌 SIDEBAR
-        ============================================================ */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 220px;
             height: 100vh;
@@ -329,38 +294,32 @@
             transition: all 0.3s ease;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
         }
-
         .sidebar .logo-area {
             text-align: center;
             border-bottom: 1px solid var(--border-military);
             padding-bottom: 0.5rem;
             margin-bottom: 0.5rem;
         }
-
         .sidebar .logo-area .icon {
             font-size: 1.8rem;
             display: block;
             color: var(--gold);
             animation: neonPulse 2s infinite;
         }
-
         .sidebar .logo-area h2 {
             font-size: 0.75rem;
             letter-spacing: 2px;
             font-weight: 700;
         }
-
         .sidebar .logo-area h2 span {
             color: var(--neon-green);
         }
-
         .sidebar .logo-area .sub {
             font-size: 0.35rem;
             color: var(--text-secondary);
             letter-spacing: 1px;
             font-family: var(--font-mono);
         }
-
         .sidebar .nav-item {
             display: flex;
             align-items: center;
@@ -379,31 +338,26 @@
             border: none;
             border-right: 2px solid transparent;
         }
-
         .sidebar .nav-item:hover {
             background: rgba(74, 138, 170, 0.08);
             color: var(--text-primary);
             padding-right: 0.6rem;
         }
-
         .sidebar .nav-item.active {
             background: rgba(74, 138, 170, 0.08);
             color: var(--neon-green);
             border-right-color: var(--neon-green);
         }
-
         .sidebar .nav-item i {
             width: 18px;
             font-size: 0.65rem;
             color: var(--gold);
         }
-
         .sidebar .nav-divider {
             height: 1px;
             background: var(--border-military);
             margin: 0.2rem 0;
         }
-
         .sidebar .commander-badge {
             margin-top: 0.5rem;
             padding: 0.3rem;
@@ -412,24 +366,20 @@
             background: rgba(184, 152, 10, 0.05);
             text-align: center;
         }
-
         .sidebar .commander-badge .title {
             color: var(--gold);
             font-size: 0.5rem;
             font-weight: 700;
         }
-
         .sidebar .commander-badge .name {
             color: var(--text-primary);
             font-size: 0.6rem;
             font-weight: 700;
         }
-
         .sidebar .commander-badge .status {
             color: var(--neon-green);
             font-size: 0.35rem;
         }
-
         .sidebar .commander-badge .logout-btn {
             background: var(--gold);
             border: none;
@@ -441,14 +391,11 @@
             margin-top: 0.1rem;
             transition: .3s;
         }
-
         .sidebar .commander-badge .logout-btn:hover {
             transform: scale(1.05);
         }
 
-        /* ============================================================
-        📄 MAIN CONTENT
-        ============================================================ */
+        /* ===== MAIN CONTENT ===== */
         .main {
             flex: 1;
             margin-right: 220px;
@@ -456,7 +403,6 @@
             height: 100vh;
             overflow-y: auto;
         }
-
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -467,7 +413,6 @@
             flex-wrap: wrap;
             gap: 0.2rem;
         }
-
         .top-bar .title {
             font-size: 0.7rem;
             font-weight: 700;
@@ -475,19 +420,16 @@
             color: var(--neon-green);
             animation: neonPulse 2s infinite;
         }
-
         .top-bar .title i {
             color: var(--gold);
             margin-left: 0.2rem;
         }
-
         .top-bar .title .sub {
             font-size: 0.35rem;
             color: var(--text-secondary);
             font-weight: 400;
             display: block;
         }
-
         .top-bar .info {
             display: flex;
             gap: 0.3rem;
@@ -496,7 +438,6 @@
             font-size: 0.4rem;
             color: var(--text-secondary);
         }
-
         .top-bar .info .dot {
             width: 4px;
             height: 4px;
@@ -505,7 +446,6 @@
             display: inline-block;
             animation: blink 1.5s infinite;
         }
-
         .top-bar .info .theme-btn {
             background: none;
             border: 1px solid var(--border-military);
@@ -516,22 +456,18 @@
             font-size: 0.6rem;
             transition: .3s;
         }
-
         .top-bar .info .theme-btn:hover {
             border-color: var(--neon-green);
             transform: rotate(30deg);
         }
 
-        /* ============================================================
-        📊 STATS GRID
-        ============================================================ */
+        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 0.3rem;
             margin-bottom: 0.4rem;
         }
-
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -541,7 +477,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .stat-card::before {
             content: '';
             position: absolute;
@@ -550,38 +485,31 @@
             opacity: 0;
             transition: .3s;
         }
-
         .stat-card:hover::before {
             opacity: 0.03;
         }
-
         .stat-card:hover {
             border-color: var(--neon-green);
             transform: translateY(-2px);
         }
-
         .stat-card .num {
             font-size: 1rem;
             font-weight: 900;
             font-family: var(--font-mono);
             color: var(--text-primary);
         }
-
         .stat-card .label {
             font-size: 0.35rem;
             color: var(--text-secondary);
             letter-spacing: 1px;
         }
-
         .stat-card .icon {
             font-size: 0.6rem;
             color: var(--gold);
             float: left;
         }
 
-        /* ============================================================
-        🖥️ MONITOR
-        ============================================================ */
+        /* ===== MONITOR ===== */
         .monitor-container {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -591,7 +519,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .monitor-container::after {
             content: '';
             position: absolute;
@@ -600,7 +527,6 @@
                     rgba(74, 138, 170, 0.02) 4px);
             pointer-events: none;
         }
-
         .monitor-container .monitor-title {
             font-size: 0.35rem;
             color: var(--text-secondary);
@@ -608,7 +534,6 @@
             letter-spacing: 2px;
             margin-bottom: 0.1rem;
         }
-
         .monitor-screen {
             background: rgba(6, 10, 12, 0.8);
             border: 1px solid rgba(26, 42, 53, 0.3);
@@ -618,13 +543,11 @@
             position: relative;
             overflow: hidden;
         }
-
         .monitor-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 0.15rem;
         }
-
         .monitor-map {
             grid-column: 1/3;
             min-height: 70px;
@@ -634,7 +557,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .monitor-map .point {
             position: absolute;
             width: 5px;
@@ -644,7 +566,6 @@
             box-shadow: 0 0 15px var(--neon-green);
             animation: pulse 2s ease-in-out infinite;
         }
-
         .monitor-map .point:nth-child(1) {
             top: 15%;
             left: 20%;
@@ -670,7 +591,6 @@
             left: 45%;
             animation-delay: 0.9s
         }
-
         .monitor-map .line {
             position: absolute;
             border: 1px solid rgba(74, 138, 170, 0.06);
@@ -682,7 +602,6 @@
             height: 55%;
             animation: sweep 25s linear infinite;
         }
-
         .monitor-map .grid-overlay {
             position: absolute;
             inset: 0;
@@ -690,7 +609,6 @@
                 linear-gradient(90deg, rgba(74, 138, 170, 0.02) 1px, transparent 1px);
             background-size: 15px 15px;
         }
-
         .monitor-radar {
             background: radial-gradient(circle, rgba(12, 18, 8, 0.95) 0%, transparent 70%);
             border: 1px solid rgba(26, 42, 53, 0.2);
@@ -701,7 +619,6 @@
             position: relative;
             box-shadow: inset 0 0 30px rgba(74, 138, 170, 0.05);
         }
-
         .monitor-radar .sweep {
             position: absolute;
             top: 0;
@@ -714,7 +631,6 @@
             animation: sweep 3s linear infinite;
             transform-origin: 100% 100%;
         }
-
         .monitor-radar .center {
             position: absolute;
             top: 50%;
@@ -726,7 +642,6 @@
             background: var(--neon-green);
             box-shadow: 0 0 15px var(--neon-green);
         }
-
         .monitor-radar .rpoint {
             position: absolute;
             width: 3px;
@@ -735,7 +650,6 @@
             background: var(--gold);
             animation: pulse 1.8s infinite;
         }
-
         .monitor-radar .rpoint:nth-child(3) {
             top: 12%;
             right: 20%;
@@ -751,7 +665,6 @@
             right: 28%;
             animation-delay: 1s
         }
-
         .monitor-radar .ring {
             position: absolute;
             border-radius: 50%;
@@ -769,7 +682,6 @@
             top: 10%;
             right: 10%
         }
-
         .monitor-item {
             background: rgba(10, 16, 22, 0.4);
             border: 1px solid rgba(26, 42, 53, 0.15);
@@ -777,26 +689,21 @@
             padding: 0.15rem;
             text-align: center;
         }
-
         .monitor-item .icon {
             font-size: 0.6rem;
             color: var(--gold);
         }
-
         .monitor-item .num {
             font-size: 0.75rem;
             font-weight: 900;
             font-family: var(--font-mono);
         }
-
         .monitor-item .label {
             font-size: 0.3rem;
             color: var(--text-secondary);
         }
 
-        /* ============================================================
-        📋 LIST CONTAINER
-        ============================================================ */
+        /* ===== LIST CONTAINER ===== */
         .list-container {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -804,7 +711,6 @@
             padding: 0.2rem 0.3rem;
             margin-bottom: 0.2rem;
         }
-
         .list-container .list-title {
             font-size: 0.35rem;
             color: var(--text-secondary);
@@ -812,7 +718,6 @@
             letter-spacing: 2px;
             margin-bottom: 0.1rem;
         }
-
         .list-item {
             display: flex;
             justify-content: space-between;
@@ -823,35 +728,28 @@
             transition: .2s;
             cursor: pointer;
         }
-
         .list-item:hover {
             background: rgba(74, 138, 170, 0.05);
         }
-
         .list-item .name {
             color: var(--text-primary);
         }
-
         .list-item .name .special-star {
             color: var(--gold);
         }
-
         .list-item .role {
             color: var(--gold);
             font-size: 0.35rem;
         }
-
         .list-item .phone {
             color: var(--neon-green);
             font-size: 0.35rem;
             direction: ltr;
         }
-
         .list-item .status {
             font-size: 0.3rem;
             color: var(--neon-green);
         }
-
         .list-item .del-btn {
             background: #c0392b;
             border: none;
@@ -862,11 +760,9 @@
             font-size: 0.35rem;
             transition: .3s;
         }
-
         .list-item .del-btn:hover {
             transform: scale(1.05);
         }
-
         .list-item .edit-btn {
             background: var(--neon-green);
             border: none;
@@ -878,11 +774,9 @@
             margin-right: 0.2rem;
             transition: .3s;
         }
-
         .list-item .edit-btn:hover {
             transform: scale(1.05);
         }
-
         .list-item .reply-btn {
             background: var(--gold);
             border: none;
@@ -894,11 +788,9 @@
             margin-right: 0.2rem;
             transition: .3s;
         }
-
         .list-item .reply-btn:hover {
             transform: scale(1.05);
         }
-
         .list-item .send-msg-btn {
             background: #4a8aaa;
             border: none;
@@ -910,11 +802,9 @@
             margin-right: 0.2rem;
             transition: .3s;
         }
-
         .list-item .send-msg-btn:hover {
             transform: scale(1.05);
         }
-
         .list-item .approve-btn {
             background: #2a7a2a;
             border: none;
@@ -926,11 +816,9 @@
             margin-right: 0.2rem;
             transition: .3s;
         }
-
         .list-item .approve-btn:hover {
             transform: scale(1.05);
         }
-
         .list-item .reject-btn {
             background: #7a2a2a;
             border: none;
@@ -942,14 +830,11 @@
             margin-right: 0.2rem;
             transition: .3s;
         }
-
         .list-item .reject-btn:hover {
             transform: scale(1.05);
         }
 
-        /* ============================================================
-        🚀 LAUNCH SECTION
-        ============================================================ */
+        /* ===== LAUNCH SECTION ===== */
         .launch-section {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -957,7 +842,6 @@
             padding: 0.3rem;
             margin-top: 0.2rem;
         }
-
         .launch-section .launch-title {
             font-size: 0.5rem;
             font-weight: 700;
@@ -965,12 +849,10 @@
             margin-bottom: 0.15rem;
             animation: glowPulse 2s infinite;
         }
-
         .launch-section .launch-title i {
             color: var(--gold);
             margin-left: 0.15rem;
         }
-
         .launch-section input,
         .launch-section textarea,
         .launch-section select {
@@ -986,24 +868,20 @@
             margin-bottom: 0.08rem;
             transition: .3s;
         }
-
         .launch-section input:focus,
         .launch-section textarea:focus {
             border-color: var(--neon-green);
             box-shadow: 0 0 15px rgba(74, 138, 170, 0.05);
         }
-
         .launch-section textarea {
             resize: vertical;
             min-height: 30px;
         }
-
         .launch-section .row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.08rem;
         }
-
         .launch-section .btn-launch {
             width: 100%;
             padding: 0.3rem;
@@ -1017,12 +895,10 @@
             transition: .3s;
             letter-spacing: 1px;
         }
-
         .launch-section .btn-launch:hover {
             transform: scale(1.02);
             box-shadow: 0 0 30px rgba(74, 138, 170, 0.2);
         }
-
         .launch-section .msg {
             color: var(--neon-green);
             font-size: 0.4rem;
@@ -1031,15 +907,12 @@
             animation: slideIn .3s ease;
         }
 
-        /* ============================================================
-        🎮 GAMES
-        ============================================================ */
+        /* ===== GAMES ===== */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
             gap: 0.3rem;
         }
-
         .game-card {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -1049,38 +922,31 @@
             cursor: pointer;
             transition: .3s;
         }
-
         .game-card:hover {
             border-color: var(--neon-green);
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(74, 138, 170, 0.1);
         }
-
         .game-card .icon {
             font-size: 1.8rem;
             display: block;
             color: var(--gold);
         }
-
         .game-card .name {
             font-size: 0.5rem;
             color: var(--text-primary);
             font-weight: 700;
         }
-
         .game-card .desc {
             font-size: 0.35rem;
             color: var(--text-secondary);
         }
-
         .game-card .xp-badge {
             font-size: 0.3rem;
             color: var(--neon-green);
         }
 
-        /* ============================================================
-        👤 USER DETAIL POPUP
-        ============================================================ */
+        /* ===== USER DETAIL POPUP ===== */
         .user-detail-popup {
             display: none;
             position: fixed;
@@ -1097,11 +963,9 @@
             box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
             animation: fadeIn .3s ease;
         }
-
         .user-detail-popup.show {
             display: block;
         }
-
         .user-detail-popup .close-popup {
             position: absolute;
             top: 0.5rem;
@@ -1113,11 +977,9 @@
             cursor: pointer;
             transition: .3s;
         }
-
         .user-detail-popup .close-popup:hover {
             transform: rotate(90deg);
         }
-
         .user-detail-popup .popup-title {
             color: var(--gold);
             font-size: 0.8rem;
@@ -1126,7 +988,6 @@
             padding-bottom: 0.3rem;
             margin-bottom: 0.5rem;
         }
-
         .user-detail-popup .popup-row {
             display: flex;
             justify-content: space-between;
@@ -1134,22 +995,18 @@
             font-size: 0.55rem;
             border-bottom: 1px solid rgba(26, 42, 53, 0.1);
         }
-
         .user-detail-popup .popup-row .label {
             color: var(--text-secondary);
         }
-
         .user-detail-popup .popup-row .value {
             color: var(--text-primary);
         }
-
         .user-detail-popup .popup-actions {
             display: flex;
             gap: 0.3rem;
             margin-top: 0.3rem;
             flex-wrap: wrap;
         }
-
         .user-detail-popup .popup-actions button {
             flex: 1;
             padding: 0.15rem;
@@ -1159,28 +1016,22 @@
             font-size: 0.45rem;
             transition: .3s;
         }
-
         .user-detail-popup .popup-actions .btn-msg {
             background: var(--neon-green);
             color: #fff;
         }
-
         .user-detail-popup .popup-actions .btn-msg:hover {
             transform: scale(1.05);
         }
-
         .user-detail-popup .popup-actions .btn-del {
             background: #c0392b;
             color: #fff;
         }
-
         .user-detail-popup .popup-actions .btn-del:hover {
             transform: scale(1.05);
         }
 
-        /* ============================================================
-        📱 HAMBURGER
-        ============================================================ */
+        /* ===== HAMBURGER ===== */
         .hamburger {
             display: none;
             position: fixed;
@@ -1196,14 +1047,11 @@
             cursor: pointer;
             transition: .3s;
         }
-
         .hamburger:hover {
             border-color: var(--neon-green);
         }
 
-        /* ============================================================
-        📱 RESPONSIVE
-        ============================================================ */
+        /* ===== RESPONSIVE ===== */
         @media(max-width:768px) {
             .sidebar {
                 transform: translateX(100%);
@@ -1225,7 +1073,6 @@
                 display: block;
             }
         }
-
         @media(max-width:400px) {
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
@@ -1249,9 +1096,7 @@
 
     <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-    <!-- ============================================================
-    🔐 SECURITY PAGE
-    ============================================================ -->
+    <!-- ===== SECURITY PAGE ===== -->
     <div id="securityPage">
         <div class="login-box">
             <span class="logo"><i class="fas fa-shield-alt"></i></span>
@@ -1278,9 +1123,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    📌 SIDEBAR
-    ============================================================ -->
+    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <div class="logo-area">
             <span class="icon"><i class="fas fa-shield-alt"></i></span>
@@ -1314,9 +1157,7 @@
         </nav>
     </aside>
 
-    <!-- ============================================================
-    📄 MAIN CONTENT
-    ============================================================ -->
+    <!-- ===== MAIN CONTENT ===== -->
     <main class="main">
         <div class="top-bar">
             <div>
@@ -1550,6 +1391,9 @@
                     <div id="userManagementList" style="max-height:150px;overflow-y:auto">
                         <div style="font-size:0.35rem;color:var(--text-secondary)">در حال بارگذاری...</div>
                     </div>
+                    <button class="btn-launch" onclick="deleteSelectedUser()" style="font-size:0.4rem;padding:0.1rem;margin-top:0.1rem">
+                        <i class="fas fa-trash"></i> حذف کاربر انتخاب‌شده
+                    </button>
                 </div>
 
                 <div class="nav-divider" style="margin:0.3rem 0"></div>
@@ -1560,6 +1404,26 @@
                     <div id="accessControlList" style="max-height:150px;overflow-y:auto">
                         <div style="font-size:0.35rem;color:var(--text-secondary)">در حال بارگذاری...</div>
                     </div>
+                    <div style="display:flex;gap:0.2rem;margin-top:0.1rem;flex-wrap:wrap">
+                        <input type="text" id="newAccessUser" placeholder="نام کاربری..." style="flex:1;min-width:80px">
+                        <button class="btn-launch" onclick="addAccessUser()" style="font-size:0.4rem;padding:0.1rem">
+                            <i class="fas fa-plus"></i> افزودن دسترسی
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-divider" style="margin:0.3rem 0"></div>
+
+                <!-- Settings Password -->
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">🔒 رمز ورود به تنظیمات</h4>
+                    <div style="display:flex;gap:0.2rem;flex-wrap:wrap">
+                        <input type="password" id="settingsPassword" placeholder="رمز جدید..." style="flex:1;min-width:80px">
+                        <button class="btn-launch" onclick="changeSettingsPassword()" style="font-size:0.4rem;padding:0.1rem">
+                            <i class="fas fa-save"></i> تغییر رمز
+                        </button>
+                    </div>
+                    <div style="font-size:0.35rem;color:var(--text-secondary);margin-top:0.1rem">فقط ۲ فرد مجاز به تغییر رمز هستند</div>
                 </div>
 
                 <div class="nav-divider" style="margin:0.3rem 0"></div>
@@ -1654,9 +1518,7 @@
 
     </main>
 
-    <!-- ============================================================
-    👤 USER DETAIL POPUP
-    ============================================================ -->
+    <!-- ===== USER DETAIL POPUP ===== -->
     <div class="user-detail-popup" id="userDetailPopup">
         <button class="close-popup" onclick="closeUserDetail()"><i class="fas fa-times"></i></button>
         <div class="popup-title"><i class="fas fa-user"></i> مشخصات کاربر</div>
@@ -1669,18 +1531,11 @@
 
     <script>
         // ============================================================
-        // 🔗 SUPABASE CONFIGURATION
+        // 🔗 SUPABASE CONFIG
         // ============================================================
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
-
-        // ============================================================
-        // 📧 EMAILJS CONFIGURATION
-        // ============================================================
-        const EMAILJS_SERVICE_ID = 'service_c8bgjtx';
-        const EMAILJS_TEMPLATE_ID = 'template_vzufaw2';
-        const EMAILJS_PUBLIC_KEY = 'kC1hLXh3iVRrHFACO';
 
         // ============================================================
         // 📦 SUPABASE HELPERS
@@ -1688,68 +1543,44 @@
         async function loadFromSupabase(table) {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
                 return await res.json();
-            } catch (e) {
-                console.error('❌ خطا در بارگذاری:', e);
-                return [];
-            }
+            } catch (e) { console.error('❌ خطا در بارگذاری:', e); return []; }
         }
 
         async function saveToSupabase(table, data) {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
                     method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 return await res.json();
-            } catch (e) {
-                console.error('❌ خطا در ذخیره:', e);
-                return null;
-            }
+            } catch (e) { console.error('❌ خطا در ذخیره:', e); return null; }
         }
 
         async function updateInSupabase(table, id, data) {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
                     method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 return await res.json();
-            } catch (e) {
-                console.error('❌ خطا در بروزرسانی:', e);
-                return null;
-            }
+            } catch (e) { console.error('❌ خطا در بروزرسانی:', e); return null; }
         }
 
         async function deleteFromSupabase(table, id) {
             try {
                 await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
                 return true;
-            } catch (e) {
-                console.error('❌ خطا در حذف:', e);
-                return false;
-            }
+            } catch (e) { console.error('❌ خطا در حذف:', e); return false; }
         }
 
         // ============================================================
@@ -1776,19 +1607,21 @@
         // ============================================================
         // 📊 DATA
         // ============================================================
-        let allPosts = [];
-        let allUsers = {};
-        let allMessages = [];
-        let allInbox = {};
-        let allReports = [];
-        let allCommanderLog = [];
-        let currentUser = null;
-        let currentUnit = '';
-        let uploadedCardData = null;
-        let isCardVerified = false;
-        let currentTab = 'dashboard';
-        let sentMessages = [];
-        let selectedUser = null;
+        let allPosts = [],
+            allUsers = {},
+            allMessages = [],
+            allInbox = {},
+            allReports = [],
+            allCommanderLog = [];
+        let currentUser = null,
+            currentUnit = '',
+            uploadedCardData = null,
+            isCardVerified = false,
+            currentTab = 'dashboard',
+            sentMessages = [],
+            selectedUser = null,
+            selectedUserForDelete = null;
+        let settingsPassword = 'padafand1404';
 
         // ============================================================
         // 🎨 THEME
@@ -1808,9 +1641,7 @@
         async function loadAllData() {
             const users = await loadFromSupabase('users');
             allUsers = {};
-            users.forEach(u => {
-                allUsers[u.username] = u;
-            });
+            users.forEach(u => { allUsers[u.username] = u; });
 
             const posts = await loadFromSupabase('posts');
             allPosts = posts || [];
@@ -1820,10 +1651,7 @@
 
             const inbox = await loadFromSupabase('inbox');
             allInbox = {};
-            inbox.forEach(i => {
-                if (!allInbox[i.user]) allInbox[i.user] = [];
-                allInbox[i.user].push(i);
-            });
+            inbox.forEach(i => { if (!allInbox[i.user]) allInbox[i.user] = []; allInbox[i.user].push(i); });
 
             const reports = await loadFromSupabase('reports');
             allReports = reports || [];
@@ -2063,12 +1891,10 @@
                 userMgmt.innerHTML = '<div style="font-size:0.35rem;color:var(--text-secondary)">هیچ کاربری ثبت‌نام نکرده</div>';
             } else {
                 userMgmt.innerHTML = userList.map(u => `
-                        <div class="list-item" style="font-size:0.4rem">
+                        <div class="list-item" style="font-size:0.4rem" onclick="selectUserForDelete('${u}')">
                             <span class="name">${allUsers[u].is_special ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
                             <span class="phone">${allUsers[u].phone || '—'}</span>
-                            <button class="del-btn" onclick="deleteUserFromSettings('${u}')" style="font-size:0.3rem">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <span class="status">${selectedUserForDelete === u ? '✅ انتخاب شده' : ''}</span>
                         </div>
                     `).join('');
             }
@@ -2149,9 +1975,17 @@
         // ============================================================
         // 🗑️ DELETE USER (from Settings)
         // ============================================================
-        async function deleteUserFromSettings(username) {
+        function selectUserForDelete(username) {
             if (!confirm(`آیا مطمئنی می‌خوای حساب "${username}" رو حذف کنی؟`)) return;
-            await deleteFromSupabase('users', username);
+            selectedUserForDelete = username;
+            updateSettings();
+        }
+
+        async function deleteSelectedUser() {
+            if (!selectedUserForDelete) { alert('⚠️ ابتدا کاربر را انتخاب کنید'); return; }
+            if (!confirm(`آیا مطمئنی می‌خوای حساب "${selectedUserForDelete}" رو حذف کنی؟`)) return;
+            await deleteFromSupabase('users', selectedUserForDelete);
+            selectedUserForDelete = null;
             await loadAllData();
             updateAll();
             alert('✅ حساب کاربری حذف شد');
@@ -2169,6 +2003,35 @@
             document.getElementById(`accessStatus_${username}`).textContent = newStatus ? '✅ مجاز' : '❌ غیرمجاز';
         }
 
+        async function addAccessUser() {
+            const username = document.getElementById('newAccessUser').value.trim();
+            if (!username) { alert('⚠️ نام کاربری را وارد کنید'); return; }
+            if (!allUsers[username]) { alert('⚠️ کاربری با این نام وجود ندارد'); return; }
+            await updateInSupabase('users', allUsers[username].id, { can_access_command: true });
+            allUsers[username].can_access_command = true;
+            document.getElementById('newAccessUser').value = '';
+            updateSettings();
+            alert('✅ دسترسی به کاربر افزوده شد');
+        }
+
+        // ============================================================
+        // 🔒 SETTINGS PASSWORD
+        // ============================================================
+        async function changeSettingsPassword() {
+            const newPass = document.getElementById('settingsPassword').value.trim();
+            if (!newPass) { alert('⚠️ رمز جدید را وارد کنید'); return; }
+            if (newPass.length < 4) { alert('⚠️ رمز باید حداقل ۴ کاراکتر باشد'); return; }
+            // فقط ۲ فرد مجاز (خیاط‌زاده و برزکار)
+            if (currentUser !== 'محمد جواد خیاط زاده' && currentUser !== 'محمد برزکار') {
+                alert('⛔ فقط سردار خیاط‌زاده و سردار برزکار مجاز به تغییر رمز هستند');
+                return;
+            }
+            settingsPassword = newPass;
+            await saveToSupabase('settings', { key: 'settings_password', value: newPass });
+            document.getElementById('settingsPassword').value = '';
+            alert('✅ رمز تنظیمات تغییر کرد');
+        }
+
         // ============================================================
         // 💾 BACKUP
         // ============================================================
@@ -2182,7 +2045,6 @@
                 commanderLog: allCommanderLog,
                 date: new Date().toLocaleString('fa-IR')
             };
-
             const json = JSON.stringify(data, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -2190,13 +2052,11 @@
             a.href = url;
             a.download = `backup_${Date.now()}.json`;
             a.click();
-
             await saveToSupabase('backups', {
                 filename: `backup_${Date.now()}.json`,
                 size: (blob.size / 1024).toFixed(2) + ' KB',
                 created_at: new Date().toLocaleString('fa-IR')
             });
-
             alert('✅ بکاپ با موفقیت گرفته شد');
             updateSettings();
         }
@@ -2213,7 +2073,6 @@
                 document.getElementById('msgSendResult').style.color = '#c0392b';
                 return;
             }
-
             if (recipient === 'all') {
                 const users = Object.keys(allUsers);
                 for (let u of users) {
@@ -2242,7 +2101,6 @@
                 sentMessages.push({ to: recipient, subject, body, date: new Date().toLocaleString('fa-IR') });
                 document.getElementById('msgSendResult').textContent = `✅ پیام به ${recipient} ارسال شد`;
             }
-
             document.getElementById('msgSendResult').style.color = '#6db33f';
             document.getElementById('msgSubject').value = '';
             document.getElementById('msgBody').value = '';
@@ -2430,16 +2288,21 @@
         }
 
         // ============================================================
-        // 🎨 THEME
+        // 📑 TABS
         // ============================================================
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
         }
 
-        // ============================================================
-        // 📑 TABS
-        // ============================================================
         function switchTab(tab) {
+            // برای ورود به تنظیمات، رمز چک میشه
+            if (tab === 'settings') {
+                const pass = prompt('🔒 برای ورود به تنظیمات، رمز را وارد کنید:');
+                if (pass !== settingsPassword) {
+                    alert('⛔ رمز اشتباه است');
+                    return;
+                }
+            }
             currentTab = tab;
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
             document.getElementById('tab-' + tab).style.display = 'block';
@@ -2635,11 +2498,7 @@
         function startGame(game) {
             const score = Math.floor(Math.random() * 10) + 5;
             const win = window.open('', '_blank', 'width=650,height=500');
-            if (!win) {
-                alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.');
-                return;
-            }
-
+            if (!win) { alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.'); return; }
             const games = {
                 shobe_hunter: { name: 'شکار شبهه', emoji: '🎯', desc: 'به شبهات هدف بزن و نابودشون کن!' },
                 verbal_defense: { name: 'پدافند کلامی', emoji: '🛡️', desc: 'پاسخ درست رو انتخاب کن و دفاع کن!' },
@@ -2649,259 +2508,258 @@
                 reaction: { name: 'واکنش سریع', emoji: '⚡', desc: 'هرچه سریعتر پاسخ بده!' }
             };
             const g = games[game] || games.shobe_hunter;
-
             let gameHtml = `
-                    <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
-                    <head><title>بازی ${g.name}</title>
-                    <style>
-                        body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
-                        .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px;box-shadow:0 0 30px rgba(57,255,20,0.05)}
-                        .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
-                        .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
-                        .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
-                        .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px}
-                        .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
-                        .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
-                        .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
-                        .btn-game:hover{background:#6db33f;transform:scale(1.05);box-shadow:0 0 20px rgba(109,179,63,0.3)}
-                        .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
-                        .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
-                        .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px;text-shadow:0 0 10px rgba(109,179,63,0.2)}
-                        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-                        .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
-                        .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
-                        .target{display:inline-block;padding:8px 16px;background:#2a1a1a;border:2px solid #c0392b;border-radius:8px;cursor:pointer;font-size:1rem;margin:5px;transition:.3s}
-                        .target:hover{transform:scale(1.1);border-color:#6db33f}
-                        .target.hit{background:#1a2a1a;border-color:#6db33f}
-                        .option-btn{padding:8px 16px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;color:#d4e8b0;cursor:pointer;font-size:0.8rem;margin:3px;transition:.3s;min-width:80px}
-                        .option-btn:hover{background:#2a3a1a;border-color:#4a7c20}
-                        .option-btn.correct{background:#2a4a1a;border-color:#6db33f}
-                        .option-btn.wrong{background:#4a1a1a;border-color:#c0392b}
-                        .timer{color:#c8a000;font-size:1.2rem;font-weight:700;margin:10px 0}
-                    </style>
-                    </head>
-                    <body>
-                        <div class="game-area">
-                            <span class="game-icon">${g.emoji}</span>
-                            <div class="game-title">🎮 ${g.name}</div>
-                            <div class="game-desc">${g.desc}</div>
-                            <div class="score-box">
-                                <div>امتیاز شما</div>
-                                <div class="score" id="gameScore">۰</div>
-                                <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
-                                <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">بازی رو شروع کن!</div>
-                            </div>
-                            <div id="gameBoard"></div>
-                            <div>
-                                <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
-                                <button class="btn-close" onclick="window.close()"><i class="fas fa-times"></i> بستن</button>
-                            </div>
-                            <div class="xp-display">✅ ${score} XP به حساب شما اضافه شد</div>
+                <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
+                <head><title>بازی ${g.name}</title>
+                <style>
+                    body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
+                    .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px;box-shadow:0 0 30px rgba(57,255,20,0.05)}
+                    .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
+                    .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
+                    .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
+                    .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px}
+                    .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
+                    .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
+                    .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
+                    .btn-game:hover{background:#6db33f;transform:scale(1.05);box-shadow:0 0 20px rgba(109,179,63,0.3)}
+                    .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
+                    .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
+                    .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px;text-shadow:0 0 10px rgba(109,179,63,0.2)}
+                    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+                    .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
+                    .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
+                    .target{display:inline-block;padding:8px 16px;background:#2a1a1a;border:2px solid #c0392b;border-radius:8px;cursor:pointer;font-size:1rem;margin:5px;transition:.3s}
+                    .target:hover{transform:scale(1.1);border-color:#6db33f}
+                    .target.hit{background:#1a2a1a;border-color:#6db33f}
+                    .option-btn{padding:8px 16px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;color:#d4e8b0;cursor:pointer;font-size:0.8rem;margin:3px;transition:.3s;min-width:80px}
+                    .option-btn:hover{background:#2a3a1a;border-color:#4a7c20}
+                    .option-btn.correct{background:#2a4a1a;border-color:#6db33f}
+                    .option-btn.wrong{background:#4a1a1a;border-color:#c0392b}
+                    .timer{color:#c8a000;font-size:1.2rem;font-weight:700;margin:10px 0}
+                </style>
+                </head>
+                <body>
+                    <div class="game-area">
+                        <span class="game-icon">${g.emoji}</span>
+                        <div class="game-title">🎮 ${g.name}</div>
+                        <div class="game-desc">${g.desc}</div>
+                        <div class="score-box">
+                            <div>امتیاز شما</div>
+                            <div class="score" id="gameScore">۰</div>
+                            <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
+                            <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">بازی رو شروع کن!</div>
                         </div>
-                        <script>
-                            let score = 0;
-                            let gameOver = false;
-                            let currentGame = '${game}';
-                            let timer = null;
-                            let timeLeft = 10;
-                            const totalTargets = 10;
-                            let targetsHit = 0;
-                            let currentQuestion = 0;
-                            let quizQuestions = [
-                                { q: 'شبهه یعنی چه؟', options: ['شک و تردید', 'یقین', 'علم', 'جهل'], correct: 0 },
-                                { q: 'بهترین روش پاسخ به شبهه چیست؟', options: ['توهین', 'مستند و منطقی', 'سکوت', 'تقلید'], correct: 1 },
-                                { q: 'منبع اصلی پاسخ به شبهات دینی چیست؟', options: ['قرآن و سنت', 'فلسفه', 'علم تجربی', 'نظر مردم'], correct: 0 },
-                                { q: 'در پدافند شبهات، هدف اصلی چیست؟', options: ['قانع کردن', 'روشنگری', 'تحقیر', 'جنجال'], correct: 1 },
-                                { q: 'چه ویژگی برای پاسخ به شبهه مهم است؟', options: ['ساده و روان', 'پیچیده', 'تحقیرآمیز', 'عجولانه'], correct: 0 }
-                            ];
+                        <div id="gameBoard"></div>
+                        <div>
+                            <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
+                            <button class="btn-close" onclick="window.close()"><i class="fas fa-times"></i> بستن</button>
+                        </div>
+                        <div class="xp-display">✅ ${score} XP به حساب شما اضافه شد</div>
+                    </div>
+                    <script>
+                        let score = 0;
+                        let gameOver = false;
+                        let currentGame = '${game}';
+                        let timer = null;
+                        let timeLeft = 10;
+                        const totalTargets = 10;
+                        let targetsHit = 0;
+                        let currentQuestion = 0;
+                        let quizQuestions = [
+                            { q: 'شبهه یعنی چه؟', options: ['شک و تردید', 'یقین', 'علم', 'جهل'], correct: 0 },
+                            { q: 'بهترین روش پاسخ به شبهه چیست؟', options: ['توهین', 'مستند و منطقی', 'سکوت', 'تقلید'], correct: 1 },
+                            { q: 'منبع اصلی پاسخ به شبهات دینی چیست؟', options: ['قرآن و سنت', 'فلسفه', 'علم تجربی', 'نظر مردم'], correct: 0 },
+                            { q: 'در پدافند شبهات، هدف اصلی چیست؟', options: ['قانع کردن', 'روشنگری', 'تحقیر', 'جنجال'], correct: 1 },
+                            { q: 'چه ویژگی برای پاسخ به شبهه مهم است؟', options: ['ساده و روان', 'پیچیده', 'تحقیرآمیز', 'عجولانه'], correct: 0 }
+                        ];
 
-                            function startGameLogic() {
-                                const board = document.getElementById('gameBoard');
-                                board.innerHTML = '';
+                        function startGameLogic() {
+                            const board = document.getElementById('gameBoard');
+                            board.innerHTML = '';
 
-                                if (currentGame === 'shobe_hunter') {
-                                    board.innerHTML = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">' +
-                                        Array(totalTargets).fill(0).map((_, i) =>
-                                            '<div class="target" onclick="hitTarget(this, ' + i + ')">🎯 شبهه</div>'
-                                        ).join('') +
-                                        '</div>';
-                                    document.getElementById('gameStatus').textContent = 'به شبهات هدف بزن!';
-                                } else if (currentGame === 'verbal_defense') {
-                                    showQuizQuestion();
-                                } else if (currentGame === 'truth_warrior') {
-                                    board.innerHTML = '<div style="font-size:1.2rem;margin:10px 0" id="truthText">آماده‌ای؟</div>' +
-                                        '<div><button class="option-btn" onclick="truthAnswer(true)">✅ واقعیت</button>' +
-                                        '<button class="option-btn" onclick="truthAnswer(false)">❌ شبهه</button></div>';
-                                    document.getElementById('gameStatus').textContent = 'تشخیص بده شبهه‌ست یا واقعیت!';
-                                    nextTruth();
-                                } else if (currentGame === 'minesweeper') {
-                                    board.innerHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:200px;margin:0 auto">' +
-                                        Array(16).fill(0).map((_, i) =>
-                                            '<div class="option-btn" onclick="mineClick(' + i + ')" style="width:40px;height:40px;padding:0;font-size:0.8rem" id="mine' + i + '">?</div>'
-                                        ).join('') +
-                                        '</div>';
-                                    document.getElementById('gameStatus').textContent = 'میدان شبهات رو پاکسازی کن!';
-                                } else if (currentGame === 'quiz') {
-                                    currentQuestion = 0;
-                                    showQuizQuestion();
-                                } else if (currentGame === 'reaction') {
-                                    startReaction();
-                                }
-                            }
-
-                            function hitTarget(el, i) {
-                                if (gameOver) return;
-                                if (el.classList.contains('hit')) return;
-                                el.classList.add('hit');
-                                el.textContent = '✅';
-                                targetsHit++;
-                                score += 2;
-                                document.getElementById('gameScore').textContent = score;
-                                document.getElementById('gameProgress').style.width = (targetsHit / totalTargets * 100) + '%';
-                                if (targetsHit >= totalTargets) {
-                                    gameOver = true;
-                                    document.getElementById('gameStatus').textContent = '🎉 همه شبهات رو نابود کردی!';
-                                    setTimeout(() => alert('🎉 پیروزی! همه شبهات رو نابود کردی!'), 300);
-                                }
-                            }
-
-                            function showQuizQuestion() {
-                                const board = document.getElementById('gameBoard');
-                                if (currentQuestion >= quizQuestions.length) {
-                                    board.innerHTML = '<div style="font-size:1.5rem;color:#6db33f">🎉 آزمون تموم شد!</div>';
-                                    document.getElementById('gameStatus').textContent = 'امتیاز نهایی: ' + score;
-                                    gameOver = true;
-                                    return;
-                                }
-                                const q = quizQuestions[currentQuestion];
-                                board.innerHTML = '<div style="font-size:1rem;margin:10px 0">' + q.q + '</div>' +
-                                    '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:5px">' +
-                                    q.options.map((o, i) =>
-                                        '<button class="option-btn" onclick="answerQuiz(' + i + ')">' + o + '</button>'
+                            if (currentGame === 'shobe_hunter') {
+                                board.innerHTML = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">' +
+                                    Array(totalTargets).fill(0).map((_, i) =>
+                                        '<div class="target" onclick="hitTarget(this, ' + i + ')">🎯 شبهه</div>'
                                     ).join('') +
                                     '</div>';
-                                document.getElementById('gameStatus').textContent = 'سوال ' + (currentQuestion + 1) + ' از ' +
-                                    quizQuestions.length;
-                            }
-
-                            function answerQuiz(index) {
-                                if (gameOver) return;
-                                const q = quizQuestions[currentQuestion];
-                                const btns = document.querySelectorAll('.option-btn');
-                                btns.forEach((b, i) => {
-                                    b.disabled = true;
-                                    if (i === q.correct) b.classList.add('correct');
-                                    else if (i === index && i !== q.correct) b.classList.add('wrong');
-                                });
-                                if (index === q.correct) {
-                                    score += 3;
-                                    document.getElementById('gameScore').textContent = score;
-                                }
-                                currentQuestion++;
-                                setTimeout(showQuizQuestion, 1000);
-                            }
-
-                            function truthAnswer(isTruth) {
-                                if (gameOver) return;
-                                const correct = window._truthAnswer;
-                                if (isTruth === correct) {
-                                    score += 3;
-                                    document.getElementById('gameScore').textContent = score;
-                                    document.getElementById('gameStatus').textContent = '✅ درست!';
-                                } else {
-                                    document.getElementById('gameStatus').textContent = '❌ اشتباه!';
-                                }
-                                setTimeout(nextTruth, 1000);
-                            }
-
-                            function nextTruth() {
-                                const truths = [
-                                    { text: 'خداوند واحد و بی‌همتاست', isTruth: true },
-                                    { text: 'قرآن توسط بشر نوشته شده', isTruth: false },
-                                    { text: 'پیامبر اسلام آخرین فرستاده خداست', isTruth: true },
-                                    { text: 'زمین در ۶ روز آفریده شده', isTruth: true },
-                                    { text: 'دین اسلام برای همه زمان‌هاست', isTruth: true },
-                                    { text: 'امامان معصوم خطا دارند', isTruth: false }
-                                ];
-                                const item = truths[Math.floor(Math.random() * truths.length)];
-                                window._truthAnswer = item.isTruth;
-                                document.getElementById('truthText').textContent = item.text;
-                                document.getElementById('gameStatus').textContent = 'واقعیت یا شبهه؟';
-                            }
-
-                            function mineClick(index) {
-                                if (gameOver) return;
-                                const el = document.getElementById('mine' + index);
-                                if (el.textContent !== '?') return;
-                                const isMine = Math.random() < 0.2;
-                                el.textContent = isMine ? '💣' : '✅';
-                                if (isMine) {
-                                    gameOver = true;
-                                    document.getElementById('gameStatus').textContent = '💥 به مین برخوردی!';
-                                    alert('💥 به مین برخوردی! بازی تموم شد.');
-                                } else {
-                                    score += 1;
-                                    document.getElementById('gameScore').textContent = score;
-                                    document.getElementById('gameProgress').style.width = (score / 15 * 100) + '%';
-                                    if (score >= 15) {
-                                        gameOver = true;
-                                        document.getElementById('gameStatus').textContent = '🎉 میدان پاکسازی شد!';
-                                        alert('🎉 میدان شبهات پاکسازی شد!');
-                                    }
-                                }
-                            }
-
-                            function startReaction() {
-                                const board = document.getElementById('gameBoard');
-                                timeLeft = 5;
-                                board.innerHTML = '<div class="timer" id="timerDisplay">⏱️ ' + timeLeft + '</div>' +
-                                    '<div style="font-size:1.5rem;margin:10px 0" id="reactionText">آماده‌ای؟</div>' +
-                                    '<button class="btn-game" onclick="reactionClick()" id="reactionBtn">کلیک کن!</button>';
-                                document.getElementById('gameStatus').textContent = 'سریع واکنش نشون بده!';
-                                let countdown = setInterval(() => {
-                                    timeLeft--;
-                                    document.getElementById('timerDisplay').textContent = '⏱️ ' + timeLeft;
-                                    if (timeLeft <= 0) {
-                                        clearInterval(countdown);
-                                        document.getElementById('gameStatus').textContent = '⏰ زمان تموم شد!';
-                                        gameOver = true;
-                                    }
-                                }, 1000);
-                                window._reactionCountdown = countdown;
-                            }
-
-                            function reactionClick() {
-                                if (gameOver) return;
-                                score += 2;
-                                document.getElementById('gameScore').textContent = score;
-                                document.getElementById('gameStatus').textContent = '✅ واکنش عالی!';
-                                document.getElementById('reactionBtn').disabled = true;
-                                clearInterval(window._reactionCountdown);
-                                if (score >= 20) {
-                                    gameOver = true;
-                                    document.getElementById('gameStatus').textContent = '🎉 پیروزی! واکنش فوق‌العاده!';
-                                    alert('🎉 واکنش فوق‌العاده!');
-                                } else {
-                                    setTimeout(startReaction, 1500);
-                                }
-                            }
-
-                            function resetGame() {
-                                score = 0;
-                                gameOver = false;
-                                targetsHit = 0;
+                                document.getElementById('gameStatus').textContent = 'به شبهات هدف بزن!';
+                            } else if (currentGame === 'verbal_defense') {
+                                showQuizQuestion();
+                            } else if (currentGame === 'truth_warrior') {
+                                board.innerHTML = '<div style="font-size:1.2rem;margin:10px 0" id="truthText">آماده‌ای؟</div>' +
+                                    '<div><button class="option-btn" onclick="truthAnswer(true)">✅ واقعیت</button>' +
+                                    '<button class="option-btn" onclick="truthAnswer(false)">❌ شبهه</button></div>';
+                                document.getElementById('gameStatus').textContent = 'تشخیص بده شبهه‌ست یا واقعیت!';
+                                nextTruth();
+                            } else if (currentGame === 'minesweeper') {
+                                board.innerHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:200px;margin:0 auto">' +
+                                    Array(16).fill(0).map((_, i) =>
+                                        '<div class="option-btn" onclick="mineClick(' + i + ')" style="width:40px;height:40px;padding:0;font-size:0.8rem" id="mine' + i + '">?</div>'
+                                    ).join('') +
+                                    '</div>';
+                                document.getElementById('gameStatus').textContent = 'میدان شبهات رو پاکسازی کن!';
+                            } else if (currentGame === 'quiz') {
                                 currentQuestion = 0;
-                                document.getElementById('gameScore').textContent = '۰';
-                                document.getElementById('gameProgress').style.width = '0%';
-                                document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
-                                startGameLogic();
+                                showQuizQuestion();
+                            } else if (currentGame === 'reaction') {
+                                startReaction();
                             }
+                        }
 
+                        function hitTarget(el, i) {
+                            if (gameOver) return;
+                            if (el.classList.contains('hit')) return;
+                            el.classList.add('hit');
+                            el.textContent = '✅';
+                            targetsHit++;
+                            score += 2;
+                            document.getElementById('gameScore').textContent = score;
+                            document.getElementById('gameProgress').style.width = (targetsHit / totalTargets * 100) + '%';
+                            if (targetsHit >= totalTargets) {
+                                gameOver = true;
+                                document.getElementById('gameStatus').textContent = '🎉 همه شبهات رو نابود کردی!';
+                                setTimeout(() => alert('🎉 پیروزی! همه شبهات رو نابود کردی!'), 300);
+                            }
+                        }
+
+                        function showQuizQuestion() {
+                            const board = document.getElementById('gameBoard');
+                            if (currentQuestion >= quizQuestions.length) {
+                                board.innerHTML = '<div style="font-size:1.5rem;color:#6db33f">🎉 آزمون تموم شد!</div>';
+                                document.getElementById('gameStatus').textContent = 'امتیاز نهایی: ' + score;
+                                gameOver = true;
+                                return;
+                            }
+                            const q = quizQuestions[currentQuestion];
+                            board.innerHTML = '<div style="font-size:1rem;margin:10px 0">' + q.q + '</div>' +
+                                '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:5px">' +
+                                q.options.map((o, i) =>
+                                    '<button class="option-btn" onclick="answerQuiz(' + i + ')">' + o + '</button>'
+                                ).join('') +
+                                '</div>';
+                            document.getElementById('gameStatus').textContent = 'سوال ' + (currentQuestion + 1) + ' از ' +
+                                quizQuestions.length;
+                        }
+
+                        function answerQuiz(index) {
+                            if (gameOver) return;
+                            const q = quizQuestions[currentQuestion];
+                            const btns = document.querySelectorAll('.option-btn');
+                            btns.forEach((b, i) => {
+                                b.disabled = true;
+                                if (i === q.correct) b.classList.add('correct');
+                                else if (i === index && i !== q.correct) b.classList.add('wrong');
+                            });
+                            if (index === q.correct) {
+                                score += 3;
+                                document.getElementById('gameScore').textContent = score;
+                            }
+                            currentQuestion++;
+                            setTimeout(showQuizQuestion, 1000);
+                        }
+
+                        function truthAnswer(isTruth) {
+                            if (gameOver) return;
+                            const correct = window._truthAnswer;
+                            if (isTruth === correct) {
+                                score += 3;
+                                document.getElementById('gameScore').textContent = score;
+                                document.getElementById('gameStatus').textContent = '✅ درست!';
+                            } else {
+                                document.getElementById('gameStatus').textContent = '❌ اشتباه!';
+                            }
+                            setTimeout(nextTruth, 1000);
+                        }
+
+                        function nextTruth() {
+                            const truths = [
+                                { text: 'خداوند واحد و بی‌همتاست', isTruth: true },
+                                { text: 'قرآن توسط بشر نوشته شده', isTruth: false },
+                                { text: 'پیامبر اسلام آخرین فرستاده خداست', isTruth: true },
+                                { text: 'زمین در ۶ روز آفریده شده', isTruth: true },
+                                { text: 'دین اسلام برای همه زمان‌هاست', isTruth: true },
+                                { text: 'امامان معصوم خطا دارند', isTruth: false }
+                            ];
+                            const item = truths[Math.floor(Math.random() * truths.length)];
+                            window._truthAnswer = item.isTruth;
+                            document.getElementById('truthText').textContent = item.text;
+                            document.getElementById('gameStatus').textContent = 'واقعیت یا شبهه؟';
+                        }
+
+                        function mineClick(index) {
+                            if (gameOver) return;
+                            const el = document.getElementById('mine' + index);
+                            if (el.textContent !== '?') return;
+                            const isMine = Math.random() < 0.2;
+                            el.textContent = isMine ? '💣' : '✅';
+                            if (isMine) {
+                                gameOver = true;
+                                document.getElementById('gameStatus').textContent = '💥 به مین برخوردی!';
+                                alert('💥 به مین برخوردی! بازی تموم شد.');
+                            } else {
+                                score += 1;
+                                document.getElementById('gameScore').textContent = score;
+                                document.getElementById('gameProgress').style.width = (score / 15 * 100) + '%';
+                                if (score >= 15) {
+                                    gameOver = true;
+                                    document.getElementById('gameStatus').textContent = '🎉 میدان پاکسازی شد!';
+                                    alert('🎉 میدان شبهات پاکسازی شد!');
+                                }
+                            }
+                        }
+
+                        function startReaction() {
+                            const board = document.getElementById('gameBoard');
+                            timeLeft = 5;
+                            board.innerHTML = '<div class="timer" id="timerDisplay">⏱️ ' + timeLeft + '</div>' +
+                                '<div style="font-size:1.5rem;margin:10px 0" id="reactionText">آماده‌ای؟</div>' +
+                                '<button class="btn-game" onclick="reactionClick()" id="reactionBtn">کلیک کن!</button>';
+                            document.getElementById('gameStatus').textContent = 'سریع واکنش نشون بده!';
+                            let countdown = setInterval(() => {
+                                timeLeft--;
+                                document.getElementById('timerDisplay').textContent = '⏱️ ' + timeLeft;
+                                if (timeLeft <= 0) {
+                                    clearInterval(countdown);
+                                    document.getElementById('gameStatus').textContent = '⏰ زمان تموم شد!';
+                                    gameOver = true;
+                                }
+                            }, 1000);
+                            window._reactionCountdown = countdown;
+                        }
+
+                        function reactionClick() {
+                            if (gameOver) return;
+                            score += 2;
+                            document.getElementById('gameScore').textContent = score;
+                            document.getElementById('gameStatus').textContent = '✅ واکنش عالی!';
+                            document.getElementById('reactionBtn').disabled = true;
+                            clearInterval(window._reactionCountdown);
+                            if (score >= 20) {
+                                gameOver = true;
+                                document.getElementById('gameStatus').textContent = '🎉 پیروزی! واکنش فوق‌العاده!';
+                                alert('🎉 واکنش فوق‌العاده!');
+                            } else {
+                                setTimeout(startReaction, 1500);
+                            }
+                        }
+
+                        function resetGame() {
+                            score = 0;
+                            gameOver = false;
+                            targetsHit = 0;
+                            currentQuestion = 0;
+                            document.getElementById('gameScore').textContent = '۰';
+                            document.getElementById('gameProgress').style.width = '0%';
+                            document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
                             startGameLogic();
-                        <\/script>
-                    </body>
-                    </html>
-                `;
+                        }
+
+                        startGameLogic();
+                    <\/script>
+                </body>
+                </html>
+            `;
             win.document.write(gameHtml);
             win.document.close();
             if (currentUser && allUsers[currentUser]) {
@@ -2915,7 +2773,7 @@
         // ============================================================
         async function sendEmail(to, fullname, subject, message) {
             try {
-                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                await emailjs.send('service_c8bgjtx', 'template_vzufaw2', {
                     to_email: to,
                     fullname: fullname,
                     subject: subject,
@@ -2964,4 +2822,4 @@
         });
     </script>
 </body>
-  </html> 
+    </html>
