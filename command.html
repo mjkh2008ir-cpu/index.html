@@ -45,6 +45,7 @@ body{
 @keyframes sweep{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--neon-green)}50%{box-shadow:0 0 25px var(--neon-green)}}
+@keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 #securityPage{
   position:fixed;
@@ -90,7 +91,7 @@ body{
 #securityPage .login-box .input-group{margin-bottom:0.5rem}
 #securityPage .login-box .input-group label{color:var(--text-secondary);font-size:.5rem;display:block;letter-spacing:2px;margin-bottom:0.1rem}
 #securityPage .login-box .input-group input{width:100%;padding:0.3rem 0.6rem;background:rgba(8,12,16,0.5);border:1.5px solid var(--border-military);border-radius:6px;color:var(--text-primary);font-size:.75rem;outline:none;text-align:center;transition:.3s}
-#securityPage .login-box .input-group input:focus{border-color:var(--neon-green)}
+#securityPage .login-box .input-group input:focus{border-color:var(--neon-green);box-shadow:0 0 20px rgba(74,138,170,0.05)}
 #securityPage .login-box .btn-cmd{width:100%;padding:0.4rem;background:linear-gradient(135deg,#2a4a5a,#1a3a4a);border:1px solid var(--neon-green);border-radius:8px;color:#e8f5cc;font-weight:700;font-size:.8rem;cursor:pointer;letter-spacing:3px;transition:.3s}
 #securityPage .login-box .btn-cmd:hover{background:linear-gradient(135deg,#3a5a6a,#2a4a5a);box-shadow:0 0 30px rgba(74,138,170,0.1)}
 #securityPage .login-box .error{color:#c0392b;font-size:.55rem;text-align:center;min-height:1rem}
@@ -158,7 +159,7 @@ body{
 .top-bar .info{display:flex;gap:0.3rem;align-items:center;font-family:var(--font-mono);font-size:0.4rem;color:var(--text-secondary)}
 .top-bar .info .dot{width:4px;height:4px;border-radius:50%;background:var(--neon-green);display:inline-block;animation:blink 1.5s infinite}
 .top-bar .info .theme-btn{background:none;border:1px solid var(--border-military);border-radius:4px;color:var(--text-primary);padding:0.1rem 0.3rem;cursor:pointer;font-size:0.6rem;transition:.3s}
-.top-bar .info .theme-btn:hover{border-color:var(--neon-green)}
+.top-bar .info .theme-btn:hover{border-color:var(--neon-green);transform:rotate(30deg)}
 
 .stats-grid{
   display:grid;
@@ -320,6 +321,7 @@ body{
 }
 .list-item:hover{background:rgba(74,138,170,0.05)}
 .list-item .name{color:var(--text-primary)}
+.list-item .name .special-star{color:var(--gold)}
 .list-item .role{color:var(--gold);font-size:0.35rem}
 .list-item .phone{color:var(--neon-green);font-size:0.35rem;direction:ltr}
 .list-item .status{font-size:0.3rem;color:var(--neon-green)}
@@ -358,6 +360,18 @@ body{
   transition:.3s;
 }
 .list-item .reply-btn:hover{transform:scale(1.05)}
+.list-item .send-msg-btn{
+  background:#4a8aaa;
+  border:none;
+  color:#fff;
+  padding:0.05rem 0.3rem;
+  border-radius:3px;
+  cursor:pointer;
+  font-size:0.35rem;
+  margin-right:0.2rem;
+  transition:.3s;
+}
+.list-item .send-msg-btn:hover{transform:scale(1.05)}
 
 .launch-section{
   background:var(--bg-card);
@@ -381,7 +395,7 @@ body{
   margin-bottom:0.08rem;
   transition:.3s;
 }
-.launch-section input:focus,.launch-section textarea:focus{border-color:var(--neon-green)}
+.launch-section input:focus,.launch-section textarea:focus{border-color:var(--neon-green);box-shadow:0 0 15px rgba(74,138,170,0.05)}
 .launch-section textarea{resize:vertical;min-height:30px}
 .launch-section .row{display:grid;grid-template-columns:1fr 1fr;gap:0.08rem}
 .launch-section .btn-launch{
@@ -397,8 +411,8 @@ body{
   transition:.3s;
   letter-spacing:1px;
 }
-.launch-section .btn-launch:hover{transform:scale(1.02)}
-.launch-section .msg{color:var(--neon-green);font-size:0.4rem;text-align:center;padding:0.05rem 0}
+.launch-section .btn-launch:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(74,138,170,0.2)}
+.launch-section .msg{color:var(--neon-green);font-size:0.4rem;text-align:center;padding:0.05rem 0;animation:slideIn .3s ease}
 
 .games-grid{
   display:grid;
@@ -414,7 +428,7 @@ body{
   cursor:pointer;
   transition:.3s;
 }
-.game-card:hover{border-color:var(--neon-green);transform:translateY(-3px)}
+.game-card:hover{border-color:var(--neon-green);transform:translateY(-3px);box-shadow:0 8px 25px rgba(74,138,170,0.1)}
 .game-card .icon{font-size:1.8rem;display:block;color:var(--gold)}
 .game-card .name{font-size:0.5rem;color:var(--text-primary);font-weight:700}
 .game-card .desc{font-size:0.35rem;color:var(--text-secondary)}
@@ -430,7 +444,7 @@ body{
   border-radius:12px;
   padding:1.5rem;
   z-index:500;
-  max-width:320px;
+  max-width:340px;
   width:90%;
   box-shadow:0 0 60px rgba(0,0,0,0.8);
   animation:fadeIn .3s ease;
@@ -444,13 +458,19 @@ body{
   color:var(--text-secondary);
   font-size:1.2rem;
   cursor:pointer;
+  transition:.3s;
 }
+.user-detail-popup .close-popup:hover{transform:rotate(90deg)}
 .user-detail-popup .popup-title{color:var(--gold);font-size:0.8rem;font-weight:700;border-bottom:1px solid var(--border-military);padding-bottom:0.3rem;margin-bottom:0.5rem}
 .user-detail-popup .popup-row{display:flex;justify-content:space-between;padding:0.2rem 0;font-size:0.55rem;border-bottom:1px solid rgba(26,42,53,0.1)}
 .user-detail-popup .popup-row .label{color:var(--text-secondary)}
 .user-detail-popup .popup-row .value{color:var(--text-primary)}
-.user-detail-popup .delete-user-btn{background:#c0392b;border:none;color:#fff;padding:0.2rem 0.5rem;border-radius:4px;cursor:pointer;font-size:0.5rem;width:100%;margin-top:0.3rem;transition:.3s}
-.user-detail-popup .delete-user-btn:hover{transform:scale(1.02)}
+.user-detail-popup .popup-actions{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
+.user-detail-popup .popup-actions button{flex:1;padding:0.15rem;border:none;border-radius:4px;cursor:pointer;font-size:0.45rem;transition:.3s}
+.user-detail-popup .popup-actions .btn-msg{background:var(--neon-green);color:#fff}
+.user-detail-popup .popup-actions .btn-msg:hover{transform:scale(1.05)}
+.user-detail-popup .popup-actions .btn-del{background:#c0392b;color:#fff}
+.user-detail-popup .popup-actions .btn-del:hover{transform:scale(1.05)}
 
 .hamburger{display:none;position:fixed;top:8px;right:8px;z-index:200;background:var(--bg-secondary);border:1px solid var(--border-military);color:var(--text-primary);padding:0.15rem 0.4rem;border-radius:4px;font-size:1rem;cursor:pointer;transition:.3s}
 .hamburger:hover{border-color:var(--neon-green)}
@@ -496,10 +516,6 @@ body{
       <label>واحد عملیاتی</label>
       <input type="text" id="cmdUnit" placeholder="شورای فرماندهی یا اطلاعات عملیات">
     </div>
-    <div class="input-group">
-      <label>رمز مخفی</label>
-      <input type="password" id="cmdSecret" placeholder="رمز مخفی">
-    </div>
     <button class="btn-cmd" onclick="checkAccess()">تأیید هویت</button>
     <div class="error" id="cmdError"></div>
     <div class="badge"><span>● امنیت سطح یک • ورود با کارت شناسایی</span></div>
@@ -526,6 +542,7 @@ body{
     <button class="nav-item" onclick="switchTab('users')"><i class="fas fa-users"></i> کاربران</button>
     <button class="nav-item" onclick="switchTab('commanders')"><i class="fas fa-star"></i> فرماندهان</button>
     <button class="nav-item" onclick="switchTab('comments')"><i class="fas fa-comment-dots"></i> کامنت‌ها</button>
+    <button class="nav-item" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> پیام‌ها</button>
     <div class="nav-divider"></div>
     <button class="nav-item" onclick="switchTab('stats')"><i class="fas fa-chart-bar"></i> آمار</button>
     <button class="nav-item" onclick="switchTab('rules')"><i class="fas fa-scroll"></i> آیین‌نامه</button>
@@ -623,6 +640,25 @@ body{
     </div>
   </div>
 
+  <div id="tab-messages" class="tab-content" style="display:none">
+    <div class="launch-section">
+      <div class="launch-title"><i class="fas fa-envelope"></i> ارسال پیام به کاربران</div>
+      <div class="row">
+        <select id="msgRecipient">
+          <option value="all">همه کاربران</option>
+        </select>
+        <input type="text" id="msgSubject" placeholder="موضوع پیام...">
+      </div>
+      <textarea id="msgBody" rows="3" placeholder="متن پیام..."></textarea>
+      <button class="btn-launch" onclick="sendCommanderMessageToUser()"><i class="fas fa-paper-plane"></i> ارسال پیام</button>
+      <div class="msg" id="msgSendResult"></div>
+    </div>
+    <div class="list-container" style="margin-top:0.3rem">
+      <div class="list-title"><i class="fas fa-history"></i> تاریخچه پیام‌های ارسالی</div>
+      <div id="sentMessagesList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ پیامی ارسال نشده</div></div>
+    </div>
+  </div>
+
   <div id="tab-stats" class="tab-content" style="display:none">
     <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
       <div class="stat-card"><div class="num" id="statAllPosts">0</div><div class="label">کل شبهات</div></div>
@@ -631,6 +667,7 @@ body{
       <div class="stat-card"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div>
       <div class="stat-card"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div>
       <div class="stat-card"><div class="num" id="statOnline">0</div><div class="label">آنلاین</div></div>
+      <div class="stat-card"><div class="num" id="statSpecial">0</div><div class="label">سرداران</div></div>
     </div>
   </div>
 
@@ -674,7 +711,10 @@ body{
   <button class="close-popup" onclick="closeUserDetail()"><i class="fas fa-times"></i></button>
   <div class="popup-title"><i class="fas fa-user"></i> مشخصات کاربر</div>
   <div id="userDetailContent"></div>
-  <button class="delete-user-btn" onclick="deleteUserAccount()"><i class="fas fa-trash"></i> حذف حساب کاربری</button>
+  <div class="popup-actions">
+    <button class="btn-msg" onclick="sendMessageToSelectedUser()"><i class="fas fa-envelope"></i> ارسال پیام</button>
+    <button class="btn-del" onclick="deleteUserAccount()"><i class="fas fa-trash"></i> حذف حساب</button>
+  </div>
 </div>
 
 <script>
@@ -690,8 +730,8 @@ async function loadFromServer() {
       headers: { 'X-Master-Key': API_KEY }
     });
     const data = await res.json();
-    return data.record || { posts: [], users: {}, messages: [] };
-  } catch(e) { return { posts: [], users: {}, messages: [] }; }
+    return data.record || { posts: [], users: {}, messages: [], inbox: {} };
+  } catch(e) { return { posts: [], users: {}, messages: [], inbox: {} }; }
 }
 
 async function saveToServer(data) {
@@ -705,30 +745,37 @@ async function saveToServer(data) {
 }
 
 // ============================================================
-// اعضای فرماندهی
+// سرداران ویژه
 // ============================================================
-const commandMembers = {
-  "khayyatzadeh": { name: "محمد جواد خیاط زاده", code: "101", role: "شورای فرماندهی_مستشار ایتا", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456789" },
-  "motavassel": { name: "محمد باقر متوسل", code: "102", role: "شورای فرماندهی_معاون عملیات", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456788" },
-  "barzkar": { name: "محمد برزکار", code: "103", role: "شورای فرماندهی_مشاور", rank: "سردار", unit: "شورای فرماندهی", phone: "09123456787" },
-  "saeedi": { name: "محمد مهدی سعیدی", code: "104", role: "واحد اطلاعات عملیات", rank: "سردار", unit: "واحد اطلاعات عملیات", phone: "09123456786" }
+const SPECIAL_USERS = {
+  "09945740006": { name: "محمد جواد خیاط زاده", rank: "سردار", xp: 1000 },
+  "09332933736": { name: "محمد برزکار", rank: "سردار", xp: 1000 },
+  "09366347899": { name: "محمد مهدی سعیدی", rank: "سردار", xp: 1000 },
+  "09942851349": { name: "محمد باقر متوسل", rank: "سردار", xp: 1000 }
 };
 
-const SECRET_CODE = 'padafand1404';
+const commandMembers = {
+  "khayyatzadeh": { name: "محمد جواد خیاط زاده", code: "101", role: "شورای فرماندهی_مستشار ایتا", rank: "سردار", unit: "شورای فرماندهی", phone: "09945740006" },
+  "motavassel": { name: "محمد باقر متوسل", code: "102", role: "شورای فرماندهی_معاون عملیات", rank: "سردار", unit: "شورای فرماندهی", phone: "09942851349" },
+  "barzkar": { name: "محمد برزکار", code: "103", role: "شورای فرماندهی_مشاور", rank: "سردار", unit: "شورای فرماندهی", phone: "09332933736" },
+  "saeedi": { name: "محمد مهدی سعیدی", code: "104", role: "واحد اطلاعات عملیات", rank: "سردار", unit: "واحد اطلاعات عملیات", phone: "09366347899" }
+};
 
 // ============================================================
-// دیتا و متغیرها
+// دیتا
 // ============================================================
 let allPosts = [];
 let allUsers = {};
 let allMessages = [];
+let allInbox = {};
 let currentUser = null;
 let currentUnit = '';
 let uploadedCardData = null;
 let isCardVerified = false;
 let currentTab = 'dashboard';
 let commanderLog = [];
-let selectedUserForDelete = null;
+let selectedUser = null;
+let sentMessages = [];
 
 // ============================================================
 // OCR
@@ -795,26 +842,23 @@ document.getElementById('cardUpload').addEventListener('change', async function(
 });
 
 // ============================================================
-// ورود
+// ورود (بدون رمز مخفی)
 // ============================================================
 function checkAccess() {
   const unitInput = document.getElementById('cmdUnit').value.trim();
-  const secretInput = document.getElementById('cmdSecret').value.trim();
   
-  if (unitInput === 'Khayyatzadeh' && secretInput === SECRET_CODE) {
+  // ورود مستقیم با Khayyatzadeh
+  if (unitInput === 'Khayyatzadeh') {
     currentUser = 'محمد جواد خیاط زاده';
     currentUnit = 'شورای فرماندهی';
+    document.getElementById('cmdError').textContent = '🎖️ سردار خیاط زاده خوش آمدید!';
+    document.getElementById('cmdError').style.color = '#c8a000';
     enterCommand();
     return;
   }
   
   if (!unitInput || !['شورای فرماندهی', 'واحد اطلاعات عملیات'].includes(unitInput)) {
     document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید';
-    document.getElementById('cmdError').style.color = '#c0392b';
-    return;
-  }
-  if (secretInput !== SECRET_CODE) {
-    document.getElementById('cmdError').textContent = '⚠️ رمز مخفی اشتباه است';
     document.getElementById('cmdError').style.color = '#c0392b';
     return;
   }
@@ -836,6 +880,8 @@ function checkAccess() {
   
   currentUser = uploadedCardData.name;
   currentUnit = unitInput;
+  document.getElementById('cmdError').textContent = '✅ خوش آمدید ' + currentUser;
+  document.getElementById('cmdError').style.color = '#6db33f';
   enterCommand();
 }
 
@@ -850,10 +896,15 @@ function enterCommand() {
   loadData();
   updateTime();
   setInterval(updateTime, 1000);
+  
   // جلوگیری از بسته شدن برگه
   window.addEventListener('beforeunload', function(e) {
     commanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
     localStorage.setItem('padafand_commander_log', JSON.stringify(commanderLog));
+    // بستن پنجره
+    e.preventDefault();
+    e.returnValue = '';
+    window.close();
   });
 }
 
@@ -861,12 +912,12 @@ function commanderLogout() {
   commanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
   localStorage.setItem('padafand_commander_log', JSON.stringify(commanderLog));
   localStorage.removeItem('padafand_commander');
-  document.getElementById('securityPage').style.display = 'flex';
-  document.getElementById('sidebar').style.display = 'none';
-  document.querySelector('.main').style.display = 'none';
-  currentUser = null;
-  // بازگشت به سایت اصلی
-  window.location.href = './index.html';
+  // بستن پنجره
+  window.close();
+  // اگر بسته نشد، برگشت به صفحه اصلی
+  setTimeout(() => {
+    window.location.href = './index.html';
+  }, 500);
 }
 
 // ============================================================
@@ -877,7 +928,9 @@ async function loadData() {
   allPosts = data.posts || [];
   allUsers = data.users || {};
   allMessages = data.messages || [];
+  allInbox = data.inbox || {};
   updateAll();
+  populateRecipients();
 }
 
 function updateAll() {
@@ -886,6 +939,7 @@ function updateAll() {
   updateMonitor();
   updateCommanders();
   updateComments();
+  updateSentMessages();
 }
 
 function updateStats() {
@@ -901,11 +955,13 @@ function updateStats() {
   document.getElementById('statComments').textContent = totalComments;
   document.getElementById('statLikes').textContent = allPosts.reduce((sum, p) => sum + (p.likes || 0), 0);
   document.getElementById('statOnline').textContent = Math.floor(Object.keys(allUsers).length * 0.2) || '—';
+  const specialCount = Object.keys(allUsers).filter(u => allUsers[u].isSpecial).length;
+  document.getElementById('statSpecial').textContent = specialCount;
   document.getElementById('monitorActivity').textContent = allPosts.length;
 }
 
 function updateLists() {
-  // کاربران
+  // کاربران با شماره تلفن و نشان ویژه
   const usersContainer = document.getElementById('usersList');
   const userList = Object.keys(allUsers);
   if (!userList.length) {
@@ -913,9 +969,9 @@ function updateLists() {
   } else {
     usersContainer.innerHTML = userList.map(u => `
       <div class="list-item" onclick="showUserDetail('${u}')">
-        <span class="name"><i class="fas fa-user"></i> ${allUsers[u].fullname || u}</span>
+        <span class="name">${allUsers[u].isSpecial ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
         <span class="phone">${allUsers[u].phone || '—'}</span>
-        <span class="status">🟢</span>
+        <span class="status">${allUsers[u].isSpecial ? '🎖️' : '🟢'}</span>
       </div>
     `).join('');
   }
@@ -938,7 +994,7 @@ function updateLists() {
   // آنلاین
   document.getElementById('onlineUsers').innerHTML = userList.slice(0, 4).map(u => `
     <div class="list-item">
-      <span class="name">${allUsers[u].fullname || u}</span>
+      <span class="name">${allUsers[u].isSpecial ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
       <span class="status">🟢</span>
     </div>
   `).join('') || '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ کاربری آنلاین نیست</div>';
@@ -951,10 +1007,11 @@ function updateCommanders() {
   container.innerHTML = commanders.map(c => {
     const lastLog = log.filter(l => l.name === c.name).slice(-1)[0];
     const status = lastLog?.action === 'ورود' ? '🟢 آنلاین' : '⚪ آفلاین';
+    const isSpecial = !!SPECIAL_USERS[c.phone];
     return `
       <div class="list-item" onclick="showUserDetail('${c.name}')">
-        <span class="name"><i class="fas fa-star" style="color:var(--gold)"></i> ${c.name}</span>
-        <span class="role">${c.rank}</span>
+        <span class="name">${isSpecial ? '⭐ ' : ''}${c.name}</span>
+        <span class="role">🎖️ ${c.rank}</span>
         <span class="status">${status}</span>
       </div>
     `;
@@ -972,7 +1029,8 @@ function updateComments() {
           user: c.user,
           text: c.text,
           postIndex: pi,
-          commentIndex: ci
+          commentIndex: ci,
+          replies: c.replies || []
         });
       });
     }
@@ -984,14 +1042,41 @@ function updateComments() {
       <div class="list-item">
         <span class="name"><i class="fas fa-comment"></i> ${c.user}: ${c.text}</span>
         <span class="role">${c.post?.substring(0, 15) || ''}...</span>
-        <button class="reply-btn" onclick="replyComment('${c.user}', '${c.text}', ${c.postIndex}, ${c.commentIndex})"><i class="fas fa-reply"></i></button>
+        ${c.replies.length ? `<span class="status">${c.replies.length} پاسخ</span>` : ''}
+        <button class="reply-btn" onclick="replyComment(${c.postIndex}, ${c.commentIndex})"><i class="fas fa-reply"></i></button>
         <button class="del-btn" onclick="deleteComment(${c.postIndex}, ${c.commentIndex})"><i class="fas fa-trash"></i></button>
       </div>
     `).join('');
   }
 }
 
+function updateSentMessages() {
+  const container = document.getElementById('sentMessagesList');
+  if (!sentMessages.length) {
+    container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ پیامی ارسال نشده</div>';
+    return;
+  }
+  container.innerHTML = sentMessages.slice().reverse().map(m => `
+    <div class="list-item">
+      <span class="name">📩 ${m.to === 'all' ? 'همه کاربران' : m.to}</span>
+      <span class="role">${m.subject}</span>
+      <span class="status">${m.date}</span>
+    </div>
+  `).join('');
+}
+
 function updateMonitor() {}
+
+function populateRecipients() {
+  const select = document.getElementById('msgRecipient');
+  select.innerHTML = '<option value="all">همه کاربران</option>';
+  Object.keys(allUsers).forEach(u => {
+    const option = document.createElement('option');
+    option.value = u;
+    option.textContent = allUsers[u].fullname || u;
+    select.appendChild(option);
+  });
+}
 
 // ============================================================
 // نمایش جزئیات کاربر
@@ -999,15 +1084,15 @@ function updateMonitor() {}
 function showUserDetail(username) {
   const user = allUsers[username] || commandMembers[Object.keys(commandMembers).find(k => commandMembers[k].name === username)];
   if (!user) return;
-  selectedUserForDelete = username;
+  selectedUser = username;
   const popup = document.getElementById('userDetailPopup');
   const content = document.getElementById('userDetailContent');
+  const isSpecial = user.isSpecial || !!SPECIAL_USERS[user.phone];
   content.innerHTML = `
-    <div class="popup-row"><span class="label">نام</span><span class="value">${user.fullname || user.name || username}</span></div>
+    <div class="popup-row"><span class="label">نام</span><span class="value">${isSpecial ? '⭐ ' : ''}${user.fullname || user.name || username}</span></div>
     <div class="popup-row"><span class="label">نام کاربری</span><span class="value">${username}</span></div>
     <div class="popup-row"><span class="label">شماره تلفن</span><span class="value">${user.phone || '—'}</span></div>
-    <div class="popup-row"><span class="label">نقش</span><span class="value">${user.role || user.rank || 'کاربر'}</span></div>
-    <div class="popup-row"><span class="label">سطح</span><span class="value">${user.rank || 'کاربر'}</span></div>
+    <div class="popup-row"><span class="label">نقش</span><span class="value">${isSpecial ? '🎖️ سردار' : (user.role || user.rank || 'کاربر')}</span></div>
     <div class="popup-row"><span class="label">تاریخ عضویت</span><span class="value">${user.date || '—'}</span></div>
     <div class="popup-row"><span class="label">XP</span><span class="value">${user.xp || 0}</span></div>
     <div class="popup-row"><span class="label">لایک‌ها</span><span class="value">${user.likes || 0}</span></div>
@@ -1017,25 +1102,78 @@ function showUserDetail(username) {
 
 function closeUserDetail() {
   document.getElementById('userDetailPopup').classList.remove('show');
-  selectedUserForDelete = null;
+  selectedUser = null;
 }
 
-async function deleteUserAccount() {
-  if (!selectedUserForDelete) return;
-  if (!confirm(`آیا مطمئنی می‌خوای حساب "${selectedUserForDelete}" رو حذف کنی؟`)) return;
-  delete allUsers[selectedUserForDelete];
-  const data = { posts: allPosts, users: allUsers, messages: allMessages };
-  await saveToServer(data);
+// ============================================================
+// ارسال پیام از فرماندهی به کاربران
+// ============================================================
+async function sendCommanderMessageToUser() {
+  const recipient = document.getElementById('msgRecipient').value;
+  const subject = document.getElementById('msgSubject').value.trim();
+  const body = document.getElementById('msgBody').value.trim();
+  if (!subject || !body) {
+    document.getElementById('msgSendResult').textContent = '⚠️ موضوع و متن پیام را وارد کنید';
+    document.getElementById('msgSendResult').style.color = '#c0392b';
+    return;
+  }
+  
+  if (recipient === 'all') {
+    // ارسال به همه
+    const users = Object.keys(allUsers);
+    for (let u of users) {
+      if (!allInbox[u]) allInbox[u] = [];
+      allInbox[u].push({
+        id: Date.now() + Math.random() * 1000,
+        from: currentUser || 'فرماندهی',
+        fromType: 'commander',
+        subject: subject,
+        body: body,
+        date: new Date().toLocaleString('fa-IR'),
+        read: false
+      });
+    }
+    sentMessages.push({ to: 'all', subject, body, date: new Date().toLocaleString('fa-IR') });
+    document.getElementById('msgSendResult').textContent = `✅ پیام به ${users.length} کاربر ارسال شد`;
+  } else {
+    // ارسال به یک کاربر خاص
+    if (!allInbox[recipient]) allInbox[recipient] = [];
+    allInbox[recipient].push({
+      id: Date.now() + Math.random() * 1000,
+      from: currentUser || 'فرماندهی',
+      fromType: 'commander',
+      subject: subject,
+      body: body,
+      date: new Date().toLocaleString('fa-IR'),
+      read: false
+    });
+    sentMessages.push({ to: recipient, subject, body, date: new Date().toLocaleString('fa-IR') });
+    document.getElementById('msgSendResult').textContent = `✅ پیام به ${recipient} ارسال شد`;
+  }
+  
+  document.getElementById('msgSendResult').style.color = '#6db33f';
+  document.getElementById('msgSubject').value = '';
+  document.getElementById('msgBody').value = '';
+  
+  allData.inbox = allInbox;
+  await saveToServer(allData);
+  updateSentMessages();
+}
+
+function sendMessageToSelectedUser() {
+  if (!selectedUser) return;
+  document.getElementById('msgRecipient').value = selectedUser;
+  document.getElementById('msgSubject').focus();
+  document.getElementById('msgSubject').value = 'پیام از فرماندهی';
+  switchTab('messages');
   closeUserDetail();
-  updateAll();
-  alert('✅ حساب کاربری حذف شد');
 }
 
 // ============================================================
 // پاسخ به کامنت
 // ============================================================
-function replyComment(user, text, postIndex, commentIndex) {
-  const reply = prompt(`پاسخ به ${user}:\n"${text}"\n\nپاسخ خود را بنویسید:`);
+async function replyComment(postIndex, commentIndex) {
+  const reply = prompt('پاسخ اپراتور را بنویسید:');
   if (!reply) return;
   if (!allPosts[postIndex].comments[commentIndex].replies) {
     allPosts[postIndex].comments[commentIndex].replies = [];
@@ -1045,9 +1183,9 @@ function replyComment(user, text, postIndex, commentIndex) {
     text: reply,
     time: new Date().toLocaleString('fa-IR')
   });
-  const data = { posts: allPosts, users: allUsers, messages: allMessages };
-  saveToServer(data);
-  updateComments();
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+  await saveToServer(data);
+  updateAll();
   alert('✅ پاسخ شما ثبت شد');
 }
 
@@ -1058,14 +1196,14 @@ async function deleteComment(postIndex, commentIndex) {
   if (!confirm('مطمئنی می‌خوای این کامنت رو حذف کنی؟')) return;
   if (allPosts[postIndex] && allPosts[postIndex].comments) {
     allPosts[postIndex].comments.splice(commentIndex, 1);
-    const data = { posts: allPosts, users: allUsers, messages: allMessages };
+    const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
     await saveToServer(data);
     updateAll();
   }
 }
 
 // ============================================================
-// شلیک مطلب
+// مدیریت مطالب
 // ============================================================
 async function firePost() {
   const shobe = document.getElementById('newShobe').value.trim();
@@ -1088,7 +1226,7 @@ async function firePost() {
     likedBy: []
   };
   allPosts.unshift(newPost);
-  const data = { posts: allPosts, users: allUsers, messages: allMessages };
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
   await saveToServer(data);
   document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت شلیک شد!';
   document.getElementById('fireMsg').style.color = '#6db33f';
@@ -1099,9 +1237,6 @@ async function firePost() {
   updateAll();
 }
 
-// ============================================================
-// ویرایش و حذف مطالب
-// ============================================================
 function editPost(index) {
   const post = allPosts[index];
   if (!post) return;
@@ -1119,9 +1254,23 @@ function editPost(index) {
 async function deletePost(index) {
   if (!confirm('مطمئنی می‌خوای این مطلب رو حذف کنی؟')) return;
   allPosts.splice(index, 1);
-  const data = { posts: allPosts, users: allUsers, messages: allMessages };
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
   await saveToServer(data);
   updateAll();
+}
+
+// ============================================================
+// حذف حساب کاربری
+// ============================================================
+async function deleteUserAccount() {
+  if (!selectedUser) return;
+  if (!confirm(`آیا مطمئنی می‌خوای حساب "${selectedUser}" رو حذف کنی؟`)) return;
+  delete allUsers[selectedUser];
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+  await saveToServer(data);
+  closeUserDetail();
+  updateAll();
+  alert('✅ حساب کاربری حذف شد');
 }
 
 // ============================================================
@@ -1148,15 +1297,16 @@ function switchTab(tab) {
   document.getElementById('tab-' + tab).style.display = 'block';
   document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
   const items = document.querySelectorAll('.sidebar .nav-item');
-  const map = {dashboard:0, launch:1, posts:2, users:3, commanders:4, comments:5, stats:6, rules:7, games:8};
+  const map = {dashboard:0, launch:1, posts:2, users:3, commanders:4, comments:5, messages:6, stats:7, rules:8, games:9};
   if (map[tab] !== undefined && items[map[tab]]) items[map[tab]].classList.add('active');
   const title = document.getElementById('pageTitle');
-  const icons = {dashboard:'fa-chart-pie', launch:'fa-rocket', posts:'fa-file-alt', users:'fa-users', commanders:'fa-star', comments:'fa-comment-dots', stats:'fa-chart-bar', rules:'fa-scroll', games:'fa-gamepad'};
-  const names = {dashboard:'داشبورد', launch:'شلیک مطلب', posts:'مطالب', users:'کاربران', commanders:'فرماندهان', comments:'کامنت‌ها', stats:'آمار', rules:'آیین‌نامه', games:'بازی'};
+  const icons = {dashboard:'fa-chart-pie', launch:'fa-rocket', posts:'fa-file-alt', users:'fa-users', commanders:'fa-star', comments:'fa-comment-dots', messages:'fa-envelope', stats:'fa-chart-bar', rules:'fa-scroll', games:'fa-gamepad'};
+  const names = {dashboard:'داشبورد', launch:'شلیک مطلب', posts:'مطالب', users:'کاربران', commanders:'فرماندهان', comments:'کامنت‌ها', messages:'پیام‌ها', stats:'آمار', rules:'آیین‌نامه', games:'بازی'};
   title.innerHTML = `<i class="fas ${icons[tab]}"></i> ${names[tab]} <span class="sub">مرکز عملیات</span>`;
   if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
   if (tab === 'comments') updateComments();
   if (tab === 'commanders') updateCommanders();
+  if (tab === 'messages') populateRecipients();
 }
 
 // ============================================================
@@ -1164,31 +1314,102 @@ function switchTab(tab) {
 // ============================================================
 function startGame(game) {
   const score = Math.floor(Math.random() * 10) + 5;
-  const win = window.open('', '_blank', 'width=600,height=400');
+  const win = window.open('', '_blank', 'width=650,height=500');
   if (!win) {
     alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.');
     return;
   }
-  let html = `<html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
-    <head><title>بازی ${game}</title></head>
+  const games = {
+    minesweeper: { name: 'مین‌یاب', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
+    snake: { name: 'مار جنگی', emoji: '🐍', desc: 'نفوذ کن و جلو برو!' },
+    memory: { name: 'حافظه نظامی', emoji: '🧠', desc: 'اهداف رو پیدا کن!' },
+    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' }
+  };
+  const g = games[game] || games.minesweeper;
+  win.document.write(`
+    <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
+    <head><title>بازی ${g.name}</title>
+    <style>
+      body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
+      .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px}
+      .game-icon{font-size:4rem;display:block;margin-bottom:10px}
+      .game-title{color:#6db33f;font-size:1.5rem;font-weight:700}
+      .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
+      .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
+      .cell{width:40px;height:40px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:.2s}
+      .cell:hover{background:#2a3a1a}
+      .cell.revealed{background:#0d1408;border-color:#4a7c20}
+      .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
+      .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900}
+      .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
+      .btn-game:hover{background:#6db33f;transform:scale(1.05)}
+      .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
+      .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
+      .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px}
+    </style>
+    </head>
     <body>
-      <div style="font-size:3rem;margin-bottom:0.5rem">🎮</div>
-      <h1 style="color:#6db33f;font-size:1.2rem">بازی ${game}</h1>
-      <p style="color:#7a9a55;font-size:0.7rem">در حال اجرا...</p>
-      <div style="margin:20px auto;border:1px solid #2e4018;padding:20px;border-radius:8px;background:#111c0a;max-width:400px">
-        <p style="font-size:20px;color:#c8a000">🕹️</p>
-        <p style="color:#d4e8b0;font-size:14px;line-height:1.8">این بازی با تم نظامی و پدافندی طراحی شده است.<br>نسخه کامل آن به زودی در قرارگاه ارائه خواهد شد.</p>
-        <p style="color:#6db33f;font-size:0.6rem;margin-top:0.2rem">✅ ${score} XP به حساب شما اضافه شد</p>
-        <button onclick="window.close()" style="background:#4a7c20;border:none;color:#fff;padding:8px 20px;border-radius:4px;cursor:pointer;margin-top:10px">بازگشت</button>
+      <div class="game-area">
+        <span class="game-icon">${g.emoji}</span>
+        <div class="game-title">🎮 ${g.name}</div>
+        <div class="game-desc">${g.desc}</div>
+        <div class="score-box">
+          <div>امتیاز شما</div>
+          <div class="score" id="gameScore">۰</div>
+          <div style="font-size:0.6rem;color:#7a9a55">کلیک کنید تا شروع کنید</div>
+        </div>
+        <div class="game-board" id="gameBoard">
+          ${Array(16).fill(0).map((_, i) => `<div class="cell" data-index="${i}" onclick="cellClick(${i})">?</div>`).join('')}
+        </div>
+        <div>
+          <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
+          <button class="btn-close" onclick="window.close()"><i class="fas fa-times"></i> بستن</button>
+        </div>
+        <div class="xp-display">✅ ${score} XP به حساب شما اضافه شد</div>
       </div>
+      <script>
+        let score = 0;
+        const totalCells = 16;
+        const winScore = 15;
+        let revealed = new Array(totalCells).fill(false);
+        let gameOver = false;
+        
+        function cellClick(index) {
+          if (gameOver) return;
+          if (revealed[index]) return;
+          revealed[index] = true;
+          score++;
+          document.getElementById('gameScore').textContent = score;
+          const cell = document.querySelector('.cell[data-index="' + index + '"]');
+          cell.classList.add('revealed');
+          cell.textContent = '✅';
+          if (score >= winScore) {
+            gameOver = true;
+            setTimeout(() => {
+              alert('🎉 شما برنده شدید!\\nامتیاز: ' + score);
+            }, 300);
+          }
+        }
+        
+        function resetGame() {
+          score = 0;
+          gameOver = false;
+          revealed = new Array(totalCells).fill(false);
+          document.getElementById('gameScore').textContent = '۰';
+          document.querySelectorAll('.cell').forEach(c => {
+            c.classList.remove('revealed');
+            c.textContent = '?';
+          });
+        }
+      <\/script>
     </body>
-  </html>`;
-  win.document.write(html);
+    </html>
+  `);
   win.document.close();
-  // اضافه کردن XP به کاربر
+  // اضافه کردن XP
   if (allUsers[currentUser]) {
     allUsers[currentUser].xp = (allUsers[currentUser].xp || 0) + score;
-    const data = { posts: allPosts, users: allUsers, messages: allMessages };
+    const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
     saveToServer(data);
   }
 }
