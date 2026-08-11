@@ -7,1619 +7,297 @@
     <meta name="description" content="پاسخ به شبهات دینی، اعتقادی و سیاسی با زبانی ساده و مستند">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* ============================================================
-        🎨 RESET & ROOT VARIABLES
-        ============================================================ */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        /* ===== RESET & ROOT ===== */
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0d1408;--bgm:#1a2410;--bgp:#111c0a;--g:#4a7c20;--gl:#6db33f;--am:#c8a000;--br:#2e4018;--tp:#d4e8b0;--ts:#7a9a55;--rd:#c0392b;--gold:#c8a000;--neon:#39ff14;--font:'Segoe UI',Tahoma,sans-serif}
+        [data-theme="dark"]{--bg:#080c0a;--bgm:#0c1410;--bgp:#0a100e;--g:#2a4a3a;--gl:#4a8a7a;--br:#1a2a25;--tp:#b0c8c0;--ts:#6a8a7a;--am:#b09840;--gold:#b09840;--neon:#39ff14}
+        [data-theme="light"]{--bg:#f2f7ef;--bgm:#e0ebd8;--bgp:#d0dfc4;--g:#3a7a2a;--gl:#4a8a3a;--br:#8aaa6a;--tp:#1a2a0a;--ts:#4a6a3a;--am:#b09000;--gold:#b09000;--neon:#2a8a1a}
+        body{background:var(--bg);font-family:var(--font);direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px;line-height:1.8}
+        ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
 
-        :root {
-            --bg: #0d1408;
-            --bgm: #1a2410;
-            --bgp: #111c0a;
-            --g: #4a7c20;
-            --gl: #6db33f;
-            --am: #c8a000;
-            --br: #2e4018;
-            --tp: #d4e8b0;
-            --ts: #7a9a55;
-            --rd: #c0392b;
-            --gold: #c8a000;
-            --neon: #39ff14;
-            --font: 'Segoe UI', Tahoma, sans-serif;
-        }
+        /* ===== ANIMATIONS ===== */
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+        @keyframes missileFly{0%{transform:translateX(0)translateY(0);opacity:1}80%{opacity:1}100%{transform:translateX(-150px)translateY(-50px);opacity:0}}
+        @keyframes carMove{0%{transform:translateX(100px)}100%{transform:translateX(calc(-100vw - 100px))}}
+        @keyframes radarPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2);box-shadow:0 0 30px var(--neon)}}
+        @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--gl)}50%{box-shadow:0 0 25px var(--gl)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon),0 0 10px var(--neon)}50%{text-shadow:0 0 20px var(--neon),0 0 40px var(--neon)}}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 
-        [data-theme="dark"] {
-            --bg: #080c0a;
-            --bgm: #0c1410;
-            --bgp: #0a100e;
-            --g: #2a4a3a;
-            --gl: #4a8a7a;
-            --br: #1a2a25;
-            --tp: #b0c8c0;
-            --ts: #6a8a7a;
-            --am: #b09840;
-            --gold: #b09840;
-            --neon: #39ff14;
-        }
+        /* ===== HEADER ===== */
+        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
+        .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
+        .hdr-top .online{display:flex;gap:.2rem;align-items:center}
+        .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
+        .hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem;margin-top:0.1rem}
+        .hdr-left{display:flex;align-items:center;gap:0.4rem}
+        .hdr-left .icon{font-size:1.5rem;animation:float 3s ease-in-out infinite;color:var(--gold)}
+        .hdr-left h1{font-size:.95rem;font-weight:900;letter-spacing:1px}
+        .hdr-left h1 span{color:var(--gl)}
+        .hdr-left .sub{font-size:.45rem;color:var(--ts);letter-spacing:0.5px}
+        .hdr-right{display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap}
+        .hdr-right .theme-btn{background:none;border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--tp);font-size:.6rem;cursor:pointer;transition:.3s}
+        .hdr-right .theme-btn:hover{border-color:var(--neon);transform:rotate(30deg)}
+        .hdr-right .user-badge{display:flex;align-items:center;gap:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;cursor:pointer;font-size:.6rem;transition:.3s}
+        .hdr-right .user-badge:hover{border-color:var(--neon)}
+        .hdr-right .user-badge .avatar{font-size:1rem}
+        .hdr-right .user-badge .level{color:var(--gold);font-size:.45rem}
+        .hdr-right .inbox-btn{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--ts);font-size:.6rem;cursor:pointer;transition:.3s;position:relative}
+        .hdr-right .inbox-btn:hover{border-color:var(--neon)}
+        .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
-        [data-theme="light"] {
-            --bg: #f2f7ef;
-            --bgm: #e0ebd8;
-            --bgp: #d0dfc4;
-            --g: #3a7a2a;
-            --gl: #4a8a3a;
-            --br: #8aaa6a;
-            --tp: #1a2a0a;
-            --ts: #4a6a3a;
-            --am: #b09000;
-            --gold: #b09000;
-            --neon: #2a8a1a;
-        }
+        /* ===== SEARCH ===== */
+        #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
+        .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
+        .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
+        .search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
+        .search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;min-height:28px;transition:.3s}
+        .search-wrap button:hover{transform:scale(1.05)}
 
-        body {
-            background: var(--bg);
-            font-family: var(--font);
-            direction: rtl;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: var(--tp);
-            transition: .3s;
-            font-size: 14px;
-            line-height: 1.8;
-        }
+        /* ===== NAV ===== */
+        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
+        .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
+        .nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.3s}
+        .nav-btn:hover{color:var(--tp);border-bottom-color:var(--neon)}
+        .nav-btn.active{color:var(--neon);border-bottom-color:var(--neon);background:var(--bg)}
 
-        ::-webkit-scrollbar {
-            width: 4px;
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--g);
-            border-radius: 2px;
-        }
+        /* ===== FAB ===== */
+        .fab{position:fixed;bottom:80px;left:20px;z-index:50;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#d4a800);border:none;color:#1a1000;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(200,160,0,0.3);transition:.3s;display:flex;align-items:center;justify-content:center}
+        .fab:hover{transform:scale(1.1) rotate(10deg);box-shadow:0 6px 30px rgba(200,160,0,0.5)}
+        .fab .tooltip{position:absolute;bottom:65px;background:var(--bgm);color:var(--tp);font-size:.5rem;padding:0.15rem 0.4rem;border-radius:4px;border:1px solid var(--br);white-space:nowrap;display:none}
+        .fab:hover .tooltip{display:block}
 
-        /* ============================================================
-        🎬 ANIMATIONS
-        ============================================================ */
-        @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .2;
-            }
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-        @keyframes missileFly {
-            0% {
-                transform: translateX(0) translateY(0);
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-150px) translateY(-50px);
-                opacity: 0;
-            }
-        }
-        @keyframes carMove {
-            0% {
-                transform: translateX(100px);
-            }
-            100% {
-                transform: translateX(calc(-100vw - 100px));
-            }
-        }
-        @keyframes radarPulse {
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: scale(0.9);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-                box-shadow: 0 0 30px var(--neon);
-            }
-        }
-        @keyframes glowPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 5px var(--gl);
-            }
-            50% {
-                box-shadow: 0 0 25px var(--gl);
-            }
-        }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        @keyframes neonPulse {
-            0%,
-            100% {
-                text-shadow: 0 0 5px var(--neon), 0 0 10px var(--neon);
-            }
-            50% {
-                text-shadow: 0 0 20px var(--neon), 0 0 40px var(--neon);
-            }
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        /* ===== CONTENT ===== */
+        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem 80px}
+        .page{display:none;animation:fadeIn .4s ease}
+        .page.active{display:block}
+        .page-title{font-size:.8rem;font-weight:700;color:var(--neon);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem;animation:neonPulse 2s infinite}
+        .page-title i{margin-left:0.3rem}
 
-        /* ============================================================
-        🧩 UTILITY CLASSES
-        ============================================================ */
-        .hidden {
-            display: none !important;
-        }
+        /* ===== POSTS ===== */
+        .post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden;transition:.3s}
+        .post:hover{border-color:var(--neon)}
+        .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:.2s}
+        .post-hdr:hover{background:var(--bgm)}
+        .post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
+        .post-hdr .title i{color:var(--am);margin-left:0.2rem}
+        .post-hdr .arrow{color:var(--gl);transition:.3s;font-size:.7rem}
+        .post-hdr .arrow.open{transform:rotate(180deg)}
+        .post-body{display:none;padding:0 0.6rem 0.6rem;border-top:1px solid var(--br)}
+        .post-body.show{display:block}
+        .post-body .ans{line-height:1.7;font-size:.75rem;margin:0.3rem 0}
+        .post-body .meta{display:flex;flex-wrap:wrap;gap:0.2rem 0.6rem;font-size:.55rem;color:var(--ts);padding-top:0.3rem;border-top:1px solid var(--br)}
+        .post-body .tags{display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.3rem}
+        .post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.5rem;color:var(--am)}
+        .post-actions{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
+        .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s;display:flex;align-items:center;gap:0.15rem}
+        .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--neon)}
+        .post-actions .liked{color:var(--rd);border-color:var(--rd);background:rgba(192,57,43,0.1)}
+        .comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
+        .comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--neon)}
+        .comments-section .cmt .cmt-user{color:var(--neon);font-weight:700}
+        .comments-section .cmt .cmt-reply{color:var(--am);font-size:.5rem;padding-right:0.5rem;border-right:1px solid var(--br);margin-right:0.3rem}
+        .comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
+        .comments-section .comment-form input{flex:1;min-width:100px;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.6rem;outline:none}
+        .comments-section .comment-form input:focus{border-color:var(--neon)}
+        .comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.15rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s}
+        .comments-section .comment-form button:hover{transform:scale(1.05)}
 
-        /* ============================================================
-        📌 HEADER
-        ============================================================ */
-        #header {
-            background: linear-gradient(180deg, #0a1206, var(--bgm));
-            border-bottom: 2px solid var(--g);
-            padding: 0.3rem 0.8rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .hdr-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: .5rem;
-            color: var(--ts);
-            font-family: monospace;
-        }
-        .hdr-top .online {
-            display: flex;
-            gap: .2rem;
-            align-items: center;
-        }
-        .hdr-top .online .dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--neon);
-            animation: blink 1.5s infinite;
-        }
-        .hdr-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-top: 0.1rem;
-        }
-        .hdr-left {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .hdr-left .icon {
-            font-size: 1.5rem;
-            animation: float 3s ease-in-out infinite;
-            color: var(--gold);
-        }
-        .hdr-left h1 {
-            font-size: .95rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-        .hdr-left h1 span {
-            color: var(--gl);
-        }
-        .hdr-left .sub {
-            font-size: .45rem;
-            color: var(--ts);
-            letter-spacing: 0.5px;
-        }
-        .hdr-right {
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .hdr-right .theme-btn {
-            background: none;
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            padding: 0.15rem 0.4rem;
-            color: var(--tp);
-            font-size: .6rem;
-            cursor: pointer;
-            transition: .3s;
-        }
-        .hdr-right .theme-btn:hover {
-            border-color: var(--neon);
-            transform: rotate(30deg);
-        }
-        .hdr-right .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            background: var(--bgp);
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            padding: 0.15rem 0.4rem;
-            cursor: pointer;
-            font-size: .6rem;
-            transition: .3s;
-        }
-        .hdr-right .user-badge:hover {
-            border-color: var(--neon);
-        }
-        .hdr-right .user-badge .avatar {
-            font-size: 1rem;
-        }
-        .hdr-right .user-badge .level {
-            color: var(--gold);
-            font-size: .45rem;
-        }
-        .hdr-right .inbox-btn {
-            background: var(--bgp);
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            padding: 0.15rem 0.4rem;
-            color: var(--ts);
-            font-size: .6rem;
-            cursor: pointer;
-            transition: .3s;
-            position: relative;
-        }
-        .hdr-right .inbox-btn:hover {
-            border-color: var(--neon);
-        }
-        .hdr-right .inbox-btn .badge {
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            background: var(--rd);
-            color: #fff;
-            font-size: .4rem;
-            border-radius: 50%;
-            padding: 0.05rem 0.2rem;
-            min-width: 14px;
-            text-align: center;
-        }
+        /* ===== SIDEBAR NAV (Mobile) ===== */
+        .sidebar-nav{position:fixed;bottom:0;right:0;left:0;background:var(--bgm);border-top:2px solid var(--neon);display:flex;justify-content:space-around;padding:0.3rem 0.5rem;z-index:99}
+        .sidebar-nav .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--ts);font-size:.5rem;cursor:pointer;transition:.3s;background:none;border:none;padding:0.1rem 0}
+        .sidebar-nav .nav-item i{font-size:1.1rem;margin-bottom:0.1rem}
+        .sidebar-nav .nav-item.active{color:var(--neon)}
+        .sidebar-nav .nav-item:hover{color:var(--neon)}
 
-        /* ============================================================
-        🔍 SEARCH
-        ============================================================ */
-        #search-section {
-            background: var(--bgm);
-            padding: 0.3rem 0.8rem;
-            border-bottom: 1px solid var(--br);
-        }
-        .search-wrap {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-        .search-wrap input {
-            flex: 1;
-            padding: 0.3rem 0.6rem;
-            border-radius: 16px;
-            border: 1px solid var(--br);
-            background: var(--bg);
-            color: var(--tp);
-            font-size: .7rem;
-            outline: none;
-            min-height: 28px;
-            transition: .3s;
-        }
-        .search-wrap input:focus {
-            border-color: var(--neon);
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
-        }
-        .search-wrap button {
-            padding: 0.2rem 0.8rem;
-            border-radius: 16px;
-            border: none;
-            background: var(--am);
-            color: #1a1000;
-            font-weight: 700;
-            font-size: .65rem;
-            cursor: pointer;
-            min-height: 28px;
-            transition: .3s;
-        }
-        .search-wrap button:hover {
-            transform: scale(1.05);
-        }
+        /* ===== AI PAGE ===== */
+        .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.3rem}
+        .ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.65rem;transition:.3s}
+        .ai-card:hover{border-color:var(--neon);transform:translateY(-5px);box-shadow:0 5px 20px rgba(57,255,20,0.1)}
+        .ai-card .ai-icon{font-size:1.2rem;display:block}
+        .ai-card .ai-desc{font-size:.4rem;color:var(--ts);display:block;margin-top:0.1rem}
 
-        /* ============================================================
-        🧭 NAV
-        ============================================================ */
-        #main-nav {
-            background: var(--bgm);
-            border-bottom: 1px solid var(--br);
-            padding: 0 0.6rem;
-            overflow-x: auto;
-        }
-        .nav-inner {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0.1rem;
-        }
-        .nav-btn {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid transparent;
-            padding: 0.3rem 0.5rem;
-            color: var(--ts);
-            font-weight: 700;
-            font-size: .65rem;
-            cursor: pointer;
-            white-space: nowrap;
-            font-family: inherit;
-            transition: .3s;
-        }
-        .nav-btn:hover {
-            color: var(--tp);
-            border-bottom-color: var(--neon);
-        }
-        .nav-btn.active {
-            color: var(--neon);
-            border-bottom-color: var(--neon);
-            background: var(--bg);
-        }
+        /* ===== SAVED ===== */
+        .saved-item{background:var(--bgp);border:1px solid var(--am);padding:0.4rem 0.6rem;margin-bottom:0.3rem;border-radius:4px;border-right:2px solid var(--am)}
+        .saved-item .saved-hdr{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+        .saved-item .saved-hdr h4{color:var(--am);font-size:.7rem;flex:1}
+        .saved-item .saved-hdr .arrow{color:var(--gl);transition:.3s;font-size:.6rem}
+        .saved-item .saved-hdr .arrow.open{transform:rotate(180deg)}
+        .saved-item .saved-body{display:none;padding-top:0.3rem;border-top:1px solid var(--br);margin-top:0.3rem}
+        .saved-item .saved-body.show{display:block}
+        .saved-item .saved-body p{font-size:.6rem;color:var(--ts);line-height:1.6}
+        .saved-item .del-btn{background:var(--rd);border:none;color:#fff;padding:0.05rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.5rem;transition:.3s}
+        .saved-item .del-btn:hover{transform:scale(1.05)}
 
-        /* ============================================================
-        📌 FAB (Floating Action Button)
-        ============================================================ */
-        .fab {
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            z-index: 50;
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), #d4a800);
-            border: none;
-            color: #1a1000;
-            font-size: 1.3rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(200, 160, 0, 0.3);
-            transition: .3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .fab:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 6px 30px rgba(200, 160, 0, 0.5);
-        }
-        .fab .tooltip {
-            position: absolute;
-            bottom: 65px;
-            background: var(--bgm);
-            color: var(--tp);
-            font-size: .5rem;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-            border: 1px solid var(--br);
-            white-space: nowrap;
-            display: none;
-        }
-        .fab:hover .tooltip {
-            display: block;
-        }
+        /* ===== GAMES ===== */
+        .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;margin-top:0.5rem}
+        .game-card{background:var(--bgp);border:2px solid var(--br);border-radius:8px;padding:0.8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+        .game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--neon),transparent);opacity:0;transition:.3s}
+        .game-card:hover::before{opacity:0.05}
+        .game-card:hover{border-color:var(--neon);transform:translateY(-5px);box-shadow:0 8px 30px rgba(57,255,20,0.15)}
+        .game-card .icon{font-size:2.2rem;display:block;margin-bottom:0.2rem;color:var(--gold)}
+        .game-card .name{font-size:.7rem;font-weight:700;color:var(--tp)}
+        .game-card .desc{font-size:.5rem;color:var(--ts)}
+        .game-card .xp-badge{font-size:.45rem;color:var(--neon);background:var(--bg);padding:0.05rem 0.3rem;border-radius:8px;display:inline-block;margin-top:0.1rem;animation:neonPulse 2s infinite}
+        .game-card .game-status{font-size:.4rem;color:var(--gold);margin-top:0.1rem}
 
-        /* ============================================================
-        📄 CONTENT
-        ============================================================ */
-        #content {
-            flex: 1;
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 0.6rem 0.6rem 80px;
-        }
-        .page {
-            display: none;
-            animation: fadeIn .4s ease;
-        }
-        .page.active {
-            display: block;
-        }
-        .page-title {
-            font-size: .8rem;
-            font-weight: 700;
-            color: var(--neon);
-            border-bottom: 1px solid var(--br);
-            padding-bottom: 0.2rem;
-            margin-bottom: 0.4rem;
-            animation: neonPulse 2s infinite;
-        }
-        .page-title i {
-            margin-left: 0.3rem;
-        }
+        /* ===== RANDOM ===== */
+        .random-box{background:var(--bgp);border:2px solid var(--am);border-radius:8px;padding:0.6rem;margin-bottom:0.5rem;text-align:center;cursor:pointer;transition:.3s;animation:glowPulse 2s infinite}
+        .random-box:hover{border-color:var(--neon);transform:scale(1.01)}
+        .random-box .title{color:var(--gold);font-size:.65rem;font-weight:700}
+        .random-box .shobe{color:var(--tp);font-size:.8rem;margin:0.2rem 0}
 
-        /* ============================================================
-        📝 POSTS
-        ============================================================ */
-        .post {
-            background: var(--bgp);
-            border: 1px solid var(--br);
-            border-right: 2px solid var(--am);
-            border-radius: 4px;
-            margin-bottom: 0.4rem;
-            overflow: hidden;
-            transition: .3s;
-        }
-        .post:hover {
-            border-color: var(--neon);
-        }
-        .post-hdr {
-            padding: 0.4rem 0.6rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.3rem;
-            transition: .2s;
-        }
-        .post-hdr:hover {
-            background: var(--bgm);
-        }
-        .post-hdr .title {
-            font-weight: 700;
-            font-size: .78rem;
-            flex: 1;
-            line-height: 1.4;
-        }
-        .post-hdr .title i {
-            color: var(--am);
-            margin-left: 0.2rem;
-        }
-        .post-hdr .arrow {
-            color: var(--gl);
-            transition: .3s;
-            font-size: .7rem;
-        }
-        .post-hdr .arrow.open {
-            transform: rotate(180deg);
-        }
-        .post-body {
-            display: none;
-            padding: 0 0.6rem 0.6rem;
-            border-top: 1px solid var(--br);
-        }
-        .post-body.show {
-            display: block;
-        }
-        .post-body .ans {
-            line-height: 1.7;
-            font-size: .75rem;
-            margin: 0.3rem 0;
-        }
-        .post-body .meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.2rem 0.6rem;
-            font-size: .55rem;
-            color: var(--ts);
-            padding-top: 0.3rem;
-            border-top: 1px solid var(--br);
-        }
-        .post-body .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.2rem;
-            margin-top: 0.3rem;
-        }
-        .post-body .tags span {
-            background: var(--bgm);
-            padding: 0.05rem 0.4rem;
-            border-radius: 8px;
-            font-size: .5rem;
-            color: var(--am);
-        }
-        .post-actions {
-            display: flex;
-            gap: 0.3rem;
-            margin-top: 0.3rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .post-actions button {
-            background: var(--bgm);
-            border: 1px solid var(--br);
-            color: var(--ts);
-            padding: 0.15rem 0.4rem;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: .55rem;
-            transition: .3s;
-            display: flex;
-            align-items: center;
-            gap: 0.15rem;
-        }
-        .post-actions button:hover {
-            background: var(--g);
-            color: var(--tp);
-            border-color: var(--neon);
-        }
-        .post-actions .liked {
-            color: var(--rd);
-            border-color: var(--rd);
-            background: rgba(192, 57, 43, 0.1);
-        }
+        /* ===== FOOTER & DEFENSE ===== */
+        #footer{border-top:1px solid var(--br);padding:0.2rem 0.6rem 0;background:var(--bgm);margin-top:0.3rem}
+        .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem;padding-bottom:0.1rem}
+        .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
+        .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
+        .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
+        .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
+        .defense-anim{width:100%;height:55px;position:relative;overflow:hidden;background:linear-gradient(180deg,transparent 0%,rgba(57,255,20,0.04)100%);border-radius:4px;margin-top:0.1rem;border:1px solid rgba(57,255,20,0.06)}
+        .defense-anim .car{position:absolute;bottom:2px;right:10px;font-size:1.8rem;animation:carMove 12s linear infinite}
+        .defense-anim .car span{font-size:0.5rem;color:var(--neon);position:absolute;bottom:-8px;right:15px;font-weight:700;white-space:nowrap;animation:neonPulse 1.5s infinite}
+        .defense-anim .missile{position:absolute;bottom:12px;font-size:1.2rem;animation:missileFly 4s linear infinite;filter:drop-shadow(0 0 5px var(--neon))}
+        .defense-anim .missile:nth-child(2){left:20%;animation-duration:4s}
+        .defense-anim .missile:nth-child(3){left:50%;animation-duration:5s;animation-delay:1s}
+        .defense-anim .missile:nth-child(4){left:75%;animation-duration:6s;animation-delay:2s}
+        .defense-anim .radar{position:absolute;bottom:0;right:0;font-size:1.5rem;animation:radarPulse 2s infinite;filter:drop-shadow(0 0 10px var(--neon))}
+        .defense-anim .jet{position:absolute;top:2px;font-size:1.2rem;animation:missileFly 8s linear infinite;filter:drop-shadow(0 0 3px var(--neon))}
+        .defense-anim .jet:nth-child(6){left:10%;animation-duration:8s;animation-delay:0.5s}
+        .defense-anim .jet:nth-child(7){left:40%;animation-duration:9s;animation-delay:1.5s}
+        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.6}
 
-        .comments-section {
-            margin-top: 0.3rem;
-            border-top: 1px solid var(--br);
-            padding-top: 0.3rem;
-        }
-        .comments-section .cmt {
-            background: var(--bg);
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
-            margin: 0.15rem 0;
-            font-size: .6rem;
-            border-right: 2px solid var(--neon);
-        }
-        .comments-section .cmt .cmt-user {
-            color: var(--neon);
-            font-weight: 700;
-        }
-        .comments-section .cmt .cmt-reply {
-            color: var(--am);
-            font-size: .5rem;
-            padding-right: 0.5rem;
-            border-right: 1px solid var(--br);
-            margin-right: 0.3rem;
-        }
-        .comments-section .comment-form {
-            display: flex;
-            gap: 0.3rem;
-            margin-top: 0.3rem;
-            flex-wrap: wrap;
-        }
-        .comments-section .comment-form input {
-            flex: 1;
-            min-width: 100px;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            border: 1px solid var(--br);
-            background: var(--bg);
-            color: var(--tp);
-            font-size: .6rem;
-            outline: none;
-        }
-        .comments-section .comment-form input:focus {
-            border-color: var(--neon);
-        }
-        .comments-section .comment-form button {
-            background: var(--g);
-            border: none;
-            color: #fff;
-            padding: 0.15rem 0.6rem;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: .55rem;
-            transition: .3s;
-        }
-        .comments-section .comment-form button:hover {
-            transform: scale(1.05);
-        }
+        /* ===== MODAL ===== */
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;justify-content:center;align-items:center}
+        .modal.show{display:flex}
+        .modal-content{background:var(--bgm);border:2px solid var(--gold);border-radius:12px;padding:1.2rem;max-width:450px;width:90%;max-height:80vh;overflow-y:auto;animation:slideIn .3s ease}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--br);padding-bottom:0.3rem;margin-bottom:0.6rem}
+        .modal-header h3{color:var(--gold);font-size:.9rem;margin:0}
+        .modal-close{background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer;transition:.3s}
+        .modal-close:hover{transform:rotate(90deg);color:var(--rd)}
+        .form-group{margin-bottom:0.5rem}
+        .form-group label{display:block;font-size:.6rem;color:var(--ts);margin-bottom:0.1rem}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:0.3rem 0.5rem;background:var(--bg);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.7rem;outline:none;font-family:inherit}
+        .form-group input:focus,.form-group textarea:focus{border-color:var(--neon)}
+        .form-group textarea{min-height:50px;resize:vertical}
+        .btn{background:var(--g);border:none;color:#fff;padding:0.3rem 1rem;border-radius:4px;cursor:pointer;font-size:.7rem;transition:.3s;display:inline-flex;align-items:center;gap:0.3rem}
+        .btn:hover{transform:scale(1.02);box-shadow:0 0 20px rgba(57,255,20,0.2)}
+        .btn-gold{background:var(--gold);color:#000}
+        .btn-gold:hover{background:#d4a800}
+        .btn-danger{background:var(--rd)}
+        .btn-danger:hover{background:#e74c3c}
+        .btn-block{width:100%;justify-content:center}
+        .btn-neon{background:var(--neon);color:#000;border:1px solid var(--neon);animation:neonPulse 2s infinite}
+        .btn-neon:hover{background:#2a8a1a;color:#fff}
 
-        /* ============================================================
-        📱 SIDEBAR NAV (Mobile)
-        ============================================================ */
-        .sidebar-nav {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            background: var(--bgm);
-            border-top: 2px solid var(--neon);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.3rem 0.5rem;
-            z-index: 99;
-        }
-        .sidebar-nav .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--ts);
-            font-size: .5rem;
-            cursor: pointer;
-            transition: .3s;
-            background: none;
-            border: none;
-            padding: 0.1rem 0;
-        }
-        .sidebar-nav .nav-item i {
-            font-size: 1.1rem;
-            margin-bottom: 0.1rem;
-        }
-        .sidebar-nav .nav-item.active {
-            color: var(--neon);
-        }
-        .sidebar-nav .nav-item:hover {
-            color: var(--neon);
-        }
+        /* ===== INBOX ===== */
+        .inbox-item{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.3rem;cursor:pointer;transition:.3s}
+        .inbox-item:hover{border-color:var(--neon)}
+        .inbox-item.unread{border-right:3px solid var(--gold)}
+        .inbox-item .inbox-hdr{display:flex;justify-content:space-between;align-items:center}
+        .inbox-item .inbox-from{font-weight:700;font-size:.65rem;color:var(--neon)}
+        .inbox-item .inbox-from .badge-special{color:var(--gold);font-size:.4rem}
+        .inbox-item .inbox-subject{font-size:.55rem;color:var(--tp)}
+        .inbox-item .inbox-date{font-size:.4rem;color:var(--ts)}
+        .inbox-item .inbox-body{display:none;padding-top:0.3rem;margin-top:0.3rem;border-top:1px solid var(--br);font-size:.6rem;color:var(--tp);line-height:1.6}
+        .inbox-item .inbox-body.show{display:block}
+        .inbox-item .inbox-delete{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.5rem;transition:.3s}
+        .inbox-item .inbox-delete:hover{color:var(--rd)}
+        .inbox-item .inbox-btn-action{background:var(--neon);border:none;color:#000;padding:0.1rem 0.6rem;border-radius:4px;cursor:pointer;font-size:.5rem;margin-top:0.2rem;transition:.3s}
+        .inbox-item .inbox-btn-action:hover{transform:scale(1.05)}
 
-        /* ============================================================
-        🤖 AI PAGE
-        ============================================================ */
-        .ai-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 0.3rem;
-            margin-top: 0.3rem;
-        }
-        .ai-card {
-            background: var(--bgp);
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            padding: 0.3rem;
-            text-align: center;
-            text-decoration: none;
-            color: var(--tp);
-            font-size: .65rem;
-            transition: .3s;
-        }
-        .ai-card:hover {
-            border-color: var(--neon);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(57, 255, 20, 0.1);
-        }
-        .ai-card .ai-icon {
-            font-size: 1.2rem;
-            display: block;
-        }
-        .ai-card .ai-desc {
-            font-size: .4rem;
-            color: var(--ts);
-            display: block;
-            margin-top: 0.1rem;
-        }
+        /* ===== NOTIFICATION ===== */
+        .notification{position:fixed;top:70px;left:20px;z-index:400;background:var(--bgm);border:2px solid var(--neon);border-radius:10px;padding:0.6rem 1rem;max-width:340px;box-shadow:0 4px 30px rgba(0,0,0,0.6);animation:slideIn .3s ease;display:flex;align-items:flex-start;gap:0.5rem}
+        .notification .notif-icon{font-size:1.5rem;color:var(--gold);animation:float 2s ease-in-out infinite}
+        .notification .notif-content{flex:1}
+        .notification .notif-title{font-size:.65rem;font-weight:700;color:var(--neon)}
+        .notification .notif-body{font-size:.55rem;color:var(--ts);line-height:1.6}
+        .notification .notif-close{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem;transition:.3s}
+        .notification .notif-close:hover{transform:rotate(90deg);color:var(--rd)}
+        .notification.hide{display:none}
 
-        /* ============================================================
-        📦 SAVED (جعبه مهمات)
-        ============================================================ */
-        .saved-item {
-            background: var(--bgp);
-            border: 1px solid var(--am);
-            padding: 0.4rem 0.6rem;
-            margin-bottom: 0.3rem;
-            border-radius: 4px;
-            border-right: 2px solid var(--am);
-        }
-        .saved-item .saved-hdr {
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .saved-item .saved-hdr h4 {
-            color: var(--am);
-            font-size: .7rem;
-            flex: 1;
-        }
-        .saved-item .saved-hdr .arrow {
-            color: var(--gl);
-            transition: .3s;
-            font-size: .6rem;
-        }
-        .saved-item .saved-hdr .arrow.open {
-            transform: rotate(180deg);
-        }
-        .saved-item .saved-body {
-            display: none;
-            padding-top: 0.3rem;
-            border-top: 1px solid var(--br);
-            margin-top: 0.3rem;
-        }
-        .saved-item .saved-body.show {
-            display: block;
-        }
-        .saved-item .saved-body p {
-            font-size: .6rem;
-            color: var(--ts);
-            line-height: 1.6;
-        }
-        .saved-item .del-btn {
-            background: var(--rd);
-            border: none;
-            color: #fff;
-            padding: 0.05rem 0.4rem;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: .5rem;
-            transition: .3s;
-        }
-        .saved-item .del-btn:hover {
-            transform: scale(1.05);
-        }
+        /* ===== USER PANEL ===== */
+        #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:340px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4);animation:slideIn .25s}
+        #userPanel.show{display:block}
+        #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer;transition:.3s}
+        #userPanel .close:hover{transform:rotate(90deg)}
+        #userPanel .profile-header{text-align:center;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:0.5rem}
+        #userPanel .profile-header .avatar{font-size:3.5rem;display:block;margin-bottom:0.1rem;animation:float 3s ease-in-out infinite}
+        #userPanel .profile-header .name{font-size:.9rem;font-weight:700}
+        #userPanel .profile-header .name .special-star{color:var(--gold);font-size:.7rem;animation:glowPulse 1.5s infinite}
+        #userPanel .profile-header .level{color:var(--gold);font-size:.6rem;display:block}
+        #userPanel .profile-header .level .rank-badge{background:var(--gold);color:#000;padding:0.05rem 0.3rem;border-radius:8px;font-size:.5rem}
+        #userPanel .profile-header .xp{color:var(--ts);font-size:.5rem;display:block}
+        #userPanel .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.2rem;margin-bottom:0.5rem}
+        #userPanel .profile-stats .stat{background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:0.2rem;text-align:center;transition:.3s}
+        #userPanel .profile-stats .stat:hover{border-color:var(--neon)}
+        #userPanel .profile-stats .stat .num{font-size:.85rem;font-weight:900;color:var(--tp);font-family:monospace}
+        #userPanel .profile-stats .stat .label{font-size:.4rem;color:var(--ts)}
+        #userPanel .avatar-select{display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center;margin:0.3rem 0}
+        #userPanel .avatar-select .av-item{font-size:1.8rem;cursor:pointer;border:2px solid transparent;border-radius:50%;padding:0.05rem;transition:.3s}
+        #userPanel .avatar-select .av-item:hover{border-color:var(--neon);transform:scale(1.1)}
+        #userPanel .avatar-select .av-item.active{border-color:var(--am)}
+        #userPanel .profile-edit{width:100%;padding:0.2rem;background:var(--am);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.6rem;cursor:pointer;transition:.3s}
+        #userPanel .profile-edit:hover{transform:scale(1.02)}
+        #userPanel .switch-link{color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer;transition:.3s}
+        #userPanel .switch-link:hover{color:var(--neon)}
+        #userPanel .form-group input{width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none}
+        #userPanel .form-group input:focus{border-color:var(--neon)}
 
-        /* ============================================================
-        🎮 GAMES
-        ============================================================ */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .game-card {
-            background: var(--bgp);
-            border: 2px solid var(--br);
-            border-radius: 8px;
-            padding: 0.8rem;
-            text-align: center;
-            cursor: pointer;
-            transition: .3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .game-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent, var(--neon), transparent);
-            opacity: 0;
-            transition: .3s;
-        }
-        .game-card:hover::before {
-            opacity: 0.05;
-        }
-        .game-card:hover {
-            border-color: var(--neon);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(57, 255, 20, 0.15);
-        }
-        .game-card .icon {
-            font-size: 2.2rem;
-            display: block;
-            margin-bottom: 0.2rem;
-            color: var(--gold);
-        }
-        .game-card .name {
-            font-size: .7rem;
-            font-weight: 700;
-            color: var(--tp);
-        }
-        .game-card .desc {
-            font-size: .5rem;
-            color: var(--ts);
-        }
-        .game-card .xp-badge {
-            font-size: .45rem;
-            color: var(--neon);
-            background: var(--bg);
-            padding: 0.05rem 0.3rem;
-            border-radius: 8px;
-            display: inline-block;
-            margin-top: 0.1rem;
-            animation: neonPulse 2s infinite;
-        }
-        .game-card .game-status {
-            font-size: .4rem;
-            color: var(--gold);
-            margin-top: 0.1rem;
-        }
+        /* ===== PIE LAUNCHER (Tutorial) ===== */
+        .pie-launcher{display:none;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
+        .pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
+        .pie-launcher .content{flex:1}
+        .pie-launcher .name{font-size:.6rem;font-weight:700;color:var(--gold)}
+        .pie-launcher .text{font-size:.55rem;color:var(--ts);line-height:1.6}
+        .pie-launcher .btn-close-tip{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem;transition:.3s}
+        .pie-launcher .btn-close-tip:hover{transform:rotate(90deg);color:var(--rd)}
+        .pie-launcher .btn-start-tutorial{background:var(--neon);border:none;color:#000;padding:0.1rem 0.6rem;border-radius:4px;cursor:pointer;font-size:.5rem;transition:.3s}
+        .pie-launcher .btn-start-tutorial:hover{transform:scale(1.05)}
 
-        /* ============================================================
-        🎲 RANDOM SHOBE
-        ============================================================ */
-        .random-box {
-            background: var(--bgp);
-            border: 2px solid var(--am);
-            border-radius: 8px;
-            padding: 0.6rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: .3s;
-            animation: glowPulse 2s infinite;
-        }
-        .random-box:hover {
-            border-color: var(--neon);
-            transform: scale(1.01);
-        }
-        .random-box .title {
-            color: var(--gold);
-            font-size: .65rem;
-            font-weight: 700;
-        }
-        .random-box .shobe {
-            color: var(--tp);
-            font-size: .8rem;
-            margin: 0.2rem 0;
-        }
-
-        /* ============================================================
-        🦶 FOOTER & DEFENSE ANIMATION
-        ============================================================ */
-        #footer {
-            border-top: 1px solid var(--br);
-            padding: 0.2rem 0.6rem 0;
-            background: var(--bgm);
-            margin-top: 0.3rem;
-        }
-        .foot-inner {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.2rem;
-            padding-bottom: 0.1rem;
-        }
-        .foot-links {
-            display: flex;
-            gap: 0.2rem;
-            flex-wrap: wrap;
-        }
-        .foot-links a {
-            color: var(--ts);
-            font-size: .5rem;
-            padding: 0.1rem 0.4rem;
-            border: 1px solid var(--br);
-            border-radius: 3px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: .3s;
-        }
-        .foot-links a:hover {
-            color: var(--neon);
-            border-color: var(--neon);
-            transform: translateY(-2px);
-        }
-        .foot-copy {
-            color: var(--ts);
-            font-size: .4rem;
-            opacity: 0.4;
-        }
-
-        .defense-anim {
-            width: 100%;
-            height: 55px;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(180deg, transparent 0%, rgba(57, 255, 20, 0.04) 100%);
-            border-radius: 4px;
-            margin-top: 0.1rem;
-            border: 1px solid rgba(57, 255, 20, 0.06);
-        }
-        .defense-anim .car {
-            position: absolute;
-            bottom: 2px;
-            right: 10px;
-            font-size: 1.8rem;
-            animation: carMove 12s linear infinite;
-        }
-        .defense-anim .car span {
-            font-size: 0.5rem;
-            color: var(--neon);
-            position: absolute;
-            bottom: -8px;
-            right: 15px;
-            font-weight: 700;
-            white-space: nowrap;
-            animation: neonPulse 1.5s infinite;
-        }
-        .defense-anim .missile {
-            position: absolute;
-            bottom: 12px;
-            font-size: 1.2rem;
-            animation: missileFly 4s linear infinite;
-            filter: drop-shadow(0 0 5px var(--neon));
-        }
-        .defense-anim .missile:nth-child(2) {
-            left: 20%;
-            animation-duration: 4s;
-        }
-        .defense-anim .missile:nth-child(3) {
-            left: 50%;
-            animation-duration: 5s;
-            animation-delay: 1s;
-        }
-        .defense-anim .missile:nth-child(4) {
-            left: 75%;
-            animation-duration: 6s;
-            animation-delay: 2s;
-        }
-        .defense-anim .radar {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            font-size: 1.5rem;
-            animation: radarPulse 2s infinite;
-            filter: drop-shadow(0 0 10px var(--neon));
-        }
-        .defense-anim .jet {
-            position: absolute;
-            top: 2px;
-            font-size: 1.2rem;
-            animation: missileFly 8s linear infinite;
-            filter: drop-shadow(0 0 3px var(--neon));
-        }
-        .defense-anim .jet:nth-child(6) {
-            left: 10%;
-            animation-duration: 8s;
-            animation-delay: 0.5s;
-        }
-        .defense-anim .jet:nth-child(7) {
-            left: 40%;
-            animation-duration: 9s;
-            animation-delay: 1.5s;
-        }
-        .defense-anim .neon-line {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon), var(--neon), transparent);
-            animation: neonPulse 1.5s infinite;
-            opacity: 0.6;
-        }
-
-        /* ============================================================
-        📦 MODAL
-        ============================================================ */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 300;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal.show {
-            display: flex;
-        }
-        .modal-content {
-            background: var(--bgm);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 1.2rem;
-            max-width: 450px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: slideIn .3s ease;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--br);
-            padding-bottom: 0.3rem;
-            margin-bottom: 0.6rem;
-        }
-        .modal-header h3 {
-            color: var(--gold);
-            font-size: .9rem;
-            margin: 0;
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--ts);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: .3s;
-        }
-        .modal-close:hover {
-            transform: rotate(90deg);
-            color: var(--rd);
-        }
-        .form-group {
-            margin-bottom: 0.5rem;
-        }
-        .form-group label {
-            display: block;
-            font-size: .6rem;
-            color: var(--ts);
-            margin-bottom: 0.1rem;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.3rem 0.5rem;
-            background: var(--bg);
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            color: var(--tp);
-            font-size: .7rem;
-            outline: none;
-            font-family: inherit;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: var(--neon);
-        }
-        .form-group textarea {
-            min-height: 50px;
-            resize: vertical;
-        }
-        .btn {
-            background: var(--g);
-            border: none;
-            color: #fff;
-            padding: 0.3rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: .7rem;
-            transition: .3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        .btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-        }
-        .btn-gold {
-            background: var(--gold);
-            color: #000;
-        }
-        .btn-gold:hover {
-            background: #d4a800;
-        }
-        .btn-danger {
-            background: var(--rd);
-        }
-        .btn-danger:hover {
-            background: #e74c3c;
-        }
-        .btn-block {
-            width: 100%;
-            justify-content: center;
-        }
-        .btn-neon {
-            background: var(--neon);
-            color: #000;
-            border: 1px solid var(--neon);
-            animation: neonPulse 2s infinite;
-        }
-        .btn-neon:hover {
-            background: #2a8a1a;
-            color: #fff;
-        }
-
-        /* ============================================================
-        📨 INBOX
-        ============================================================ */
-        .inbox-item {
-            background: var(--bgp);
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            padding: 0.3rem 0.5rem;
-            margin-bottom: 0.3rem;
-            cursor: pointer;
-            transition: .3s;
-        }
-        .inbox-item:hover {
-            border-color: var(--neon);
-        }
-        .inbox-item.unread {
-            border-right: 3px solid var(--gold);
-        }
-        .inbox-item .inbox-hdr {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .inbox-item .inbox-from {
-            font-weight: 700;
-            font-size: .65rem;
-            color: var(--neon);
-        }
-        .inbox-item .inbox-from .badge-special {
-            color: var(--gold);
-            font-size: .4rem;
-        }
-        .inbox-item .inbox-subject {
-            font-size: .55rem;
-            color: var(--tp);
-        }
-        .inbox-item .inbox-date {
-            font-size: .4rem;
-            color: var(--ts);
-        }
-        .inbox-item .inbox-body {
-            display: none;
-            padding-top: 0.3rem;
-            margin-top: 0.3rem;
-            border-top: 1px solid var(--br);
-            font-size: .6rem;
-            color: var(--tp);
-            line-height: 1.6;
-        }
-        .inbox-item .inbox-body.show {
-            display: block;
-        }
-        .inbox-item .inbox-delete {
-            background: none;
-            border: none;
-            color: var(--ts);
-            cursor: pointer;
-            font-size: .5rem;
-            transition: .3s;
-        }
-        .inbox-item .inbox-delete:hover {
-            color: var(--rd);
-        }
-        .inbox-item .inbox-btn-action {
-            background: var(--neon);
-            border: none;
-            color: #000;
-            padding: 0.1rem 0.6rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: .5rem;
-            margin-top: 0.2rem;
-            transition: .3s;
-        }
-        .inbox-item .inbox-btn-action:hover {
-            transform: scale(1.05);
-        }
-
-        /* ============================================================
-        🔔 NOTIFICATION
-        ============================================================ */
-        .notification {
-            position: fixed;
-            top: 70px;
-            left: 20px;
-            z-index: 400;
-            background: var(--bgm);
-            border: 2px solid var(--neon);
-            border-radius: 10px;
-            padding: 0.6rem 1rem;
-            max-width: 340px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
-            animation: slideIn .3s ease;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-        .notification .notif-icon {
-            font-size: 1.5rem;
-            color: var(--gold);
-            animation: float 2s ease-in-out infinite;
-        }
-        .notification .notif-content {
-            flex: 1;
-        }
-        .notification .notif-title {
-            font-size: .65rem;
-            font-weight: 700;
-            color: var(--neon);
-        }
-        .notification .notif-body {
-            font-size: .55rem;
-            color: var(--ts);
-            line-height: 1.6;
-        }
-        .notification .notif-close {
-            background: none;
-            border: none;
-            color: var(--ts);
-            cursor: pointer;
-            font-size: .8rem;
-            transition: .3s;
-        }
-        .notification .notif-close:hover {
-            transform: rotate(90deg);
-            color: var(--rd);
-        }
-        .notification.hide {
-            display: none;
-        }
-
-        /* ============================================================
-        👤 USER PANEL
-        ============================================================ */
-        #userPanel {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 340px;
-            background: var(--bgm);
-            border-left: 1px solid var(--br);
-            padding: 1.2rem 1rem;
-            z-index: 200;
-            overflow-y: auto;
-            box-shadow: -4px 0 20px rgba(0, 0, 0, .4);
-            animation: slideIn .25s;
-        }
-        #userPanel.show {
-            display: block;
-        }
-        #userPanel .close {
-            position: absolute;
-            top: 0.5rem;
-            left: 0.8rem;
-            background: none;
-            border: none;
-            color: var(--ts);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: .3s;
-        }
-        #userPanel .close:hover {
-            transform: rotate(90deg);
-        }
-        #userPanel .profile-header {
-            text-align: center;
-            border-bottom: 1px solid var(--br);
-            padding-bottom: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        #userPanel .profile-header .avatar {
-            font-size: 3.5rem;
-            display: block;
-            margin-bottom: 0.1rem;
-            animation: float 3s ease-in-out infinite;
-        }
-        #userPanel .profile-header .name {
-            font-size: .9rem;
-            font-weight: 700;
-        }
-        #userPanel .profile-header .name .special-star {
-            color: var(--gold);
-            font-size: .7rem;
-            animation: glowPulse 1.5s infinite;
-        }
-        #userPanel .profile-header .level {
-            color: var(--gold);
-            font-size: .6rem;
-            display: block;
-        }
-        #userPanel .profile-header .level .rank-badge {
-            background: var(--gold);
-            color: #000;
-            padding: 0.05rem 0.3rem;
-            border-radius: 8px;
-            font-size: .5rem;
-        }
-        #userPanel .profile-header .xp {
-            color: var(--ts);
-            font-size: .5rem;
-            display: block;
-        }
-        #userPanel .profile-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.2rem;
-            margin-bottom: 0.5rem;
-        }
-        #userPanel .profile-stats .stat {
-            background: var(--bg);
-            border: 1px solid var(--br);
-            border-radius: 4px;
-            padding: 0.2rem;
-            text-align: center;
-            transition: .3s;
-        }
-        #userPanel .profile-stats .stat:hover {
-            border-color: var(--neon);
-        }
-        #userPanel .profile-stats .stat .num {
-            font-size: .85rem;
-            font-weight: 900;
-            color: var(--tp);
-            font-family: monospace;
-        }
-        #userPanel .profile-stats .stat .label {
-            font-size: .4rem;
-            color: var(--ts);
-        }
-        #userPanel .avatar-select {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 0.3rem 0;
-        }
-        #userPanel .avatar-select .av-item {
-            font-size: 1.8rem;
-            cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 50%;
-            padding: 0.05rem;
-            transition: .3s;
-        }
-        #userPanel .avatar-select .av-item:hover {
-            border-color: var(--neon);
-            transform: scale(1.1);
-        }
-        #userPanel .avatar-select .av-item.active {
-            border-color: var(--am);
-        }
-        #userPanel .profile-edit {
-            width: 100%;
-            padding: 0.2rem;
-            background: var(--am);
-            border: none;
-            border-radius: 4px;
-            color: #1a1000;
-            font-weight: 700;
-            font-size: .6rem;
-            cursor: pointer;
-            transition: .3s;
-        }
-        #userPanel .profile-edit:hover {
-            transform: scale(1.02);
-        }
-        #userPanel .switch-link {
-            color: var(--ts);
-            font-size: .5rem;
-            text-align: center;
-            margin-top: 0.2rem;
-            cursor: pointer;
-            transition: .3s;
-        }
-        #userPanel .switch-link:hover {
-            color: var(--neon);
-        }
-        #userPanel .form-group input {
-            width: 100%;
-            padding: 0.2rem 0.4rem;
-            background: var(--bg);
-            border: 1px solid var(--br);
-            border-radius: 3px;
-            color: var(--tp);
-            font-size: .65rem;
-            outline: none;
-        }
-        #userPanel .form-group input:focus {
-            border-color: var(--neon);
-        }
-
-        /* ============================================================
-        🤖 PIE LAUNCHER (Tutorial)
-        ============================================================ */
-        .pie-launcher {
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--bgp);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            padding: 0.4rem 0.6rem;
-            margin-bottom: 0.4rem;
-            border-right: 3px solid var(--gold);
-        }
-        .pie-launcher .avatar {
-            font-size: 2rem;
-            animation: float 2s ease-in-out infinite;
-        }
-        .pie-launcher .content {
-            flex: 1;
-        }
-        .pie-launcher .name {
-            font-size: .6rem;
-            font-weight: 700;
-            color: var(--gold);
-        }
-        .pie-launcher .text {
-            font-size: .55rem;
-            color: var(--ts);
-            line-height: 1.6;
-        }
-        .pie-launcher .btn-close-tip {
-            background: none;
-            border: none;
-            color: var(--ts);
-            cursor: pointer;
-            font-size: .8rem;
-            transition: .3s;
-        }
-        .pie-launcher .btn-close-tip:hover {
-            transform: rotate(90deg);
-            color: var(--rd);
-        }
-        .pie-launcher .btn-start-tutorial {
-            background: var(--neon);
-            border: none;
-            color: #000;
-            padding: 0.1rem 0.6rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: .5rem;
-            transition: .3s;
-        }
-        .pie-launcher .btn-start-tutorial:hover {
-            transform: scale(1.05);
-        }
-
-        /* ============================================================
-        📱 RESPONSIVE
-        ============================================================ */
-        @media(max-width:600px) {
-            .hdr-left h1 {
-                font-size: .8rem;
-            }
-            .hdr-left .sub {
-                font-size: .4rem;
-            }
-            #content {
-                padding: 0.4rem;
-                padding-bottom: 75px;
-            }
-            .post-hdr .title {
-                font-size: .7rem;
-            }
-            #userPanel {
-                width: 100%;
-            }
-            .ai-grid {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            }
-            .games-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            .fab {
-                bottom: 70px;
-                left: 10px;
-                width: 44px;
-                height: 44px;
-                font-size: 1rem;
-            }
-            .notification {
-                left: 10px;
-                right: 10px;
-                max-width: none;
-            }
-            .defense-anim {
-                height: 40px;
-            }
-            .defense-anim .car {
-                font-size: 1.4rem;
-            }
-            .defense-anim .missile {
-                font-size: 1rem;
-            }
-            .defense-anim .radar {
-                font-size: 1.2rem;
-            }
-        }
-        @media(max-width:400px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .modal-content {
-                padding: 0.8rem;
-            }
-        }
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:600px){
+            .hdr-left h1{font-size:.8rem}.hdr-left .sub{font-size:.4rem}#content{padding:0.4rem 0.4rem 75px}
+            .post-hdr .title{font-size:.7rem}#userPanel{width:100%}.ai-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+            .games-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+            .fab{bottom:70px;left:10px;width:44px;height:44px;font-size:1rem}
+            .notification{left:10px;right:10px;max-width:none}.defense-anim{height:40px}
+            .defense-anim .car{font-size:1.4rem}.defense-anim .missile{font-size:1rem}.defense-anim .radar{font-size:1.2rem}
+        }
+        @media(max-width:400px){.stats-grid{grid-template-columns:1fr 1fr}.modal-content{padding:0.8rem}}
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    📌 HEADER
-    ============================================================ -->
+    <!-- ===== HEADER ===== -->
     <div id="header">
         <div style="max-width:800px;margin:0 auto">
-            <div class="hdr-top">
-                <span>SYS // PADAFAND v10.0</span>
-                <div class="online"><span class="dot"></span><span>آنلاین</span></div>
-            </div>
+            <div class="hdr-top"><span>SYS // PADAFAND v10.0</span><div class="online"><span class="dot"></span><span>آنلاین</span></div></div>
             <div class="hdr-main">
-                <div class="hdr-left">
-                    <span class="icon"><i class="fas fa-shield-alt"></i></span>
-                    <div>
-                        <h1><span>پدافند</span> شبهات</h1>
-                        <div class="sub">قرارگاه پاسخگویی به شبهات</div>
-                    </div>
-                </div>
+                <div class="hdr-left"><span class="icon"><i class="fas fa-shield-alt"></i></span><div><h1><span>پدافند</span> شبهات</h1><div class="sub">قرارگاه پاسخگویی به شبهات</div></div></div>
                 <div class="hdr-right">
                     <button class="theme-btn" onclick="cycleTheme()"><i class="fas fa-adjust"></i></button>
-                    <button class="inbox-btn" onclick="openInbox()" id="inboxBtn">
-                        <i class="fas fa-envelope"></i>
-                        <span class="badge" id="inboxBadge" style="display:none">0</span>
-                    </button>
-                    <div class="user-badge" onclick="toggleUserPanel()">
-                        <span class="avatar" id="headerAvatar"><i class="fas fa-user"></i></span>
-                        <span id="headerName">ورود</span>
-                        <span class="level" id="headerLevel"></span>
-                    </div>
+                    <button class="inbox-btn" onclick="openInbox()" id="inboxBtn"><i class="fas fa-envelope"></i><span class="badge" id="inboxBadge" style="display:none">0</span></button>
+                    <div class="user-badge" onclick="toggleUserPanel()"><span class="avatar" id="headerAvatar"><i class="fas fa-user"></i></span><span id="headerName">ورود</span><span class="level" id="headerLevel"></span></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ============================================================
-    🔍 SEARCH
-    ============================================================ -->
-    <div id="search-section">
-        <div class="search-wrap">
-            <i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i>
-            <input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()">
-            <button onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button>
-        </div>
-    </div>
+    <!-- ===== SEARCH ===== -->
+    <div id="search-section"><div class="search-wrap"><i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i><input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()"><button onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
 
-    <!-- ============================================================
-    🧭 MAIN NAV
-    ============================================================ -->
-    <nav id="main-nav">
-        <div class="nav-inner">
-            <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
-            <button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button>
-            <button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button>
-            <button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button>
-            <button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button>
-            <button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button>
-        </div>
-    </nav>
+    <!-- ===== NAV ===== -->
+    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
 
-    <!-- ============================================================
-    📌 FAB
-    ============================================================ -->
-    <button class="fab" onclick="openSendToCommand()">
-        <i class="fas fa-pen"></i>
-        <span class="tooltip">ارسال شبهه</span>
-    </button>
+    <!-- ===== FAB ===== -->
+    <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
 
-    <!-- ============================================================
-    📱 SIDEBAR NAV (Mobile)
-    ============================================================ -->
+    <!-- ===== SIDEBAR NAV (Mobile) ===== -->
     <div class="sidebar-nav" id="sidebarNav">
         <button class="nav-item active" onclick="switchPage('home')"><i class="fas fa-home"></i><span>خانه</span></button>
         <button class="nav-item" onclick="switchPage('posts')"><i class="fas fa-list"></i><span>شبهات</span></button>
@@ -1630,262 +308,64 @@
         <button class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></button>
     </div>
 
-    <!-- ============================================================
-    📄 CONTENT
-    ============================================================ -->
+    <!-- ===== CONTENT ===== -->
     <div id="content">
 
-        <!-- ===== HOME PAGE ===== -->
+        <!-- HOME -->
         <div id="page-home" class="page active">
             <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
-
             <!-- Pie Launcher -->
-            <div class="pie-launcher" id="pieLauncher">
-                <span class="avatar">🤖</span>
-                <div class="content">
-                    <div class="name">🎯 پای لانچر</div>
-                    <div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div>
-                </div>
-                <button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button>
-                <button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button>
-            </div>
-
+            <div class="pie-launcher" id="pieLauncher"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
             <!-- Stats -->
-            <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem">
-                <span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span>
-                <span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span>
-                <span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span>
-                <span><i class="fas fa-star"></i> <b id="specialCount">0</b> سردار</span>
-            </div>
-
+            <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span><span><i class="fas fa-star"></i> <b id="specialCount">0</b> سردار</span></div>
             <!-- Random Shobe -->
-            <div class="random-box" onclick="showRandomShobe()">
-                <div class="title"><i class="fas fa-random"></i> شبهه تصادفی</div>
-                <div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div>
-            </div>
-
+            <div class="random-box" onclick="showRandomShobe()"><div class="title"><i class="fas fa-random"></i> شبهه تصادفی</div><div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div></div>
             <!-- Welcome -->
-            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)">
-                <div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div>
-                <p style="color:var(--ts);font-size:.7rem;line-height:1.8">
-                    به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br>
-                    <span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span>
-                </p>
-            </div>
-
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)"><div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div><p style="color:var(--ts);font-size:.7rem;line-height:1.8">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br><span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span></p></div>
             <!-- Latest Posts -->
-            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem">
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem">
-                    <span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span>
-                    <button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button>
-                </div>
-                <div id="homePosts" style="margin-top:0.2rem"></div>
-            </div>
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div><div id="homePosts" style="margin-top:0.2rem"></div></div>
         </div>
 
-        <!-- ===== POSTS PAGE ===== -->
-        <div id="page-posts" class="page">
-            <div class="page-title"><i class="fas fa-list"></i> شبهات</div>
-            <div id="postContainer"></div>
-        </div>
+        <!-- POSTS -->
+        <div id="page-posts" class="page"><div class="page-title"><i class="fas fa-list"></i> شبهات</div><div id="postContainer"></div></div>
 
-        <!-- ===== GAMES PAGE ===== -->
-        <div id="page-games" class="page">
-            <div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div>
-            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center">
-                <p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> هر بازی به شما بین ۵ تا ۱۵ امتیاز XP میدهد</p>
-            </div>
-            <div class="games-grid" id="gamesGrid"></div>
-        </div>
+        <!-- GAMES -->
+        <div id="page-games" class="page"><div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center"><p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> هر بازی به شما بین ۵ تا ۱۵ امتیاز XP میدهد</p></div><div class="games-grid" id="gamesGrid"></div></div>
 
-        <!-- ===== AI PAGE ===== -->
-        <div id="page-ai" class="page">
-            <div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div>
-            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.4rem;border-right:2px solid var(--am)">
-                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-info-circle" style="color:var(--am)"></i> تا زمانی که هوش مصنوعی اختصاصی قرارگاه راه‌اندازی شود، از ابزارهای زیر استفاده کنید.</p>
-            </div>
-            <div class="ai-grid">
-                <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ‌های دقیق</span></a>
-                <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a>
-                <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">مکالمه طبیعی</span></a>
-                <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a>
-                <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">تخصصی اسلامی</span></a>
-                <a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">جستجوی هوشمند</span></a>
-            </div>
-        </div>
+        <!-- AI -->
+        <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.4rem;border-right:2px solid var(--am)"><p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-info-circle" style="color:var(--am)"></i> تا زمانی که هوش مصنوعی اختصاصی قرارگاه راه‌اندازی شود، از ابزارهای زیر استفاده کنید.</p></div><div class="ai-grid"><a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ‌های دقیق</span></a><a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a><a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">مکالمه طبیعی</span></a><a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a><a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">تخصصی اسلامی</span></a><a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">جستجوی هوشمند</span></a></div></div>
 
-        <!-- ===== SAVED PAGE ===== -->
-        <div id="page-saved" class="page">
-            <div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div>
-            <div id="savedContainer"></div>
-        </div>
+        <!-- SAVED -->
+        <div id="page-saved" class="page"><div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div><div id="savedContainer"></div></div>
 
     </div>
 
-    <!-- ============================================================
-    📦 MODALS
-    ============================================================ -->
+    <!-- ===== MODALS ===== -->
+    <!-- Send to Command -->
+    <div class="modal" id="sendToCommandModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3><button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button></div><div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div><div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"><div class="form-group"><label>دسته‌بندی</label><select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select></div><div class="form-group"><label>اولویت</label><select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div></div><button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button><div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div></div></div>
 
-    <!-- Send to Command Modal -->
-    <div class="modal" id="sendToCommandModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3>
-                <button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button>
-            </div>
-            <div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div>
-            <div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem">
-                <div class="form-group"><label>دسته‌بندی</label>
-                    <select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select>
-                </div>
-                <div class="form-group"><label>اولویت</label>
-                    <select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select>
-                </div>
-            </div>
-            <button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button>
-            <div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div>
-        </div>
-    </div>
+    <!-- Login -->
+    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور"></div><button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button><div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div></div><div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div></div></div>
 
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3>
-                <button class="modal-close" onclick="closeModal('loginModal')">×</button>
-            </div>
-            <div id="loginForm">
-                <div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" placeholder="نام کاربری"></div>
-                <div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="رمز عبور"></div>
-                <button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button>
-                <button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button>
-            </div>
-            <div id="registerForm" style="display:none">
-                <div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div>
-                <div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div>
-                <div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div>
-                <div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور"></div>
-                <button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button>
-                <div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div>
-            </div>
-            <div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div>
-        </div>
-    </div>
+    <!-- Inbox -->
+    <div class="modal" id="inboxModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-envelope"></i> صندوق پیام‌ها <span id="inboxCount" style="font-size:.5rem;color:var(--ts)"></span></h3><button class="modal-close" onclick="closeModal('inboxModal')">×</button></div><div id="inboxContainer" style="max-height:400px;overflow-y:auto"></div></div></div>
 
-    <!-- Inbox Modal -->
-    <div class="modal" id="inboxModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-envelope"></i> صندوق پیام‌ها <span id="inboxCount" style="font-size:.5rem;color:var(--ts)"></span></h3>
-                <button class="modal-close" onclick="closeModal('inboxModal')">×</button>
-            </div>
-            <div id="inboxContainer" style="max-height:400px;overflow-y:auto"></div>
-        </div>
-    </div>
+    <!-- Tutorial -->
+    <div class="modal" id="tutorialModal"><div class="modal-content" style="max-width:600px"><div class="modal-header"><h3><i class="fas fa-graduation-cap"></i> آموزش قرارگاه</h3><button class="modal-close" onclick="closeModal('tutorialModal')">×</button></div><div id="tutorialContent" style="min-height:200px"><div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div></div></div></div>
 
-    <!-- Tutorial Modal -->
-    <div class="modal" id="tutorialModal">
-        <div class="modal-content" style="max-width:600px">
-            <div class="modal-header">
-                <h3><i class="fas fa-graduation-cap"></i> آموزش قرارگاه</h3>
-                <button class="modal-close" onclick="closeModal('tutorialModal')">×</button>
-            </div>
-            <div id="tutorialContent" style="min-height:200px">
-                <div style="text-align:center;padding:0.5rem">
-                    <div style="font-size:3rem;margin-bottom:0.5rem">🤖</div>
-                    <h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3>
-                    <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
-                        میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>
-                        با من همراه باش تا همه بخش‌ها رو یاد بگیری.
-                    </p>
-                    <button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ===== USER PANEL ===== -->
+    <div id="userPanel"><button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button><div class="profile-header"><span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span><div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div><span class="level" id="profileLevel">سرباز</span><span class="xp" id="profileXP">XP: 0</span></div><div class="avatar-select" id="avatarSelect"><span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span><span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span><span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span><span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span><span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span><span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span><span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span><span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span><span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span><span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span><span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span><span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span><span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span><span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span></div><div class="profile-stats"><div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div><div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div><div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div><div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div></div><div id="userInfo" style="display:none"><button class="profile-edit" onclick="openInbox()" style="background:var(--gold);margin-bottom:0.2rem"><i class="fas fa-envelope"></i> صندوق پیام</button><button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff"><i class="fas fa-sign-out-alt"></i> خروج</button></div><div id="userNotLogged" style="display:block"><button class="profile-edit" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> ورود / ثبت‌نام</button></div></div>
 
-    <!-- ============================================================
-    👤 USER PANEL
-    ============================================================ -->
-    <div id="userPanel">
-        <button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button>
-        <div class="profile-header">
-            <span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span>
-            <div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div>
-            <span class="level" id="profileLevel">سرباز</span>
-            <span class="xp" id="profileXP">XP: 0</span>
-        </div>
-        <div class="avatar-select" id="avatarSelect">
-            <span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span>
-            <span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span>
-            <span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span>
-            <span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span>
-            <span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span>
-            <span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span>
-            <span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span>
-            <span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span>
-            <span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span>
-            <span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span>
-            <span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span>
-            <span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span>
-            <span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span>
-            <span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span>
-            <span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span>
-        </div>
-        <div class="profile-stats">
-            <div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div>
-            <div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div>
-            <div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div>
-            <div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div>
-        </div>
-        <div id="userInfo" style="display:none">
-            <button class="profile-edit" onclick="openInbox()" style="background:var(--gold);margin-bottom:0.2rem"><i class="fas fa-envelope"></i> صندوق پیام</button>
-            <button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff"><i class="fas fa-sign-out-alt"></i> خروج</button>
-        </div>
-        <div id="userNotLogged" style="display:block">
-            <button class="profile-edit" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> ورود / ثبت‌نام</button>
-        </div>
-    </div>
-
-    <!-- ============================================================
-    🦶 FOOTER
-    ============================================================ -->
-    <footer id="footer">
-        <div class="foot-inner">
-            <div class="foot-links">
-                <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a>
-                <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
-                <a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a>
-            </div>
-            <div class="foot-copy">PADAFAND v10.0</div>
-        </div>
-        <div class="defense-anim">
-            <div class="car">🚛<span>پدافند شبهات</span></div>
-            <div class="missile">🚀</div>
-            <div class="missile">🚀</div>
-            <div class="missile">🚀</div>
-            <div class="radar">📡</div>
-            <div class="jet">✈️</div>
-            <div class="jet">✈️</div>
-            <div class="neon-line"></div>
-        </div>
-    </footer>
+    <!-- ===== FOOTER ===== -->
+    <footer id="footer"><div class="foot-inner"><div class="foot-links"><a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a><a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a><a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a></div><div class="foot-copy">PADAFAND v10.0</div></div><div class="defense-anim"><div class="car">🚛<span>پدافند شبهات</span></div><div class="missile">🚀</div><div class="missile">🚀</div><div class="missile">🚀</div><div class="radar">📡</div><div class="jet">✈️</div><div class="jet">✈️</div><div class="neon-line"></div></div></footer>
 
     <script>
         // ============================================================
-        // 🔗 SUPABASE CONFIGURATION
+        // 🔗 SUPABASE CONFIG
         // ============================================================
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
-
-        // ============================================================
-        // 📧 EMAILJS CONFIGURATION
-        // ============================================================
-        const EMAILJS_SERVICE_ID = 'service_c8bgjtx';
-        const EMAILJS_TEMPLATE_ID = 'template_vzufaw2';
-        const EMAILJS_PUBLIC_KEY = 'kC1hLXh3iVRrHFACO';
 
         // ============================================================
         // 📦 SUPABASE HELPERS
@@ -1893,72 +373,48 @@
         async function loadFromSupabase(table) {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
                 return await res.json();
-            } catch (e) {
-                console.error('❌ خطا در بارگذاری:', e);
-                return [];
-            }
+            } catch (e) { console.error('❌ خطا در بارگذاری:', e); return []; }
         }
 
         async function saveToSupabase(table, data) {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
                     method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 return await res.json();
-            } catch (e) {
-                console.error('❌ خطا در ذخیره:', e);
-                return null;
-            }
+            } catch (e) { console.error('❌ خطا در ذخیره:', e); return null; }
         }
 
         async function updateInSupabase(table, id, data) {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
                     method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 return await res.json();
-            } catch (e) {
-                console.error('❌ خطا در بروزرسانی:', e);
-                return null;
-            }
+            } catch (e) { console.error('❌ خطا در بروزرسانی:', e); return null; }
         }
 
         async function deleteFromSupabase(table, id) {
             try {
                 await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
                 return true;
-            } catch (e) {
-                console.error('❌ خطا در حذف:', e);
-                return false;
-            }
+            } catch (e) { console.error('❌ خطا در حذف:', e); return false; }
         }
 
         // ============================================================
-        // 👤 SPECIAL USERS (سرداران)
+        // 👤 SPECIAL USERS
         // ============================================================
         const SPECIAL_USERS = {
             "09945740006": { name: "محمد جواد خیاط زاده", rank: "سردار", xp: 1000 },
@@ -1969,40 +425,29 @@
 
         function checkSpecialUser(phone, fullname) {
             if (SPECIAL_USERS[phone]) return SPECIAL_USERS[phone];
-            for (let key in SPECIAL_USERS) {
-                if (SPECIAL_USERS[key].name === fullname) return SPECIAL_USERS[key];
-            }
+            for (let key in SPECIAL_USERS) { if (SPECIAL_USERS[key].name === fullname) return SPECIAL_USERS[key]; }
             return null;
         }
 
         // ============================================================
         // 📊 DATA
         // ============================================================
-        let allPosts = [];
-        let allUsers = {};
-        let allMessages = [];
-        let allInbox = {};
-        let loggedUser = null;
-        let selectedAvatar = 'fa-user';
-        let tutorialStep = 0;
-        let tutorialActive = false;
-
-        const LEVELS = [
-            { name: 'سرباز', xp: 0 },
-            { name: 'سرجوخه', xp: 30 },
-            { name: 'گروهبان', xp: 80 },
-            { name: 'سروان', xp: 150 },
-            { name: 'سرگرد', xp: 250 },
-            { name: 'سرهنگ', xp: 400 },
-            { name: 'سردار', xp: 600 }
-        ];
+        let allPosts = [],
+            allUsers = {},
+            allMessages = [],
+            allInbox = {},
+            allSaved = [];
+        let loggedUser = null,
+            selectedAvatar = 'fa-user',
+            tutorialStep = 0,
+            tutorialActive = false;
+        const LEVELS = [{ name: 'سرباز', xp: 0 }, { name: 'سرجوخه', xp: 30 }, { name: 'گروهبان', xp: 80 },
+        { name: 'سروان', xp: 150 }, { name: 'سرگرد', xp: 250 }, { name: 'سرهنگ', xp: 400 }, { name: 'سردار', xp: 600 }];
 
         function getUserLevel(xp, isSpecial) {
             if (isSpecial) return { name: '🎖️ سردار', xp: 0 };
             let level = LEVELS[0];
-            for (let l of LEVELS) {
-                if (xp >= l.xp) level = l;
-            }
+            for (let l of LEVELS) { if (xp >= l.xp) level = l; }
             return level;
         }
 
@@ -2024,9 +469,7 @@
         async function loadAllData() {
             const users = await loadFromSupabase('users');
             allUsers = {};
-            users.forEach(u => {
-                allUsers[u.username] = u;
-            });
+            users.forEach(u => { allUsers[u.username] = u; });
 
             const posts = await loadFromSupabase('posts');
             allPosts = posts || [];
@@ -2036,15 +479,13 @@
 
             const inbox = await loadFromSupabase('inbox');
             allInbox = {};
-            inbox.forEach(i => {
-                if (!allInbox[i.user]) allInbox[i.user] = [];
-                allInbox[i.user].push(i);
-            });
+            inbox.forEach(i => { if (!allInbox[i.user]) allInbox[i.user] = []; allInbox[i.user].push(i); });
+
+            const saved = await loadFromSupabase('saved');
+            allSaved = saved || [];
 
             const savedUser = localStorage.getItem('padafand_logged_user');
-            if (savedUser && allUsers[savedUser]) {
-                loggedUser = savedUser;
-            }
+            if (savedUser && allUsers[savedUser]) { loggedUser = savedUser; }
 
             renderAll();
             document.getElementById('userCount').textContent = Object.keys(allUsers).length;
@@ -2070,12 +511,8 @@
             themeIndex = themes.indexOf(savedTheme);
             if (themeIndex === -1) themeIndex = 0;
             document.documentElement.setAttribute('data-theme', themes[themeIndex]);
-
             const savedUser = localStorage.getItem('padafand_logged_user');
-            if (savedUser) {
-                loggedUser = savedUser;
-            }
-
+            if (savedUser) { loggedUser = savedUser; }
             loadAllData();
             setTimeout(showWelcomeMessage, 1500);
         });
@@ -2093,7 +530,7 @@
                     from: 'سیستم',
                     from_type: 'system',
                     subject: '🎯 آموزش قرارگاه',
-                    body: `سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.`,
+                    body: 'سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.',
                     read: false,
                     date: new Date().toLocaleString('fa-IR'),
                     has_action: true,
@@ -2104,7 +541,7 @@
                     from: 'سیستم',
                     from_type: 'system',
                     subject: '🎯 آموزش قرارگاه',
-                    body: `سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.`,
+                    body: 'سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.',
                     read: false,
                     date: new Date().toLocaleString('fa-IR'),
                     has_action: true,
@@ -2117,90 +554,48 @@
 
         function openTutorialFromInbox() {
             document.getElementById('tutorialModal').classList.add('show');
-            document.getElementById('tutorialContent').innerHTML = `
-                <div style="text-align:center;padding:0.5rem">
-                    <div style="font-size:3rem;margin-bottom:0.5rem">🤖</div>
-                    <h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3>
-                    <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
-                        میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>
-                        با من همراه باش تا همه بخش‌ها رو یاد بگیری.
-                    </p>
-                    <button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button>
-                </div>
-            `;
+            document.getElementById('tutorialContent').innerHTML =
+                `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div>`;
         }
 
         function startTutorial() {
             document.getElementById('tutorialModal').classList.add('show');
-            document.getElementById('tutorialContent').innerHTML = `
-                <div style="text-align:center;padding:0.5rem">
-                    <div style="font-size:3rem;margin-bottom:0.5rem">🤖</div>
-                    <h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3>
-                    <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
-                        میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>
-                        با من همراه باش تا همه بخش‌ها رو یاد بگیری.
-                    </p>
-                    <button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button>
-                </div>
-            `;
+            document.getElementById('tutorialContent').innerHTML =
+                `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div>`;
         }
 
         const tutorialSteps = [
-            { title: '🏠 صفحه اصلی', desc: 'اینجا همه چیز شروع میشه. میتونی آخرین شبهات رو ببینی و با محیط آشنا بشی.', icon: 'fa-home' },
+            { title: '🏠 صفحه اصلی', desc: 'اینجا همه چیز شروع میشه. میتونی آخرین شبهات رو ببینی و با محیط آشنا بشی.',
+            icon: 'fa-home' },
             { title: '📝 شبهات', desc: 'همه شبهات اینجا جمع شدن. میتونی بخونی، لایک کنی و نظر بدی.', icon: 'fa-list' },
-            { title: '🎮 بازی‌ها', desc: 'با بازی کردن هم سرگرم میشی هم XP میگیری. هر بازی ۵ تا ۱۵ XP داره.', icon: 'fa-gamepad' },
+            { title: '🎮 بازی‌ها', desc: 'با بازی کردن هم سرگرم میشی هم XP میگیری. هر بازی ۵ تا ۱۵ XP داره.',
+            icon: 'fa-gamepad' },
             { title: '🤖 هوش مصنوعی', desc: 'از ابزارهای هوش مصنوعی برای پاسخ به شبهات استفاده کن.', icon: 'fa-robot' },
             { title: '📦 جعبه مهمات', desc: 'مطالب مورد علاقت رو اینجا ذخیره کن تا هر وقت خواستی بخونیش.', icon: 'fa-box' },
-            { title: '📨 ارسال به فرماندهی', desc: 'اگه شبهه‌ای دیدی که نتونستی پاسخ بدی، بفرستش به فرماندهی.', icon: 'fa-paper-plane' },
+            { title: '📨 ارسال به فرماندهی', desc: 'اگه شبهه‌ای دیدی که نتونستی پاسخ بدی، بفرستش به فرماندهی.',
+                icon: 'fa-paper-plane' },
             { title: '👤 پروفایل', desc: 'اینجا میتونی آواتار انتخاب کنی، XP و سطح خودت رو ببینی.', icon: 'fa-user' },
-            { title: '🎯 تمام!', desc: 'تبریک! حالا با همه بخش‌های قرارگاه آشنا شدی. موفق باشی سرباز! 💪', icon: 'fa-flag-checkered' }
+            { title: '🎯 تمام!', desc: 'تبریک! حالا با همه بخش‌های قرارگاه آشنا شدی. موفق باشی سرباز! 💪',
+                icon: 'fa-flag-checkered' }
         ];
 
-        function startTutorialSteps() {
-            tutorialStep = 0;
+        function startTutorialSteps() { tutorialStep = 0;
             tutorialActive = true;
-            showTutorialStep();
-        }
+            showTutorialStep(); }
 
         function showTutorialStep() {
             if (tutorialStep >= tutorialSteps.length) {
-                document.getElementById('tutorialContent').innerHTML = `
-                    <div style="text-align:center;padding:0.5rem">
-                        <div style="font-size:3rem;margin-bottom:0.5rem">🎖️</div>
-                        <h3 style="color:var(--gold)">آموزش کامل شد!</h3>
-                        <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
-                            حالا با همه بخش‌های قرارگاه آشنا شدی.<br>
-                            برو و از امکانات استفاده کن. موفق باشی سرباز! 💪
-                        </p>
-                        <button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button>
-                    </div>
-                `;
+                document.getElementById('tutorialContent').innerHTML =
+                    `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🎖️</div><h3 style="color:var(--gold)">آموزش کامل شد!</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">حالا با همه بخش‌های قرارگاه آشنا شدی.<br>برو و از امکانات استفاده کن. موفق باشی سرباز! 💪</p><button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button></div>`;
                 tutorialActive = false;
                 return;
             }
-
             const step = tutorialSteps[tutorialStep];
-            document.getElementById('tutorialContent').innerHTML = `
-                <div style="text-align:center;padding:0.5rem">
-                    <div style="font-size:2.5rem;margin-bottom:0.5rem"><i class="fas ${step.icon}"></i></div>
-                    <h3 style="color:var(--gold)">${step.title}</h3>
-                    <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
-                        ${step.desc}
-                    </p>
-                    <div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem">
-                        ${tutorialStep > 0 ? `<button class="btn btn-sm" onclick="tutorialStep--;showTutorialStep()"><i class="fas fa-chevron-right"></i> قبلی</button>` : ''}
-                        <button class="btn btn-neon" onclick="tutorialStep++;showTutorialStep()">
-                            ${tutorialStep === tutorialSteps.length - 1 ? '🎯 پایان' : 'بعدی →'}
-                        </button>
-                    </div>
-                    <div style="font-size:.4rem;color:var(--ts);margin-top:0.3rem">${tutorialStep + 1} از ${tutorialSteps.length}</div>
-                </div>
-            `;
+            document.getElementById('tutorialContent').innerHTML =
+                `<div style="text-align:center;padding:0.5rem"><div style="font-size:2.5rem;margin-bottom:0.5rem"><i class="fas ${step.icon}"></i></div><h3 style="color:var(--gold)">${step.title}</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">${step.desc}</p><div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem">${tutorialStep > 0 ? `<button class="btn btn-sm" onclick="tutorialStep--;showTutorialStep()"><i class="fas fa-chevron-right"></i> قبلی</button>` : ''}<button class="btn btn-neon" onclick="tutorialStep++;showTutorialStep()">${tutorialStep === tutorialSteps.length - 1 ? '🎯 پایان' : 'بعدی →'}</button></div><div style="font-size:.4rem;color:var(--ts);margin-top:0.3rem">${tutorialStep + 1} از ${tutorialSteps.length}</div></div>`;
         }
 
-        function closePieLauncher() {
-            document.getElementById('pieLauncher').style.display = 'none';
-        }
+        function closePieLauncher() { document.getElementById('pieLauncher').style.display = 'none'; }
 
         // ============================================================
         // 🧭 NAVIGATION
@@ -2222,9 +617,7 @@
             if (page === 'games') initGames();
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('show');
-        }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
         // ============================================================
         // 📝 POSTS
@@ -2328,13 +721,13 @@
             } else {
                 post.likes++;
                 post.liked_by.push(loggedUser);
-                if (allUsers[loggedUser]) allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
-                await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
+                if (allUsers[loggedUser]) {
+                    allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
+                    await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
+                }
             }
-            await updateInSupabase('posts', post.id, {
-                likes: post.likes,
-                liked_by: post.liked_by
-            });
+            await updateInSupabase('posts', post.id, { likes: post.likes, liked_by: post.liked_by });
+            allPosts[index] = post;
             renderPosts(allPosts);
             updateProfile();
         }
@@ -2370,7 +763,7 @@
         }
 
         // ============================================================
-        // 📦 SAVED (جعبه مهمات) - با Supabase
+        // 📦 SAVED (با Supabase)
         // ============================================================
         async function saveToBox(index) {
             if (!loggedUser) { alert('⚠️ برای ذخیره مطالب وارد حساب خود شوید.'); return; }
@@ -2411,18 +804,18 @@
                 return;
             }
             container.innerHTML = userSaved.map((p, i) => `
-                <div class="saved-item">
-                    <div class="saved-hdr" onclick="toggleSaved(${i})">
-                        <h4><i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}</h4>
-                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    <div class="saved-item">
+                        <div class="saved-hdr" onclick="toggleSaved(${i})">
+                            <h4><i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}</h4>
+                            <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                        </div>
+                        <div class="saved-body" id="savedBody${i}">
+                            <p>${(p.answer || '').replace(/\n/g, '<br>')}</p>
+                            <div style="color:var(--ts);font-size:.5rem"><i class="fas fa-calendar-alt"></i> ${p.saved_at || 'تاریخ نامشخص'}</div>
+                            <button class="del-btn" onclick="removeFromSaved(${i})"><i class="fas fa-trash"></i> حذف</button>
+                        </div>
                     </div>
-                    <div class="saved-body" id="savedBody${i}">
-                        <p>${(p.answer || '').replace(/\n/g, '<br>')}</p>
-                        <div style="color:var(--ts);font-size:.5rem"><i class="fas fa-calendar-alt"></i> ${p.saved_at || 'تاریخ نامشخص'}</div>
-                        <button class="del-btn" onclick="removeFromSaved(${i})"><i class="fas fa-trash"></i> حذف</button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
         }
 
         function toggleSaved(index) {
@@ -2437,10 +830,8 @@
             if (!confirm('مطمئنی حذف کنی؟')) return;
             const saved = await loadFromSupabase('saved');
             const userSaved = saved.filter(s => s.user === loggedUser);
-            if (userSaved[index]) {
-                await deleteFromSupabase('saved', userSaved[index].id);
-                renderSaved();
-            }
+            if (userSaved[index]) { await deleteFromSupabase('saved', userSaved[index].id);
+                renderSaved(); }
         }
 
         // ============================================================
@@ -2450,56 +841,43 @@
             if (allPosts.length > 0) {
                 const random = allPosts[Math.floor(Math.random() * allPosts.length)];
                 document.getElementById('randomShobe').textContent = random.shobe || 'شبهه‌ای یافت نشد';
-            } else {
-                document.getElementById('randomShobe').textContent = 'هنوز شبهه‌ای ثبت نشده است';
-            }
+            } else { document.getElementById('randomShobe').textContent = 'هنوز شبهه‌ای ثبت نشده است'; }
         }
 
         function showRandomShobe() {
             if (allPosts.length > 0) {
                 const random = allPosts[Math.floor(Math.random() * allPosts.length)];
                 alert(`❓ ${random.shobe}\n\n💡 ${random.answer}`);
-            } else {
-                alert('هنوز شبهه‌ای برای نمایش وجود ندارد');
-            }
+            } else { alert('هنوز شبهه‌ای برای نمایش وجود ندارد'); }
         }
 
         function showRandomShobeAfterRegister() {
             if (!allPosts.length) return;
             const random = allPosts[Math.floor(Math.random() * allPosts.length)];
-            const modal = document.getElementById('sendToCommandModal');
-            document.getElementById('sendShobe').value = random.shobe;
-            document.getElementById('sendAnswer').value = random.answer;
             document.querySelector('#sendToCommandModal .modal-header h3').innerHTML =
                 '<i class="fas fa-random"></i> شبهه تصادفی';
-            modal.classList.add('show');
+            document.getElementById('sendShobe').value = random.shobe;
+            document.getElementById('sendAnswer').value = random.answer;
             document.getElementById('sendMsg').textContent = '🎯 این شبهه را بررسی کنید';
             document.getElementById('sendMsg').style.color = '#c8a000';
+            document.getElementById('sendToCommandModal').classList.add('show');
         }
 
         // ============================================================
         // 📨 INBOX
         // ============================================================
         function updateInboxBadge() {
-            if (!loggedUser) {
-                document.getElementById('inboxBadge').style.display = 'none';
-                return;
-            }
+            if (!loggedUser) { document.getElementById('inboxBadge').style.display = 'none'; return; }
             const msgs = allInbox[loggedUser] || [];
             const unread = msgs.filter(m => !m.read).length;
             const badge = document.getElementById('inboxBadge');
-            if (unread > 0) {
-                badge.textContent = unread;
-                badge.style.display = 'block';
-            } else {
-                badge.style.display = 'none';
-            }
+            if (unread > 0) { badge.textContent = unread;
+                badge.style.display = 'block'; } else { badge.style.display = 'none'; }
         }
 
         function openInbox() {
             if (!loggedUser) { alert('⚠️ لطفاً وارد حساب خود شوید'); return; }
-            const modal = document.getElementById('inboxModal');
-            modal.classList.add('show');
+            document.getElementById('inboxModal').classList.add('show');
             renderInbox();
         }
 
@@ -2508,29 +886,27 @@
             const msgs = allInbox[loggedUser] || [];
             const unread = msgs.filter(m => !m.read).length;
             document.getElementById('inboxCount').textContent = `(${unread} خوانده نشده)`;
-
             if (!msgs.length) {
                 container.innerHTML =
                     '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem"><i class="fas fa-inbox"></i> صندوق پیام شما خالی است</div>';
                 return;
             }
-
             container.innerHTML = msgs.slice().reverse().map((m, i) => {
                 const hasAction = m.has_action && m.action === 'tutorial';
                 return `
-                    <div class="inbox-item ${!m.read ? 'unread' : ''}" onclick="toggleInboxItem(${i})">
-                        <div class="inbox-hdr">
-                            <span class="inbox-from">${m.from_type === 'system' ? '📢 ' : '📩 '}${m.from} ${m.from_type === 'system' ? '<span class="badge-special">سیستم</span>' : ''}</span>
-                            <span class="inbox-date">${m.date}</span>
+                        <div class="inbox-item ${!m.read ? 'unread' : ''}" onclick="toggleInboxItem(${i})">
+                            <div class="inbox-hdr">
+                                <span class="inbox-from">${m.from_type === 'system' ? '📢 ' : '📩 '}${m.from} ${m.from_type === 'system' ? '<span class="badge-special">سیستم</span>' : ''}</span>
+                                <span class="inbox-date">${m.date}</span>
+                            </div>
+                            <div class="inbox-subject">${m.subject}</div>
+                            <div class="inbox-body" id="inboxBody${i}">
+                                <p style="white-space:pre-wrap">${m.body}</p>
+                                ${hasAction ? `<button class="inbox-btn-action" onclick="openTutorialFromInbox()"><i class="fas fa-play"></i> شروع آموزش</button>` : ''}
+                                <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
+                            </div>
                         </div>
-                        <div class="inbox-subject">${m.subject}</div>
-                        <div class="inbox-body" id="inboxBody${i}">
-                            <p style="white-space:pre-wrap">${m.body}</p>
-                            ${hasAction ? `<button class="inbox-btn-action" onclick="openTutorialFromInbox()"><i class="fas fa-play"></i> شروع آموزش</button>` : ''}
-                            <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
-                        </div>
-                    </div>
-                `;
+                    `;
             }).join('');
         }
 
@@ -2596,19 +972,15 @@
             document.getElementById('sendMsg').style.color = '#6db33f';
             document.getElementById('sendShobe').value = '';
             document.getElementById('sendAnswer').value = '';
-            setTimeout(() => {
-                closeModal('sendToCommandModal');
-                document.getElementById('sendMsg').textContent = '';
-            }, 1500);
+            setTimeout(() => { closeModal('sendToCommandModal');
+                document.getElementById('sendMsg').textContent = ''; }, 1500);
         }
 
         // ============================================================
         // 👤 USER MANAGEMENT
         // ============================================================
-        function toggleUserPanel() {
-            document.getElementById('userPanel').classList.toggle('show');
-            if (loggedUser) updateProfile();
-        }
+        function toggleUserPanel() { document.getElementById('userPanel').classList.toggle('show'); if (loggedUser)
+            updateProfile(); }
 
         function selectAvatar(el) {
             document.querySelectorAll('.avatar-select .av-item').forEach(a => a.classList.remove('active'));
@@ -2687,7 +1059,7 @@
         }
 
         // ============================================================
-        // 📝 USER REGISTER / LOGIN
+        // 📝 REGISTER / LOGIN
         // ============================================================
         async function userRegister() {
             const fullname = document.getElementById('regFullname').value.trim();
@@ -2704,32 +1076,27 @@
                 document.getElementById('authMsg').style.color = '#c0392b';
                 return;
             }
-
             const existing = await loadFromSupabase('users');
             if (existing.some(u => u.username === username)) {
                 document.getElementById('authMsg').textContent = '⚠️ این نام کاربری قبلاً ثبت شده';
                 document.getElementById('authMsg').style.color = '#c0392b';
                 return;
             }
-
             const special = checkSpecialUser(phone, fullname);
             const isSpecial = !!special;
-
             const userData = {
-                username: username,
-                fullname: fullname,
-                phone: phone,
-                password: password,
+                username,
+                fullname,
+                phone,
+                password,
                 avatar: selectedAvatar,
                 xp: isSpecial ? special.xp : 10,
                 is_special: isSpecial,
                 rank: isSpecial ? 'سردار' : 'سرباز',
                 date: new Date().toLocaleDateString('fa-IR')
             };
-
             await saveToSupabase('users', userData);
             allUsers[username] = userData;
-
             if (isSpecial) {
                 document.getElementById('authMsg').textContent =
                     `🎖️ سردار گرامی ${special.name}، به قرارگاه پدافند شبهات خوش آمدید! ۱۰۰۰ XP دریافت کردید.`;
@@ -2756,7 +1123,6 @@
                     date: new Date().toLocaleString('fa-IR')
                 });
             }
-
             loggedUser = username;
             localStorage.setItem('padafand_logged_user', username);
             closeModal('loginModal');
@@ -2806,8 +1172,8 @@
             const grid = document.getElementById('gamesGrid');
             if (!grid) return;
             const games = [
-                { id: 'shobe_hunter', name: 'شکار شبهه', icon: 'fa-crosshairs', desc: 'به شبهات هدف بزن!', color: '#c0392b',
-                    status: '🎯 تیراندازی' },
+                { id: 'shobe_hunter', name: 'شکار شبهه', icon: 'fa-crosshairs', desc: 'به شبهات هدف بزن!',
+                    color: '#c0392b', status: '🎯 تیراندازی' },
                 { id: 'verbal_defense', name: 'پدافند کلامی', icon: 'fa-shield-alt', desc: 'پاسخ درست رو انتخاب کن',
                     color: '#c8a000', status: '🧠 دانش' },
                 { id: 'truth_warrior', name: 'جنگجوی حقیقت', icon: 'fa-fist-raised', desc: 'شبهه یا واقعیت؟',
@@ -2840,7 +1206,6 @@
                 allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + score;
                 updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
             }
-
             const games = {
                 shobe_hunter: { name: 'شکار شبهه', emoji: '🎯', desc: 'به شبهات هدف بزن و نابودشون کن!' },
                 verbal_defense: { name: 'پدافند کلامی', emoji: '🛡️', desc: 'پاسخ درست رو انتخاب کن و دفاع کن!' },
@@ -2849,14 +1214,9 @@
                 quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۱۰ سوال چهارگزینه‌ای پاسخ بده!' },
                 reaction: { name: 'واکنش سریع', emoji: '⚡', desc: 'هرچه سریعتر پاسخ بده!' }
             };
-
             const g = games[game] || games.shobe_hunter;
             const win = window.open('', '_blank', 'width=650,height=500');
-            if (!win) {
-                alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.');
-                return;
-            }
-
+            if (!win) { alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.'); return; }
             let gameHtml = `
                 <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
                 <head><title>بازی ${g.name}</title>
@@ -3116,25 +1476,6 @@
         }
 
         // ============================================================
-        // 📧 SEND EMAIL (EmailJS)
-        // ============================================================
-        async function sendEmail(to, fullname, subject, message) {
-            try {
-                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                    to_email: to,
-                    fullname: fullname,
-                    subject: subject,
-                    message: message
-                });
-                console.log('✅ ایمیل ارسال شد');
-                return true;
-            } catch (e) {
-                console.error('❌ خطا در ارسال ایمیل:', e);
-                return false;
-            }
-        }
-
-        // ============================================================
         // 🎬 WELCOME MESSAGE
         // ============================================================
         function showWelcomeMessage() {
@@ -3171,20 +1512,14 @@
         // ============================================================
         // 📌 CLOSE MODAL ON OUTSIDE CLICK
         // ============================================================
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal')) {
-                e.target.classList.remove('show');
-            }
-        });
+        document.addEventListener('click', function(e) { if (e.target.classList.contains('modal')) { e.target.classList
+                    .remove('show'); } });
 
         // ============================================================
         // 🔗 COMMAND LINK
         // ============================================================
-        document.getElementById('cmdLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            const win = window.open(this.href, '_blank');
-            if (win) win.focus();
-        });
+        document.getElementById('cmdLink').addEventListener('click', function(e) { e.preventDefault();
+            window.open(this.href, '_blank'); });
     </script>
 </body>
 </html>
