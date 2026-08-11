@@ -18,7 +18,7 @@
   --text-primary:#c8d8e0;
   --text-secondary:#7a9aaa;
   --font-mono:'Courier New',monospace;
-  --neon-glow:#39ff14;
+  --neon:#39ff14;
 }
 [data-theme="light"]{
   --bg-primary:#e8eef0;
@@ -28,7 +28,7 @@
   --neon-green:#2a6a7a;
   --text-primary:#1a2a2e;
   --text-secondary:#4a5a5e;
-  --neon-glow:#2a8a1a;
+  --neon:#2a8a1a;
 }
 body{
   background:var(--bg-primary);
@@ -48,7 +48,7 @@ body{
 @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--neon-green)}50%{box-shadow:0 0 25px var(--neon-green)}}
 @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon-glow),0 0 10px var(--neon-glow)}50%{text-shadow:0 0 20px var(--neon-glow),0 0 40px var(--neon-glow)}}
+@keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon),0 0 10px var(--neon)}50%{text-shadow:0 0 20px var(--neon),0 0 40px var(--neon)}}
 
 #securityPage{
   position:fixed;
@@ -157,7 +157,7 @@ body{
   flex-wrap:wrap;
   gap:0.2rem;
 }
-.top-bar .title{font-size:0.7rem;font-weight:700;letter-spacing:1px;color:var(--neon-green)}
+.top-bar .title{font-size:0.7rem;font-weight:700;letter-spacing:1px;color:var(--neon-green);animation:neonPulse 2s infinite}
 .top-bar .title i{color:var(--gold);margin-left:0.2rem}
 .top-bar .title .sub{font-size:0.35rem;color:var(--text-secondary);font-weight:400;display:block}
 .top-bar .info{display:flex;gap:0.3rem;align-items:center;font-family:var(--font-mono);font-size:0.4rem;color:var(--text-secondary)}
@@ -738,11 +738,11 @@ body{
       <div style="font-size:1.8rem;margin-bottom:0.2rem;color:var(--gold)"><i class="fas fa-gamepad"></i></div>
       <div style="color:var(--text-primary);font-size:0.6rem;font-weight:700;margin-bottom:0.2rem">بازی‌های قرارگاه</div>
       <div class="games-grid">
+        <div class="game-card" onclick="startGame('shobe_hunter')"><span class="icon"><i class="fas fa-crosshairs"></i></span><span class="name">شکار شبهه</span><span class="desc">به شبهات هدف بزن</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
+        <div class="game-card" onclick="startGame('verbal_defense')"><span class="icon"><i class="fas fa-shield-alt"></i></span><span class="name">پدافند کلامی</span><span class="desc">پاسخ درست رو انتخاب کن</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
+        <div class="game-card" onclick="startGame('truth_warrior')"><span class="icon"><i class="fas fa-fist-raised"></i></span><span class="name">جنگجوی حقیقت</span><span class="desc">شبهه یا واقعیت؟</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
         <div class="game-card" onclick="startGame('minesweeper')"><span class="icon"><i class="fas fa-bomb"></i></span><span class="name">مین‌یاب</span><span class="desc">پاکسازی میدان</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
-        <div class="game-card" onclick="startGame('snake')"><span class="icon"><i class="fas fa-crown"></i></span><span class="name">مار جنگی</span><span class="desc">عملیات نفوذ</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
-        <div class="game-card" onclick="startGame('memory')"><span class="icon"><i class="fas fa-brain"></i></span><span class="name">حافظه</span><span class="desc">شناسایی اهداف</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
-        <div class="game-card" onclick="startGame('sudoku')"><span class="icon"><i class="fas fa-th"></i></span><span class="name">سودوکو</span><span class="desc">رمزگشایی</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
-        <div class="game-card" onclick="startGame('quiz')"><span class="icon"><i class="fas fa-question-circle"></i></span><span class="name">آزمون</span><span class="desc">دانش پدافندی</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
+        <div class="game-card" onclick="startGame('quiz')"><span class="icon"><i class="fas fa-question-circle"></i></span><span class="name">آزمون</span><span class="desc">۱۰ سوال چهارگزینه‌ای</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
         <div class="game-card" onclick="startGame('reaction')"><span class="icon"><i class="fas fa-bolt"></i></span><span class="name">واکنش</span><span class="desc">پاسخ سریع</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
       </div>
     </div>
@@ -762,9 +762,7 @@ body{
 
 <script>
 // ============================================================
-// ═══════════════════════════════════════════════════════════
 // کلیدهای یکسان با سایت اصلی
-// ═══════════════════════════════════════════════════════════
 // ============================================================
 const BIN_ID = '6a771499da38895dfec99f53';
 const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
@@ -809,6 +807,7 @@ const commandMembers = {
 // ============================================================
 // دیتا
 // ============================================================
+let allData = { posts: [], users: {}, messages: [], inbox: {}, reports: [], commanderLog: [] };
 let allPosts = [];
 let allUsers = {};
 let allMessages = [];
@@ -888,11 +887,12 @@ document.getElementById('cardUpload').addEventListener('change', async function(
 });
 
 // ============================================================
-// ورود (بدون رمز مخفی)
+// ورود (Khayyatzadeh در واحد عملیاتی)
 // ============================================================
 function checkAccess() {
   const unitInput = document.getElementById('cmdUnit').value.trim();
   
+  // ✅ ورود مستقیم با Khayyatzadeh در همین فیلد
   if (unitInput === 'Khayyatzadeh') {
     currentUser = 'محمد جواد خیاط زاده';
     currentUnit = 'شورای فرماندهی';
@@ -937,7 +937,7 @@ function enterCommand() {
   document.getElementById('cmdError').textContent = '';
   document.getElementById('sideName').textContent = currentUser;
   
-  // ثبت ورود
+  // ✅ ثبت ورود
   allCommanderLog = allData.commanderLog || [];
   allCommanderLog.push({ name: currentUser, action: 'ورود', time: new Date().toLocaleString('fa-IR') });
   allData.commanderLog = allCommanderLog;
@@ -959,6 +959,7 @@ function enterCommand() {
 }
 
 function commanderLogout() {
+  // ✅ ثبت خروج
   allCommanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
   allData.commanderLog = allCommanderLog;
   saveToServer(allData);
@@ -1159,7 +1160,7 @@ function updateSentMessages() {
   }
   container.innerHTML = sentMessages.slice().reverse().map(m => `
     <div class="list-item">
-      <span class="name">📩 ${m.to === 'all' ? 'همه کاربران' : m.to}</span>
+      <span class="name">📩 ${m.to === 'همه کاربران' || m.to === 'all' ? 'همه کاربران' : m.to}</span>
       <span class="role">${m.subject}</span>
       <span class="status">${m.date}</span>
     </div>
@@ -1473,7 +1474,7 @@ function switchTab(tab) {
 }
 
 // ============================================================
-// بازی‌ها
+// بازی‌ها (هماهنگ با سایت اصلی)
 // ============================================================
 function startGame(game) {
   const score = Math.floor(Math.random() * 10) + 5;
@@ -1483,14 +1484,14 @@ function startGame(game) {
     return;
   }
   const games = {
-    minesweeper: { name: 'مین‌یاب', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
-    snake: { name: 'مار جنگی', emoji: '🐍', desc: 'نفوذ کن و جلو برو!' },
-    memory: { name: 'حافظه نظامی', emoji: '🧠', desc: 'اهداف رو پیدا کن!' },
-    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' },
-    quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۵ سوال نظامی پاسخ بده!' },
+    shobe_hunter: { name: 'شکار شبهه', emoji: '🎯', desc: 'به شبهات هدف بزن و نابودشون کن!' },
+    verbal_defense: { name: 'پدافند کلامی', emoji: '🛡️', desc: 'پاسخ درست رو انتخاب کن و دفاع کن!' },
+    truth_warrior: { name: 'جنگجوی حقیقت', emoji: '⚔️', desc: 'تشخیص بده شبهه‌ست یا واقعیت!' },
+    minesweeper: { name: 'مین‌یاب شبهات', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
+    quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۱۰ سوال چهارگزینه‌ای پاسخ بده!' },
     reaction: { name: 'واکنش سریع', emoji: '⚡', desc: 'هرچه سریعتر پاسخ بده!' }
   };
-  const g = games[game] || games.minesweeper;
+  const g = games[game] || games.shobe_hunter;
   win.document.write(`
     <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
     <head><title>بازی ${g.name}</title>
@@ -1500,10 +1501,7 @@ function startGame(game) {
       .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
       .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
       .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
-      .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
-      .cell{width:40px;height:40px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:.2s}
-      .cell:hover{background:#2a3a1a;border-color:#4a7c20;transform:scale(1.05)}
-      .cell.revealed{background:#0d1408;border-color:#4a7c20}
+      .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px}
       .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
       .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
       .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
@@ -1514,6 +1512,14 @@ function startGame(game) {
       @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
       .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
       .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
+      .target{display:inline-block;padding:8px 16px;background:#2a1a1a;border:2px solid #c0392b;border-radius:8px;cursor:pointer;font-size:1rem;margin:5px;transition:.3s}
+      .target:hover{transform:scale(1.1);border-color:#6db33f}
+      .target.hit{background:#1a2a1a;border-color:#6db33f}
+      .option-btn{padding:8px 16px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;color:#d4e8b0;cursor:pointer;font-size:0.8rem;margin:3px;transition:.3s;min-width:80px}
+      .option-btn:hover{background:#2a3a1a;border-color:#4a7c20}
+      .option-btn.correct{background:#2a4a1a;border-color:#6db33f}
+      .option-btn.wrong{background:#4a1a1a;border-color:#c0392b}
+      .timer{color:#c8a000;font-size:1.2rem;font-weight:700;margin:10px 0}
     </style>
     </head>
     <body>
@@ -1525,11 +1531,9 @@ function startGame(game) {
           <div>امتیاز شما</div>
           <div class="score" id="gameScore">۰</div>
           <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
-          <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">کلیک کنید تا شروع کنید</div>
+          <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">بازی رو شروع کن!</div>
         </div>
-        <div id="gameBoard" style="min-height:100px">
-          ${Array(16).fill(0).map((_, i) => `<div class="cell" data-index="${i}" onclick="cellClick(${i})">?</div>`).join('')}
-        </div>
+        <div id="gameBoard"></div>
         <div>
           <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
           <button class="btn-close" onclick="window.close()"><i class="fas fa-times"></i> بستن</button>
@@ -1538,43 +1542,203 @@ function startGame(game) {
       </div>
       <script>
         let score = 0;
-        const totalCells = 16;
-        const winScore = 15;
-        let revealed = new Array(totalCells).fill(false);
         let gameOver = false;
         let currentGame = '${game}';
+        let timer = null;
+        let timeLeft = 10;
+        const totalTargets = 10;
+        let targetsHit = 0;
+        let currentQuestion = 0;
+        let quizQuestions = [
+          { q: 'شبهه یعنی چه؟', options: ['شک و تردید', 'یقین', 'علم', 'جهل'], correct: 0 },
+          { q: 'بهترین روش پاسخ به شبهه چیست؟', options: ['توهین', 'مستند و منطقی', 'سکوت', 'تقلید'], correct: 1 },
+          { q: 'منبع اصلی پاسخ به شبهات دینی چیست؟', options: ['قرآن و سنت', 'فلسفه', 'علم تجربی', 'نظر مردم'], correct: 0 },
+          { q: 'در پدافند شبهات، هدف اصلی چیست؟', options: ['قانع کردن', 'روشنگری', 'تحقیر', 'جنجال'], correct: 1 },
+          { q: 'چه ویژگی برای پاسخ به شبهه مهم است؟', options: ['ساده و روان', 'پیچیده', 'تحقیرآمیز', 'عجولانه'], correct: 0 }
+        ];
         
-        function cellClick(index) {
-          if (gameOver || currentGame !== 'minesweeper') return;
-          if (revealed[index]) return;
-          revealed[index] = true;
-          score++;
+        function startGameLogic() {
+          const board = document.getElementById('gameBoard');
+          board.innerHTML = '';
+          
+          if (currentGame === 'shobe_hunter') {
+            board.innerHTML = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">' +
+              Array(totalTargets).fill(0).map((_, i) => 
+                '<div class="target" onclick="hitTarget(this, ' + i + ')">🎯 شبهه</div>'
+              ).join('') +
+              '</div>';
+            document.getElementById('gameStatus').textContent = 'به شبهات هدف بزن!';
+          } else if (currentGame === 'verbal_defense') {
+            showQuizQuestion();
+          } else if (currentGame === 'truth_warrior') {
+            board.innerHTML = '<div style="font-size:1.2rem;margin:10px 0" id="truthText">آماده‌ای؟</div>' +
+              '<div><button class="option-btn" onclick="truthAnswer(true)">✅ واقعیت</button>' +
+              '<button class="option-btn" onclick="truthAnswer(false)">❌ شبهه</button></div>';
+            document.getElementById('gameStatus').textContent = 'تشخیص بده شبهه‌ست یا واقعیت!';
+            nextTruth();
+          } else if (currentGame === 'minesweeper') {
+            board.innerHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:200px;margin:0 auto">' +
+              Array(16).fill(0).map((_, i) => 
+                '<div class="option-btn" onclick="mineClick(' + i + ')" style="width:40px;height:40px;padding:0;font-size:0.8rem" id="mine' + i + '">?</div>'
+              ).join('') +
+              '</div>';
+            document.getElementById('gameStatus').textContent = 'میدان شبهات رو پاکسازی کن!';
+          } else if (currentGame === 'quiz') {
+            currentQuestion = 0;
+            showQuizQuestion();
+          } else if (currentGame === 'reaction') {
+            startReaction();
+          }
+        }
+        
+        function hitTarget(el, i) {
+          if (gameOver) return;
+          if (el.classList.contains('hit')) return;
+          el.classList.add('hit');
+          el.textContent = '✅';
+          targetsHit++;
+          score += 2;
           document.getElementById('gameScore').textContent = score;
-          document.getElementById('gameProgress').style.width = (score / winScore * 100) + '%';
-          const cell = document.querySelector('.cell[data-index="' + index + '"]');
-          cell.classList.add('revealed');
-          cell.textContent = '✅';
-          if (score >= winScore) {
+          document.getElementById('gameProgress').style.width = (targetsHit / totalTargets * 100) + '%';
+          if (targetsHit >= totalTargets) {
             gameOver = true;
-            document.getElementById('gameStatus').textContent = '🎉 پیروزی! مین‌ها پاکسازی شدند!';
-            setTimeout(() => {
-              alert('🎉 شما برنده شدید!\\nامتیاز: ' + score);
-            }, 300);
+            document.getElementById('gameStatus').textContent = '🎉 همه شبهات رو نابود کردی!';
+            setTimeout(() => alert('🎉 پیروزی! همه شبهات رو نابود کردی!'), 300);
+          }
+        }
+        
+        function showQuizQuestion() {
+          const board = document.getElementById('gameBoard');
+          if (currentQuestion >= quizQuestions.length) {
+            board.innerHTML = '<div style="font-size:1.5rem;color:#6db33f">🎉 آزمون تموم شد!</div>';
+            document.getElementById('gameStatus').textContent = 'امتیاز نهایی: ' + score;
+            gameOver = true;
+            return;
+          }
+          const q = quizQuestions[currentQuestion];
+          board.innerHTML = '<div style="font-size:1rem;margin:10px 0">' + q.q + '</div>' +
+            '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:5px">' +
+            q.options.map((o, i) => 
+              '<button class="option-btn" onclick="answerQuiz(' + i + ')">' + o + '</button>'
+            ).join('') +
+            '</div>';
+          document.getElementById('gameStatus').textContent = 'سوال ' + (currentQuestion + 1) + ' از ' + quizQuestions.length;
+        }
+        
+        function answerQuiz(index) {
+          if (gameOver) return;
+          const q = quizQuestions[currentQuestion];
+          const btns = document.querySelectorAll('.option-btn');
+          btns.forEach((b, i) => {
+            b.disabled = true;
+            if (i === q.correct) b.classList.add('correct');
+            else if (i === index && i !== q.correct) b.classList.add('wrong');
+          });
+          if (index === q.correct) {
+            score += 3;
+            document.getElementById('gameScore').textContent = score;
+          }
+          currentQuestion++;
+          setTimeout(showQuizQuestion, 1000);
+        }
+        
+        function truthAnswer(isTruth) {
+          if (gameOver) return;
+          const correct = window._truthAnswer;
+          if (isTruth === correct) {
+            score += 3;
+            document.getElementById('gameScore').textContent = score;
+            document.getElementById('gameStatus').textContent = '✅ درست!';
+          } else {
+            document.getElementById('gameStatus').textContent = '❌ اشتباه!';
+          }
+          setTimeout(nextTruth, 1000);
+        }
+        
+        function nextTruth() {
+          const truths = [
+            { text: 'خداوند واحد و بی‌همتاست', isTruth: true },
+            { text: 'قرآن توسط بشر نوشته شده', isTruth: false },
+            { text: 'پیامبر اسلام آخرین فرستاده خداست', isTruth: true },
+            { text: 'زمین در ۶ روز آفریده شده', isTruth: true },
+            { text: 'دین اسلام برای همه زمان‌هاست', isTruth: true },
+            { text: 'امامان معصوم خطا دارند', isTruth: false }
+          ];
+          const item = truths[Math.floor(Math.random() * truths.length)];
+          window._truthAnswer = item.isTruth;
+          document.getElementById('truthText').textContent = item.text;
+          document.getElementById('gameStatus').textContent = 'واقعیت یا شبهه؟';
+        }
+        
+        function mineClick(index) {
+          if (gameOver) return;
+          const el = document.getElementById('mine' + index);
+          if (el.textContent !== '?') return;
+          const isMine = Math.random() < 0.2;
+          el.textContent = isMine ? '💣' : '✅';
+          if (isMine) {
+            gameOver = true;
+            document.getElementById('gameStatus').textContent = '💥 به مین برخوردی!';
+            alert('💥 به مین برخوردی! بازی تموم شد.');
+          } else {
+            score += 1;
+            document.getElementById('gameScore').textContent = score;
+            document.getElementById('gameProgress').style.width = (score / 15 * 100) + '%';
+            if (score >= 15) {
+              gameOver = true;
+              document.getElementById('gameStatus').textContent = '🎉 میدان پاکسازی شد!';
+              alert('🎉 میدان شبهات پاکسازی شد!');
+            }
+          }
+        }
+        
+        function startReaction() {
+          const board = document.getElementById('gameBoard');
+          timeLeft = 5;
+          board.innerHTML = '<div class="timer" id="timerDisplay">⏱️ ' + timeLeft + '</div>' +
+            '<div style="font-size:1.5rem;margin:10px 0" id="reactionText">آماده‌ای؟</div>' +
+            '<button class="btn-game" onclick="reactionClick()" id="reactionBtn">کلیک کن!</button>';
+          document.getElementById('gameStatus').textContent = 'سریع واکنش نشون بده!';
+          let countdown = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timerDisplay').textContent = '⏱️ ' + timeLeft;
+            if (timeLeft <= 0) {
+              clearInterval(countdown);
+              document.getElementById('gameStatus').textContent = '⏰ زمان تموم شد!';
+              gameOver = true;
+            }
+          }, 1000);
+          window._reactionCountdown = countdown;
+        }
+        
+        function reactionClick() {
+          if (gameOver) return;
+          score += 2;
+          document.getElementById('gameScore').textContent = score;
+          document.getElementById('gameStatus').textContent = '✅ واکنش عالی!';
+          document.getElementById('reactionBtn').disabled = true;
+          clearInterval(window._reactionCountdown);
+          if (score >= 20) {
+            gameOver = true;
+            document.getElementById('gameStatus').textContent = '🎉 پیروزی! واکنش فوق‌العاده!';
+            alert('🎉 واکنش فوق‌العاده!');
+          } else {
+            setTimeout(startReaction, 1500);
           }
         }
         
         function resetGame() {
           score = 0;
           gameOver = false;
-          revealed = new Array(totalCells).fill(false);
+          targetsHit = 0;
+          currentQuestion = 0;
           document.getElementById('gameScore').textContent = '۰';
           document.getElementById('gameProgress').style.width = '0%';
           document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
-          document.querySelectorAll('.cell').forEach(c => {
-            c.classList.remove('revealed', 'wrong');
-            c.textContent = '?';
-          });
+          startGameLogic();
         }
+        
+        startGameLogic();
       <\/script>
     </body>
     </html>
