@@ -19,6 +19,7 @@
   --ts:#7a9a55;
   --rd:#c0392b;
   --gold:#c8a000;
+  --neon-green:#39ff14;
 }
 [data-theme="dark"]{
   --bg:#080c0a;
@@ -31,6 +32,7 @@
   --ts:#6a8a7a;
   --am:#b09840;
   --gold:#b09840;
+  --neon-green:#39ff14;
 }
 [data-theme="light"]{
   --bg:#f2f7ef;
@@ -43,6 +45,7 @@
   --ts:#4a6a3a;
   --am:#b09000;
   --gold:#b09000;
+  --neon-green:#2a8a1a;
 }
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px;line-height:1.8}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
@@ -52,11 +55,11 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes missileFly{0%{transform:translateX(0)translateY(0);opacity:1}80%{opacity:1}100%{transform:translateX(-150px)translateY(-50px);opacity:0}}
 @keyframes carMove{0%{transform:translateX(100px)}100%{transform:translateX(calc(-100vw - 100px))}}
-@keyframes radarPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes radarPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2);box-shadow:0 0 30px var(--neon-green)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--gl)}50%{box-shadow:0 0 25px var(--gl)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon-green),0 0 10px var(--neon-green)}50%{text-shadow:0 0 20px var(--neon-green),0 0 40px var(--neon-green)}}
 
 /* ===== HEADER ===== */
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
@@ -166,15 +169,16 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .saved-item .del-btn:hover{transform:scale(1.05)}
 
 /* ===== GAMES ===== */
-.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem;margin-top:0.5rem}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;margin-top:0.5rem}
 .game-card{background:var(--bgp);border:2px solid var(--br);border-radius:8px;padding:0.8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
 .game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--gl),transparent);opacity:0;transition:.3s}
 .game-card:hover::before{opacity:0.05}
 .game-card:hover{border-color:var(--gl);transform:translateY(-5px);box-shadow:0 8px 30px rgba(74,124,32,0.15)}
 .game-card .icon{font-size:2.2rem;display:block;margin-bottom:0.2rem;color:var(--gold)}
-.game-card .name{font-size:.65rem;font-weight:700;color:var(--tp)}
-.game-card .desc{font-size:.45rem;color:var(--ts)}
+.game-card .name{font-size:.7rem;font-weight:700;color:var(--tp)}
+.game-card .desc{font-size:.5rem;color:var(--ts)}
 .game-card .xp-badge{font-size:.45rem;color:var(--gl);background:var(--bg);padding:0.05rem 0.3rem;border-radius:8px;display:inline-block;margin-top:0.1rem}
+.game-card .game-status{font-size:.4rem;color:var(--gold);margin-top:0.1rem}
 
 /* ===== RANDOM ===== */
 .random-box{background:var(--bgp);border:2px solid var(--am);border-radius:8px;padding:0.6rem;margin-bottom:0.5rem;text-align:center;cursor:pointer;transition:.3s;animation:glowPulse 2s infinite}
@@ -183,25 +187,26 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .random-box .shobe{color:var(--tp);font-size:.8rem;margin:0.2rem 0}
 
 /* ===== FOOTER ===== */
-#footer{border-top:1px solid var(--br);padding:0.3rem 0.6rem;background:var(--bgm);margin-top:0.5rem}
-.foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem}
+#footer{border-top:1px solid var(--br);padding:0.2rem 0.6rem 0;background:var(--bgm);margin-top:0.3rem}
+.foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem;padding-bottom:0.1rem}
 .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
 .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
 .foot-links a:hover{color:var(--gl);border-color:var(--gl);transform:translateY(-2px)}
 .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
 
-/* ===== دفاع ===== */
-.defense-anim{width:100%;height:50px;position:relative;overflow:hidden;background:linear-gradient(180deg,transparent 0%,rgba(74,124,32,0.05)100%);border-radius:4px;margin-top:0.2rem}
-.defense-anim .car{position:absolute;bottom:0;right:10px;font-size:1.8rem;animation:carMove 12s linear infinite}
-.defense-anim .car span{font-size:0.5rem;color:var(--gold);position:absolute;bottom:-8px;right:15px;font-weight:700;white-space:nowrap}
-.defense-anim .missile{position:absolute;bottom:15px;font-size:1.2rem;animation:missileFly 4s linear infinite}
+/* ===== دفاع نئونی ===== */
+.defense-anim{width:100%;height:55px;position:relative;overflow:hidden;background:linear-gradient(180deg,transparent 0%,rgba(57,255,20,0.04)100%);border-radius:4px;margin-top:0.1rem;border:1px solid rgba(57,255,20,0.06)}
+.defense-anim .car{position:absolute;bottom:2px;right:10px;font-size:1.8rem;animation:carMove 12s linear infinite}
+.defense-anim .car span{font-size:0.5rem;color:var(--neon-green);position:absolute;bottom:-8px;right:15px;font-weight:700;white-space:nowrap;animation:neonPulse 1.5s infinite}
+.defense-anim .missile{position:absolute;bottom:12px;font-size:1.2rem;animation:missileFly 4s linear infinite;filter:drop-shadow(0 0 5px var(--neon-green))}
 .defense-anim .missile:nth-child(2){left:20%;animation-duration:4s}
 .defense-anim .missile:nth-child(3){left:50%;animation-duration:5s;animation-delay:1s}
 .defense-anim .missile:nth-child(4){left:75%;animation-duration:6s;animation-delay:2s}
-.defense-anim .radar{position:absolute;bottom:0;right:0;font-size:1.5rem;animation:radarPulse 2s infinite}
-.defense-anim .jet{position:absolute;top:5px;font-size:1.2rem;animation:missileFly 8s linear infinite}
+.defense-anim .radar{position:absolute;bottom:0;right:0;font-size:1.5rem;animation:radarPulse 2s infinite;filter:drop-shadow(0 0 10px var(--neon-green))}
+.defense-anim .jet{position:absolute;top:2px;font-size:1.2rem;animation:missileFly 8s linear infinite;filter:drop-shadow(0 0 3px var(--neon-green))}
 .defense-anim .jet:nth-child(6){left:10%;animation-duration:8s;animation-delay:0.5s}
 .defense-anim .jet:nth-child(7){left:40%;animation-duration:9s;animation-delay:1.5s}
+.defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon-green),var(--neon-green),transparent);animation:neonPulse 1.5s infinite;opacity:0.6}
 
 /* ===== MODAL ===== */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;justify-content:center;align-items:center}
@@ -224,6 +229,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .btn-danger:hover{background:#e74c3c}
 .btn-block{width:100%;justify-content:center}
 .btn-sm{padding:0.15rem 0.5rem;font-size:.55rem}
+.btn-neon{background:var(--neon-green);color:#000;border:1px solid var(--neon-green);animation:neonPulse 2s infinite}
+.btn-neon:hover{background:#2a8a1a;color:#fff}
 
 /* ===== INBOX ===== */
 .inbox-item{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.3rem;cursor:pointer;transition:.3s}
@@ -239,6 +246,16 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .inbox-item .inbox-delete{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.5rem;transition:.3s}
 .inbox-item .inbox-delete:hover{color:var(--rd)}
 
+/* ===== NOTIFICATION ===== */
+.notification{position:fixed;top:70px;left:20px;z-index:400;background:var(--bgm);border:2px solid var(--gold);border-radius:10px;padding:0.6rem 1rem;max-width:340px;box-shadow:0 4px 30px rgba(0,0,0,0.6);animation:slideIn .3s ease;display:flex;align-items:flex-start;gap:0.5rem}
+.notification .notif-icon{font-size:1.5rem;color:var(--gold);animation:float 2s ease-in-out infinite}
+.notification .notif-content{flex:1}
+.notification .notif-title{font-size:.65rem;font-weight:700;color:var(--gl)}
+.notification .notif-body{font-size:.55rem;color:var(--ts);line-height:1.6}
+.notification .notif-close{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem;transition:.3s}
+.notification .notif-close:hover{transform:rotate(90deg);color:var(--rd)}
+.notification.hide{display:none}
+
 /* ===== USER PANEL ===== */
 #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:340px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4);animation:slideIn .25s}
 #userPanel.show{display:block}
@@ -247,7 +264,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #userPanel .profile-header{text-align:center;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:0.5rem}
 #userPanel .profile-header .avatar{font-size:3.5rem;display:block;margin-bottom:0.1rem;animation:float 3s ease-in-out infinite}
 #userPanel .profile-header .name{font-size:.9rem;font-weight:700}
-#userPanel .profile-header .name .special-star{color:var(--gold);font-size:.7rem}
+#userPanel .profile-header .name .special-star{color:var(--gold);font-size:.7rem;animation:glowPulse 1.5s infinite}
 #userPanel .profile-header .level{color:var(--gold);font-size:.6rem;display:block}
 #userPanel .profile-header .level .rank-badge{background:var(--gold);color:#000;padding:0.05rem 0.3rem;border-radius:8px;font-size:.5rem}
 #userPanel .profile-header .xp{color:var(--ts);font-size:.5rem;display:block}
@@ -268,14 +285,14 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #userPanel .form-group input:focus{border-color:var(--gl)}
 #userPanel .inbox-list{max-height:200px;overflow-y:auto}
 
-/* ===== NOTIFICATION ===== */
-.notification{position:fixed;top:70px;left:20px;z-index:400;background:var(--bgm);border:1px solid var(--gold);border-radius:8px;padding:0.5rem 1rem;max-width:320px;box-shadow:0 4px 30px rgba(0,0,0,0.5);animation:slideIn .3s ease;display:flex;align-items:center;gap:0.5rem}
-.notification .notif-icon{font-size:1.2rem;color:var(--gold)}
-.notification .notif-content{flex:1}
-.notification .notif-title{font-size:.6rem;font-weight:700;color:var(--gl)}
-.notification .notif-body{font-size:.5rem;color:var(--ts)}
-.notification .notif-close{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem}
-.notification.hide{display:none}
+/* ===== پای لانچر ===== */
+.pie-launcher{display:flex;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
+.pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
+.pie-launcher .content{flex:1}
+.pie-launcher .name{font-size:.6rem;font-weight:700;color:var(--gold)}
+.pie-launcher .text{font-size:.55rem;color:var(--ts);line-height:1.6}
+.pie-launcher .btn-close-tip{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem;transition:.3s}
+.pie-launcher .btn-close-tip:hover{transform:rotate(90deg);color:var(--rd)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:600px){
@@ -285,9 +302,13 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   .post-hdr .title{font-size:.7rem}
   #userPanel{width:100%}
   .ai-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
-  .games-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
+  .games-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
   .fab{bottom:70px;left:10px;width:44px;height:44px;font-size:1rem}
   .notification{left:10px;right:10px;max-width:none}
+  .defense-anim{height:40px}
+  .defense-anim .car{font-size:1.4rem}
+  .defense-anim .missile{font-size:1rem}
+  .defense-anim .radar{font-size:1.2rem}
 }
 @media(max-width:400px){
   .stats-grid{grid-template-columns:1fr 1fr}
@@ -300,7 +321,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 <div id="header">
   <div style="max-width:800px;margin:0 auto">
     <div class="hdr-top">
-      <span>SYS // PADAFAND v9.0</span>
+      <span>SYS // PADAFAND v9.5</span>
       <div class="online"><span class="dot"></span><span>آنلاین</span></div>
     </div>
     <div class="hdr-main">
@@ -367,6 +388,17 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
   <div id="page-home" class="page active">
     <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
+    
+    <!-- ===== پای لانچر ===== -->
+    <div class="pie-launcher" id="pieLauncher">
+      <span class="avatar">🤖</span>
+      <div class="content">
+        <div class="name">🎯 پای لانچر</div>
+        <div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div>
+      </div>
+      <button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button>
+    </div>
+    
     <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem">
       <span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span>
       <span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span>
@@ -532,7 +564,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
       <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
       <a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a>
     </div>
-    <div class="foot-copy">PADAFAND v9.0</div>
+    <div class="foot-copy">PADAFAND v9.5</div>
   </div>
   <div class="defense-anim">
     <div class="car">🚛<span>پدافند شبهات</span></div>
@@ -542,12 +574,15 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
     <div class="radar">📡</div>
     <div class="jet">✈️</div>
     <div class="jet">✈️</div>
+    <div class="neon-line"></div>
   </div>
 </footer>
 
 <script>
 // ============================================================
-// تنظیمات سرور
+// ═══════════════════════════════════════════════════════════
+// کلیدهای یکسان برای هماهنگی با فرماندهی
+// ═══════════════════════════════════════════════════════════
 // ============================================================
 const BIN_ID = '6a771499da38895dfec99f53';
 const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
@@ -558,8 +593,8 @@ async function loadFromServer() {
       headers: { 'X-Master-Key': API_KEY }
     });
     const data = await res.json();
-    return data.record || { posts: [], users: {}, messages: [], inbox: {} };
-  } catch(e) { return { posts: [], users: {}, messages: [], inbox: {} }; }
+    return data.record || { posts: [], users: {}, messages: [], inbox: {}, reports: [], commanderLog: [] };
+  } catch(e) { return { posts: [], users: {}, messages: [], inbox: {}, reports: [], commanderLog: [] }; }
 }
 
 async function saveToServer(data) {
@@ -593,13 +628,22 @@ function checkSpecialUser(phone, fullname) {
 // ============================================================
 // دیتا
 // ============================================================
-let allData = { posts: [], users: {}, messages: [], inbox: {} };
+let allData = { posts: [], users: {}, messages: [], inbox: {}, reports: [], commanderLog: [] };
 let allPosts = [];
 let allUsers = {};
 let allMessages = [];
 let allInbox = {};
+let allReports = [];
 let loggedUser = null;
 let selectedAvatar = 'fa-user';
+let pieTips = [
+  { text: "سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟" },
+  { text: "یادت باشه هر شبهه‌ای که بهش برخوردی رو اینجا بذار. ما باهاش مقابله می‌کنیم! 💪" },
+  { text: "اگه حس کردی یه شبهه خیلی قویه، بفرستش به فرماندهی. اونجا سردارا منتظرن! 🎖️" },
+  { text: "بازی‌های قرارگاه رو هم فراموش نکن. با بازی کردن هم XP می‌گیری هم مهارتات قوی‌تر میشه! 🎮" },
+  { text: "بهترین سربازا کسانی هستن که همیشه در حال یادگیری‌ن. پس بخون و رشد کن! 📚" }
+];
+let pieIndex = 0;
 
 const LEVELS = [
   { name: 'سرباز', xp: 0 },
@@ -640,6 +684,7 @@ async function loadAllData() {
   allUsers = allData.users || {};
   allMessages = allData.messages || [];
   allInbox = allData.inbox || {};
+  allReports = allData.reports || [];
   renderAll();
   document.getElementById('userCount').textContent = Object.keys(allUsers).length;
   const specialCount = Object.keys(allUsers).filter(u => allUsers[u].isSpecial).length;
@@ -671,7 +716,25 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   loadAllData();
   setTimeout(showWelcomeMessage, 1500);
+  setTimeout(showPieTip, 3000);
 });
+
+// ============================================================
+// پای لانچر
+// ============================================================
+function showPieTip() {
+  const el = document.getElementById('pieLauncher');
+  if (!el) return;
+  el.style.display = 'flex';
+  const textEl = document.getElementById('pieText');
+  textEl.textContent = pieTips[pieIndex % pieTips.length].text;
+  pieIndex++;
+}
+
+function closePieLauncher() {
+  document.getElementById('pieLauncher').style.display = 'none';
+  setTimeout(showPieTip, 60000); // بعد ۱ دقیقه دوباره
+}
 
 // ============================================================
 // منو
@@ -960,7 +1023,6 @@ function showWelcomeMessage() {
     `);
     win.document.close();
     localStorage.setItem('padafand_welcome_shown', 'true');
-    // ارسال پیام به صندوق
     if (loggedUser) {
       sendSystemMessage(loggedUser, 'خوش‌آمدگویی', '🎖️ به قرارگاه پدافند شبهات خوش آمدید!\n\n🛡️ مأموریت: پاسخ به شبهات دینی، اعتقادی و سیاسی\n📚 روش: با زبانی ساده و مستند\n🎯 هدف: روشنگری و دفاع از مرزهای اعتقادی\n\n⭐ ۵ XP جایزه به شما تعلق گرفت.');
       if (allUsers[loggedUser]) {
@@ -982,22 +1044,6 @@ async function sendSystemMessage(to, subject, body) {
     id: Date.now(),
     from: 'سیستم',
     fromType: 'system',
-    subject: subject,
-    body: body,
-    date: new Date().toLocaleString('fa-IR'),
-    read: false
-  });
-  allData.inbox = allInbox;
-  await saveToServer(allData);
-  updateInboxBadge();
-}
-
-async function sendCommanderMessage(to, subject, body) {
-  if (!allInbox[to]) allInbox[to] = [];
-  allInbox[to].push({
-    id: Date.now(),
-    from: 'فرماندهی',
-    fromType: 'commander',
     subject: subject,
     body: body,
     date: new Date().toLocaleString('fa-IR'),
@@ -1061,7 +1107,6 @@ function toggleInboxItem(index) {
   const body = document.getElementById(`inboxBody${index}`);
   if (!body) return;
   body.classList.toggle('show');
-  // علامت خوانده شده
   const msgs = allInbox[loggedUser] || [];
   const realIndex = msgs.length - 1 - index;
   if (msgs[realIndex] && !msgs[realIndex].read) {
@@ -1223,7 +1268,6 @@ async function userRegister() {
     return;
   }
   
-  // بررسی حساب ویژه
   const special = checkSpecialUser(phone, fullname);
   const isSpecial = !!special;
   
@@ -1244,7 +1288,6 @@ async function userRegister() {
   if (isSpecial) {
     document.getElementById('authMsg').textContent = `🎖️ سردار گرامی ${special.name}، به قرارگاه پدافند شبهات خوش آمدید! ۱۰۰۰ XP دریافت کردید.`;
     document.getElementById('authMsg').style.color = '#c8a000';
-    // ارسال پیام ویژه
     await sendSystemMessage(username, '🎖️ خوش‌آمدگویی ویژه', `سردار گرامی ${special.name}\n\nبه قرارگاه پدافند شبهات خوش آمدید.\n\nشما به عنوان یکی از فرماندهان ارشد این مجموعه، از امکانات ویژه برخوردار هستید:\n- 🎖️ درجه سردار\n- ⭐ نشان ویژه در پروفایل\n- 🚀 ۱۰۰۰ XP جایزه\n- 🔓 دسترسی کامل به همه بخش‌ها\n\nاز همراهی شما سپاسگزاریم.`);
   } else {
     document.getElementById('authMsg').textContent = '✅ ثبت‌نام موفق! ۱۰ XP جایزه گرفتید.';
@@ -1292,22 +1335,25 @@ function userLogout() {
 }
 
 // ============================================================
-// بازی‌ها (کامل و قابل اجرا)
+// بازی‌ها (جدی‌تر)
 // ============================================================
 function initGames() {
   const grid = document.getElementById('gamesGrid');
   if (!grid) return;
   const games = [
-    { id: 'minesweeper', name: 'مین‌یاب', icon: 'fa-bomb', desc: 'پاکسازی میدان شبهات', color: '#c0392b' },
-    { id: 'snake', name: 'مار جنگی', icon: 'fa-crown', desc: 'عملیات نفوذ و پیشروی', color: '#c8a000' },
-    { id: 'memory', name: 'حافظه نظامی', icon: 'fa-brain', desc: 'شناسایی اهداف', color: '#6db33f' },
-    { id: 'sudoku', name: 'رمزگشایی', icon: 'fa-th', desc: 'شکستن رمز شبهات', color: '#4a8aaa' }
+    { id: 'minesweeper', name: 'مین‌یاب', icon: 'fa-bomb', desc: 'پاکسازی میدان شبهات', color: '#c0392b', status: '🔥 جدید' },
+    { id: 'snake', name: 'مار جنگی', icon: 'fa-crown', desc: 'عملیات نفوذ و پیشروی', color: '#c8a000', status: '🎯 چالش‌برانگیز' },
+    { id: 'memory', name: 'حافظه نظامی', icon: 'fa-brain', desc: 'شناسایی اهداف', color: '#6db33f', status: '🧠 تمرین ذهن' },
+    { id: 'sudoku', name: 'رمزگشایی', icon: 'fa-th', desc: 'شکستن رمز شبهات', color: '#4a8aaa', status: '🔐 هوشمندانه' },
+    { id: 'quiz', name: 'آزمون پدافندی', icon: 'fa-question-circle', desc: 'دانش نظامی خود را بسنج', color: '#8e44ad', status: '📝 امتحان' },
+    { id: 'reaction', name: 'واکنش سریع', icon: 'fa-bolt', desc: 'به شبهات سریع پاسخ بده', color: '#e67e22', status: '⚡ سرعتی' }
   ];
   grid.innerHTML = games.map(g => `
     <div class="game-card" onclick="startGame('${g.id}')" style="border-color:${g.color}">
       <span class="icon" style="color:${g.color}"><i class="fas ${g.icon}"></i></span>
       <span class="name">${g.name}</span>
       <span class="desc">${g.desc}</span>
+      <span class="game-status" style="color:${g.color}">${g.status}</span>
       <span class="xp-badge">+۵ تا ۱۵ XP</span>
     </div>
   `).join('');
@@ -1329,7 +1375,9 @@ function startGame(game) {
     minesweeper: { name: 'مین‌یاب', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
     snake: { name: 'مار جنگی', emoji: '🐍', desc: 'نفوذ کن و جلو برو!' },
     memory: { name: 'حافظه نظامی', emoji: '🧠', desc: 'اهداف رو پیدا کن!' },
-    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' }
+    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' },
+    quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۵ سوال نظامی پاسخ بده!' },
+    reaction: { name: 'واکنش سریع', emoji: '⚡', desc: 'هرچه سریعتر پاسخ بده!' }
   };
   
   const g = games[game] || games.minesweeper;
@@ -1340,23 +1388,32 @@ function startGame(game) {
       <head><title>بازی ${g.name}</title>
       <style>
         body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
-        .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px}
-        .game-icon{font-size:4rem;display:block;margin-bottom:10px}
-        .game-title{color:#6db33f;font-size:1.5rem;font-weight:700}
+        .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px;box-shadow:0 0 30px rgba(57,255,20,0.05)}
+        .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
+        .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
         .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
         .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
         .cell{width:40px;height:40px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:.2s}
-        .cell:hover{background:#2a3a1a}
+        .cell:hover{background:#2a3a1a;border-color:#4a7c20;transform:scale(1.05)}
         .cell.revealed{background:#0d1408;border-color:#4a7c20}
-        .cell.flag{background:#2a1a0a;border-color:#c8a000}
+        .cell.wrong{background:#2a0a0a;border-color:#c0392b}
         .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
-        .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900}
+        .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
         .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
-        .btn-game:hover{background:#6db33f;transform:scale(1.05)}
+        .btn-game:hover{background:#6db33f;transform:scale(1.05);box-shadow:0 0 20px rgba(109,179,63,0.3)}
         .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
         .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
-        .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px}
-        .hidden{display:none}
+        .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px;text-shadow:0 0 10px rgba(109,179,63,0.2)}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
+        .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
+        .question-text{font-size:1rem;color:#d4e8b0;margin:10px 0;padding:10px;background:#0d1408;border-radius:6px;border-right:3px solid #c8a000}
+        .options{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:10px 0}
+        .options button{padding:8px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;color:#d4e8b0;cursor:pointer;transition:.3s;font-size:0.8rem}
+        .options button:hover{background:#2a3a1a;border-color:#4a7c20;transform:scale(1.02)}
+        .options button.correct{background:#2a4a1a;border-color:#6db33f}
+        .options button.wrong{background:#4a1a1a;border-color:#c0392b}
+        .timer{color:#c8a000;font-size:0.8rem;font-weight:700}
       </style>
       </head>
       <body>
@@ -1367,10 +1424,20 @@ function startGame(game) {
           <div class="score-box">
             <div>امتیاز شما</div>
             <div class="score" id="gameScore">۰</div>
-            <div style="font-size:0.6rem;color:#7a9a55">کلیک کنید تا شروع کنید</div>
+            <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
+            <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">کلیک کنید تا شروع کنید</div>
           </div>
-          <div class="game-board" id="gameBoard">
+          <div id="gameBoard" style="min-height:100px">
             ${Array(16).fill(0).map((_, i) => `<div class="cell" data-index="${i}" onclick="cellClick(${i})">?</div>`).join('')}
+          </div>
+          <div id="quizArea" style="display:none">
+            <div class="question-text" id="questionText">سوال</div>
+            <div class="options" id="optionsContainer"></div>
+          </div>
+          <div id="reactionArea" style="display:none">
+            <div style="font-size:2rem;margin:10px 0" id="reactionIcon">⚡</div>
+            <div class="timer" id="reactionTimer">۳ ثانیه</div>
+            <button class="btn-game" onclick="reactionClick()" id="reactionBtn" style="font-size:1.2rem;padding:10px 30px">کلیک کن!</button>
           </div>
           <div>
             <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
@@ -1383,20 +1450,22 @@ function startGame(game) {
           const totalCells = 16;
           const winScore = 15;
           let revealed = new Array(totalCells).fill(false);
-          let flagged = new Array(totalCells).fill(false);
           let gameOver = false;
+          let currentGame = '${game}';
           
           function cellClick(index) {
-            if (gameOver) return;
+            if (gameOver || currentGame !== 'minesweeper') return;
             if (revealed[index]) return;
             revealed[index] = true;
             score++;
             document.getElementById('gameScore').textContent = score;
+            document.getElementById('gameProgress').style.width = (score / winScore * 100) + '%';
             const cell = document.querySelector('.cell[data-index="' + index + '"]');
             cell.classList.add('revealed');
             cell.textContent = '✅';
             if (score >= winScore) {
               gameOver = true;
+              document.getElementById('gameStatus').textContent = '🎉 پیروزی! مین‌ها پاکسازی شدند!';
               setTimeout(() => {
                 alert('🎉 شما برنده شدید!\\nامتیاز: ' + score);
               }, 300);
@@ -1408,8 +1477,10 @@ function startGame(game) {
             gameOver = false;
             revealed = new Array(totalCells).fill(false);
             document.getElementById('gameScore').textContent = '۰';
+            document.getElementById('gameProgress').style.width = '0%';
+            document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
             document.querySelectorAll('.cell').forEach(c => {
-              c.classList.remove('revealed');
+              c.classList.remove('revealed', 'wrong');
               c.textContent = '?';
             });
           }
