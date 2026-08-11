@@ -8,7 +8,6 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* ===== RESET & ROOT ===== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -55,7 +54,6 @@
             border-radius: 2px;
         }
 
-        /* ===== ANIMATIONS ===== */
         @keyframes blink {
             0%,
             100% {
@@ -123,7 +121,6 @@
             }
         }
 
-        /* ===== SECURITY PAGE (Login) ===== */
         #securityPage {
             position: fixed;
             inset: 0;
@@ -278,7 +275,6 @@
             font-family: var(--font-mono);
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 220px;
             height: 100vh;
@@ -395,7 +391,6 @@
             transform: scale(1.05);
         }
 
-        /* ===== MAIN CONTENT ===== */
         .main {
             flex: 1;
             margin-right: 220px;
@@ -461,7 +456,6 @@
             transform: rotate(30deg);
         }
 
-        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -509,7 +503,6 @@
             float: left;
         }
 
-        /* ===== MONITOR ===== */
         .monitor-container {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -703,7 +696,6 @@
             color: var(--text-secondary);
         }
 
-        /* ===== LIST CONTAINER ===== */
         .list-container {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -834,7 +826,6 @@
             transform: scale(1.05);
         }
 
-        /* ===== LAUNCH SECTION ===== */
         .launch-section {
             background: var(--bg-card);
             border: 1px solid var(--border-military);
@@ -907,7 +898,6 @@
             animation: slideIn .3s ease;
         }
 
-        /* ===== GAMES ===== */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
@@ -946,7 +936,6 @@
             color: var(--neon-green);
         }
 
-        /* ===== USER DETAIL POPUP ===== */
         .user-detail-popup {
             display: none;
             position: fixed;
@@ -1031,7 +1020,6 @@
             transform: scale(1.05);
         }
 
-        /* ===== HAMBURGER ===== */
         .hamburger {
             display: none;
             position: fixed;
@@ -1051,7 +1039,6 @@
             border-color: var(--neon-green);
         }
 
-        /* ===== RESPONSIVE ===== */
         @media(max-width:768px) {
             .sidebar {
                 transform: translateX(100%);
@@ -1096,7 +1083,6 @@
 
     <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-    <!-- ===== SECURITY PAGE ===== -->
     <div id="securityPage">
         <div class="login-box">
             <span class="logo"><i class="fas fa-shield-alt"></i></span>
@@ -1123,7 +1109,6 @@
         </div>
     </div>
 
-    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <div class="logo-area">
             <span class="icon"><i class="fas fa-shield-alt"></i></span>
@@ -1157,7 +1142,6 @@
         </nav>
     </aside>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <main class="main">
         <div class="top-bar">
             <div>
@@ -1169,10 +1153,13 @@
                 <span class="dot"></span>
                 <span id="timeDisplay">--:--</span>
                 <button class="theme-btn" onclick="cycleTheme()"><i class="fas fa-adjust"></i></button>
+                <button class="btn-neon" onclick="refreshData()" style="font-size:0.4rem;padding:0.1rem 0.4rem;border-radius:4px;border:none;cursor:pointer;background:var(--neon);color:#000">
+                    <i class="fas fa-sync"></i> تازه‌سازی
+                </button>
+                <span id="refreshStatus" style="font-size:0.3rem;color:var(--neon)"></span>
             </div>
         </div>
 
-        <!-- ===== DASHBOARD ===== -->
         <div id="tab-dashboard" class="tab-content">
             <div class="stats-grid">
                 <div class="stat-card"><span class="icon"><i class="fas fa-file-alt"></i></span>
@@ -1245,7 +1232,6 @@
             </div>
         </div>
 
-        <!-- ===== LAUNCH ===== -->
         <div id="tab-launch" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-rocket"></i> شلیک مطلب جدید</div>
@@ -1267,7 +1253,6 @@
             </div>
         </div>
 
-        <!-- ===== POSTS ===== -->
         <div id="tab-posts" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-file-alt"></i> مطالب ارسال‌شده</div>
@@ -1278,7 +1263,6 @@
             </div>
         </div>
 
-        <!-- ===== USERS ===== -->
         <div id="tab-users" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-users"></i> کاربران سیستم</div>
@@ -1289,7 +1273,6 @@
             </div>
         </div>
 
-        <!-- ===== COMMANDERS ===== -->
         <div id="tab-commanders" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-star"></i> فرماندهان <span style="font-size:0.3rem;color:var(--text-secondary)">(ورود/خروج ثبت می‌شود)</span></div>
@@ -1300,7 +1283,6 @@
             </div>
         </div>
 
-        <!-- ===== COMMENTS ===== -->
         <div id="tab-comments" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-comment-dots"></i> کامنت‌های کاربران</div>
@@ -1311,7 +1293,6 @@
             </div>
         </div>
 
-        <!-- ===== MESSAGES ===== -->
         <div id="tab-messages" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-envelope"></i> ارسال پیام به کاربران</div>
@@ -1335,7 +1316,6 @@
             </div>
         </div>
 
-        <!-- ===== INCOMING ===== -->
         <div id="tab-incoming" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-inbox"></i> شبهات ارسالی از سوی مردم</div>
@@ -1346,7 +1326,6 @@
             </div>
         </div>
 
-        <!-- ===== REPORTS ===== -->
         <div id="tab-reports" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-clipboard"></i> نوشتن گزارش جدید</div>
@@ -1364,12 +1343,10 @@
             </div>
         </div>
 
-        <!-- ===== SETTINGS ===== -->
         <div id="tab-settings" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-cog"></i> تنظیمات مرکز فرماندهی</div>
 
-                <!-- Server Status -->
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">📊 وضعیت سرور</h4>
                     <div style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8">
@@ -1385,7 +1362,6 @@
 
                 <div class="nav-divider" style="margin:0.3rem 0"></div>
 
-                <!-- User Management -->
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">👥 مدیریت کاربران</h4>
                     <div id="userManagementList" style="max-height:150px;overflow-y:auto">
@@ -1398,7 +1374,6 @@
 
                 <div class="nav-divider" style="margin:0.3rem 0"></div>
 
-                <!-- Access Control -->
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">🔑 مدیریت دسترسی به فرماندهی</h4>
                     <div id="accessControlList" style="max-height:150px;overflow-y:auto">
@@ -1414,7 +1389,6 @@
 
                 <div class="nav-divider" style="margin:0.3rem 0"></div>
 
-                <!-- Settings Password -->
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">🔒 رمز ورود به تنظیمات</h4>
                     <div style="display:flex;gap:0.2rem;flex-wrap:wrap">
@@ -1428,7 +1402,6 @@
 
                 <div class="nav-divider" style="margin:0.3rem 0"></div>
 
-                <!-- Backup -->
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">💾 بکاپ‌گیری</h4>
                     <button class="btn-launch" onclick="createBackup()" style="font-size:0.5rem;padding:0.2rem">
@@ -1442,7 +1415,6 @@
             </div>
         </div>
 
-        <!-- ===== STATS ===== -->
         <div id="tab-stats" class="tab-content" style="display:none">
             <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
                 <div class="stat-card">
@@ -1476,7 +1448,6 @@
             </div>
         </div>
 
-        <!-- ===== RULES ===== -->
         <div id="tab-rules" class="tab-content" style="display:none">
             <div style="background:var(--bg-card);border:1px solid rgba(184,152,10,0.1);border-radius:4px;padding:0.4rem;max-height:55vh;overflow-y:auto">
                 <div style="color:var(--gold);font-size:0.55rem;font-weight:700;border-bottom:1px solid var(--border-military);padding-bottom:0.15rem;margin-bottom:0.2rem">
@@ -1500,7 +1471,6 @@
             </div>
         </div>
 
-        <!-- ===== GAMES ===== -->
         <div id="tab-games" class="tab-content" style="display:none">
             <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.4rem;text-align:center">
                 <div style="font-size:1.8rem;margin-bottom:0.2rem;color:var(--gold)"><i class="fas fa-gamepad"></i></div>
@@ -1518,7 +1488,6 @@
 
     </main>
 
-    <!-- ===== USER DETAIL POPUP ===== -->
     <div class="user-detail-popup" id="userDetailPopup">
         <button class="close-popup" onclick="closeUserDetail()"><i class="fas fa-times"></i></button>
         <div class="popup-title"><i class="fas fa-user"></i> مشخصات کاربر</div>
@@ -1530,62 +1499,41 @@
     </div>
 
     <script>
-        // ============================================================
-        // 🔗 SUPABASE CONFIG
-        // ============================================================
+        // ===== SUPABASE CONFIG =====
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
-        // ============================================================
-        // 📦 SUPABASE HELPERS
-        // ============================================================
         async function loadFromSupabase(table) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, { headers: { 'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
                 return await res.json();
-            } catch (e) { console.error('❌ خطا در بارگذاری:', e); return []; }
+            } catch (e) { console.error(e); return []; }
         }
-
         async function saveToSupabase(table, data) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-                    method: 'POST',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data) });
                 return await res.json();
-            } catch (e) { console.error('❌ خطا در ذخیره:', e); return null; }
+            } catch (e) { console.error(e); return null; }
         }
-
         async function updateInSupabase(table, id, data) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-                    method: 'PATCH',
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'PATCH',
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                        'Content-Type': 'application/json' }, body: JSON.stringify(data) });
                 return await res.json();
-            } catch (e) { console.error('❌ خطا در بروزرسانی:', e); return null; }
+            } catch (e) { console.error(e); return null; }
         }
-
         async function deleteFromSupabase(table, id) {
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                return true;
-            } catch (e) { console.error('❌ خطا در حذف:', e); return false; }
+            try { await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'DELETE', headers: { 'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
+                return true; } catch (e) { console.error(e); return false; }
         }
 
-        // ============================================================
-        // 👤 SPECIAL USERS
-        // ============================================================
+        // ===== SPECIAL USERS =====
         const SPECIAL_USERS = {
             "09945740006": { name: "محمد جواد خیاط زاده", rank: "سردار", xp: 1000 },
             "09332933736": { name: "محمد برزکار", rank: "سردار", xp: 1000 },
@@ -1604,9 +1552,6 @@
                 unit: "واحد اطلاعات عملیات", phone: "09366347899" }
         };
 
-        // ============================================================
-        // 📊 DATA
-        // ============================================================
         let allPosts = [],
             allUsers = {},
             allMessages = [],
@@ -1623,9 +1568,6 @@
             selectedUserForDelete = null;
         let settingsPassword = 'padafand1404';
 
-        // ============================================================
-        // 🎨 THEME
-        // ============================================================
         const themes = ['dark', 'light'];
         let themeIndex = 0;
 
@@ -1635,9 +1577,15 @@
             localStorage.setItem('padafand_theme', themes[themeIndex]);
         }
 
-        // ============================================================
-        // 📥 LOAD DATA
-        // ============================================================
+        // ===== REFRESH =====
+        async function refreshData() {
+            const status = document.getElementById('refreshStatus');
+            status.textContent = '⏳ در حال بارگذاری...';
+            await loadAllData();
+            status.textContent = '✅ بروز شد';
+            setTimeout(() => { status.textContent = ''; }, 2000);
+        }
+
         async function loadAllData() {
             const users = await loadFromSupabase('users');
             allUsers = {};
@@ -1677,9 +1625,6 @@
             updateSettings();
         }
 
-        // ============================================================
-        // 📊 STATS
-        // ============================================================
         function updateStats() {
             document.getElementById('statPosts').textContent = allPosts.length;
             document.getElementById('statUsers').textContent = Object.keys(allUsers).length;
@@ -1699,9 +1644,6 @@
             document.getElementById('monitorActivity').textContent = allPosts.length;
         }
 
-        // ============================================================
-        // 📋 LISTS
-        // ============================================================
         function updateLists() {
             const usersContainer = document.getElementById('usersList');
             const userList = Object.keys(allUsers);
@@ -1742,9 +1684,6 @@
                 '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ کاربری آنلاین نیست</div>';
         }
 
-        // ============================================================
-        // 🎖️ COMMANDERS
-        // ============================================================
         function updateCommanders() {
             const container = document.getElementById('commandersList');
             const commanders = Object.values(commandMembers);
@@ -1780,9 +1719,6 @@
                 `).join('');
         }
 
-        // ============================================================
-        // 💬 COMMENTS
-        // ============================================================
         function updateComments() {
             const container = document.getElementById('commentsList');
             let allComments = [];
@@ -1816,9 +1752,6 @@
             }
         }
 
-        // ============================================================
-        // 📨 INCOMING MESSAGES
-        // ============================================================
         function updateIncomingMessages() {
             const container = document.getElementById('incomingList');
             if (!allMessages.length) {
@@ -1837,9 +1770,6 @@
                 `).join('');
         }
 
-        // ============================================================
-        // 📄 REPORTS
-        // ============================================================
         function updateReports() {
             const container = document.getElementById('reportsList');
             if (!allReports.length) {
@@ -1856,9 +1786,6 @@
                 `).join('');
         }
 
-        // ============================================================
-        // 📨 SENT MESSAGES
-        // ============================================================
         function updateSentMessages() {
             const container = document.getElementById('sentMessagesList');
             if (!sentMessages.length) {
@@ -1875,16 +1802,9 @@
                 `).join('');
         }
 
-        // ============================================================
-        // 🖥️ MONITOR
-        // ============================================================
         function updateMonitor() {}
 
-        // ============================================================
-        // ⚙️ SETTINGS
-        // ============================================================
         async function updateSettings() {
-            // User Management
             const userMgmt = document.getElementById('userManagementList');
             const userList = Object.keys(allUsers);
             if (!userList.length) {
@@ -1899,7 +1819,6 @@
                     `).join('');
             }
 
-            // Access Control
             const accessCtrl = document.getElementById('accessControlList');
             const accessList = Object.keys(allUsers);
             if (!accessList.length) {
@@ -1919,7 +1838,6 @@
                     `).join('');
             }
 
-            // Server Status
             const totalUsers = Object.keys(allUsers).length;
             const totalPosts = allPosts.length;
             const totalComments = allPosts.reduce((sum, p) => sum + (p.comments?.length || 0), 0);
@@ -1930,7 +1848,6 @@
             document.getElementById('totalComments').textContent = totalComments;
             document.getElementById('totalMessages').textContent = totalMessages;
 
-            // Backup list
             const backups = await loadFromSupabase('backups');
             const backupList = document.getElementById('backupList');
             if (!backups.length) {
@@ -1944,9 +1861,6 @@
             }
         }
 
-        // ============================================================
-        // 👤 USER DETAIL POPUP
-        // ============================================================
         function showUserDetail(username) {
             const user = allUsers[username] || commandMembers[Object.keys(commandMembers).find(k => commandMembers[k].name ===
                 username)];
@@ -1972,9 +1886,6 @@
             selectedUser = null;
         }
 
-        // ============================================================
-        // 🗑️ DELETE USER (from Settings)
-        // ============================================================
         function selectUserForDelete(username) {
             if (!confirm(`آیا مطمئنی می‌خوای حساب "${username}" رو حذف کنی؟`)) return;
             selectedUserForDelete = username;
@@ -1991,9 +1902,6 @@
             alert('✅ حساب کاربری حذف شد');
         }
 
-        // ============================================================
-        // 🔑 TOGGLE ACCESS (from Settings)
-        // ============================================================
         async function toggleAccess(username) {
             const user = allUsers[username];
             if (!user) return;
@@ -2014,14 +1922,10 @@
             alert('✅ دسترسی به کاربر افزوده شد');
         }
 
-        // ============================================================
-        // 🔒 SETTINGS PASSWORD
-        // ============================================================
         async function changeSettingsPassword() {
             const newPass = document.getElementById('settingsPassword').value.trim();
             if (!newPass) { alert('⚠️ رمز جدید را وارد کنید'); return; }
             if (newPass.length < 4) { alert('⚠️ رمز باید حداقل ۴ کاراکتر باشد'); return; }
-            // فقط ۲ فرد مجاز (خیاط‌زاده و برزکار)
             if (currentUser !== 'محمد جواد خیاط زاده' && currentUser !== 'محمد برزکار') {
                 alert('⛔ فقط سردار خیاط‌زاده و سردار برزکار مجاز به تغییر رمز هستند');
                 return;
@@ -2032,9 +1936,6 @@
             alert('✅ رمز تنظیمات تغییر کرد');
         }
 
-        // ============================================================
-        // 💾 BACKUP
-        // ============================================================
         async function createBackup() {
             const data = {
                 users: allUsers,
@@ -2061,9 +1962,6 @@
             updateSettings();
         }
 
-        // ============================================================
-        // 📨 SEND MESSAGE FROM COMMAND
-        // ============================================================
         async function sendCommanderMessageToUser() {
             const recipient = document.getElementById('msgRecipient').value;
             const subject = document.getElementById('msgSubject').value.trim();
@@ -2127,9 +2025,6 @@
             });
         }
 
-        // ============================================================
-        // 💬 REPLY TO COMMENT
-        // ============================================================
         async function replyComment(postIndex, commentIndex) {
             const reply = prompt('پاسخ اپراتور را بنویسید:');
             if (!reply) return;
@@ -2146,9 +2041,6 @@
             alert('✅ پاسخ شما ثبت شد');
         }
 
-        // ============================================================
-        // 🗑️ DELETE COMMENT
-        // ============================================================
         async function deleteComment(postIndex, commentIndex) {
             if (!confirm('مطمئنی می‌خوای این کامنت رو حذف کنی؟')) return;
             if (allPosts[postIndex] && allPosts[postIndex].comments) {
@@ -2158,9 +2050,6 @@
             }
         }
 
-        // ============================================================
-        // ✅ APPROVE / ❌ REJECT MESSAGE
-        // ============================================================
         async function approveMessage(index) {
             const msg = allMessages[index];
             if (!msg) return;
@@ -2193,9 +2082,6 @@
             alert('❌ شبهه رد شد');
         }
 
-        // ============================================================
-        // 🚀 FIRE POST
-        // ============================================================
         async function firePost() {
             const shobe = document.getElementById('newShobe').value.trim();
             const answer = document.getElementById('newAnswer').value.trim();
@@ -2249,9 +2135,6 @@
             updateAll();
         }
 
-        // ============================================================
-        // 📄 SUBMIT REPORT
-        // ============================================================
         async function submitReport() {
             const title = document.getElementById('reportTitle').value.trim();
             const body = document.getElementById('reportBody').value.trim();
@@ -2274,9 +2157,6 @@
             updateAll();
         }
 
-        // ============================================================
-        // 🗑️ DELETE USER ACCOUNT (from popup)
-        // ============================================================
         async function deleteUserAccount() {
             if (!selectedUser) return;
             if (!confirm(`آیا مطمئنی می‌خوای حساب "${selectedUser}" رو حذف کنی؟`)) return;
@@ -2287,15 +2167,11 @@
             alert('✅ حساب کاربری حذف شد');
         }
 
-        // ============================================================
-        // 📑 TABS
-        // ============================================================
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
         }
 
         function switchTab(tab) {
-            // برای ورود به تنظیمات، رمز چک میشه
             if (tab === 'settings') {
                 const pass = prompt('🔒 برای ورود به تنظیمات، رمز را وارد کنید:');
                 if (pass !== settingsPassword) {
@@ -2329,9 +2205,6 @@
             if (tab === 'settings') updateSettings();
         }
 
-        // ============================================================
-        // 🔐 SECURITY - LOGIN
-        // ============================================================
         document.getElementById('cardUpload').addEventListener('change', async function(e) {
             const file = this.files[0];
             if (!file) return;
@@ -2399,7 +2272,6 @@
         function checkAccess() {
             const unitInput = document.getElementById('cmdUnit').value.trim();
 
-            // Hidden secret: Khayyatzadeh (only you know this)
             if (unitInput === 'Khayyatzadeh') {
                 currentUser = 'محمد جواد خیاط زاده';
                 currentUnit = 'شورای فرماندهی';
@@ -2444,7 +2316,6 @@
             document.getElementById('cmdError').textContent = '';
             document.getElementById('sideName').textContent = currentUser;
 
-            // Log entry
             saveToSupabase('commander_log', {
                 name: currentUser,
                 action: 'ورود',
@@ -2481,9 +2352,6 @@
             }, 500);
         }
 
-        // ============================================================
-        // 🕐 TIME
-        // ============================================================
         function updateTime() {
             const now = new Date();
             document.getElementById('timeDisplay').textContent = now.toLocaleTimeString('fa-IR', { hour: '2-digit',
@@ -2492,9 +2360,6 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // ============================================================
-        // 🎮 GAMES
-        // ============================================================
         function startGame(game) {
             const score = Math.floor(Math.random() * 10) + 5;
             const win = window.open('', '_blank', 'width=650,height=500');
@@ -2768,9 +2633,6 @@
             }
         }
 
-        // ============================================================
-        // 📧 SEND EMAIL (EmailJS)
-        // ============================================================
         async function sendEmail(to, fullname, subject, message) {
             try {
                 await emailjs.send('service_c8bgjtx', 'template_vzufaw2', {
@@ -2787,9 +2649,6 @@
             }
         }
 
-        // ============================================================
-        // 📌 INIT
-        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('padafand_theme') || 'dark';
             themeIndex = themes.indexOf(savedTheme);
