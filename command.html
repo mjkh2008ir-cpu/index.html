@@ -18,6 +18,7 @@
   --text-primary:#c8d8e0;
   --text-secondary:#7a9aaa;
   --font-mono:'Courier New',monospace;
+  --neon-glow:#39ff14;
 }
 [data-theme="light"]{
   --bg-primary:#e8eef0;
@@ -27,6 +28,7 @@
   --neon-green:#2a6a7a;
   --text-primary:#1a2a2e;
   --text-secondary:#4a5a5e;
+  --neon-glow:#2a8a1a;
 }
 body{
   background:var(--bg-primary);
@@ -46,6 +48,7 @@ body{
 @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--neon-green)}50%{box-shadow:0 0 25px var(--neon-green)}}
 @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon-glow),0 0 10px var(--neon-glow)}50%{text-shadow:0 0 20px var(--neon-glow),0 0 40px var(--neon-glow)}}
 
 #securityPage{
   position:fixed;
@@ -67,7 +70,7 @@ body{
   width:100%;
   box-shadow:0 0 60px rgba(74,138,170,0.05);
 }
-#securityPage .login-box .logo{text-align:center;font-size:2.5rem;display:block;color:var(--gold)}
+#securityPage .login-box .logo{text-align:center;font-size:2.5rem;display:block;color:var(--gold);animation:neonPulse 2s infinite}
 #securityPage .login-box h2{color:var(--text-primary);font-size:1.1rem;text-align:center;letter-spacing:2px;margin:0.3rem 0}
 #securityPage .login-box h2 span{color:var(--neon-green)}
 #securityPage .login-box .sub{text-align:center;color:var(--text-secondary);font-size:.5rem;font-family:var(--font-mono)}
@@ -99,7 +102,7 @@ body{
 #securityPage .login-box .badge span{color:var(--text-secondary);font-size:.35rem;letter-spacing:2px;font-family:var(--font-mono)}
 
 .sidebar{
-  width:200px;
+  width:220px;
   height:100vh;
   background:var(--bg-secondary);
   border-left:1px solid var(--border-military);
@@ -111,9 +114,10 @@ body{
   z-index:100;
   overflow-y:auto;
   transition:all 0.3s ease;
+  box-shadow:0 0 30px rgba(0,0,0,0.3);
 }
 .sidebar .logo-area{text-align:center;border-bottom:1px solid var(--border-military);padding-bottom:0.5rem;margin-bottom:0.5rem}
-.sidebar .logo-area .icon{font-size:1.8rem;display:block;color:var(--gold);animation:glowPulse 2s infinite}
+.sidebar .logo-area .icon{font-size:1.8rem;display:block;color:var(--gold);animation:neonPulse 2s infinite}
 .sidebar .logo-area h2{font-size:0.75rem;letter-spacing:2px;font-weight:700}
 .sidebar .logo-area h2 span{color:var(--neon-green)}
 .sidebar .logo-area .sub{font-size:0.35rem;color:var(--text-secondary);letter-spacing:1px;font-family:var(--font-mono)}
@@ -131,18 +135,18 @@ body{
   border-right:2px solid transparent;
   background:none;width:100%;text-align:right;border:none;border-right:2px solid transparent;
 }
-.sidebar .nav-item:hover{background:rgba(74,138,170,0.04);color:var(--text-primary);padding-right:0.6rem}
-.sidebar .nav-item.active{background:rgba(74,138,170,0.06);color:var(--neon-green);border-right-color:var(--neon-green)}
-.sidebar .nav-item i{width:16px;font-size:0.65rem;color:var(--gold)}
+.sidebar .nav-item:hover{background:rgba(74,138,170,0.08);color:var(--text-primary);padding-right:0.6rem}
+.sidebar .nav-item.active{background:rgba(74,138,170,0.08);color:var(--neon-green);border-right-color:var(--neon-green)}
+.sidebar .nav-item i{width:18px;font-size:0.65rem;color:var(--gold)}
 .sidebar .nav-divider{height:1px;background:var(--border-military);margin:0.2rem 0}
 .sidebar .commander-badge{margin-top:0.5rem;padding:0.3rem;border:1px solid var(--gold);border-radius:6px;background:rgba(184,152,10,0.05);text-align:center}
 .sidebar .commander-badge .title{color:var(--gold);font-size:0.5rem;font-weight:700}
-.sidebar .commander-badge .name{color:var(--text-primary);font-size:0.6rem}
+.sidebar .commander-badge .name{color:var(--text-primary);font-size:0.6rem;font-weight:700}
 .sidebar .commander-badge .status{color:var(--neon-green);font-size:0.35rem}
 .sidebar .commander-badge .logout-btn{background:var(--gold);border:none;border-radius:4px;color:#1a1000;font-size:0.4rem;padding:0.05rem 0.5rem;cursor:pointer;margin-top:0.1rem;transition:.3s}
 .sidebar .commander-badge .logout-btn:hover{transform:scale(1.05)}
 
-.main{flex:1;margin-right:200px;padding:0.4rem 0.6rem;height:100vh;overflow-y:auto}
+.main{flex:1;margin-right:220px;padding:0.4rem 0.8rem;height:100vh;overflow-y:auto}
 .top-bar{
   display:flex;
   justify-content:space-between;
@@ -173,7 +177,11 @@ body{
   border-radius:4px;
   padding:0.25rem 0.4rem;
   transition:.3s;
+  position:relative;
+  overflow:hidden;
 }
+.stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--neon-green),transparent);opacity:0;transition:.3s}
+.stat-card:hover::before{opacity:0.03}
 .stat-card:hover{border-color:var(--neon-green);transform:translateY(-2px)}
 .stat-card .num{font-size:1rem;font-weight:900;font-family:var(--font-mono);color:var(--text-primary)}
 .stat-card .label{font-size:0.35rem;color:var(--text-secondary);letter-spacing:1px}
@@ -188,6 +196,7 @@ body{
   position:relative;
   overflow:hidden;
 }
+.monitor-container::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(74,138,170,0.02) 2px,rgba(74,138,170,0.02) 4px);pointer-events:none}
 .monitor-container .monitor-title{font-size:0.35rem;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:2px;margin-bottom:0.1rem}
 .monitor-screen{
   background:rgba(6,10,12,0.8);
@@ -372,6 +381,10 @@ body{
   transition:.3s;
 }
 .list-item .send-msg-btn:hover{transform:scale(1.05)}
+.list-item .approve-btn{background:#2a7a2a;border:none;color:#fff;padding:0.05rem 0.3rem;border-radius:3px;cursor:pointer;font-size:0.35rem;margin-right:0.2rem;transition:.3s}
+.list-item .approve-btn:hover{transform:scale(1.05)}
+.list-item .reject-btn{background:#7a2a2a;border:none;color:#fff;padding:0.05rem 0.3rem;border-radius:3px;cursor:pointer;font-size:0.35rem;margin-right:0.2rem;transition:.3s}
+.list-item .reject-btn:hover{transform:scale(1.05)}
 
 .launch-section{
   background:var(--bg-card);
@@ -514,7 +527,7 @@ body{
     </div>
     <div class="input-group">
       <label>واحد عملیاتی</label>
-      <input type="text" id="cmdUnit" placeholder="شورای فرماندهی یا اطلاعات عملیات">
+      <input type="text" id="cmdUnit" placeholder='مثلاً "Khayyatzadeh" یا "شورای فرماندهی"'>
     </div>
     <button class="btn-cmd" onclick="checkAccess()">تأیید هویت</button>
     <div class="error" id="cmdError"></div>
@@ -543,6 +556,8 @@ body{
     <button class="nav-item" onclick="switchTab('commanders')"><i class="fas fa-star"></i> فرماندهان</button>
     <button class="nav-item" onclick="switchTab('comments')"><i class="fas fa-comment-dots"></i> کامنت‌ها</button>
     <button class="nav-item" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> پیام‌ها</button>
+    <button class="nav-item" onclick="switchTab('incoming')"><i class="fas fa-inbox"></i> شبهات دریافتی</button>
+    <button class="nav-item" onclick="switchTab('reports')"><i class="fas fa-clipboard"></i> گزارش‌ها</button>
     <div class="nav-divider"></div>
     <button class="nav-item" onclick="switchTab('stats')"><i class="fas fa-chart-bar"></i> آمار</button>
     <button class="nav-item" onclick="switchTab('rules')"><i class="fas fa-scroll"></i> آیین‌نامه</button>
@@ -567,7 +582,8 @@ body{
       <div class="stat-card"><span class="icon"><i class="fas fa-file-alt"></i></span><div class="num" id="statPosts">0</div><div class="label">مطالب</div></div>
       <div class="stat-card"><span class="icon"><i class="fas fa-users"></i></span><div class="num" id="statUsers">0</div><div class="label">کاربران</div></div>
       <div class="stat-card"><span class="icon"><i class="fas fa-calendar-day"></i></span><div class="num" id="statToday">0</div><div class="label">امروز</div></div>
-      <div class="stat-card"><span class="icon"><i class="fas fa-clock"></i></span><div class="num" id="statPending">0</div><div class="label">در انتظار</div></div>
+      <div class="stat-card"><span class="icon"><i class="fas fa-inbox"></i></span><div class="num" id="statPending">0</div><div class="label">در انتظار</div></div>
+      <div class="stat-card"><span class="icon"><i class="fas fa-star"></i></span><div class="num" id="statSpecial">0</div><div class="label">سرداران</div></div>
     </div>
     <div class="monitor-container">
       <div class="monitor-title"><i class="fas fa-desktop"></i> مانیتور عملیات</div>
@@ -590,6 +606,10 @@ body{
     <div class="list-container">
       <div class="list-title"><i class="fas fa-users"></i> کاربران آنلاین</div>
       <div id="onlineUsers"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
+    </div>
+    <div class="list-container">
+      <div class="list-title"><i class="fas fa-clock"></i> آخرین ورود/خروج فرماندهان</div>
+      <div id="commanderLogList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
     </div>
   </div>
 
@@ -628,7 +648,7 @@ body{
 
   <div id="tab-commanders" class="tab-content" style="display:none">
     <div class="list-container">
-      <div class="list-title"><i class="fas fa-star"></i> فرماندهان <span style="font-size:0.3rem;color:var(--text-secondary)">(ورود/خروج)</span></div>
+      <div class="list-title"><i class="fas fa-star"></i> فرماندهان <span style="font-size:0.3rem;color:var(--text-secondary)">(ورود/خروج ثبت می‌شود)</span></div>
       <div id="commandersList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
     </div>
   </div>
@@ -659,6 +679,27 @@ body{
     </div>
   </div>
 
+  <div id="tab-incoming" class="tab-content" style="display:none">
+    <div class="list-container">
+      <div class="list-title"><i class="fas fa-inbox"></i> شبهات ارسالی از سوی مردم</div>
+      <div id="incomingList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...</div></div>
+    </div>
+  </div>
+
+  <div id="tab-reports" class="tab-content" style="display:none">
+    <div class="launch-section">
+      <div class="launch-title"><i class="fas fa-clipboard"></i> نوشتن گزارش جدید</div>
+      <input type="text" id="reportTitle" placeholder="عنوان گزارش...">
+      <textarea id="reportBody" rows="4" placeholder="متن گزارش..."></textarea>
+      <button class="btn-launch" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
+      <div class="msg" id="reportMsg"></div>
+    </div>
+    <div class="list-container" style="margin-top:0.3rem">
+      <div class="list-title"><i class="fas fa-list"></i> گزارش‌های ارسال‌شده</div>
+      <div id="reportsList"><div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ گزارشی ارسال نشده</div></div>
+    </div>
+  </div>
+
   <div id="tab-stats" class="tab-content" style="display:none">
     <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
       <div class="stat-card"><div class="num" id="statAllPosts">0</div><div class="label">کل شبهات</div></div>
@@ -667,7 +708,7 @@ body{
       <div class="stat-card"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div>
       <div class="stat-card"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div>
       <div class="stat-card"><div class="num" id="statOnline">0</div><div class="label">آنلاین</div></div>
-      <div class="stat-card"><div class="num" id="statSpecial">0</div><div class="label">سرداران</div></div>
+      <div class="stat-card"><div class="num" id="statSpecialCount">0</div><div class="label">سرداران</div></div>
     </div>
   </div>
 
@@ -701,6 +742,8 @@ body{
         <div class="game-card" onclick="startGame('snake')"><span class="icon"><i class="fas fa-crown"></i></span><span class="name">مار جنگی</span><span class="desc">عملیات نفوذ</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
         <div class="game-card" onclick="startGame('memory')"><span class="icon"><i class="fas fa-brain"></i></span><span class="name">حافظه</span><span class="desc">شناسایی اهداف</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
         <div class="game-card" onclick="startGame('sudoku')"><span class="icon"><i class="fas fa-th"></i></span><span class="name">سودوکو</span><span class="desc">رمزگشایی</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
+        <div class="game-card" onclick="startGame('quiz')"><span class="icon"><i class="fas fa-question-circle"></i></span><span class="name">آزمون</span><span class="desc">دانش پدافندی</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
+        <div class="game-card" onclick="startGame('reaction')"><span class="icon"><i class="fas fa-bolt"></i></span><span class="name">واکنش</span><span class="desc">پاسخ سریع</span><span class="xp-badge">+۵ تا ۱۵ XP</span></div>
       </div>
     </div>
   </div>
@@ -719,7 +762,9 @@ body{
 
 <script>
 // ============================================================
-// سرور
+// ═══════════════════════════════════════════════════════════
+// کلیدهای یکسان با سایت اصلی
+// ═══════════════════════════════════════════════════════════
 // ============================================================
 const BIN_ID = '6a771499da38895dfec99f53';
 const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
@@ -730,8 +775,8 @@ async function loadFromServer() {
       headers: { 'X-Master-Key': API_KEY }
     });
     const data = await res.json();
-    return data.record || { posts: [], users: {}, messages: [], inbox: {} };
-  } catch(e) { return { posts: [], users: {}, messages: [], inbox: {} }; }
+    return data.record || { posts: [], users: {}, messages: [], inbox: {}, reports: [], commanderLog: [] };
+  } catch(e) { return { posts: [], users: {}, messages: [], inbox: {}, reports: [], commanderLog: [] }; }
 }
 
 async function saveToServer(data) {
@@ -768,14 +813,15 @@ let allPosts = [];
 let allUsers = {};
 let allMessages = [];
 let allInbox = {};
+let allReports = [];
+let allCommanderLog = [];
 let currentUser = null;
 let currentUnit = '';
 let uploadedCardData = null;
 let isCardVerified = false;
 let currentTab = 'dashboard';
-let commanderLog = [];
-let selectedUser = null;
 let sentMessages = [];
+let selectedUser = null;
 
 // ============================================================
 // OCR
@@ -847,7 +893,6 @@ document.getElementById('cardUpload').addEventListener('change', async function(
 function checkAccess() {
   const unitInput = document.getElementById('cmdUnit').value.trim();
   
-  // ورود مستقیم با Khayyatzadeh
   if (unitInput === 'Khayyatzadeh') {
     currentUser = 'محمد جواد خیاط زاده';
     currentUnit = 'شورای فرماندهی';
@@ -891,17 +936,22 @@ function enterCommand() {
   document.querySelector('.main').style.display = 'block';
   document.getElementById('cmdError').textContent = '';
   document.getElementById('sideName').textContent = currentUser;
-  commanderLog.push({ name: currentUser, action: 'ورود', time: new Date().toLocaleString('fa-IR') });
+  
+  // ثبت ورود
+  allCommanderLog = allData.commanderLog || [];
+  allCommanderLog.push({ name: currentUser, action: 'ورود', time: new Date().toLocaleString('fa-IR') });
+  allData.commanderLog = allCommanderLog;
+  saveToServer(allData);
+  
   localStorage.setItem('padafand_commander', JSON.stringify({ user: currentUser, time: new Date().toISOString() }));
   loadData();
   updateTime();
   setInterval(updateTime, 1000);
   
-  // جلوگیری از بسته شدن برگه
   window.addEventListener('beforeunload', function(e) {
-    commanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
-    localStorage.setItem('padafand_commander_log', JSON.stringify(commanderLog));
-    // بستن پنجره
+    allCommanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
+    allData.commanderLog = allCommanderLog;
+    saveToServer(allData);
     e.preventDefault();
     e.returnValue = '';
     window.close();
@@ -909,12 +959,11 @@ function enterCommand() {
 }
 
 function commanderLogout() {
-  commanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
-  localStorage.setItem('padafand_commander_log', JSON.stringify(commanderLog));
+  allCommanderLog.push({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') });
+  allData.commanderLog = allCommanderLog;
+  saveToServer(allData);
   localStorage.removeItem('padafand_commander');
-  // بستن پنجره
   window.close();
-  // اگر بسته نشد، برگشت به صفحه اصلی
   setTimeout(() => {
     window.location.href = './index.html';
   }, 500);
@@ -929,6 +978,9 @@ async function loadData() {
   allUsers = data.users || {};
   allMessages = data.messages || [];
   allInbox = data.inbox || {};
+  allReports = data.reports || [];
+  allCommanderLog = data.commanderLog || [];
+  allData = data;
   updateAll();
   populateRecipients();
 }
@@ -940,6 +992,9 @@ function updateAll() {
   updateCommanders();
   updateComments();
   updateSentMessages();
+  updateIncomingMessages();
+  updateReports();
+  updateCommanderLog();
 }
 
 function updateStats() {
@@ -948,6 +1003,8 @@ function updateStats() {
   const today = new Date().toLocaleDateString('fa-IR');
   document.getElementById('statToday').textContent = allPosts.filter(p => p.date === today).length;
   document.getElementById('statPending').textContent = allMessages.length || '—';
+  const specialCount = Object.keys(allUsers).filter(u => allUsers[u].isSpecial).length;
+  document.getElementById('statSpecial').textContent = specialCount;
   document.getElementById('statAllPosts').textContent = allPosts.length;
   document.getElementById('statPublished').textContent = allPosts.length;
   document.getElementById('statWaiting').textContent = allMessages.length || '—';
@@ -955,13 +1012,11 @@ function updateStats() {
   document.getElementById('statComments').textContent = totalComments;
   document.getElementById('statLikes').textContent = allPosts.reduce((sum, p) => sum + (p.likes || 0), 0);
   document.getElementById('statOnline').textContent = Math.floor(Object.keys(allUsers).length * 0.2) || '—';
-  const specialCount = Object.keys(allUsers).filter(u => allUsers[u].isSpecial).length;
-  document.getElementById('statSpecial').textContent = specialCount;
+  document.getElementById('statSpecialCount').textContent = specialCount;
   document.getElementById('monitorActivity').textContent = allPosts.length;
 }
 
 function updateLists() {
-  // کاربران با شماره تلفن و نشان ویژه
   const usersContainer = document.getElementById('usersList');
   const userList = Object.keys(allUsers);
   if (!userList.length) {
@@ -976,7 +1031,6 @@ function updateLists() {
     `).join('');
   }
   
-  // مطالب
   const postsContainer = document.getElementById('postsList');
   if (!allPosts.length) {
     postsContainer.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ مطلبی ارسال نشده</div>';
@@ -991,7 +1045,6 @@ function updateLists() {
     `).join('');
   }
   
-  // آنلاین
   document.getElementById('onlineUsers').innerHTML = userList.slice(0, 4).map(u => `
     <div class="list-item">
       <span class="name">${allUsers[u].isSpecial ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
@@ -1003,7 +1056,7 @@ function updateLists() {
 function updateCommanders() {
   const container = document.getElementById('commandersList');
   const commanders = Object.values(commandMembers);
-  const log = JSON.parse(localStorage.getItem('padafand_commander_log') || '[]');
+  const log = allCommanderLog || [];
   container.innerHTML = commanders.map(c => {
     const lastLog = log.filter(l => l.name === c.name).slice(-1)[0];
     const status = lastLog?.action === 'ورود' ? '🟢 آنلاین' : '⚪ آفلاین';
@@ -1016,6 +1069,22 @@ function updateCommanders() {
       </div>
     `;
   }).join('');
+}
+
+function updateCommanderLog() {
+  const container = document.getElementById('commanderLogList');
+  const log = allCommanderLog || [];
+  if (!log.length) {
+    container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ ورود/خروجی ثبت نشده</div>';
+    return;
+  }
+  container.innerHTML = log.slice(-10).reverse().map(l => `
+    <div class="list-item">
+      <span class="name">${l.name}</span>
+      <span class="role">${l.action}</span>
+      <span class="status">${l.time}</span>
+    </div>
+  `).join('');
 }
 
 function updateComments() {
@@ -1050,6 +1119,38 @@ function updateComments() {
   }
 }
 
+function updateIncomingMessages() {
+  const container = document.getElementById('incomingList');
+  if (!allMessages.length) {
+    container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ شبهه‌ای از سوی مردم ارسال نشده</div>';
+    return;
+  }
+  container.innerHTML = allMessages.map((m, i) => `
+    <div class="list-item">
+      <span class="name">❓ ${m.shobe?.substring(0, 20) || 'بدون عنوان'}...</span>
+      <span class="role">${m.category || 'عمومی'} • ${m.priority || 'عادی'}</span>
+      <span class="status">${m.status || 'در انتظار'}</span>
+      <button class="approve-btn" onclick="approveMessage(${i})"><i class="fas fa-check"></i></button>
+      <button class="reject-btn" onclick="rejectMessage(${i})"><i class="fas fa-times"></i></button>
+    </div>
+  `).join('');
+}
+
+function updateReports() {
+  const container = document.getElementById('reportsList');
+  if (!allReports.length) {
+    container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ گزارشی ارسال نشده</div>';
+    return;
+  }
+  container.innerHTML = allReports.slice().reverse().map(r => `
+    <div class="list-item">
+      <span class="name">📄 ${r.title}</span>
+      <span class="role">${r.author}</span>
+      <span class="status">${r.date}</span>
+    </div>
+  `).join('');
+}
+
 function updateSentMessages() {
   const container = document.getElementById('sentMessagesList');
   if (!sentMessages.length) {
@@ -1067,15 +1168,66 @@ function updateSentMessages() {
 
 function updateMonitor() {}
 
-function populateRecipients() {
-  const select = document.getElementById('msgRecipient');
-  select.innerHTML = '<option value="all">همه کاربران</option>';
-  Object.keys(allUsers).forEach(u => {
-    const option = document.createElement('option');
-    option.value = u;
-    option.textContent = allUsers[u].fullname || u;
-    select.appendChild(option);
+// ============================================================
+// تأیید/رد شبهات دریافتی
+// ============================================================
+async function approveMessage(index) {
+  const msg = allMessages[index];
+  if (!msg) return;
+  const newPost = {
+    shobe: msg.shobe,
+    answer: msg.answer || 'پاسخ توسط فرماندهی ارسال خواهد شد',
+    source: 'ارسال شده توسط ' + msg.sender,
+    tags: ['مردمی'],
+    cat: msg.category || 'عمومی',
+    date: new Date().toLocaleDateString('fa-IR'),
+    time: new Date().toLocaleTimeString('fa-IR'),
+    sender: msg.sender,
+    comments: [],
+    likes: 0,
+    likedBy: []
+  };
+  allPosts.unshift(newPost);
+  allMessages.splice(index, 1);
+  allData.posts = allPosts;
+  allData.messages = allMessages;
+  await saveToServer(allData);
+  updateAll();
+  alert('✅ شبهه تأیید و در سایت منتشر شد');
+}
+
+async function rejectMessage(index) {
+  if (!confirm('مطمئنی این شبهه رو رد کنی؟')) return;
+  allMessages.splice(index, 1);
+  allData.messages = allMessages;
+  await saveToServer(allData);
+  updateAll();
+  alert('❌ شبهه رد شد');
+}
+
+// ============================================================
+// گزارش‌ها
+// ============================================================
+async function submitReport() {
+  const title = document.getElementById('reportTitle').value.trim();
+  const body = document.getElementById('reportBody').value.trim();
+  if (!title || !body) {
+    document.getElementById('reportMsg').textContent = '⚠️ عنوان و متن گزارش را وارد کنید';
+    document.getElementById('reportMsg').style.color = '#c0392b';
+    return;
+  }
+  allReports.push({
+    title, body,
+    author: currentUser,
+    date: new Date().toLocaleString('fa-IR')
   });
+  allData.reports = allReports;
+  await saveToServer(allData);
+  document.getElementById('reportMsg').textContent = '✅ گزارش ارسال شد';
+  document.getElementById('reportMsg').style.color = '#6db33f';
+  document.getElementById('reportTitle').value = '';
+  document.getElementById('reportBody').value = '';
+  updateReports();
 }
 
 // ============================================================
@@ -1106,7 +1258,7 @@ function closeUserDetail() {
 }
 
 // ============================================================
-// ارسال پیام از فرماندهی به کاربران
+// ارسال پیام از فرماندهی
 // ============================================================
 async function sendCommanderMessageToUser() {
   const recipient = document.getElementById('msgRecipient').value;
@@ -1119,7 +1271,6 @@ async function sendCommanderMessageToUser() {
   }
   
   if (recipient === 'all') {
-    // ارسال به همه
     const users = Object.keys(allUsers);
     for (let u of users) {
       if (!allInbox[u]) allInbox[u] = [];
@@ -1133,10 +1284,9 @@ async function sendCommanderMessageToUser() {
         read: false
       });
     }
-    sentMessages.push({ to: 'all', subject, body, date: new Date().toLocaleString('fa-IR') });
+    sentMessages.push({ to: 'همه کاربران', subject, body, date: new Date().toLocaleString('fa-IR') });
     document.getElementById('msgSendResult').textContent = `✅ پیام به ${users.length} کاربر ارسال شد`;
   } else {
-    // ارسال به یک کاربر خاص
     if (!allInbox[recipient]) allInbox[recipient] = [];
     allInbox[recipient].push({
       id: Date.now() + Math.random() * 1000,
@@ -1169,6 +1319,17 @@ function sendMessageToSelectedUser() {
   closeUserDetail();
 }
 
+function populateRecipients() {
+  const select = document.getElementById('msgRecipient');
+  select.innerHTML = '<option value="all">همه کاربران</option>';
+  Object.keys(allUsers).forEach(u => {
+    const option = document.createElement('option');
+    option.value = u;
+    option.textContent = allUsers[u].fullname || u;
+    select.appendChild(option);
+  });
+}
+
 // ============================================================
 // پاسخ به کامنت
 // ============================================================
@@ -1183,7 +1344,7 @@ async function replyComment(postIndex, commentIndex) {
     text: reply,
     time: new Date().toLocaleString('fa-IR')
   });
-  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox, reports: allReports, commanderLog: allCommanderLog };
   await saveToServer(data);
   updateAll();
   alert('✅ پاسخ شما ثبت شد');
@@ -1196,7 +1357,7 @@ async function deleteComment(postIndex, commentIndex) {
   if (!confirm('مطمئنی می‌خوای این کامنت رو حذف کنی؟')) return;
   if (allPosts[postIndex] && allPosts[postIndex].comments) {
     allPosts[postIndex].comments.splice(commentIndex, 1);
-    const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+    const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox, reports: allReports, commanderLog: allCommanderLog };
     await saveToServer(data);
     updateAll();
   }
@@ -1226,7 +1387,7 @@ async function firePost() {
     likedBy: []
   };
   allPosts.unshift(newPost);
-  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox, reports: allReports, commanderLog: allCommanderLog };
   await saveToServer(data);
   document.getElementById('fireMsg').textContent = '✅ مطلب با موفقیت شلیک شد!';
   document.getElementById('fireMsg').style.color = '#6db33f';
@@ -1254,7 +1415,7 @@ function editPost(index) {
 async function deletePost(index) {
   if (!confirm('مطمئنی می‌خوای این مطلب رو حذف کنی؟')) return;
   allPosts.splice(index, 1);
-  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox, reports: allReports, commanderLog: allCommanderLog };
   await saveToServer(data);
   updateAll();
 }
@@ -1266,7 +1427,7 @@ async function deleteUserAccount() {
   if (!selectedUser) return;
   if (!confirm(`آیا مطمئنی می‌خوای حساب "${selectedUser}" رو حذف کنی؟`)) return;
   delete allUsers[selectedUser];
-  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+  const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox, reports: allReports, commanderLog: allCommanderLog };
   await saveToServer(data);
   closeUserDetail();
   updateAll();
@@ -1297,16 +1458,18 @@ function switchTab(tab) {
   document.getElementById('tab-' + tab).style.display = 'block';
   document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
   const items = document.querySelectorAll('.sidebar .nav-item');
-  const map = {dashboard:0, launch:1, posts:2, users:3, commanders:4, comments:5, messages:6, stats:7, rules:8, games:9};
+  const map = {dashboard:0, launch:1, posts:2, users:3, commanders:4, comments:5, messages:6, incoming:7, reports:8, stats:9, rules:10, games:11};
   if (map[tab] !== undefined && items[map[tab]]) items[map[tab]].classList.add('active');
   const title = document.getElementById('pageTitle');
-  const icons = {dashboard:'fa-chart-pie', launch:'fa-rocket', posts:'fa-file-alt', users:'fa-users', commanders:'fa-star', comments:'fa-comment-dots', messages:'fa-envelope', stats:'fa-chart-bar', rules:'fa-scroll', games:'fa-gamepad'};
-  const names = {dashboard:'داشبورد', launch:'شلیک مطلب', posts:'مطالب', users:'کاربران', commanders:'فرماندهان', comments:'کامنت‌ها', messages:'پیام‌ها', stats:'آمار', rules:'آیین‌نامه', games:'بازی'};
+  const icons = {dashboard:'fa-chart-pie', launch:'fa-rocket', posts:'fa-file-alt', users:'fa-users', commanders:'fa-star', comments:'fa-comment-dots', messages:'fa-envelope', incoming:'fa-inbox', reports:'fa-clipboard', stats:'fa-chart-bar', rules:'fa-scroll', games:'fa-gamepad'};
+  const names = {dashboard:'داشبورد', launch:'شلیک مطلب', posts:'مطالب', users:'کاربران', commanders:'فرماندهان', comments:'کامنت‌ها', messages:'پیام‌ها', incoming:'شبهات دریافتی', reports:'گزارش‌ها', stats:'آمار', rules:'آیین‌نامه', games:'بازی'};
   title.innerHTML = `<i class="fas ${icons[tab]}"></i> ${names[tab]} <span class="sub">مرکز عملیات</span>`;
   if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
   if (tab === 'comments') updateComments();
   if (tab === 'commanders') updateCommanders();
   if (tab === 'messages') populateRecipients();
+  if (tab === 'incoming') updateIncomingMessages();
+  if (tab === 'reports') updateReports();
 }
 
 // ============================================================
@@ -1323,7 +1486,9 @@ function startGame(game) {
     minesweeper: { name: 'مین‌یاب', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
     snake: { name: 'مار جنگی', emoji: '🐍', desc: 'نفوذ کن و جلو برو!' },
     memory: { name: 'حافظه نظامی', emoji: '🧠', desc: 'اهداف رو پیدا کن!' },
-    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' }
+    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' },
+    quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۵ سوال نظامی پاسخ بده!' },
+    reaction: { name: 'واکنش سریع', emoji: '⚡', desc: 'هرچه سریعتر پاسخ بده!' }
   };
   const g = games[game] || games.minesweeper;
   win.document.write(`
@@ -1331,21 +1496,24 @@ function startGame(game) {
     <head><title>بازی ${g.name}</title>
     <style>
       body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
-      .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px}
-      .game-icon{font-size:4rem;display:block;margin-bottom:10px}
-      .game-title{color:#6db33f;font-size:1.5rem;font-weight:700}
+      .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px;box-shadow:0 0 30px rgba(57,255,20,0.05)}
+      .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
+      .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
       .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
       .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
       .cell{width:40px;height:40px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:.2s}
-      .cell:hover{background:#2a3a1a}
+      .cell:hover{background:#2a3a1a;border-color:#4a7c20;transform:scale(1.05)}
       .cell.revealed{background:#0d1408;border-color:#4a7c20}
       .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
-      .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900}
+      .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
       .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
-      .btn-game:hover{background:#6db33f;transform:scale(1.05)}
+      .btn-game:hover{background:#6db33f;transform:scale(1.05);box-shadow:0 0 20px rgba(109,179,63,0.3)}
       .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
       .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
-      .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px}
+      .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px;text-shadow:0 0 10px rgba(109,179,63,0.2)}
+      @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+      .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
+      .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
     </style>
     </head>
     <body>
@@ -1356,9 +1524,10 @@ function startGame(game) {
         <div class="score-box">
           <div>امتیاز شما</div>
           <div class="score" id="gameScore">۰</div>
-          <div style="font-size:0.6rem;color:#7a9a55">کلیک کنید تا شروع کنید</div>
+          <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
+          <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">کلیک کنید تا شروع کنید</div>
         </div>
-        <div class="game-board" id="gameBoard">
+        <div id="gameBoard" style="min-height:100px">
           ${Array(16).fill(0).map((_, i) => `<div class="cell" data-index="${i}" onclick="cellClick(${i})">?</div>`).join('')}
         </div>
         <div>
@@ -1373,18 +1542,21 @@ function startGame(game) {
         const winScore = 15;
         let revealed = new Array(totalCells).fill(false);
         let gameOver = false;
+        let currentGame = '${game}';
         
         function cellClick(index) {
-          if (gameOver) return;
+          if (gameOver || currentGame !== 'minesweeper') return;
           if (revealed[index]) return;
           revealed[index] = true;
           score++;
           document.getElementById('gameScore').textContent = score;
+          document.getElementById('gameProgress').style.width = (score / winScore * 100) + '%';
           const cell = document.querySelector('.cell[data-index="' + index + '"]');
           cell.classList.add('revealed');
           cell.textContent = '✅';
           if (score >= winScore) {
             gameOver = true;
+            document.getElementById('gameStatus').textContent = '🎉 پیروزی! مین‌ها پاکسازی شدند!';
             setTimeout(() => {
               alert('🎉 شما برنده شدید!\\nامتیاز: ' + score);
             }, 300);
@@ -1396,8 +1568,10 @@ function startGame(game) {
           gameOver = false;
           revealed = new Array(totalCells).fill(false);
           document.getElementById('gameScore').textContent = '۰';
+          document.getElementById('gameProgress').style.width = '0%';
+          document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
           document.querySelectorAll('.cell').forEach(c => {
-            c.classList.remove('revealed');
+            c.classList.remove('revealed', 'wrong');
             c.textContent = '?';
           });
         }
@@ -1406,10 +1580,9 @@ function startGame(game) {
     </html>
   `);
   win.document.close();
-  // اضافه کردن XP
   if (allUsers[currentUser]) {
     allUsers[currentUser].xp = (allUsers[currentUser].xp || 0) + score;
-    const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox };
+    const data = { posts: allPosts, users: allUsers, messages: allMessages, inbox: allInbox, reports: allReports, commanderLog: allCommanderLog };
     saveToServer(data);
   }
 }
@@ -1435,7 +1608,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('sidebar').style.display = 'none';
   document.querySelector('.main').style.display = 'none';
   
-  // بررسی ورود قبلی
   const savedCommander = localStorage.getItem('padafand_commander');
   if (savedCommander) {
     try {
