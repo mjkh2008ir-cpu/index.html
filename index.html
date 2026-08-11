@@ -19,7 +19,7 @@
   --ts:#7a9a55;
   --rd:#c0392b;
   --gold:#c8a000;
-  --neon-green:#39ff14;
+  --neon:#39ff14;
 }
 [data-theme="dark"]{
   --bg:#080c0a;
@@ -32,7 +32,7 @@
   --ts:#6a8a7a;
   --am:#b09840;
   --gold:#b09840;
-  --neon-green:#39ff14;
+  --neon:#39ff14;
 }
 [data-theme="light"]{
   --bg:#f2f7ef;
@@ -45,7 +45,7 @@
   --ts:#4a6a3a;
   --am:#b09000;
   --gold:#b09000;
-  --neon-green:#2a8a1a;
+  --neon:#2a8a1a;
 }
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;color:var(--tp);transition:.3s;font-size:14px;line-height:1.8}
 ::-webkit-scrollbar{width:4px;background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
@@ -55,17 +55,17 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes missileFly{0%{transform:translateX(0)translateY(0);opacity:1}80%{opacity:1}100%{transform:translateX(-150px)translateY(-50px);opacity:0}}
 @keyframes carMove{0%{transform:translateX(100px)}100%{transform:translateX(calc(-100vw - 100px))}}
-@keyframes radarPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2);box-shadow:0 0 30px var(--neon-green)}}
+@keyframes radarPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2);box-shadow:0 0 30px var(--neon)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px var(--gl)}50%{box-shadow:0 0 25px var(--gl)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon),0 0 10px var(--neon)}50%{text-shadow:0 0 20px var(--neon),0 0 40px var(--neon)}}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-@keyframes neonPulse{0%,100%{text-shadow:0 0 5px var(--neon-green),0 0 10px var(--neon-green)}50%{text-shadow:0 0 20px var(--neon-green),0 0 40px var(--neon-green)}}
 
 /* ===== HEADER ===== */
 #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
 .hdr-top .online{display:flex;gap:.2rem;align-items:center}
-.hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--gl);animation:blink 1.5s infinite}
+.hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
 .hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem;margin-top:0.1rem}
 .hdr-left{display:flex;align-items:center;gap:0.4rem}
 .hdr-left .icon{font-size:1.5rem;animation:float 3s ease-in-out infinite;color:var(--gold)}
@@ -74,21 +74,20 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .hdr-left .sub{font-size:.45rem;color:var(--ts);letter-spacing:0.5px}
 .hdr-right{display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap}
 .hdr-right .theme-btn{background:none;border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--tp);font-size:.6rem;cursor:pointer;transition:.3s}
-.hdr-right .theme-btn:hover{border-color:var(--gl);transform:rotate(30deg)}
+.hdr-right .theme-btn:hover{border-color:var(--neon);transform:rotate(30deg)}
 .hdr-right .user-badge{display:flex;align-items:center;gap:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;cursor:pointer;font-size:.6rem;transition:.3s}
-.hdr-right .user-badge:hover{border-color:var(--gl)}
+.hdr-right .user-badge:hover{border-color:var(--neon)}
 .hdr-right .user-badge .avatar{font-size:1rem}
 .hdr-right .user-badge .level{color:var(--gold);font-size:.45rem}
-.hdr-right .user-badge .special-star{color:var(--gold);animation:glowPulse 1.5s infinite}
 .hdr-right .inbox-btn{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.15rem 0.4rem;color:var(--ts);font-size:.6rem;cursor:pointer;transition:.3s;position:relative}
-.hdr-right .inbox-btn:hover{border-color:var(--gl)}
+.hdr-right .inbox-btn:hover{border-color:var(--neon)}
 .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
 /* ===== SEARCH ===== */
 #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
 .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
 .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
-.search-wrap input:focus{border-color:var(--gl);box-shadow:0 0 10px rgba(109,179,63,0.1)}
+.search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
 .search-wrap button{padding:0.2rem 0.8rem;border-radius:16px;border:none;background:var(--am);color:#1a1000;font-weight:700;font-size:.65rem;cursor:pointer;min-height:28px;transition:.3s}
 .search-wrap button:hover{transform:scale(1.05)}
 
@@ -96,8 +95,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
 .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
 .nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.3s}
-.nav-btn:hover{color:var(--tp);border-bottom-color:var(--ts)}
-.nav-btn.active{color:var(--gl);border-bottom-color:var(--gl);background:var(--bg)}
+.nav-btn:hover{color:var(--tp);border-bottom-color:var(--neon)}
+.nav-btn.active{color:var(--neon);border-bottom-color:var(--neon);background:var(--bg)}
 
 /* ===== FAB ===== */
 .fab{position:fixed;bottom:80px;left:20px;z-index:50;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#d4a800);border:none;color:#1a1000;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(200,160,0,0.3);transition:.3s;display:flex;align-items:center;justify-content:center}
@@ -109,12 +108,12 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem;padding-bottom:80px}
 .page{display:none;animation:fadeIn .4s ease}
 .page.active{display:block}
-.page-title{font-size:.8rem;font-weight:700;color:var(--gl);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem}
+.page-title{font-size:.8rem;font-weight:700;color:var(--neon);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem;animation:neonPulse 2s infinite}
 .page-title i{margin-left:0.3rem}
 
 /* ===== POSTS ===== */
 .post{background:var(--bgp);border:1px solid var(--br);border-right:2px solid var(--am);border-radius:4px;margin-bottom:0.4rem;overflow:hidden;transition:.3s}
-.post:hover{border-color:var(--g)}
+.post:hover{border-color:var(--neon)}
 .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:.2s}
 .post-hdr:hover{background:var(--bgm)}
 .post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
@@ -129,30 +128,29 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .post-body .tags span{background:var(--bgm);padding:0.05rem 0.4rem;border-radius:8px;font-size:.5rem;color:var(--am)}
 .post-actions{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center}
 .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s;display:flex;align-items:center;gap:0.15rem}
-.post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--gl)}
+.post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--neon)}
 .post-actions .liked{color:var(--rd);border-color:var(--rd);background:rgba(192,57,43,0.1)}
 .comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
-.comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--gl)}
-.comments-section .cmt .cmt-user{color:var(--gl);font-weight:700}
+.comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--neon)}
+.comments-section .cmt .cmt-user{color:var(--neon);font-weight:700}
 .comments-section .cmt .cmt-reply{color:var(--am);font-size:.5rem;padding-right:0.5rem;border-right:1px solid var(--br);margin-right:0.3rem}
 .comments-section .comment-form{display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap}
 .comments-section .comment-form input{flex:1;min-width:100px;padding:0.2rem 0.4rem;border-radius:3px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.6rem;outline:none}
-.comments-section .comment-form input:focus{border-color:var(--gl)}
+.comments-section .comment-form input:focus{border-color:var(--neon)}
 .comments-section .comment-form button{background:var(--g);border:none;color:#fff;padding:0.15rem 0.6rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s}
 .comments-section .comment-form button:hover{transform:scale(1.05)}
 
 /* ===== SIDEBAR NAV ===== */
-.sidebar-nav{position:fixed;bottom:0;right:0;left:0;background:var(--bgm);border-top:2px solid var(--g);display:flex;justify-content:space-around;padding:0.3rem 0.5rem;z-index:99}
+.sidebar-nav{position:fixed;bottom:0;right:0;left:0;background:var(--bgm);border-top:2px solid var(--neon);display:flex;justify-content:space-around;padding:0.3rem 0.5rem;z-index:99}
 .sidebar-nav .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--ts);font-size:.5rem;cursor:pointer;transition:.3s;background:none;border:none;padding:0.1rem 0}
 .sidebar-nav .nav-item i{font-size:1.1rem;margin-bottom:0.1rem}
-.sidebar-nav .nav-item.active{color:var(--gl)}
-.sidebar-nav .nav-item:hover{color:var(--gl)}
-.sidebar-nav .nav-item .badge{position:absolute;top:-4px;right:-6px;background:var(--rd);color:#fff;font-size:.35rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:12px;text-align:center}
+.sidebar-nav .nav-item.active{color:var(--neon)}
+.sidebar-nav .nav-item:hover{color:var(--neon)}
 
 /* ===== AI ===== */
 .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.3rem}
 .ai-card{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem;text-align:center;text-decoration:none;color:var(--tp);font-size:.65rem;transition:.3s}
-.ai-card:hover{border-color:var(--gl);transform:translateY(-5px);box-shadow:0 5px 20px rgba(74,124,32,0.1)}
+.ai-card:hover{border-color:var(--neon);transform:translateY(-5px);box-shadow:0 5px 20px rgba(57,255,20,0.1)}
 .ai-card .ai-icon{font-size:1.2rem;display:block}
 .ai-card .ai-desc{font-size:.4rem;color:var(--ts);display:block;margin-top:0.1rem}
 
@@ -171,42 +169,41 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 /* ===== GAMES ===== */
 .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;margin-top:0.5rem}
 .game-card{background:var(--bgp);border:2px solid var(--br);border-radius:8px;padding:0.8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
-.game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--gl),transparent);opacity:0;transition:.3s}
+.game-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,var(--neon),transparent);opacity:0;transition:.3s}
 .game-card:hover::before{opacity:0.05}
-.game-card:hover{border-color:var(--gl);transform:translateY(-5px);box-shadow:0 8px 30px rgba(74,124,32,0.15)}
+.game-card:hover{border-color:var(--neon);transform:translateY(-5px);box-shadow:0 8px 30px rgba(57,255,20,0.15)}
 .game-card .icon{font-size:2.2rem;display:block;margin-bottom:0.2rem;color:var(--gold)}
 .game-card .name{font-size:.7rem;font-weight:700;color:var(--tp)}
 .game-card .desc{font-size:.5rem;color:var(--ts)}
-.game-card .xp-badge{font-size:.45rem;color:var(--gl);background:var(--bg);padding:0.05rem 0.3rem;border-radius:8px;display:inline-block;margin-top:0.1rem}
+.game-card .xp-badge{font-size:.45rem;color:var(--neon);background:var(--bg);padding:0.05rem 0.3rem;border-radius:8px;display:inline-block;margin-top:0.1rem;animation:neonPulse 2s infinite}
 .game-card .game-status{font-size:.4rem;color:var(--gold);margin-top:0.1rem}
 
 /* ===== RANDOM ===== */
 .random-box{background:var(--bgp);border:2px solid var(--am);border-radius:8px;padding:0.6rem;margin-bottom:0.5rem;text-align:center;cursor:pointer;transition:.3s;animation:glowPulse 2s infinite}
-.random-box:hover{border-color:var(--gl);transform:scale(1.01)}
+.random-box:hover{border-color:var(--neon);transform:scale(1.01)}
 .random-box .title{color:var(--gold);font-size:.65rem;font-weight:700}
 .random-box .shobe{color:var(--tp);font-size:.8rem;margin:0.2rem 0}
 
-/* ===== FOOTER ===== */
+/* ===== FOOTER & DEFENSE ===== */
 #footer{border-top:1px solid var(--br);padding:0.2rem 0.6rem 0;background:var(--bgm);margin-top:0.3rem}
 .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem;padding-bottom:0.1rem}
 .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
 .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
-.foot-links a:hover{color:var(--gl);border-color:var(--gl);transform:translateY(-2px)}
+.foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
 .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
 
-/* ===== دفاع نئونی ===== */
 .defense-anim{width:100%;height:55px;position:relative;overflow:hidden;background:linear-gradient(180deg,transparent 0%,rgba(57,255,20,0.04)100%);border-radius:4px;margin-top:0.1rem;border:1px solid rgba(57,255,20,0.06)}
 .defense-anim .car{position:absolute;bottom:2px;right:10px;font-size:1.8rem;animation:carMove 12s linear infinite}
-.defense-anim .car span{font-size:0.5rem;color:var(--neon-green);position:absolute;bottom:-8px;right:15px;font-weight:700;white-space:nowrap;animation:neonPulse 1.5s infinite}
-.defense-anim .missile{position:absolute;bottom:12px;font-size:1.2rem;animation:missileFly 4s linear infinite;filter:drop-shadow(0 0 5px var(--neon-green))}
+.defense-anim .car span{font-size:0.5rem;color:var(--neon);position:absolute;bottom:-8px;right:15px;font-weight:700;white-space:nowrap;animation:neonPulse 1.5s infinite}
+.defense-anim .missile{position:absolute;bottom:12px;font-size:1.2rem;animation:missileFly 4s linear infinite;filter:drop-shadow(0 0 5px var(--neon))}
 .defense-anim .missile:nth-child(2){left:20%;animation-duration:4s}
 .defense-anim .missile:nth-child(3){left:50%;animation-duration:5s;animation-delay:1s}
 .defense-anim .missile:nth-child(4){left:75%;animation-duration:6s;animation-delay:2s}
-.defense-anim .radar{position:absolute;bottom:0;right:0;font-size:1.5rem;animation:radarPulse 2s infinite;filter:drop-shadow(0 0 10px var(--neon-green))}
-.defense-anim .jet{position:absolute;top:2px;font-size:1.2rem;animation:missileFly 8s linear infinite;filter:drop-shadow(0 0 3px var(--neon-green))}
+.defense-anim .radar{position:absolute;bottom:0;right:0;font-size:1.5rem;animation:radarPulse 2s infinite;filter:drop-shadow(0 0 10px var(--neon))}
+.defense-anim .jet{position:absolute;top:2px;font-size:1.2rem;animation:missileFly 8s linear infinite;filter:drop-shadow(0 0 3px var(--neon))}
 .defense-anim .jet:nth-child(6){left:10%;animation-duration:8s;animation-delay:0.5s}
 .defense-anim .jet:nth-child(7){left:40%;animation-duration:9s;animation-delay:1.5s}
-.defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon-green),var(--neon-green),transparent);animation:neonPulse 1.5s infinite;opacity:0.6}
+.defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.6}
 
 /* ===== MODAL ===== */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;justify-content:center;align-items:center}
@@ -219,25 +216,24 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .form-group{margin-bottom:0.5rem}
 .form-group label{display:block;font-size:.6rem;color:var(--ts);margin-bottom:0.1rem}
 .form-group input,.form-group textarea,.form-group select{width:100%;padding:0.3rem 0.5rem;background:var(--bg);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.7rem;outline:none;font-family:inherit}
-.form-group input:focus,.form-group textarea:focus{border-color:var(--gl)}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--neon)}
 .form-group textarea{min-height:50px;resize:vertical}
 .btn{background:var(--g);border:none;color:#fff;padding:0.3rem 1rem;border-radius:4px;cursor:pointer;font-size:.7rem;transition:.3s;display:inline-flex;align-items:center;gap:0.3rem}
-.btn:hover{transform:scale(1.02);box-shadow:0 0 20px rgba(74,124,32,0.2)}
+.btn:hover{transform:scale(1.02);box-shadow:0 0 20px rgba(57,255,20,0.2)}
 .btn-gold{background:var(--gold);color:#000}
 .btn-gold:hover{background:#d4a800}
 .btn-danger{background:var(--rd)}
 .btn-danger:hover{background:#e74c3c}
 .btn-block{width:100%;justify-content:center}
-.btn-sm{padding:0.15rem 0.5rem;font-size:.55rem}
-.btn-neon{background:var(--neon-green);color:#000;border:1px solid var(--neon-green);animation:neonPulse 2s infinite}
+.btn-neon{background:var(--neon);color:#000;border:1px solid var(--neon);animation:neonPulse 2s infinite}
 .btn-neon:hover{background:#2a8a1a;color:#fff}
 
 /* ===== INBOX ===== */
 .inbox-item{background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.3rem;cursor:pointer;transition:.3s}
-.inbox-item:hover{border-color:var(--gl)}
+.inbox-item:hover{border-color:var(--neon)}
 .inbox-item.unread{border-right:3px solid var(--gold)}
 .inbox-item .inbox-hdr{display:flex;justify-content:space-between;align-items:center}
-.inbox-item .inbox-from{font-weight:700;font-size:.65rem;color:var(--gl)}
+.inbox-item .inbox-from{font-weight:700;font-size:.65rem;color:var(--neon)}
 .inbox-item .inbox-from .badge-special{color:var(--gold);font-size:.4rem}
 .inbox-item .inbox-subject{font-size:.55rem;color:var(--tp)}
 .inbox-item .inbox-date{font-size:.4rem;color:var(--ts)}
@@ -245,12 +241,14 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 .inbox-item .inbox-body.show{display:block}
 .inbox-item .inbox-delete{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.5rem;transition:.3s}
 .inbox-item .inbox-delete:hover{color:var(--rd)}
+.inbox-item .inbox-btn-action{background:var(--neon);border:none;color:#000;padding:0.1rem 0.6rem;border-radius:4px;cursor:pointer;font-size:.5rem;margin-top:0.2rem;transition:.3s}
+.inbox-item .inbox-btn-action:hover{transform:scale(1.05)}
 
 /* ===== NOTIFICATION ===== */
-.notification{position:fixed;top:70px;left:20px;z-index:400;background:var(--bgm);border:2px solid var(--gold);border-radius:10px;padding:0.6rem 1rem;max-width:340px;box-shadow:0 4px 30px rgba(0,0,0,0.6);animation:slideIn .3s ease;display:flex;align-items:flex-start;gap:0.5rem}
+.notification{position:fixed;top:70px;left:20px;z-index:400;background:var(--bgm);border:2px solid var(--neon);border-radius:10px;padding:0.6rem 1rem;max-width:340px;box-shadow:0 4px 30px rgba(0,0,0,0.6);animation:slideIn .3s ease;display:flex;align-items:flex-start;gap:0.5rem}
 .notification .notif-icon{font-size:1.5rem;color:var(--gold);animation:float 2s ease-in-out infinite}
 .notification .notif-content{flex:1}
-.notification .notif-title{font-size:.65rem;font-weight:700;color:var(--gl)}
+.notification .notif-title{font-size:.65rem;font-weight:700;color:var(--neon)}
 .notification .notif-body{font-size:.55rem;color:var(--ts);line-height:1.6}
 .notification .notif-close{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem;transition:.3s}
 .notification .notif-close:hover{transform:rotate(90deg);color:var(--rd)}
@@ -270,29 +268,30 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 #userPanel .profile-header .xp{color:var(--ts);font-size:.5rem;display:block}
 #userPanel .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.2rem;margin-bottom:0.5rem}
 #userPanel .profile-stats .stat{background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:0.2rem;text-align:center;transition:.3s}
-#userPanel .profile-stats .stat:hover{border-color:var(--gl)}
+#userPanel .profile-stats .stat:hover{border-color:var(--neon)}
 #userPanel .profile-stats .stat .num{font-size:.85rem;font-weight:900;color:var(--tp);font-family:monospace}
 #userPanel .profile-stats .stat .label{font-size:.4rem;color:var(--ts)}
 #userPanel .avatar-select{display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center;margin:0.3rem 0}
 #userPanel .avatar-select .av-item{font-size:1.8rem;cursor:pointer;border:2px solid transparent;border-radius:50%;padding:0.05rem;transition:.3s}
-#userPanel .avatar-select .av-item:hover{border-color:var(--gl);transform:scale(1.1)}
+#userPanel .avatar-select .av-item:hover{border-color:var(--neon);transform:scale(1.1)}
 #userPanel .avatar-select .av-item.active{border-color:var(--am)}
 #userPanel .profile-edit{width:100%;padding:0.2rem;background:var(--am);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.6rem;cursor:pointer;transition:.3s}
 #userPanel .profile-edit:hover{transform:scale(1.02)}
 #userPanel .switch-link{color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer;transition:.3s}
-#userPanel .switch-link:hover{color:var(--gl)}
+#userPanel .switch-link:hover{color:var(--neon)}
 #userPanel .form-group input{width:100%;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.65rem;outline:none}
-#userPanel .form-group input:focus{border-color:var(--gl)}
-#userPanel .inbox-list{max-height:200px;overflow-y:auto}
+#userPanel .form-group input:focus{border-color:var(--neon)}
 
-/* ===== پای لانچر ===== */
-.pie-launcher{display:flex;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
+/* ===== PIE LAUNCHER ===== */
+.pie-launcher{display:none;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
 .pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
 .pie-launcher .content{flex:1}
 .pie-launcher .name{font-size:.6rem;font-weight:700;color:var(--gold)}
 .pie-launcher .text{font-size:.55rem;color:var(--ts);line-height:1.6}
 .pie-launcher .btn-close-tip{background:none;border:none;color:var(--ts);cursor:pointer;font-size:.8rem;transition:.3s}
 .pie-launcher .btn-close-tip:hover{transform:rotate(90deg);color:var(--rd)}
+.pie-launcher .btn-start-tutorial{background:var(--neon);border:none;color:#000;padding:0.1rem 0.6rem;border-radius:4px;cursor:pointer;font-size:.5rem;transition:.3s}
+.pie-launcher .btn-start-tutorial:hover{transform:scale(1.05)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:600px){
@@ -339,7 +338,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
           <span class="badge" id="inboxBadge" style="display:none">0</span>
         </button>
         <div class="user-badge" onclick="toggleUserPanel()">
-          <span class="avatar"><i class="fas fa-user"></i></span>
+          <span class="avatar" id="headerAvatar"><i class="fas fa-user"></i></span>
           <span id="headerName">ورود</span>
           <span class="level" id="headerLevel"></span>
         </div>
@@ -396,6 +395,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
         <div class="name">🎯 پای لانچر</div>
         <div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div>
       </div>
+      <button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button>
       <button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button>
     </div>
     
@@ -516,6 +516,26 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
   </div>
 </div>
 
+<div class="modal" id="tutorialModal">
+  <div class="modal-content" style="max-width:600px">
+    <div class="modal-header">
+      <h3><i class="fas fa-graduation-cap"></i> آموزش قرارگاه</h3>
+      <button class="modal-close" onclick="closeModal('tutorialModal')">×</button>
+    </div>
+    <div id="tutorialContent" style="min-height:200px">
+      <div style="text-align:center;padding:0.5rem">
+        <div style="font-size:3rem;margin-bottom:0.5rem">🤖</div>
+        <h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3>
+        <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
+          میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>
+          با من همراه باش تا همه بخش‌ها رو یاد بگیری.
+        </p>
+        <button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== USER PANEL ===== -->
 <div id="userPanel">
   <button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button>
@@ -580,9 +600,7 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl
 
 <script>
 // ============================================================
-// ═══════════════════════════════════════════════════════════
 // کلیدهای یکسان برای هماهنگی با فرماندهی
-// ═══════════════════════════════════════════════════════════
 // ============================================================
 const BIN_ID = '6a771499da38895dfec99f53';
 const API_KEY = '$2a$10$l235.uREI9OA0fWF4cxN0exlUw7Wcji0uj/0ieQni8JE/u85m1q3q';
@@ -634,16 +652,11 @@ let allUsers = {};
 let allMessages = [];
 let allInbox = {};
 let allReports = [];
+let allCommanderLog = [];
 let loggedUser = null;
 let selectedAvatar = 'fa-user';
-let pieTips = [
-  { text: "سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟" },
-  { text: "یادت باشه هر شبهه‌ای که بهش برخوردی رو اینجا بذار. ما باهاش مقابله می‌کنیم! 💪" },
-  { text: "اگه حس کردی یه شبهه خیلی قویه، بفرستش به فرماندهی. اونجا سردارا منتظرن! 🎖️" },
-  { text: "بازی‌های قرارگاه رو هم فراموش نکن. با بازی کردن هم XP می‌گیری هم مهارتات قوی‌تر میشه! 🎮" },
-  { text: "بهترین سربازا کسانی هستن که همیشه در حال یادگیری‌ن. پس بخون و رشد کن! 📚" }
-];
-let pieIndex = 0;
+let tutorialStep = 0;
+let tutorialActive = false;
 
 const LEVELS = [
   { name: 'سرباز', xp: 0 },
@@ -685,11 +698,13 @@ async function loadAllData() {
   allMessages = allData.messages || [];
   allInbox = allData.inbox || {};
   allReports = allData.reports || [];
+  allCommanderLog = allData.commanderLog || [];
   renderAll();
   document.getElementById('userCount').textContent = Object.keys(allUsers).length;
   const specialCount = Object.keys(allUsers).filter(u => allUsers[u].isSpecial).length;
   document.getElementById('specialCount').textContent = specialCount;
   updateInboxBadge();
+  checkTutorialMessage();
 }
 
 function renderAll() {
@@ -716,24 +731,126 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   loadAllData();
   setTimeout(showWelcomeMessage, 1500);
-  setTimeout(showPieTip, 3000);
 });
 
 // ============================================================
-// پای لانچر
+// آموزش با پای لانچر
 // ============================================================
-function showPieTip() {
-  const el = document.getElementById('pieLauncher');
-  if (!el) return;
-  el.style.display = 'flex';
-  const textEl = document.getElementById('pieText');
-  textEl.textContent = pieTips[pieIndex % pieTips.length].text;
-  pieIndex++;
+function checkTutorialMessage() {
+  if (!loggedUser) return;
+  const tutorialSent = localStorage.getItem('padafand_tutorial_sent_' + loggedUser);
+  if (!tutorialSent) {
+    // ارسال پیام آموزش به صندوق
+    if (!allInbox[loggedUser]) allInbox[loggedUser] = [];
+    allInbox[loggedUser].push({
+      id: Date.now(),
+      from: 'سیستم',
+      fromType: 'system',
+      subject: '🎯 آموزش قرارگاه',
+      body: `سلام سرباز! 👋
+
+من پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.
+
+آماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟
+
+✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.`,
+      read: false,
+      date: new Date().toLocaleString('fa-IR'),
+      hasAction: true,
+      action: 'tutorial'
+    });
+    allData.inbox = allInbox;
+    saveToServer(allData);
+    localStorage.setItem('padafand_tutorial_sent_' + loggedUser, 'true');
+    updateInboxBadge();
+  }
+}
+
+function openTutorialFromInbox() {
+  document.getElementById('tutorialModal').classList.add('show');
+  document.getElementById('tutorialContent').innerHTML = `
+    <div style="text-align:center;padding:0.5rem">
+      <div style="font-size:3rem;margin-bottom:0.5rem">🤖</div>
+      <h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3>
+      <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
+        میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>
+        با من همراه باش تا همه بخش‌ها رو یاد بگیری.
+      </p>
+      <button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button>
+    </div>
+  `;
+}
+
+function startTutorial() {
+  document.getElementById('tutorialModal').classList.add('show');
+  document.getElementById('tutorialContent').innerHTML = `
+    <div style="text-align:center;padding:0.5rem">
+      <div style="font-size:3rem;margin-bottom:0.5rem">🤖</div>
+      <h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3>
+      <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
+        میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>
+        با من همراه باش تا همه بخش‌ها رو یاد بگیری.
+      </p>
+      <button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button>
+    </div>
+  `;
+}
+
+const tutorialSteps = [
+  { title: '🏠 صفحه اصلی', desc: 'اینجا همه چیز شروع میشه. میتونی آخرین شبهات رو ببینی و با محیط آشنا بشی.', icon: 'fa-home' },
+  { title: '📝 شبهات', desc: 'همه شبهات اینجا جمع شدن. میتونی بخونی، لایک کنی و نظر بدی.', icon: 'fa-list' },
+  { title: '🎮 بازی‌ها', desc: 'با بازی کردن هم سرگرم میشی هم XP میگیری. هر بازی ۵ تا ۱۵ XP داره.', icon: 'fa-gamepad' },
+  { title: '🤖 هوش مصنوعی', desc: 'از ابزارهای هوش مصنوعی برای پاسخ به شبهات استفاده کن.', icon: 'fa-robot' },
+  { title: '📦 جعبه مهمات', desc: 'مطالب مورد علاقت رو اینجا ذخیره کن تا هر وقت خواستی بخونیش.', icon: 'fa-box' },
+  { title: '📨 ارسال به فرماندهی', desc: 'اگه شبهه‌ای دیدی که نتونستی پاسخ بدی، بفرستش به فرماندهی.', icon: 'fa-paper-plane' },
+  { title: '👤 پروفایل', desc: 'اینجا میتونی آواتار انتخاب کنی، XP و سطح خودت رو ببینی.', icon: 'fa-user' },
+  { title: '🎯 تمام!', desc: 'تبریک! حالا با همه بخش‌های قرارگاه آشنا شدی. موفق باشی سرباز! 💪', icon: 'fa-flag-checkered' }
+];
+
+function startTutorialSteps() {
+  tutorialStep = 0;
+  tutorialActive = true;
+  showTutorialStep();
+}
+
+function showTutorialStep() {
+  if (tutorialStep >= tutorialSteps.length) {
+    document.getElementById('tutorialContent').innerHTML = `
+      <div style="text-align:center;padding:0.5rem">
+        <div style="font-size:3rem;margin-bottom:0.5rem">🎖️</div>
+        <h3 style="color:var(--gold)">آموزش کامل شد!</h3>
+        <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
+          حالا با همه بخش‌های قرارگاه آشنا شدی.<br>
+          برو و از امکانات استفاده کن. موفق باشی سرباز! 💪
+        </p>
+        <button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button>
+      </div>
+    `;
+    tutorialActive = false;
+    return;
+  }
+  
+  const step = tutorialSteps[tutorialStep];
+  document.getElementById('tutorialContent').innerHTML = `
+    <div style="text-align:center;padding:0.5rem">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem"><i class="fas ${step.icon}"></i></div>
+      <h3 style="color:var(--gold)">${step.title}</h3>
+      <p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">
+        ${step.desc}
+      </p>
+      <div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem">
+        ${tutorialStep > 0 ? `<button class="btn btn-sm" onclick="tutorialStep--;showTutorialStep()"><i class="fas fa-chevron-right"></i> قبلی</button>` : ''}
+        <button class="btn btn-neon" onclick="tutorialStep++;showTutorialStep()">
+          ${tutorialStep === tutorialSteps.length - 1 ? '🎯 پایان' : 'بعدی →'}
+        </button>
+      </div>
+      <div style="font-size:.4rem;color:var(--ts);margin-top:0.3rem">${tutorialStep + 1} از ${tutorialSteps.length}</div>
+    </div>
+  `;
 }
 
 function closePieLauncher() {
   document.getElementById('pieLauncher').style.display = 'none';
-  setTimeout(showPieTip, 60000); // بعد ۱ دقیقه دوباره
 }
 
 // ============================================================
@@ -1088,19 +1205,23 @@ function renderInbox() {
     return;
   }
   
-  container.innerHTML = msgs.slice().reverse().map((m, i) => `
-    <div class="inbox-item ${!m.read ? 'unread' : ''}" onclick="toggleInboxItem(${i})">
-      <div class="inbox-hdr">
-        <span class="inbox-from">${m.fromType === 'system' ? '📢 ' : '📩 '}${m.from} ${m.fromType === 'system' ? '<span class="badge-special">سیستم</span>' : ''}</span>
-        <span class="inbox-date">${m.date}</span>
+  container.innerHTML = msgs.slice().reverse().map((m, i) => {
+    const hasAction = m.hasAction && m.action === 'tutorial';
+    return `
+      <div class="inbox-item ${!m.read ? 'unread' : ''}" onclick="toggleInboxItem(${i})">
+        <div class="inbox-hdr">
+          <span class="inbox-from">${m.fromType === 'system' ? '📢 ' : '📩 '}${m.from} ${m.fromType === 'system' ? '<span class="badge-special">سیستم</span>' : ''}</span>
+          <span class="inbox-date">${m.date}</span>
+        </div>
+        <div class="inbox-subject">${m.subject}</div>
+        <div class="inbox-body" id="inboxBody${i}">
+          <p style="white-space:pre-wrap">${m.body}</p>
+          ${hasAction ? `<button class="inbox-btn-action" onclick="openTutorialFromInbox()"><i class="fas fa-play"></i> شروع آموزش</button>` : ''}
+          <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
+        </div>
       </div>
-      <div class="inbox-subject">${m.subject}</div>
-      <div class="inbox-body" id="inboxBody${i}">
-        <p style="white-space:pre-wrap">${m.body}</p>
-        <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function toggleInboxItem(index) {
@@ -1185,14 +1306,17 @@ function selectAvatar(el) {
 function updateHeader() {
   const nameEl = document.getElementById('headerName');
   const levelEl = document.getElementById('headerLevel');
+  const avatarEl = document.getElementById('headerAvatar');
   if (loggedUser) {
     const u = allUsers[loggedUser];
     nameEl.textContent = u?.fullname || loggedUser;
     const level = getUserLevel(u?.xp || 0, u?.isSpecial || false);
     levelEl.textContent = level.name + (u?.isSpecial ? ' ⭐' : '');
+    avatarEl.innerHTML = `<i class="fas ${u?.avatar || 'fa-user'}"></i>`;
   } else {
     nameEl.textContent = 'ورود';
     levelEl.textContent = '';
+    avatarEl.innerHTML = `<i class="fas fa-user"></i>`;
   }
 }
 
@@ -1335,18 +1459,18 @@ function userLogout() {
 }
 
 // ============================================================
-// بازی‌ها (جدی‌تر)
+// بازی‌ها
 // ============================================================
 function initGames() {
   const grid = document.getElementById('gamesGrid');
   if (!grid) return;
   const games = [
-    { id: 'minesweeper', name: 'مین‌یاب', icon: 'fa-bomb', desc: 'پاکسازی میدان شبهات', color: '#c0392b', status: '🔥 جدید' },
-    { id: 'snake', name: 'مار جنگی', icon: 'fa-crown', desc: 'عملیات نفوذ و پیشروی', color: '#c8a000', status: '🎯 چالش‌برانگیز' },
-    { id: 'memory', name: 'حافظه نظامی', icon: 'fa-brain', desc: 'شناسایی اهداف', color: '#6db33f', status: '🧠 تمرین ذهن' },
-    { id: 'sudoku', name: 'رمزگشایی', icon: 'fa-th', desc: 'شکستن رمز شبهات', color: '#4a8aaa', status: '🔐 هوشمندانه' },
-    { id: 'quiz', name: 'آزمون پدافندی', icon: 'fa-question-circle', desc: 'دانش نظامی خود را بسنج', color: '#8e44ad', status: '📝 امتحان' },
-    { id: 'reaction', name: 'واکنش سریع', icon: 'fa-bolt', desc: 'به شبهات سریع پاسخ بده', color: '#e67e22', status: '⚡ سرعتی' }
+    { id: 'shobe_hunter', name: 'شکار شبهه', icon: 'fa-crosshairs', desc: 'به شبهات هدف بزن!', color: '#c0392b', status: '🎯 تیراندازی' },
+    { id: 'verbal_defense', name: 'پدافند کلامی', icon: 'fa-shield-alt', desc: 'پاسخ درست رو انتخاب کن', color: '#c8a000', status: '🧠 دانش' },
+    { id: 'truth_warrior', name: 'جنگجوی حقیقت', icon: 'fa-fist-raised', desc: 'شبهه یا واقعیت؟', color: '#6db33f', status: '⚔️ تشخیص' },
+    { id: 'minesweeper', name: 'مین‌یاب شبهات', icon: 'fa-bomb', desc: 'میدان شبهات رو پاک کن', color: '#4a8aaa', status: '💣 استراتژی' },
+    { id: 'quiz', name: 'آزمون پدافندی', icon: 'fa-question-circle', desc: '۱۰ سوال چهارگزینه‌ای', color: '#8e44ad', status: '📝 امتحان' },
+    { id: 'reaction', name: 'واکنش سریع', icon: 'fa-bolt', desc: 'سریع پاسخ بده!', color: '#e67e22', status: '⚡ سرعت' }
   ];
   grid.innerHTML = games.map(g => `
     <div class="game-card" onclick="startGame('${g.id}')" style="border-color:${g.color}">
@@ -1372,126 +1496,276 @@ function startGame(game) {
   }
   
   const games = {
-    minesweeper: { name: 'مین‌یاب', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
-    snake: { name: 'مار جنگی', emoji: '🐍', desc: 'نفوذ کن و جلو برو!' },
-    memory: { name: 'حافظه نظامی', emoji: '🧠', desc: 'اهداف رو پیدا کن!' },
-    sudoku: { name: 'رمزگشایی', emoji: '🔐', desc: 'رمز شبهات رو بشکن!' },
-    quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۵ سوال نظامی پاسخ بده!' },
+    shobe_hunter: { name: 'شکار شبهه', emoji: '🎯', desc: 'به شبهات هدف بزن و نابودشون کن!' },
+    verbal_defense: { name: 'پدافند کلامی', emoji: '🛡️', desc: 'پاسخ درست رو انتخاب کن و دفاع کن!' },
+    truth_warrior: { name: 'جنگجوی حقیقت', emoji: '⚔️', desc: 'تشخیص بده شبهه‌ست یا واقعیت!' },
+    minesweeper: { name: 'مین‌یاب شبهات', emoji: '💣', desc: 'میدان شبهات رو پاکسازی کن!' },
+    quiz: { name: 'آزمون پدافندی', emoji: '📝', desc: 'به ۱۰ سوال چهارگزینه‌ای پاسخ بده!' },
     reaction: { name: 'واکنش سریع', emoji: '⚡', desc: 'هرچه سریعتر پاسخ بده!' }
   };
   
-  const g = games[game] || games.minesweeper;
+  const g = games[game] || games.shobe_hunter;
   const win = window.open('', '_blank', 'width=650,height=500');
-  if (win) {
-    win.document.write(`
-      <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
-      <head><title>بازی ${g.name}</title>
-      <style>
-        body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
-        .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px;box-shadow:0 0 30px rgba(57,255,20,0.05)}
-        .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
-        .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
-        .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
-        .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
-        .cell{width:40px;height:40px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:.2s}
-        .cell:hover{background:#2a3a1a;border-color:#4a7c20;transform:scale(1.05)}
-        .cell.revealed{background:#0d1408;border-color:#4a7c20}
-        .cell.wrong{background:#2a0a0a;border-color:#c0392b}
-        .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
-        .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
-        .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
-        .btn-game:hover{background:#6db33f;transform:scale(1.05);box-shadow:0 0 20px rgba(109,179,63,0.3)}
-        .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
-        .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
-        .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px;text-shadow:0 0 10px rgba(109,179,63,0.2)}
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
-        .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
-        .question-text{font-size:1rem;color:#d4e8b0;margin:10px 0;padding:10px;background:#0d1408;border-radius:6px;border-right:3px solid #c8a000}
-        .options{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:10px 0}
-        .options button{padding:8px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;color:#d4e8b0;cursor:pointer;transition:.3s;font-size:0.8rem}
-        .options button:hover{background:#2a3a1a;border-color:#4a7c20;transform:scale(1.02)}
-        .options button.correct{background:#2a4a1a;border-color:#6db33f}
-        .options button.wrong{background:#4a1a1a;border-color:#c0392b}
-        .timer{color:#c8a000;font-size:0.8rem;font-weight:700}
-      </style>
-      </head>
-      <body>
-        <div class="game-area">
-          <span class="game-icon">${g.emoji}</span>
-          <div class="game-title">🎮 ${g.name}</div>
-          <div class="game-desc">${g.desc}</div>
-          <div class="score-box">
-            <div>امتیاز شما</div>
-            <div class="score" id="gameScore">۰</div>
-            <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
-            <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">کلیک کنید تا شروع کنید</div>
-          </div>
-          <div id="gameBoard" style="min-height:100px">
-            ${Array(16).fill(0).map((_, i) => `<div class="cell" data-index="${i}" onclick="cellClick(${i})">?</div>`).join('')}
-          </div>
-          <div id="quizArea" style="display:none">
-            <div class="question-text" id="questionText">سوال</div>
-            <div class="options" id="optionsContainer"></div>
-          </div>
-          <div id="reactionArea" style="display:none">
-            <div style="font-size:2rem;margin:10px 0" id="reactionIcon">⚡</div>
-            <div class="timer" id="reactionTimer">۳ ثانیه</div>
-            <button class="btn-game" onclick="reactionClick()" id="reactionBtn" style="font-size:1.2rem;padding:10px 30px">کلیک کن!</button>
-          </div>
-          <div>
-            <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
-            <button class="btn-close" onclick="window.close()"><i class="fas fa-times"></i> بستن</button>
-          </div>
-          <div class="xp-display">✅ ${score} XP به حساب شما اضافه شد</div>
+  if (!win) {
+    alert('لطفاً باز شدن پنجره جدید را در مرورگر خود اجازه دهید.');
+    return;
+  }
+  
+  let gameHtml = `
+    <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
+    <head><title>بازی ${g.name}</title>
+    <style>
+      body{background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center;direction:rtl}
+      .game-area{max-width:500px;margin:0 auto;background:#111c0a;border:2px solid #2e4018;border-radius:12px;padding:20px;box-shadow:0 0 30px rgba(57,255,20,0.05)}
+      .game-icon{font-size:4rem;display:block;margin-bottom:10px;animation:float 3s ease-in-out infinite}
+      .game-title{color:#6db33f;font-size:1.5rem;font-weight:700;text-shadow:0 0 10px rgba(109,179,63,0.3)}
+      .game-desc{color:#7a9a55;font-size:0.9rem;margin:5px 0}
+      .game-board{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:15px;margin:15px 0;min-height:120px}
+      .score-box{background:#0d1408;border:1px solid #2e4018;border-radius:8px;padding:10px;margin:10px 0}
+      .score-box .score{color:#c8a000;font-size:1.5rem;font-weight:900;text-shadow:0 0 10px rgba(200,160,0,0.3)}
+      .btn-game{background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
+      .btn-game:hover{background:#6db33f;transform:scale(1.05);box-shadow:0 0 20px rgba(109,179,63,0.3)}
+      .btn-close{background:#c0392b;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:0.9rem;transition:.3s;margin:5px}
+      .btn-close:hover{background:#e74c3c;transform:scale(1.05)}
+      .xp-display{color:#6db33f;font-size:0.8rem;border-top:1px solid #2e4018;padding-top:10px;margin-top:10px;text-shadow:0 0 10px rgba(109,179,63,0.2)}
+      @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+      .progress-bar{height:4px;background:#1a2410;border-radius:2px;margin:5px 0;overflow:hidden}
+      .progress-bar .fill{height:100%;background:#6db33f;border-radius:2px;transition:.3s}
+      .target{display:inline-block;padding:8px 16px;background:#2a1a1a;border:2px solid #c0392b;border-radius:8px;cursor:pointer;font-size:1rem;margin:5px;transition:.3s}
+      .target:hover{transform:scale(1.1);border-color:#6db33f}
+      .target.hit{background:#1a2a1a;border-color:#6db33f}
+      .option-btn{padding:8px 16px;background:#1a2410;border:1px solid #2e4018;border-radius:4px;color:#d4e8b0;cursor:pointer;font-size:0.8rem;margin:3px;transition:.3s;min-width:80px}
+      .option-btn:hover{background:#2a3a1a;border-color:#4a7c20}
+      .option-btn.correct{background:#2a4a1a;border-color:#6db33f}
+      .option-btn.wrong{background:#4a1a1a;border-color:#c0392b}
+      .timer{color:#c8a000;font-size:1.2rem;font-weight:700;margin:10px 0}
+    </style>
+    </head>
+    <body>
+      <div class="game-area">
+        <span class="game-icon">${g.emoji}</span>
+        <div class="game-title">🎮 ${g.name}</div>
+        <div class="game-desc">${g.desc}</div>
+        <div class="score-box">
+          <div>امتیاز شما</div>
+          <div class="score" id="gameScore">۰</div>
+          <div class="progress-bar"><div class="fill" id="gameProgress" style="width:0%"></div></div>
+          <div style="font-size:0.6rem;color:#7a9a55" id="gameStatus">بازی رو شروع کن!</div>
         </div>
-        <script>
-          let score = 0;
-          const totalCells = 16;
-          const winScore = 15;
-          let revealed = new Array(totalCells).fill(false);
-          let gameOver = false;
-          let currentGame = '${game}';
+        <div id="gameBoard"></div>
+        <div>
+          <button class="btn-game" onclick="resetGame()"><i class="fas fa-redo"></i> دوباره</button>
+          <button class="btn-close" onclick="window.close()"><i class="fas fa-times"></i> بستن</button>
+        </div>
+        <div class="xp-display">✅ ${score} XP به حساب شما اضافه شد</div>
+      </div>
+      <script>
+        let score = 0;
+        let gameOver = false;
+        let currentGame = '${game}';
+        let timer = null;
+        let timeLeft = 10;
+        const totalTargets = 10;
+        let targetsHit = 0;
+        let currentQuestion = 0;
+        let quizQuestions = [
+          { q: 'شبهه یعنی چه؟', options: ['شک و تردید', 'یقین', 'علم', 'جهل'], correct: 0 },
+          { q: 'بهترین روش پاسخ به شبهه چیست؟', options: ['توهین', 'مستند و منطقی', 'سکوت', 'تقلید'], correct: 1 },
+          { q: 'منبع اصلی پاسخ به شبهات دینی چیست؟', options: ['قرآن و سنت', 'فلسفه', 'علم تجربی', 'نظر مردم'], correct: 0 },
+          { q: 'در پدافند شبهات، هدف اصلی چیست؟', options: ['قانع کردن', 'روشنگری', 'تحقیر', 'جنجال'], correct: 1 },
+          { q: 'چه ویژگی برای پاسخ به شبهه مهم است؟', options: ['ساده و روان', 'پیچیده', 'تحقیرآمیز', 'عجولانه'], correct: 0 }
+        ];
+        
+        function startGameLogic() {
+          const board = document.getElementById('gameBoard');
+          board.innerHTML = '';
           
-          function cellClick(index) {
-            if (gameOver || currentGame !== 'minesweeper') return;
-            if (revealed[index]) return;
-            revealed[index] = true;
-            score++;
+          if (currentGame === 'shobe_hunter') {
+            board.innerHTML = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">' +
+              Array(totalTargets).fill(0).map((_, i) => 
+                '<div class="target" onclick="hitTarget(this, ' + i + ')">🎯 شبهه</div>'
+              ).join('') +
+              '</div>';
+            document.getElementById('gameStatus').textContent = 'به شبهات هدف بزن!';
+          } else if (currentGame === 'verbal_defense') {
+            showQuizQuestion();
+          } else if (currentGame === 'truth_warrior') {
+            board.innerHTML = '<div style="font-size:1.2rem;margin:10px 0" id="truthText">آماده‌ای؟</div>' +
+              '<div><button class="option-btn" onclick="truthAnswer(true)">✅ واقعیت</button>' +
+              '<button class="option-btn" onclick="truthAnswer(false)">❌ شبهه</button></div>';
+            document.getElementById('gameStatus').textContent = 'تشخیص بده شبهه‌ست یا واقعیت!';
+            nextTruth();
+          } else if (currentGame === 'minesweeper') {
+            board.innerHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:200px;margin:0 auto">' +
+              Array(16).fill(0).map((_, i) => 
+                '<div class="option-btn" onclick="mineClick(' + i + ')" style="width:40px;height:40px;padding:0;font-size:0.8rem" id="mine' + i + '">?</div>'
+              ).join('') +
+              '</div>';
+            document.getElementById('gameStatus').textContent = 'میدان شبهات رو پاکسازی کن!';
+          } else if (currentGame === 'quiz') {
+            currentQuestion = 0;
+            showQuizQuestion();
+          } else if (currentGame === 'reaction') {
+            startReaction();
+          }
+        }
+        
+        function hitTarget(el, i) {
+          if (gameOver) return;
+          if (el.classList.contains('hit')) return;
+          el.classList.add('hit');
+          el.textContent = '✅';
+          targetsHit++;
+          score += 2;
+          document.getElementById('gameScore').textContent = score;
+          document.getElementById('gameProgress').style.width = (targetsHit / totalTargets * 100) + '%';
+          if (targetsHit >= totalTargets) {
+            gameOver = true;
+            document.getElementById('gameStatus').textContent = '🎉 همه شبهات رو نابود کردی!';
+            setTimeout(() => alert('🎉 پیروزی! همه شبهات رو نابود کردی!'), 300);
+          }
+        }
+        
+        function showQuizQuestion() {
+          const board = document.getElementById('gameBoard');
+          if (currentQuestion >= quizQuestions.length) {
+            board.innerHTML = '<div style="font-size:1.5rem;color:#6db33f">🎉 آزمون تموم شد!</div>';
+            document.getElementById('gameStatus').textContent = 'امتیاز نهایی: ' + score;
+            gameOver = true;
+            return;
+          }
+          const q = quizQuestions[currentQuestion];
+          board.innerHTML = '<div style="font-size:1rem;margin:10px 0">' + q.q + '</div>' +
+            '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:5px">' +
+            q.options.map((o, i) => 
+              '<button class="option-btn" onclick="answerQuiz(' + i + ')">' + o + '</button>'
+            ).join('') +
+            '</div>';
+          document.getElementById('gameStatus').textContent = 'سوال ' + (currentQuestion + 1) + ' از ' + quizQuestions.length;
+        }
+        
+        function answerQuiz(index) {
+          if (gameOver) return;
+          const q = quizQuestions[currentQuestion];
+          const btns = document.querySelectorAll('.option-btn');
+          btns.forEach((b, i) => {
+            b.disabled = true;
+            if (i === q.correct) b.classList.add('correct');
+            else if (i === index && i !== q.correct) b.classList.add('wrong');
+          });
+          if (index === q.correct) {
+            score += 3;
             document.getElementById('gameScore').textContent = score;
-            document.getElementById('gameProgress').style.width = (score / winScore * 100) + '%';
-            const cell = document.querySelector('.cell[data-index="' + index + '"]');
-            cell.classList.add('revealed');
-            cell.textContent = '✅';
-            if (score >= winScore) {
+          }
+          currentQuestion++;
+          setTimeout(showQuizQuestion, 1000);
+        }
+        
+        function truthAnswer(isTruth) {
+          if (gameOver) return;
+          const correct = window._truthAnswer;
+          if (isTruth === correct) {
+            score += 3;
+            document.getElementById('gameScore').textContent = score;
+            document.getElementById('gameStatus').textContent = '✅ درست!';
+          } else {
+            document.getElementById('gameStatus').textContent = '❌ اشتباه!';
+          }
+          setTimeout(nextTruth, 1000);
+        }
+        
+        function nextTruth() {
+          const truths = [
+            { text: 'خداوند واحد و بی‌همتاست', isTruth: true },
+            { text: 'قرآن توسط بشر نوشته شده', isTruth: false },
+            { text: 'پیامبر اسلام آخرین فرستاده خداست', isTruth: true },
+            { text: 'زمین در ۶ روز آفریده شده', isTruth: true },
+            { text: 'دین اسلام برای همه زمان‌هاست', isTruth: true },
+            { text: 'امامان معصوم خطا دارند', isTruth: false }
+          ];
+          const item = truths[Math.floor(Math.random() * truths.length)];
+          window._truthAnswer = item.isTruth;
+          document.getElementById('truthText').textContent = item.text;
+          document.getElementById('gameStatus').textContent = 'واقعیت یا شبهه؟';
+        }
+        
+        function mineClick(index) {
+          if (gameOver) return;
+          const el = document.getElementById('mine' + index);
+          if (el.textContent !== '?') return;
+          const isMine = Math.random() < 0.2;
+          el.textContent = isMine ? '💣' : '✅';
+          if (isMine) {
+            gameOver = true;
+            document.getElementById('gameStatus').textContent = '💥 به مین برخوردی!';
+            alert('💥 به مین برخوردی! بازی تموم شد.');
+          } else {
+            score += 1;
+            document.getElementById('gameScore').textContent = score;
+            document.getElementById('gameProgress').style.width = (score / 15 * 100) + '%';
+            if (score >= 15) {
               gameOver = true;
-              document.getElementById('gameStatus').textContent = '🎉 پیروزی! مین‌ها پاکسازی شدند!';
-              setTimeout(() => {
-                alert('🎉 شما برنده شدید!\\nامتیاز: ' + score);
-              }, 300);
+              document.getElementById('gameStatus').textContent = '🎉 میدان پاکسازی شد!';
+              alert('🎉 میدان شبهات پاکسازی شد!');
             }
           }
-          
-          function resetGame() {
-            score = 0;
-            gameOver = false;
-            revealed = new Array(totalCells).fill(false);
-            document.getElementById('gameScore').textContent = '۰';
-            document.getElementById('gameProgress').style.width = '0%';
-            document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
-            document.querySelectorAll('.cell').forEach(c => {
-              c.classList.remove('revealed', 'wrong');
-              c.textContent = '?';
-            });
+        }
+        
+        function startReaction() {
+          const board = document.getElementById('gameBoard');
+          timeLeft = 5;
+          board.innerHTML = '<div class="timer" id="timerDisplay">⏱️ ' + timeLeft + '</div>' +
+            '<div style="font-size:1.5rem;margin:10px 0" id="reactionText">آماده‌ای؟</div>' +
+            '<button class="btn-game" onclick="reactionClick()" id="reactionBtn">کلیک کن!</button>';
+          document.getElementById('gameStatus').textContent = 'سریع واکنش نشون بده!';
+          let countdown = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timerDisplay').textContent = '⏱️ ' + timeLeft;
+            if (timeLeft <= 0) {
+              clearInterval(countdown);
+              document.getElementById('gameStatus').textContent = '⏰ زمان تموم شد!';
+              gameOver = true;
+            }
+          }, 1000);
+          window._reactionCountdown = countdown;
+        }
+        
+        function reactionClick() {
+          if (gameOver) return;
+          score += 2;
+          document.getElementById('gameScore').textContent = score;
+          document.getElementById('gameStatus').textContent = '✅ واکنش عالی!';
+          document.getElementById('reactionBtn').disabled = true;
+          clearInterval(window._reactionCountdown);
+          if (score >= 20) {
+            gameOver = true;
+            document.getElementById('gameStatus').textContent = '🎉 پیروزی! واکنش فوق‌العاده!';
+            alert('🎉 واکنش فوق‌العاده!');
+          } else {
+            setTimeout(startReaction, 1500);
           }
-        <\/script>
-      </body>
-      </html>
-    `);
-    win.document.close();
-    updateProfile();
-    updateHeader();
-  }
+        }
+        
+        function resetGame() {
+          score = 0;
+          gameOver = false;
+          targetsHit = 0;
+          currentQuestion = 0;
+          document.getElementById('gameScore').textContent = '۰';
+          document.getElementById('gameProgress').style.width = '0%';
+          document.getElementById('gameStatus').textContent = 'بازی دوباره شروع شد';
+          startGameLogic();
+        }
+        
+        startGameLogic();
+      <\/script>
+    </body>
+    </html>
+  `;
+  win.document.write(gameHtml);
+  win.document.close();
+  updateProfile();
+  updateHeader();
 }
 
 // ============================================================
