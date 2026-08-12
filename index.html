@@ -248,7 +248,7 @@
         #userPanel .form-group input:focus{border-color:var(--neon)}
 
         /* ===== PIE LAUNCHER ===== */
-        .pie-launcher{display:flex;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
+        #pieLauncher{display:none}.pie-launcher{display:none;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
         .pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
         .pie-launcher .content{flex:1}
         .pie-launcher .name{font-size:.6rem;font-weight:700;color:var(--gold)}
@@ -313,9 +313,9 @@
         <!-- HOME -->
         <div id="page-home" class="page active">
             <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
-            <div class="pie-launcher" id="pieLauncher"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
+            <div class="pie-launcher" id="pieLauncher" style="display:none"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
             <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span><span><i class="fas fa-star"></i> <b id="specialCount">0</b> سردار</span></div>
-            <div class="random-box" onclick="showRandomShobe()"><div class="title"><i class="fas fa-random"></i> شبهه تصادفی</div><div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div></div>
+<div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div></div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)">
                 <div style="color:var(--gold);font-size:.65rem;font-weight:700;margin-bottom:0.3rem"><i class="fas fa-trophy"></i> برترین رزمندگان</div>
                 <div id="leaderboardList" style="font-size:.55rem"></div>
@@ -473,7 +473,15 @@
         async function loadAllData() {
             const users = await loadFromSupabase('users');
             allUsers = {};
-            users.forEach(u => { allUsers[u.username] = u; });
+            users.forEach(u => {
+                const special = checkSpecialUser(u.phone, u.fullname);
+                if (special) {
+                    u.is_special = true;
+                    u.rank = u.rank || special.rank || 'سردار';
+                    if (!u.xp || u.xp < special.xp) u.xp = special.xp;
+                }
+                allUsers[u.username] = u;
+            });
             const posts = await loadFromSupabase('posts');
             allPosts = posts || [];
             const messages = await loadFromSupabase('messages');
@@ -534,7 +542,7 @@
             if (savedUser) { loggedUser = savedUser; }
             loadAllData().then(() => {
                 setTimeout(showWelcomeMessage, 800);
-                setTimeout(showRandomShobe, 1200);
+                
             });
             // هماهنگی زنده بین دو سایت (هر ۱۵ ثانیه)
             setInterval(() => { loadAllData(); }, 15000);
@@ -1479,14 +1487,9 @@
         // ===== WELCOME =====
         function showWelcomeMessage() {
             if (localStorage.getItem('padafand_welcome_shown')) return;
-            // نمایش داخل خود صفحه (بدون popup که مرورگر بلاک کند)
-            const pie = document.getElementById('pieLauncher');
-            if (pie) {
-                pie.style.display = 'flex';
-                const t = document.getElementById('pieText');
-                if (t) t.textContent = 'سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. مأموریت ما پاسخ به شبهات با زبان ساده و مستند است. آماده‌ای آموزش ببینی؟';
-            }
             localStorage.setItem('padafand_welcome_shown', 'true');
+            // آموزش فقط از طریق صندوق پیام (نه روی صفحه اصلی)
+            if (loggedUser) checkTutorialMessage();
             if (loggedUser && allUsers[loggedUser] && allUsers[loggedUser].id) {
                 allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 5;
                 updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
@@ -1497,7 +1500,7 @@
         document.addEventListener('click', function(e) { if (e.target.classList.contains('modal')) { e.target.classList
                     .remove('show'); } });
         document.getElementById('cmdLink').addEventListener('click', function(e) { e.preventDefault();
-            window.open(this.href, '_blank'); });
+            window.open(this.href, 'padafand_command', 'noopener'); });
     </script>
 </body>
 </html>
