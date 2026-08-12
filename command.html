@@ -1504,33 +1504,71 @@
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
+        const sbHeaders = {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        };
+
         async function loadFromSupabase(table) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, { headers: { 'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
-                return await res.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                if (!res.ok) { console.error('Load error', table, res.status); return []; }
+                const data = await res.json();
+                return Array.isArray(data) ? data : [];
             } catch (e) { console.error(e); return []; }
         }
+
         async function saveToSupabase(table, data) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data) });
-                return await res.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: sbHeaders,
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    const err = await res.text();
+                    console.error('Save error', table, res.status, err);
+                    return null;
+                }
+                const result = await res.json();
+                return Array.isArray(result) ? result[0] : result;
             } catch (e) { console.error(e); return null; }
         }
+
         async function updateInSupabase(table, id, data) {
+            if (id === undefined || id === null || id === '') {
+                console.error('updateInSupabase: missing id for', table);
+                return null;
+            }
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'PATCH',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                return await res.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: sbHeaders,
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    const err = await res.text();
+                    console.error('Update error', table, id, res.status, err);
+                    return null;
+                }
+                const result = await res.json();
+                return Array.isArray(result) ? result[0] : result;
             } catch (e) { console.error(e); return null; }
         }
+
         async function deleteFromSupabase(table, id) {
-            try { await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'DELETE', headers: { 'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
-                return true; } catch (e) { console.error(e); return false; }
+            if (id === undefined || id === null || id === '') return false;
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                return res.ok;
+            } catch (e) { console.error(e); return false; }
         }
 
         // ===== SPECIAL USERS =====
@@ -2671,6 +2709,8 @@
                         loadAllData();
                         updateTime();
                         setInterval(updateTime, 1000);
+                        // هماهنگی زنده با سایت عمومی (هر ۱۵ ثانیه)
+                        setInterval(() => { loadAllData(); }, 15000);
                     } else {
                         localStorage.removeItem('padafand_commander');
                     }
