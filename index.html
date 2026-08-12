@@ -248,7 +248,7 @@
         #userPanel .form-group input:focus{border-color:var(--neon)}
 
         /* ===== PIE LAUNCHER ===== */
-        .pie-launcher{display:none;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
+        .pie-launcher{display:flex;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
         .pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
         .pie-launcher .content{flex:1}
         .pie-launcher .name{font-size:.6rem;font-weight:700;color:var(--gold)}
@@ -532,8 +532,10 @@
             document.documentElement.setAttribute('data-theme', themes[themeIndex]);
             const savedUser = localStorage.getItem('padafand_logged_user');
             if (savedUser) { loggedUser = savedUser; }
-            loadAllData();
-            setTimeout(showWelcomeMessage, 1500);
+            loadAllData().then(() => {
+                setTimeout(showWelcomeMessage, 800);
+                setTimeout(showRandomShobe, 1200);
+            });
             // هماهنگی زنده بین دو سایت (هر ۱۵ ثانیه)
             setInterval(() => { loadAllData(); }, 15000);
         });
@@ -546,25 +548,21 @@
                 if (!allInbox[loggedUser]) allInbox[loggedUser] = [];
                 allInbox[loggedUser].push({
                     id: Date.now(),
-                    from: 'سیستم',
+                    from_user: 'سیستم',
                     from_type: 'system',
                     subject: '🎯 آموزش قرارگاه',
                     body: 'سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.',
                     read: false,
-                    date: new Date().toLocaleString('fa-IR'),
-                    has_action: true,
-                    action: 'tutorial'
+                    date: new Date().toLocaleString('fa-IR')
                 });
                 saveToSupabase('inbox', {
                     user: loggedUser,
-                    from: 'سیستم',
+                    from_user: 'سیستم',
                     from_type: 'system',
                     subject: '🎯 آموزش قرارگاه',
                     body: 'سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.',
                     read: false,
-                    date: new Date().toLocaleString('fa-IR'),
-                    has_action: true,
-                    action: 'tutorial'
+                    date: new Date().toLocaleString('fa-IR')
                 });
                 localStorage.setItem('padafand_tutorial_sent_' + loggedUser, 'true');
                 updateInboxBadge();
@@ -903,11 +901,11 @@
                 return;
             }
             container.innerHTML = msgs.slice().reverse().map((m, i) => {
-                const hasAction = m.has_action && m.action === 'tutorial';
+                const hasAction = (m.subject || '').includes('آموزش') || (m.body || '').includes('[آموزش]');
                 return `
                         <div class="inbox-item ${!m.read ? 'unread' : ''}" onclick="toggleInboxItem(${i})">
                             <div class="inbox-hdr">
-                                <span class="inbox-from">${m.from_type === 'system' ? '📢 ' : '📩 '}${m.from} ${m.from_type === 'system' ? '<span class="badge-special">سیستم</span>' : ''}</span>
+                                <span class="inbox-from">${m.from_type === 'system' ? '📢 ' : '📩 '}${m.from_user || m.from || 'ناشناس'} ${m.from_type === 'system' ? '<span class="badge-special">سیستم</span>' : ''}</span>
                                 <span class="inbox-date">${m.date}</span>
                             </div>
                             <div class="inbox-subject">${m.subject}</div>
@@ -1108,7 +1106,7 @@
                 document.getElementById('authMsg').style.color = '#c8a000';
                 await saveToSupabase('inbox', {
                     user: username,
-                    from: 'سیستم',
+                    from_user: 'سیستم',
                     from_type: 'system',
                     subject: '🎖️ خوش‌آمدگویی ویژه',
                     body: `سردار گرامی ${special.name}\n\nبه قرارگاه پدافند شبهات خوش آمدید.\n\nشما به عنوان یکی از فرماندهان ارشد این مجموعه، از امکانات ویژه برخوردار هستید:\n- 🎖️ درجه سردار\n- ⭐ نشان ویژه در پروفایل\n- 🚀 ۱۰۰۰ XP جایزه\n- 🔓 دسترسی کامل به همه بخش‌ها\n\nاز همراهی شما سپاسگزاریم.`,
@@ -1120,7 +1118,7 @@
                 document.getElementById('authMsg').style.color = '#6db33f';
                 await saveToSupabase('inbox', {
                     user: username,
-                    from: 'سیستم',
+                    from_user: 'سیستم',
                     from_type: 'system',
                     subject: 'خوش‌آمدگویی',
                     body: '🎖️ به قرارگاه پدافند شبهات خوش آمدید!\n\n🛡️ مأموریت: پاسخ به شبهات دینی، اعتقادی و سیاسی\n📚 روش: با زبانی ساده و مستند\n🎯 هدف: روشنگری و دفاع از مرزهای اعتقادی\n\n⭐ ۱۰ XP جایزه به شما تعلق گرفت.',
@@ -1481,32 +1479,18 @@
         // ===== WELCOME =====
         function showWelcomeMessage() {
             if (localStorage.getItem('padafand_welcome_shown')) return;
-            const win = window.open('', '_blank', 'width=600,height=480');
-            if (win) {
-                win.document.write(`
-                        <html dir="rtl" style="background:#0a0e08;color:#d4e8b0;font-family:Tahoma;padding:20px;text-align:center">
-                        <head><title>خوش آمدید</title></head>
-                        <body>
-                            <div style="font-size:3rem;margin-bottom:0.5rem">🎖️</div>
-                            <h1 style="color:#6db33f;font-size:1.4rem">به قرارگاه <span style="color:#c8a000">پدافند شبهات</span> خوش آمدید</h1>
-                            <div style="text-align:justify;max-width:500px;margin:15px auto;padding:15px;background:#111c0a;border-radius:8px;border-right:3px solid #c8a000;font-size:13px;line-height:2.2">
-                                <p><b style="color:#c8a000">🛡️ مأموریت:</b> پاسخ به شبهات دینی، اعتقادی و سیاسی</p>
-                                <p><b style="color:#c8a000">📚 روش:</b> با زبانی ساده و مستند</p>
-                                <p><b style="color:#c8a000">🎯 هدف:</b> روشنگری و دفاع از مرزهای اعتقادی</p>
-                                <p><b style="color:#c8a000">⭐ مزایا:</b> با فعالیت، XP و سطح خود را افزایش دهید</p>
-                                <p style="color:#7a9a55;font-size:11px;border-top:1px solid #2e4018;padding-top:8px;margin-top:8px">📬 پیام خوش‌آمدگویی به صندوق پیام شما ارسال شد.</p>
-                            </div>
-                            <button onclick="window.close()" style="background:#4a7c20;border:none;color:#fff;padding:8px 24px;border-radius:4px;cursor:pointer;margin-top:8px;font-size:14px">باشه، فهمیدم</button>
-                        </body>
-                        </html>
-                    `);
-                win.document.close();
-                localStorage.setItem('padafand_welcome_shown', 'true');
-                if (loggedUser && allUsers[loggedUser]) {
-                    allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 5;
-                    updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
-                    updateProfile();
-                }
+            // نمایش داخل خود صفحه (بدون popup که مرورگر بلاک کند)
+            const pie = document.getElementById('pieLauncher');
+            if (pie) {
+                pie.style.display = 'flex';
+                const t = document.getElementById('pieText');
+                if (t) t.textContent = 'سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. مأموریت ما پاسخ به شبهات با زبان ساده و مستند است. آماده‌ای آموزش ببینی؟';
+            }
+            localStorage.setItem('padafand_welcome_shown', 'true');
+            if (loggedUser && allUsers[loggedUser] && allUsers[loggedUser].id) {
+                allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 5;
+                updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
+                updateProfile();
             }
         }
 
