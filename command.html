@@ -25,6 +25,28 @@
             --font-mono: 'Courier New', monospace;
             --neon: #39ff14;
         }
+
+        /* قفل امنیتی: داشبورد تا احراز هویت مخفی */
+        body:not(.authenticated) .sidebar,
+        body:not(.authenticated) .main,
+        body:not(.authenticated) .hamburger {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        body:not(.authenticated) #securityPage {
+            display: flex !important;
+        }
+        body.authenticated #securityPage {
+            display: none !important;
+        }
+        body.authenticated .sidebar {
+            display: flex !important;
+        }
+        body.authenticated .main {
+            display: block !important;
+        }
+
         [data-theme="light"] {
             --bg-primary: #e8eef0;
             --bg-secondary: #d0d8dc;
@@ -1647,6 +1669,10 @@
         }
 
         async function loadAllData() {
+            if (!document.body.classList.contains('authenticated') && !currentUser) {
+                console.warn('blocked: loadAllData without auth');
+                return;
+            }
             const users = await loadFromSupabase('users');
             allUsers = {};
             users.forEach(u => {
@@ -2504,6 +2530,7 @@
         }
 
         async function enterCommand() {
+            document.body.classList.add('authenticated');
             document.getElementById('securityPage').style.display = 'none';
             document.getElementById('sidebar').style.display = 'block';
             document.querySelector('.main').style.display = 'block';
@@ -2540,6 +2567,10 @@
                 });
             } catch (e) {}
             localStorage.removeItem('padafand_commander');
+            document.body.classList.remove('authenticated');
+            // پاک کردن داده‌های حساس از حافظه
+            allUsers = {}; allPosts = []; allMessages = []; allInbox = {}; allReports = []; allCommanderLog = [];
+            currentUser = null;
             // بستن پنجره فرماندهی (باید با window.open باز شده باشد)
             try {
                 if (window.opener && !window.opener.closed) {
@@ -2861,30 +2892,9 @@
             document.getElementById('sidebar').style.display = 'none';
             document.querySelector('.main').style.display = 'none';
 
-            const savedCommander = localStorage.getItem('padafand_commander');
-            if (savedCommander) {
-                try {
-                    const data = JSON.parse(savedCommander);
-                    const elapsed = (new Date() - new Date(data.time)) / 1000 / 60;
-                    if (elapsed < 60) {
-                        currentUser = data.user;
-                        document.getElementById('securityPage').style.display = 'none';
-                        document.getElementById('sidebar').style.display = 'block';
-                        document.querySelector('.main').style.display = 'block';
-                        document.getElementById('sideName').textContent = currentUser;
-                        loadAllData();
-                        updateTime();
-                        setInterval(updateTime, 1000);
-                        // هماهنگی زنده با سایت عمومی (هر ۱۵ ثانیه)
-                        setInterval(() => { loadAllData(); }, 15000);
-                    } else {
-                        localStorage.removeItem('padafand_commander');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('padafand_commander');
-                }
-            }
-        });
+            localStorage.removeItem('padafand_commander');
+            document.body.classList.remove('authenticated');
+            // ورود مجدد اجباری برای امنیت);
     </script>
 </body>
     </html>
