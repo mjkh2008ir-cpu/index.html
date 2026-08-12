@@ -2347,14 +2347,14 @@
             enterCommand();
         }
 
-        function enterCommand() {
+        async function enterCommand() {
             document.getElementById('securityPage').style.display = 'none';
             document.getElementById('sidebar').style.display = 'block';
             document.querySelector('.main').style.display = 'block';
             document.getElementById('cmdError').textContent = '';
             document.getElementById('sideName').textContent = currentUser;
 
-            saveToSupabase('commander_log', {
+            await saveToSupabase('commander_log', {
                 name: currentUser,
                 action: 'ورود',
                 time: new Date().toLocaleString('fa-IR')
@@ -2364,30 +2364,25 @@
             loadAllData();
             updateTime();
             setInterval(updateTime, 1000);
+            setInterval(() => { loadAllData(); }, 15000);
 
             window.addEventListener('beforeunload', function(e) {
-                saveToSupabase('commander_log', {
-                    name: currentUser,
-                    action: 'خروج',
-                    time: new Date().toLocaleString('fa-IR')
-                });
-                e.preventDefault();
-                e.returnValue = '';
-                window.close();
+                // best-effort log on close
+                navigator.sendBeacon && navigator.sendBeacon(
+                    `${SUPABASE_URL}/rest/v1/commander_log`,
+                    new Blob([JSON.stringify({ name: currentUser, action: 'خروج', time: new Date().toLocaleString('fa-IR') })], { type: 'application/json' })
+                );
             });
         }
 
-        function commanderLogout() {
-            saveToSupabase('commander_log', {
+        async function commanderLogout() {
+            await saveToSupabase('commander_log', {
                 name: currentUser,
                 action: 'خروج',
                 time: new Date().toLocaleString('fa-IR')
             });
             localStorage.removeItem('padafand_commander');
-            window.close();
-            setTimeout(() => {
-                window.location.href = './index.html';
-            }, 500);
+            window.location.href = './index.html';
         }
 
         function updateTime() {
