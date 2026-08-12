@@ -355,33 +355,71 @@
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
+        const sbHeaders = {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        };
+
         async function loadFromSupabase(table) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, { headers: { 'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
-                return await res.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                if (!res.ok) { console.error('Load error', table, res.status); return []; }
+                const data = await res.json();
+                return Array.isArray(data) ? data : [];
             } catch (e) { console.error(e); return []; }
         }
+
         async function saveToSupabase(table, data) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data) });
-                return await res.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: sbHeaders,
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    const err = await res.text();
+                    console.error('Save error', table, res.status, err);
+                    return null;
+                }
+                const result = await res.json();
+                return Array.isArray(result) ? result[0] : result;
             } catch (e) { console.error(e); return null; }
         }
+
         async function updateInSupabase(table, id, data) {
+            if (id === undefined || id === null || id === '') {
+                console.error('updateInSupabase: missing id for', table);
+                return null;
+            }
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'PATCH',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                return await res.json();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: sbHeaders,
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    const err = await res.text();
+                    console.error('Update error', table, id, res.status, err);
+                    return null;
+                }
+                const result = await res.json();
+                return Array.isArray(result) ? result[0] : result;
             } catch (e) { console.error(e); return null; }
         }
+
         async function deleteFromSupabase(table, id) {
-            try { await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method: 'DELETE', headers: { 'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
-                return true; } catch (e) { console.error(e); return false; }
+            if (id === undefined || id === null || id === '') return false;
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                return res.ok;
+            } catch (e) { console.error(e); return false; }
         }
 
         // ===== SPECIAL USERS =====
@@ -471,6 +509,8 @@
             if (savedUser) { loggedUser = savedUser; }
             loadAllData();
             setTimeout(showWelcomeMessage, 1500);
+            // هماهنگی زنده بین دو سایت (هر ۱۵ ثانیه)
+            setInterval(() => { loadAllData(); }, 15000);
         });
 
         // ===== PIE LAUNCHER =====
@@ -659,38 +699,44 @@
         async function toggleLike(index) {
             if (!loggedUser) { alert('⚠️ برای لایک کردن وارد حساب خود شوید.'); return; }
             const post = allPosts[index];
-            if (!post) return;
-            if (!post.liked_by) post.liked_by = [];
+            if (!post || !post.id) return;
+            if (!Array.isArray(post.liked_by)) post.liked_by = [];
+            post.likes = Number(post.likes) || 0;
             if (post.liked_by.includes(loggedUser)) {
-                post.likes--;
+                post.likes = Math.max(0, post.likes - 1);
                 post.liked_by = post.liked_by.filter(u => u !== loggedUser);
             } else {
                 post.likes++;
                 post.liked_by.push(loggedUser);
-                if (allUsers[loggedUser]) {
-                    allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
+                if (allUsers[loggedUser] && allUsers[loggedUser].id) {
+                    allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 1;
                     await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
                 }
             }
-            await updateInSupabase('posts', post.id, { likes: post.likes, liked_by: post.liked_by });
-            allPosts[index] = post;
+            const updated = await updateInSupabase('posts', post.id, { likes: post.likes, liked_by: post.liked_by });
+            if (updated) allPosts[index] = { ...post, ...updated };
+            else allPosts[index] = post;
             renderPosts(allPosts);
             updateProfile();
         }
 
         async function addComment(index) {
             if (!loggedUser) { alert('⚠️ برای نظر دادن وارد حساب خود شوید.'); return; }
+            const post = allPosts[index];
+            if (!post || !post.id) return;
             const input = document.getElementById(`cmtInput${index}`);
             const text = input.value.trim();
             if (!text) return;
-            if (!allPosts[index].comments) allPosts[index].comments = [];
-            allPosts[index].comments.push({ user: loggedUser, text: text });
-            if (allUsers[loggedUser]) {
-                allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 2;
+            if (!Array.isArray(post.comments)) post.comments = [];
+            post.comments.push({ user: loggedUser, text: text, time: new Date().toLocaleString('fa-IR') });
+            if (allUsers[loggedUser] && allUsers[loggedUser].id) {
+                allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 2;
                 await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
             }
             input.value = '';
-            await updateInSupabase('posts', allPosts[index].id, { comments: allPosts[index].comments });
+            const updated = await updateInSupabase('posts', post.id, { comments: post.comments });
+            if (updated) allPosts[index] = { ...post, ...updated };
+            else allPosts[index] = post;
             renderPosts(allPosts);
             updateProfile();
         }
@@ -1023,14 +1069,14 @@
                 fullname,
                 phone,
                 password,
-                avatar: selectedAvatar,
+                avatar: selectedAvatar || 'fa-user',
                 xp: isSpecial ? special.xp : 10,
                 is_special: isSpecial,
                 rank: isSpecial ? 'سردار' : 'سرباز',
                 date: new Date().toLocaleDateString('fa-IR')
             };
-            await saveToSupabase('users', userData);
-            allUsers[username] = userData;
+            const savedUser = await saveToSupabase('users', userData);
+            allUsers[username] = savedUser ? { ...userData, ...savedUser } : userData;
             if (isSpecial) {
                 document.getElementById('authMsg').textContent =
                     `🎖️ سردار گرامی ${special.name}، به قرارگاه پدافند شبهات خوش آمدید! ۱۰۰۰ XP دریافت کردید.`;
@@ -1445,4 +1491,4 @@
             window.open(this.href, '_blank'); });
     </script>
 </body>
-                                                          </html>
+</html>
