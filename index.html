@@ -156,18 +156,32 @@
         .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
         .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
         .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
-        .defense-anim{width:100%;height:55px;position:relative;overflow:hidden;background:linear-gradient(180deg,transparent 0%,rgba(57,255,20,0.04)100%);border-radius:4px;margin-top:0.1rem;border:1px solid rgba(57,255,20,0.06)}
-        .defense-anim .car{position:absolute;bottom:2px;right:10px;font-size:1.8rem;animation:carMove 12s linear infinite}
-        .defense-anim .car span{font-size:0.5rem;color:var(--neon);position:absolute;bottom:-8px;right:15px;font-weight:700;white-space:nowrap;animation:neonPulse 1.5s infinite}
-        .defense-anim .missile{position:absolute;bottom:12px;font-size:1.2rem;animation:missileFly 4s linear infinite;filter:drop-shadow(0 0 5px var(--neon))}
-        .defense-anim .missile:nth-child(2){left:20%;animation-duration:4s}
-        .defense-anim .missile:nth-child(3){left:50%;animation-duration:5s;animation-delay:1s}
-        .defense-anim .missile:nth-child(4){left:75%;animation-duration:6s;animation-delay:2s}
-        .defense-anim .radar{position:absolute;bottom:0;right:0;font-size:1.5rem;animation:radarPulse 2s infinite;filter:drop-shadow(0 0 10px var(--neon))}
-        .defense-anim .jet{position:absolute;top:2px;font-size:1.2rem;animation:missileFly 8s linear infinite;filter:drop-shadow(0 0 3px var(--neon))}
-        .defense-anim .jet:nth-child(6){left:10%;animation-duration:8s;animation-delay:0.5s}
-        .defense-anim .jet:nth-child(7){left:40%;animation-duration:9s;animation-delay:1.5s}
-        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,var(--neon),var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.85;box-shadow:0 0 12px var(--neon)}
+        .defense-anim{width:100%;height:140px;position:relative;overflow:hidden;background:
+            linear-gradient(180deg, rgba(6,12,8,0.2) 0%, rgba(10,20,12,0.85) 40%, rgba(5,15,8,0.95) 100%),
+            repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(57,255,20,0.03) 3px, rgba(57,255,20,0.03) 4px),
+            repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(57,255,20,0.03) 3px, rgba(57,255,20,0.03) 4px);
+            border-radius:6px;margin-top:0.3rem;border:1px solid rgba(57,255,20,0.25);box-shadow:inset 0 0 40px rgba(57,255,20,0.08),0 0 20px rgba(57,255,20,0.05)}
+        .defense-anim .pixel-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(57,255,20,0.04) 1px, transparent 1px),linear-gradient(90deg, rgba(57,255,20,0.04) 1px, transparent 1px);background-size:8px 8px;pointer-events:none;opacity:0.6}
+        .defense-anim .defense-system{position:absolute;bottom:8px;right:-120px;animation:systemEnter 14s ease-in-out infinite;z-index:3;text-align:center}
+        .defense-anim .system-img{height:95px;width:auto;max-width:180px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(57,255,20,0.45));image-rendering:auto;border-radius:4px}
+        .defense-anim .system-label{display:block;font-size:0.45rem;color:var(--neon);font-weight:700;text-shadow:0 0 8px var(--neon);margin-top:2px;animation:neonPulse 2s infinite;font-family:monospace;letter-spacing:1px}
+        .defense-anim .enemy-missile{position:absolute;top:8px;font-size:1.1rem;animation:enemyDive 5s linear infinite;filter:drop-shadow(0 0 6px #c0392b);z-index:2}
+        .defense-anim .enemy-missile.m1{left:15%;animation-duration:5s}
+        .defense-anim .enemy-missile.m2{left:45%;animation-duration:6s;animation-delay:1.2s}
+        .defense-anim .enemy-missile.m3{left:70%;animation-duration:5.5s;animation-delay:2.4s}
+        .defense-anim .interceptor{position:absolute;bottom:40px;right:30%;font-size:0.9rem;color:var(--neon);animation:intercept 5s linear infinite;text-shadow:0 0 10px var(--neon);z-index:4}
+        .defense-anim .interceptor.i1{animation-duration:5s}
+        .defense-anim .interceptor.i2{animation-duration:6s;animation-delay:1.2s;right:50%}
+        .defense-anim .boom{position:absolute;font-size:1.3rem;opacity:0;animation:boomFlash 5s linear infinite;z-index:5}
+        .defense-anim .boom.b1{left:18%;top:25%;animation-duration:5s}
+        .defense-anim .boom.b2{left:48%;top:20%;animation-duration:6s;animation-delay:1.2s}
+        .defense-anim .status-text{position:absolute;top:4px;left:8px;font-size:0.38rem;color:var(--neon);font-family:monospace;letter-spacing:1px;opacity:0.85;animation:neonPulse 2s infinite;text-shadow:0 0 6px var(--neon)}
+        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,var(--neon),#39ff14,var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.9;box-shadow:0 0 14px var(--neon)}
+        @keyframes systemEnter{0%{right:-120px;opacity:0}12%{right:12px;opacity:1}75%{right:12px;opacity:1}100%{right:-120px;opacity:0}}
+        @keyframes enemyDive{0%{transform:translateY(-20px) translateX(0);opacity:0}15%{opacity:1}55%{opacity:1}70%{transform:translateY(50px) translateX(-15px);opacity:0}100%{opacity:0}}
+        @keyframes intercept{0%{bottom:35px;opacity:0;transform:translateX(0)}20%{opacity:1}55%{bottom:70%;opacity:1;transform:translateX(-40px)}70%{opacity:0}100%{opacity:0}}
+        @keyframes boomFlash{0%,55%{opacity:0;transform:scale(0.3)}62%{opacity:1;transform:scale(1.3)}75%{opacity:0;transform:scale(0.5)}100%{opacity:0}}
+
 
         /* ===== MODAL ===== */
         .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;justify-content:center;align-items:center}
@@ -264,8 +278,8 @@
             .post-hdr .title{font-size:.7rem}#userPanel{width:100%}.ai-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
             .games-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
             .fab{bottom:70px;left:10px;width:44px;height:44px;font-size:1rem}
-            .notification{left:10px;right:10px;max-width:none}.defense-anim{height:40px}
-            .defense-anim .car{font-size:1.4rem}.defense-anim .missile{font-size:1rem}.defense-anim .radar{font-size:1.2rem}
+            .notification{left:10px;right:10px;max-width:none}.defense-anim{height:100px}
+            .defense-anim .system-img{height:70px;max-width:130px}
         }
         @media(max-width:400px){.stats-grid{grid-template-columns:1fr 1fr}.modal-content{padding:0.8rem}}
     </style>
@@ -348,7 +362,34 @@
     <div id="userPanel"><button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button><div class="profile-header"><span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span><div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div><span class="level" id="profileLevel">سرباز</span><span class="xp" id="profileXP">XP: 0</span></div><div class="avatar-select" id="avatarSelect"><span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span><span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span><span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span><span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span><span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span><span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span><span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span><span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span><span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span><span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span><span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span><span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span><span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span><span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span></div><div class="profile-stats"><div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div><div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div><div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div><div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div></div><div id="userInfo" style="display:none"><button class="profile-edit" onclick="openInbox()" style="background:var(--gold);margin-bottom:0.2rem"><i class="fas fa-envelope"></i> صندوق پیام</button><button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff"><i class="fas fa-sign-out-alt"></i> خروج</button></div><div id="userNotLogged" style="display:block"><button class="profile-edit" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> ورود / ثبت‌نام</button></div></div>
 
     <!-- ===== FOOTER ===== -->
-    <footer id="footer"><div class="foot-inner"><div class="foot-links"><a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a><a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a><a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a></div><div class="foot-copy">PADAFAND v10.0</div></div><div class="defense-anim"><div class="car">🚛<span>پدافند شبهات</span></div><div class="missile">🚀</div><div class="missile">🚀</div><div class="missile">🚀</div><div class="radar">📡</div><div class="jet">✈️</div><div class="jet">✈️</div><div class="neon-line"></div></div></footer>
+    
+<footer id="footer">
+    <div class="foot-inner">
+        <div class="foot-links">
+            <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a>
+            <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
+            <a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a>
+        </div>
+        <div class="foot-copy">PADAFAND v10.0</div>
+    </div>
+    <div class="defense-anim" id="defenseAnim">
+        <div class="pixel-grid"></div>
+        <div class="defense-system">
+            <img src="padafand-system.jpg" alt="سامانه پدافند شبهات" class="system-img">
+            <span class="system-label">سامانه پدافند شبهات</span>
+        </div>
+        <div class="enemy-missile m1">❓</div>
+        <div class="enemy-missile m2">❓</div>
+        <div class="enemy-missile m3">❓</div>
+        <div class="interceptor i1">✦</div>
+        <div class="interceptor i2">✦</div>
+        <div class="boom b1">💥</div>
+        <div class="boom b2">💥</div>
+        <div class="status-text">ورود سامانه • رهگیری • انهدام شبهات</div>
+        <div class="neon-line"></div>
+    </div>
+</footer>
+
 
     <script>
         // ===== SUPABASE CONFIG =====
