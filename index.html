@@ -167,7 +167,7 @@
         .defense-anim .jet{position:absolute;top:2px;font-size:1.2rem;animation:missileFly 8s linear infinite;filter:drop-shadow(0 0 3px var(--neon))}
         .defense-anim .jet:nth-child(6){left:10%;animation-duration:8s;animation-delay:0.5s}
         .defense-anim .jet:nth-child(7){left:40%;animation-duration:9s;animation-delay:1.5s}
-        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.6}
+        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,var(--neon),var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.85;box-shadow:0 0 12px var(--neon)}
 
         /* ===== MODAL ===== */
         .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;justify-content:center;align-items:center}
@@ -316,6 +316,10 @@
             <div class="pie-launcher" id="pieLauncher"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
             <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span><span><i class="fas fa-star"></i> <b id="specialCount">0</b> سردار</span></div>
             <div class="random-box" onclick="showRandomShobe()"><div class="title"><i class="fas fa-random"></i> شبهه تصادفی</div><div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div></div>
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)">
+                <div style="color:var(--gold);font-size:.65rem;font-weight:700;margin-bottom:0.3rem"><i class="fas fa-trophy"></i> برترین رزمندگان</div>
+                <div id="leaderboardList" style="font-size:.55rem"></div>
+            </div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)"><div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div><p style="color:var(--ts);font-size:.7rem;line-height:1.8">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br><span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span></p></div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div><div id="homePosts" style="margin-top:0.2rem"></div></div>
         </div>
@@ -324,7 +328,7 @@
         <div id="page-posts" class="page"><div class="page-title"><i class="fas fa-list"></i> شبهات</div><div id="postContainer"></div></div>
 
         <!-- GAMES -->
-        <div id="page-games" class="page"><div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center"><p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> هر بازی به شما بین ۵ تا ۱۵ امتیاز XP میدهد</p></div><div class="games-grid" id="gamesGrid"></div></div>
+        <div id="page-games" class="page"><div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center"><p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> با بازی کردن و کسب امتیاز، XP واقعی به حسابت اضافه می‌شود</p></div><div class="games-grid" id="gamesGrid"></div></div>
 
         <!-- AI -->
         <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.4rem;border-right:2px solid var(--am)"><p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-info-circle" style="color:var(--am)"></i> تا زمانی که هوش مصنوعی اختصاصی قرارگاه راه‌اندازی شود، از ابزارهای زیر استفاده کنید.</p></div><div class="ai-grid"><a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ‌های دقیق</span></a><a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a><a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">مکالمه طبیعی</span></a><a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a><a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">تخصصی اسلامی</span></a><a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">جستجوی هوشمند</span></a></div></div>
@@ -498,6 +502,27 @@
             updateProfile();
             updateRandomShobe();
             initGames();
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const el = document.getElementById('leaderboardList');
+            if (!el) return;
+            const list = Object.values(allUsers)
+                .filter(u => u && (u.xp || 0) > 0)
+                .sort((a, b) => (b.xp || 0) - (a.xp || 0))
+                .slice(0, 5);
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--ts);text-align:center">هنوز رزمنده‌ای ثبت نشده</div>';
+                return;
+            }
+            const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+            el.innerHTML = list.map((u, i) => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.15rem 0;border-bottom:1px solid var(--br)">
+                    <span>${medals[i] || (i+1)} <i class="fas ${u.avatar || 'fa-user'}"></i> ${u.fullname || u.username} ${u.is_special ? '⭐' : ''}</span>
+                    <span style="color:var(--neon);font-family:monospace">${u.xp || 0} XP</span>
+                </div>
+            `).join('');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
