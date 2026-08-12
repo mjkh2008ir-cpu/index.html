@@ -305,7 +305,7 @@
     <div id="search-section"><div class="search-wrap"><i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i><input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()"><button onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
 
     <!-- ===== NAV ===== -->
-    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
+    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
 
     <!-- ===== FAB ===== -->
     <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
@@ -342,9 +342,35 @@
         <div id="page-games" class="page"><div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center"><p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> با بازی کردن و کسب امتیاز، XP واقعی به حسابت اضافه می‌شود</p></div><div class="games-grid" id="gamesGrid"></div></div>
 
         <!-- AI -->
-        <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> هوش مصنوعی</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.4rem;border-right:2px solid var(--am)"><p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-info-circle" style="color:var(--am)"></i> تا زمانی که هوش مصنوعی اختصاصی قرارگاه راه‌اندازی شود، از ابزارهای زیر استفاده کنید.</p></div><div class="ai-grid"><a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ‌های دقیق</span></a><a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a><a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">مکالمه طبیعی</span></a><a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a><a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">تخصصی اسلامی</span></a><a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">جستجوی هوشمند</span></a></div></div>
+        <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> اتاق عملیات هوش مصنوعی</div>
+            <div style="background:var(--bgp);border:1px solid var(--neon);border-radius:4px;padding:0.4rem 0.5rem;margin-bottom:0.4rem;border-right:3px solid var(--neon)">
+                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> سامانه اختصاصی در حال توسعه — تا آن زمان از پایگاه‌های زیر برای پشتیبانی عملیات استفاده کنید.</p>
+            </div>
+            <div class="ai-grid">
+                <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ دقیق و مستند</span></a>
+                <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a>
+                <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">استدلال قوی</span></a>
+                <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a>
+                <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">تخصصی اسلامی</span></a>
+                <a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">جستجوی منابع</span></a>
+                <a href="https://grok.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-bolt"></i></span>Grok<span class="ai-desc">پاسخ سریع</span></a>
+                <a href="https://chat.qwen.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-globe"></i></span>Qwen<span class="ai-desc">چندزبانه</span></a>
+            </div>
+            <div style="margin-top:0.5rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;font-size:.55rem;color:var(--ts);line-height:1.8">
+                <b style="color:var(--gold)"><i class="fas fa-scroll"></i> پروتکل عملیاتی:</b><br>
+                ۱. شبهه را دقیق بنویس &nbsp; ۲. از منبع معتبر بخواه &nbsp; ۳. پاسخ را با قرآن و روایات تطبیق بده &nbsp; ۴. در صورت نیاز به فرماندهی ارسال کن
+            </div>
+        </div>
 
         <!-- SAVED -->
+        
+        <div id="page-faq" class="page"><div class="page-title"><i class="fas fa-question-circle"></i> سوالات متداول</div>
+            <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">چطور ثبت‌نام کنم؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">روی آیکون کاربر بزن، ثبت‌نام را انتخاب کن و نام، شماره و رمز را وارد کن.</div></div></div>
+            <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">XP چیست؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">امتیاز فعالیت توست. با لایک، کامنت، بازی و مشارکت XP می‌گیری و سطحت بالا می‌رود.</div></div></div>
+            <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">چطور شبهه به فرماندهی بفرستم؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">از منو «ارسال به فرماندهی» یا دکمه شناور پایین صفحه استفاده کن.</div></div></div>
+            <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">سردار کیست؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">کاربران ویژه‌ای که با شماره مشخص ثبت‌نام کنند درجه سردار و امکانات ویژه دریافت می‌کنند.</div></div></div>
+        </div>
+
         <div id="page-saved" class="page"><div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div><div id="savedContainer"></div></div>
 
     </div>
@@ -669,7 +695,7 @@
             document.getElementById(`page-${page}`).classList.add('active');
             document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.nav-btn[data-page]');
-            const map = { home: 0, posts: 1, games: 2, ai: 3, saved: 4 };
+            const map = { home: 0, posts: 1, games: 2, ai: 3, saved: 4, faq: 5 };
             if (btns[map[page]]) btns[map[page]].classList.add('active');
             document.querySelectorAll('.sidebar-nav .nav-item').forEach(b => b.classList.remove('active'));
             const sMap = { home: 0, posts: 1, games: 2, ai: 3, saved: 4 };
