@@ -162,19 +162,26 @@
             repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(57,255,20,0.03) 3px, rgba(57,255,20,0.03) 4px);
             border-radius:6px;margin-top:0.3rem;border:1px solid rgba(57,255,20,0.25);box-shadow:inset 0 0 40px rgba(57,255,20,0.08),0 0 20px rgba(57,255,20,0.05)}
         .defense-anim .pixel-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(57,255,20,0.04) 1px, transparent 1px),linear-gradient(90deg, rgba(57,255,20,0.04) 1px, transparent 1px);background-size:8px 8px;pointer-events:none;opacity:0.6}
-        .defense-anim .defense-system{position:absolute;bottom:8px;right:-120px;animation:systemEnter 14s ease-in-out infinite;z-index:3;text-align:center}
-        .defense-anim .system-img{height:95px;width:auto;max-width:180px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(57,255,20,0.45));image-rendering:auto;border-radius:4px}
-        .defense-anim .system-label{display:block;font-size:0.45rem;color:var(--neon);font-weight:700;text-shadow:0 0 8px var(--neon);margin-top:2px;animation:neonPulse 2s infinite;font-family:monospace;letter-spacing:1px}
-        .defense-anim .enemy-missile{position:absolute;top:8px;font-size:1.1rem;animation:enemyDive 5s linear infinite;filter:drop-shadow(0 0 6px #c0392b);z-index:2}
-        .defense-anim .enemy-missile.m1{left:15%;animation-duration:5s}
-        .defense-anim .enemy-missile.m2{left:45%;animation-duration:6s;animation-delay:1.2s}
-        .defense-anim .enemy-missile.m3{left:70%;animation-duration:5.5s;animation-delay:2.4s}
-        .defense-anim .interceptor{position:absolute;bottom:40px;right:30%;font-size:0.9rem;color:var(--neon);animation:intercept 5s linear infinite;text-shadow:0 0 10px var(--neon);z-index:4}
-        .defense-anim .interceptor.i1{animation-duration:5s}
-        .defense-anim .interceptor.i2{animation-duration:6s;animation-delay:1.2s;right:50%}
-        .defense-anim .boom{position:absolute;font-size:1.3rem;opacity:0;animation:boomFlash 5s linear infinite;z-index:5}
-        .defense-anim .boom.b1{left:18%;top:25%;animation-duration:5s}
-        .defense-anim .boom.b2{left:48%;top:20%;animation-duration:6s;animation-delay:1.2s}
+        .defense-anim .defense-system{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);z-index:3;text-align:center}
+        .defense-anim .system-label{display:block;font-size:0.4rem;color:var(--neon);font-weight:700;text-shadow:0 0 8px var(--neon);margin-top:2px;animation:neonPulse 2s infinite;font-family:monospace;letter-spacing:1px}
+        .defense-anim .pixel-turret{image-rendering:pixelated;margin:0 auto}
+        .defense-anim .turret-top{width:10px;height:14px;background:#39ff14;margin:0 auto;box-shadow:0 0 8px #39ff14;border-radius:1px}
+        .defense-anim .turret-body{width:28px;height:16px;background:#2a6a2a;margin:0 auto;border:1px solid #39ff14;box-shadow:0 0 6px rgba(57,255,20,0.4)}
+        .defense-anim .turret-base{width:40px;height:8px;background:#1a3a1a;margin:0 auto;border:1px solid #4a8a4a}
+        .defense-anim .enemy-missile{position:absolute;top:-20px;z-index:2;text-align:center;animation:enemyDive 6s linear infinite}
+        .defense-anim .enemy-missile .px-missile{display:block;color:#c0392b;font-size:1.2rem;text-shadow:0 0 8px #c0392b;filter:drop-shadow(0 0 4px #c0392b)}
+        .defense-anim .enemy-missile .px-tag{display:block;font-size:0.3rem;color:#e74c3c;font-family:monospace}
+        .defense-anim .enemy-missile.m1{left:12%;animation-duration:5.5s}
+        .defense-anim .enemy-missile.m2{left:48%;animation-duration:6.5s;animation-delay:1.5s}
+        .defense-anim .enemy-missile.m3{left:78%;animation-duration:5.8s;animation-delay:3s}
+        .defense-anim .interceptor{position:absolute;bottom:28px;left:50%;font-size:0.85rem;color:#39ff14;text-shadow:0 0 12px #39ff14;z-index:4;animation:intercept 6s linear infinite;opacity:0}
+        .defense-anim .interceptor.i1{animation-duration:5.5s;animation-delay:0.8s}
+        .defense-anim .interceptor.i2{animation-duration:6.5s;animation-delay:2.3s}
+        .defense-anim .interceptor.i3{animation-duration:5.8s;animation-delay:3.8s}
+        .defense-anim .boom{position:absolute;font-size:1.4rem;opacity:0;animation:boomFlash 6s linear infinite;z-index:5;color:#39ff14;text-shadow:0 0 15px #39ff14}
+        .defense-anim .boom.b1{left:12%;top:35%;animation-duration:5.5s;animation-delay:1.5s}
+        .defense-anim .boom.b2{left:48%;top:30%;animation-duration:6.5s;animation-delay:3s}
+        .defense-anim .boom.b3{left:78%;top:32%;animation-duration:5.8s;animation-delay:4.5s}
         .defense-anim .status-text{position:absolute;top:4px;left:8px;font-size:0.38rem;color:var(--neon);font-family:monospace;letter-spacing:1px;opacity:0.85;animation:neonPulse 2s infinite;text-shadow:0 0 6px var(--neon)}
         .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,var(--neon),#39ff14,var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.9;box-shadow:0 0 14px var(--neon)}
         @keyframes systemEnter{0%{right:-120px;opacity:0}12%{right:12px;opacity:1}75%{right:12px;opacity:1}100%{right:-120px;opacity:0}}
@@ -385,7 +392,13 @@
     <div class="modal" id="tutorialModal"><div class="modal-content" style="max-width:600px"><div class="modal-header"><h3><i class="fas fa-graduation-cap"></i> آموزش قرارگاه</h3><button class="modal-close" onclick="closeModal('tutorialModal')">×</button></div><div id="tutorialContent" style="min-height:200px"><div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div></div></div></div>
 
     <!-- ===== USER PANEL ===== -->
-    <div id="userPanel"><button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button><div class="profile-header"><span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span><div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div><span class="level" id="profileLevel">سرباز</span><span class="xp" id="profileXP">XP: 0</span></div><div class="avatar-select" id="avatarSelect"><span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span><span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span><span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span><span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span><span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span><span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span><span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span><span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span><span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span><span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span><span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span><span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span><span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span><span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span></div><div class="profile-stats"><div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div><div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div><div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div><div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div></div><div id="userInfo" style="display:none"><button class="profile-edit" onclick="openInbox()" style="background:var(--gold);margin-bottom:0.2rem"><i class="fas fa-envelope"></i> صندوق پیام</button><button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff"><i class="fas fa-sign-out-alt"></i> خروج</button></div><div id="userNotLogged" style="display:block"><button class="profile-edit" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> ورود / ثبت‌نام</button></div></div>
+    <div id="userPanel"><button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button><div class="profile-header"><span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span><div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div><span class="level" id="profileLevel">سرباز</span><span class="xp" id="profileXP">XP: 0</span></div><div class="avatar-select" id="avatarSelect"><span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span><span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span><span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span><span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span><span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span><span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span><span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span><span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span><span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span><span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span><span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span><span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span><span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span><span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span></div><div class="profile-stats"><div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div><div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div><div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div><div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div></div><div id="userInfo" style="display:none">
+<div style="font-size:.55rem;color:var(--gold);margin:0.3rem 0 0.15rem;text-align:center"><i class="fas fa-user-edit"></i> ویرایش حساب — انتخاب آواتار</div>
+<div class="form-group" style="margin-bottom:0.3rem"><label style="font-size:.45rem;color:var(--ts)">نام نمایشی</label><input type="text" id="editFullname" placeholder="نام شما" style="width:100%;padding:0.25rem;background:var(--bg);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.65rem"></div>
+<button class="profile-edit" onclick="saveProfileEdit()" style="background:var(--neon);color:#000;margin-bottom:0.2rem"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+<button class="profile-edit" onclick="openInbox()" style="background:var(--gold);margin-bottom:0.2rem"><i class="fas fa-envelope"></i> صندوق پیام</button>
+<button class="profile-edit" onclick="userLogout()" style="background:var(--rd);color:#fff"><i class="fas fa-sign-out-alt"></i> خروج</button>
+</div><div id="userNotLogged" style="display:block"><button class="profile-edit" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> ورود / ثبت‌نام</button></div></div>
 
     <!-- ===== FOOTER ===== -->
     
@@ -400,18 +413,28 @@
     </div>
     <div class="defense-anim" id="defenseAnim">
         <div class="pixel-grid"></div>
+        <div class="status-text">◈ سامانه پدافند شبهات ◈ ورود • رهگیری • انهدام</div>
+        <!-- دشمن: موشک‌های شبهه از بالا می‌آیند -->
+        <div class="enemy-missile m1"><span class="px-missile">▲</span><span class="px-tag">شبهه</span></div>
+        <div class="enemy-missile m2"><span class="px-missile">▲</span><span class="px-tag">شبهه</span></div>
+        <div class="enemy-missile m3"><span class="px-missile">▲</span><span class="px-tag">شبهه</span></div>
+        <!-- رهگیرهای پدافند -->
+        <div class="interceptor i1">◆</div>
+        <div class="interceptor i2">◆</div>
+        <div class="interceptor i3">◆</div>
+        <!-- انفجار -->
+        <div class="boom b1">✸</div>
+        <div class="boom b2">✸</div>
+        <div class="boom b3">✸</div>
+        <!-- سامانه پدافند پیکسلی -->
         <div class="defense-system">
-            <img src="padafand-system.jpg" alt="سامانه پدافند شبهات" class="system-img">
-            <span class="system-label">سامانه پدافند شبهات</span>
+            <div class="pixel-turret">
+                <div class="turret-top"></div>
+                <div class="turret-body"></div>
+                <div class="turret-base"></div>
+            </div>
+            <span class="system-label">پدافند شبهات</span>
         </div>
-        <div class="enemy-missile m1">❓</div>
-        <div class="enemy-missile m2">❓</div>
-        <div class="enemy-missile m3">❓</div>
-        <div class="interceptor i1">✦</div>
-        <div class="interceptor i2">✦</div>
-        <div class="boom b1">💥</div>
-        <div class="boom b2">💥</div>
-        <div class="status-text">ورود سامانه • رهگیری • انهدام شبهات</div>
         <div class="neon-line"></div>
     </div>
 </footer>
@@ -659,18 +682,15 @@
         }
 
         const tutorialSteps = [
-            { title: '🏠 صفحه اصلی', desc: 'اینجا همه چیز شروع میشه. میتونی آخرین شبهات رو ببینی و با محیط آشنا بشی.',
-            icon: 'fa-home' },
-            { title: '📝 شبهات', desc: 'همه شبهات اینجا جمع شدن. میتونی بخونی، لایک کنی و نظر بدی.', icon: 'fa-list' },
-            { title: '🎮 بازی‌ها', desc: 'با بازی کردن هم سرگرم میشی هم XP میگیری. هر بازی ۵ تا ۱۵ XP داره.',
-            icon: 'fa-gamepad' },
-            { title: '🤖 هوش مصنوعی', desc: 'از ابزارهای هوش مصنوعی برای پاسخ به شبهات استفاده کن.', icon: 'fa-robot' },
-            { title: '📦 جعبه مهمات', desc: 'مطالب مورد علاقت رو اینجا ذخیره کن تا هر وقت خواستی بخونیش.', icon: 'fa-box' },
-            { title: '📨 ارسال به فرماندهی', desc: 'اگه شبهه‌ای دیدی که نتونستی پاسخ بدی، بفرستش به فرماندهی.',
-                icon: 'fa-paper-plane' },
-            { title: '👤 پروفایل', desc: 'اینجا میتونی آواتار انتخاب کنی، XP و سطح خودت رو ببینی.', icon: 'fa-user' },
-            { title: '🎯 تمام!', desc: 'تبریک! حالا با همه بخش‌های قرارگاه آشنا شدی. موفق باشی سرباز! 💪',
-                icon: 'fa-flag-checkered' }
+            { title: '🏠 صفحه اصلی', desc: 'خلاصه وضعیت قرارگاه، آخرین مطالب و دسترسی سریع به بخش‌ها.', icon: 'fa-home' },
+            { title: '📝 شبهات', desc: 'فهرست پاسخ‌های آماده. می‌توانی بخوانی، لایک کنی و نظر بدهی.', icon: 'fa-list' },
+            { title: '🎮 بازی‌ها', desc: 'تمرین و یادگیری با بازی؛ با کسب امتیاز XP می‌گیری.', icon: 'fa-gamepad' },
+            { title: '🤖 هوش مصنوعی', desc: 'ابزارهای کمکی برای تحلیل و پاسخ دقیق‌تر به شبهات.', icon: 'fa-robot' },
+            { title: '📦 جعبه مهمات', desc: 'مطالبی که ذخیره کرده‌ای برای مرور بعدی.', icon: 'fa-box' },
+            { title: '📨 ارسال به فرماندهی', desc: 'اگر پاسخی نیافتی، شبهه را برای بررسی به مرکز فرماندهی بفرست.', icon: 'fa-paper-plane' },
+            { title: '📬 صندوق پیام', desc: 'پیام‌های سیستم و فرماندهی اینجا می‌آید؛ می‌توانی پاسخ بدهی.', icon: 'fa-envelope' },
+            { title: '👤 حساب کاربری', desc: 'آواتار، نام نمایشی و آمار فعالیت خود را مدیریت کن.', icon: 'fa-user' },
+            { title: '✅ پایان آموزش', desc: 'حالا با بخش‌های اصلی آشنا شدی. از منوها استفاده کن و مشارکت داشته باش.', icon: 'fa-flag-checkered' }
         ];
 
         function startTutorialSteps() { tutorialStep = 0;
@@ -989,7 +1009,11 @@
                             <div class="inbox-body" id="inboxBody${i}">
                                 <p style="white-space:pre-wrap">${m.body}</p>
                                 ${hasAction ? `<button class="inbox-btn-action" onclick="openTutorialFromInbox()"><i class="fas fa-play"></i> شروع آموزش</button>` : ''}
-                                <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
+                                <div style="display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap">
+                                    <input type="text" id="replyInbox${i}" placeholder="پاسخ شما..." style="flex:1;min-width:100px;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.55rem">
+                                    <button class="inbox-btn-action" onclick="event.stopPropagation();replyInboxItem(${i})"><i class="fas fa-reply"></i> پاسخ</button>
+                                    <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1008,6 +1032,37 @@
                 updateInboxBadge();
                 renderInbox();
             }
+        }
+
+        
+        async function replyInboxItem(index) {
+            if (!loggedUser) return;
+            const input = document.getElementById('replyInbox' + index);
+            const text = (input?.value || '').trim();
+            if (!text) { alert('⚠️ متن پاسخ را بنویسید'); return; }
+            const msgs = allInbox[loggedUser] || [];
+            const realIndex = msgs.length - 1 - index;
+            const msg = msgs[realIndex];
+            if (!msg) return;
+            // ارسال پاسخ به عنوان پیام جدید به فرستنده (یا ذخیره در body)
+            const replyBody = (msg.body || '') + '\n\n———\n💬 پاسخ شما: ' + text;
+            if (msg.id) await updateInSupabase('inbox', msg.id, { body: replyBody, read: true });
+            msg.body = replyBody;
+            msg.read = true;
+            // اگر از فرماندهی آمده، یک پیام به سیستم هم بفرست
+            await saveToSupabase('inbox', {
+                user: 'command_replies',
+                from_user: loggedUser,
+                from_type: 'user',
+                subject: 'پاسخ به: ' + (msg.subject || ''),
+                body: text,
+                read: false,
+                date: new Date().toLocaleString('fa-IR')
+            });
+            if (input) input.value = '';
+            renderInbox();
+            updateInboxBadge();
+            alert('✅ پاسخ ثبت شد');
         }
 
         async function deleteInboxItem(index) {
@@ -1063,6 +1118,23 @@
         // ===== USER MANAGEMENT =====
         function toggleUserPanel() { document.getElementById('userPanel').classList.toggle('show'); if (loggedUser)
             updateProfile(); }
+
+        
+        async function saveProfileEdit() {
+            if (!loggedUser || !allUsers[loggedUser]) { alert('⚠️ وارد حساب شوید'); return; }
+            const name = (document.getElementById('editFullname')?.value || '').trim();
+            const data = { avatar: selectedAvatar || allUsers[loggedUser].avatar || 'fa-user' };
+            if (name) data.fullname = name;
+            const id = allUsers[loggedUser].id;
+            if (!id) { alert('⚠️ شناسه کاربر یافت نشد'); return; }
+            const updated = await updateInSupabase('users', id, data);
+            if (updated) {
+                Object.assign(allUsers[loggedUser], data);
+                updateHeader();
+                updateProfile();
+                alert('✅ حساب به‌روز شد');
+            } else alert('❌ خطا در ذخیره');
+        }
 
         function selectAvatar(el) {
             document.querySelectorAll('.avatar-select .av-item').forEach(a => a.classList.remove('active'));
@@ -1123,6 +1195,7 @@
             });
             document.getElementById('statDate').textContent = u?.date || '—';
             document.getElementById('userInfo').style.display = 'block';
+            const ef=document.getElementById('editFullname'); if(ef) ef.value = u?.fullname || '';
             document.getElementById('userNotLogged').style.display = 'none';
             updateInboxBadge();
         }
