@@ -222,8 +222,8 @@
         /* ===== USER PANEL ===== */
         #userPanel{display:none;position:fixed;top:0;right:0;bottom:0;width:340px;background:var(--bgm);border-left:1px solid var(--br);padding:1.2rem 1rem;z-index:200;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,.4);animation:slideIn .25s}
         #userPanel.show{display:block}
-        #userPanel .close{position:absolute;top:0.5rem;left:0.8rem;background:none;border:none;color:var(--ts);font-size:1.2rem;cursor:pointer;transition:.3s}
-        #userPanel .close:hover{transform:rotate(90deg)}
+        #userPanel .close{position:absolute;top:0.4rem;left:0.5rem;background:var(--bg);border:2px solid var(--br);border-radius:50%;width:36px;height:36px;color:var(--tp);font-size:1.4rem;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1}
+        #userPanel .close:hover{transform:rotate(90deg);border-color:var(--rd);color:var(--rd);background:rgba(192,57,43,0.15)}
         #userPanel .profile-header{text-align:center;border-bottom:1px solid var(--br);padding-bottom:0.5rem;margin-bottom:0.5rem}
         #userPanel .profile-header .avatar{font-size:3.5rem;display:block;margin-bottom:0.1rem;animation:float 3s ease-in-out infinite}
         #userPanel .profile-header .name{font-size:.9rem;font-weight:700}
@@ -314,12 +314,9 @@
         <div id="page-home" class="page active">
             <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
             <div class="pie-launcher" id="pieLauncher" style="display:none"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
-            <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span><span><i class="fas fa-star"></i> <b id="specialCount">0</b> سردار</span></div>
-<div class="shobe" id="randomShobe">برای دیدن یک شبهه تصادفی کلیک کن</div></div>
-            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)">
-                <div style="color:var(--gold);font-size:.65rem;font-weight:700;margin-bottom:0.3rem"><i class="fas fa-trophy"></i> برترین رزمندگان</div>
-                <div id="leaderboardList" style="font-size:.55rem"></div>
-            </div>
+            <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span></div>
+
+            
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)"><div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div><p style="color:var(--ts);font-size:.7rem;line-height:1.8">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br><span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span></p></div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div><div id="homePosts" style="margin-top:0.2rem"></div></div>
         </div>
@@ -546,6 +543,11 @@
             });
             // هماهنگی زنده بین دو سایت (هر ۱۵ ثانیه)
             setInterval(() => { loadAllData(); }, 15000);
+
+        document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
+            btn.addEventListener('click', () => switchPage(btn.dataset.page));
+        });
+
         });
 
         // ===== PIE LAUNCHER =====
@@ -999,6 +1001,12 @@
             document.querySelectorAll('.avatar-select .av-item').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
             selectedAvatar = el.dataset.avatar;
+            if (loggedUser && allUsers[loggedUser] && allUsers[loggedUser].id) {
+                allUsers[loggedUser].avatar = selectedAvatar;
+                updateInSupabase('users', allUsers[loggedUser].id, { avatar: selectedAvatar });
+                updateHeader();
+                updateProfile();
+            }
         }
 
         function updateHeader() {
@@ -1165,6 +1173,10 @@
             updateHeader();
             updateProfile();
             renderAll();
+            // پیام خوش‌آمد / آموزش در صندوق
+            localStorage.removeItem('padafand_tutorial_sent_' + loggedUser);
+            checkTutorialMessage();
+            updateInboxBadge();
         }
 
         function userLogout() {
