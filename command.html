@@ -41,7 +41,7 @@
             display: none !important;
         }
         body.authenticated .sidebar {
-            display: flex !important;
+            display: block !important;
         }
         body.authenticated .main {
             display: block !important;
@@ -2889,12 +2889,14 @@
             themeIndex = themes.indexOf(savedTheme);
             if (themeIndex === -1) themeIndex = 0;
             document.documentElement.setAttribute('data-theme', themes[themeIndex]);
+            document.body.classList.remove('authenticated');
             document.getElementById('sidebar').style.display = 'none';
             document.querySelector('.main').style.display = 'none';
-
+            var sec = document.getElementById('securityPage');
+            if (sec) sec.style.display = 'flex';
             localStorage.removeItem('padafand_commander');
-            document.body.classList.remove('authenticated');
-            // ورود مجدد اجباری برای امنیت);
+            // ورود مجدد اجباری برای امنیت — بدون نشست خودکار
+        });
     </script>
 </body>
-    </html>
+</html>
