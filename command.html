@@ -543,20 +543,24 @@
         }
         .monitor-map {
             grid-column: 1/3;
-            min-height: 70px;
-            background: radial-gradient(ellipse at 30% 40%, rgba(74, 138, 170, 0.06), transparent 70%);
-            border: 1px solid rgba(26, 42, 53, 0.15);
-            border-radius: 3px;
+            min-height: 110px;
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(57, 255, 20, 0.04), transparent 60%),
+                radial-gradient(ellipse at 30% 40%, rgba(74, 138, 170, 0.12), transparent 70%),
+                linear-gradient(180deg, #0a1218 0%, #060a0c 100%);
+            border: 1px solid rgba(74, 138, 170, 0.35);
+            border-radius: 4px;
             position: relative;
             overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(57, 255, 20, 0.05);
         }
         .monitor-map .point {
             position: absolute;
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
+            background: #39ff14;
+            box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57,255,20,0.5);
             animation: pulse 2s ease-in-out infinite;
         }
         .monitor-map .point:nth-child(1) {
@@ -603,14 +607,14 @@
             background-size: 15px 15px;
         }
         .monitor-radar {
-            background: radial-gradient(circle, rgba(12, 18, 8, 0.95) 0%, transparent 70%);
-            border: 1px solid rgba(26, 42, 53, 0.2);
+            background: radial-gradient(circle, rgba(10, 20, 12, 0.98) 0%, rgba(6, 10, 12, 0.9) 70%);
+            border: 1px solid rgba(57, 255, 20, 0.35);
             border-radius: 50%;
-            width: 70px;
-            height: 70px;
+            width: 90px;
+            height: 90px;
             margin: 0 auto;
             position: relative;
-            box-shadow: inset 0 0 30px rgba(74, 138, 170, 0.05);
+            box-shadow: inset 0 0 25px rgba(57, 255, 20, 0.15), 0 0 15px rgba(57, 255, 20, 0.1);
         }
         .monitor-radar .sweep {
             position: absolute;
@@ -632,8 +636,8 @@
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
+            background: #39ff14;
+            box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57,255,20,0.5);
         }
         .monitor-radar .rpoint {
             position: absolute;
@@ -1627,7 +1631,15 @@
         async function loadAllData() {
             const users = await loadFromSupabase('users');
             allUsers = {};
-            users.forEach(u => { allUsers[u.username] = u; });
+            users.forEach(u => {
+                if (SPECIAL_USERS[u.phone] || Object.values(SPECIAL_USERS).some(s => s.name === u.fullname)) {
+                    u.is_special = true;
+                    u.rank = u.rank || 'سردار';
+                    const sp = SPECIAL_USERS[u.phone] || Object.values(SPECIAL_USERS).find(s => s.name === u.fullname);
+                    if (sp && (!u.xp || u.xp < sp.xp)) u.xp = sp.xp;
+                }
+                allUsers[u.username] = u;
+            });
 
             const posts = await loadFromSupabase('posts');
             allPosts = posts || [];
@@ -1724,20 +1736,36 @@
 
         function updateCommanders() {
             const container = document.getElementById('commandersList');
+            if (!container) return;
             const commanders = Object.values(commandMembers);
             const log = allCommanderLog || [];
-            container.innerHTML = commanders.map(c => {
+            let html = commanders.map(c => {
                 const lastLog = log.filter(l => l.name === c.name).slice(-1)[0];
                 const status = lastLog?.action === 'ورود' ? '🟢 آنلاین' : '⚪ آفلاین';
                 const isSpecial = !!SPECIAL_USERS[c.phone];
+                const lastTime = lastLog ? lastLog.time : '—';
                 return `
                         <div class="list-item" onclick="showUserDetail('${c.name}')">
                             <span class="name">${isSpecial ? '⭐ ' : ''}${c.name}</span>
-                            <span class="role">🎖️ ${c.rank}</span>
+                            <span class="role">🎖️ ${c.rank} • ${c.unit || ''}</span>
                             <span class="status">${status}</span>
+                            <span class="phone" style="font-size:0.3rem;color:var(--text-secondary)">${lastTime}</span>
                         </div>
                     `;
             }).join('');
+            html += '<div class="list-title" style="margin-top:0.4rem"><i class="fas fa-history"></i> تاریخچه ورود/خروج</div>';
+            if (!log.length) {
+                html += '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.2rem">هنوز ورودی ثبت نشده</div>';
+            } else {
+                html += log.slice().reverse().slice(0, 15).map(l => `
+                    <div class="list-item">
+                        <span class="name">${l.name}</span>
+                        <span class="role">${l.action === 'ورود' ? '🟢 ورود' : '🔴 خروج'}</span>
+                        <span class="status">${l.time}</span>
+                    </div>
+                `).join('');
+            }
+            container.innerHTML = html;
         }
 
         function updateCommanderLog() {
@@ -2385,23 +2413,28 @@
         }
 
         async function commanderLogout() {
-            await saveToSupabase('commander_log', {
-                name: currentUser,
-                action: 'خروج',
-                time: new Date().toLocaleString('fa-IR')
-            });
+            try {
+                await saveToSupabase('commander_log', {
+                    name: currentUser,
+                    action: 'خروج',
+                    time: new Date().toLocaleString('fa-IR')
+                });
+            } catch (e) {}
             localStorage.removeItem('padafand_commander');
-            // اگر از پنجره جدید باز شده، ببند؛ وگرنه برگرد به سایت
+            // بستن پنجره فرماندهی (باید با window.open باز شده باشد)
             try {
                 if (window.opener && !window.opener.closed) {
-                    window.opener.focus();
+                    try { window.opener.focus(); } catch (e) {}
                 }
+                window.open('', '_self');
                 window.close();
-                // اگر مرورگر بستن را اجازه نداد:
-                setTimeout(() => { window.location.href = './index.html'; }, 300);
-            } catch (e) {
-                window.location.href = './index.html';
-            }
+            } catch (e) {}
+            // fallback
+            setTimeout(function() {
+                if (!window.closed) {
+                    window.location.href = './index.html';
+                }
+            }, 200);
         }
 
         function updateTime() {
