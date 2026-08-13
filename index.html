@@ -70,7 +70,7 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem 80px}
+        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem 100px}
         .page{display:none;animation:fadeIn .4s ease}
         .page.active{display:block}
         .page-title{font-size:.8rem;font-weight:700;color:var(--neon);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem;animation:neonPulse 2s infinite}
@@ -152,11 +152,12 @@
         /* ===== FOOTER & DEFENSE ===== */
         #footer{border-top:1px solid var(--br);padding:0.2rem 0.6rem 0;background:var(--bgm);margin-top:0.3rem}
         .foot-inner{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem;padding-bottom:0.1rem}
+        #footer{padding-bottom:70px}
         .foot-links{display:flex;gap:0.2rem;flex-wrap:wrap}
         .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
         .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
         .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
-        .defense-anim{width:100%;height:200px;position:relative;overflow:hidden;background:#020402;
+        .defense-anim{width:100%;height:120px;position:relative;overflow:hidden;background:#020402;margin-bottom:70px;
             border-radius:6px;margin-top:0.4rem;border:1px solid rgba(57,255,20,0.35);
             box-shadow:inset 0 0 40px rgba(57,255,20,0.06),0 0 16px rgba(57,255,20,0.08)}
         .defense-anim canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
@@ -236,7 +237,7 @@
         #userPanel .profile-stats .stat:hover{border-color:var(--neon)}
         #userPanel .profile-stats .stat .num{font-size:.85rem;font-weight:900;color:var(--tp);font-family:monospace}
         #userPanel .profile-stats .stat .label{font-size:.4rem;color:var(--ts)}
-        #userPanel .avatar-select{display:none;gap:0.35rem;flex-wrap:wrap;justify-content:center;margin:0.4rem 0;padding:0.35rem;background:var(--bg);border:1px solid var(--br);border-radius:6px}
+        #userPanel .avatar-select{display:none; /* shown when logged in via JS */gap:0.35rem;flex-wrap:wrap;justify-content:center;margin:0.4rem 0;padding:0.35rem;background:var(--bg);border:1px solid var(--br);border-radius:6px}
         #userPanel .avatar-select .av-item{font-size:1.6rem;cursor:pointer;border:2px solid var(--br);border-radius:50%;padding:0.25rem;width:2.4rem;height:2.4rem;display:inline-flex;align-items:center;justify-content:center;transition:.2s;background:var(--bgp)}
         #userPanel .avatar-select .av-item:hover{border-color:var(--neon);transform:scale(1.1)}
         #userPanel .avatar-select .av-item.active{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.35);background:rgba(57,255,20,0.08)}
@@ -391,7 +392,7 @@
         <div class="foot-copy">PADAFAND v10.0</div>
     </div>
     <div class="defense-anim" id="defenseAnim">
-        <canvas id="defenseCanvas" width="640" height="200"></canvas>
+        <canvas id="defenseCanvas" width="640" height="140"></canvas>
         <div class="status-text">◈ سامانه پدافند شبهات ◈ TRACK · LIVE</div>
     </div>
 </footer>
@@ -1185,14 +1186,16 @@
                 document.getElementById('statSaved').textContent = userSaved.length;
             });
             document.getElementById('statDate').textContent = u?.date || '—';
-            document.getElementById('userInfo').style.display = 'block';
+            const ui = document.getElementById('userInfo');
+            if (ui) { ui.style.display = 'block'; ui.style.visibility = 'visible'; }
             const ef = document.getElementById('editFullname');
-            if (ef) ef.value = u?.fullname || '';
+            if (ef) { ef.value = u?.fullname || ''; ef.style.display = 'block'; }
             document.getElementById('userNotLogged').style.display = 'none';
             // نمایش انتخاب آواتار و علامت‌گذاری آواتار فعلی
             const avSel = document.getElementById('avatarSelect');
             if (avSel) {
                 avSel.style.display = 'flex';
+                avSel.style.visibility = 'visible';
                 const current = u?.avatar || 'fa-user';
                 selectedAvatar = current;
                 avSel.querySelectorAll('.av-item').forEach(a => {
@@ -1670,7 +1673,7 @@
                 }
                 const NEON = '#39ff14', NEON_DIM = '#1c8a10', NEON_DARK = '#0c3a08';
                 const ENEMY = '#c0392b';
-                const groundY = 175;
+                const groundY = 120;
                 const truckX = 50;
 
                 function drawGrid() {
