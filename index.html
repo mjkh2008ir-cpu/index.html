@@ -372,7 +372,15 @@
     <div class="modal" id="tutorialModal"><div class="modal-content" style="max-width:600px"><div class="modal-header"><h3><i class="fas fa-graduation-cap"></i> آموزش قرارگاه</h3><button class="modal-close" onclick="closeModal('tutorialModal')">×</button></div><div id="tutorialContent" style="min-height:200px"><div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div></div></div></div>
 
     <!-- ===== USER PANEL ===== -->
-    <div id="userPanel"><button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button><div class="profile-header"><span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span><div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div><span class="level" id="profileLevel">سرباز</span><span class="xp" id="profileXP">XP: 0</span></div><div class="avatar-select" id="avatarSelect"><span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span><span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span><span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span><span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span><span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span><span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span><span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span><span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span><span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span><span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span><span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span><span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span><span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span><span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span></div><div class="profile-stats"><div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div><div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div><div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div><div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div></div><div id="userInfo" style="display:none">
+    <div id="userPanel"><button class="close" onclick="toggleUserPanel()"><i class="fas fa-times"></i></button><div class="profile-header"><span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span><div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div><span class="level" id="profileLevel">سرباز</span><span class="xp" id="profileXP">XP: 0</span></div><div class="avatar-select" id="avatarSelect"><span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span><span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span><span class="av-item" data-avatar="fa-user-graduate" onclick="selectAvatar(this)"><i class="fas fa-user-graduate"></i></span><span class="av-item" data-avatar="fa-user-astronaut" onclick="selectAvatar(this)"><i class="fas fa-user-astronaut"></i></span><span class="av-item" data-avatar="fa-user-ninja" onclick="selectAvatar(this)"><i class="fas fa-user-ninja"></i></span><span class="av-item" data-avatar="fa-user-secret" onclick="selectAvatar(this)"><i class="fas fa-user-secret"></i></span><span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span><span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span><span class="av-item" data-avatar="fa-user-shield" onclick="selectAvatar(this)"><i class="fas fa-user-shield"></i></span><span class="av-item" data-avatar="fa-user-edit" onclick="selectAvatar(this)"><i class="fas fa-user-edit"></i></span><span class="av-item" data-avatar="fa-user-md" onclick="selectAvatar(this)"><i class="fas fa-user-md"></i></span><span class="av-item" data-avatar="fa-user-plus" onclick="selectAvatar(this)"><i class="fas fa-user-plus"></i></span><span class="av-item" data-avatar="fa-user-tag" onclick="selectAvatar(this)"><i class="fas fa-user-tag"></i></span><span class="av-item" data-avatar="fa-user-circle" onclick="selectAvatar(this)"><i class="fas fa-user-circle"></i></span></div><button type="button" id="btnEditProfile" onclick="document.getElementById('editSection').style.display='block';document.getElementById('editFullname')?.focus()" style="display:none;width:100%;margin:0.4rem 0;padding:0.4rem;background:var(--neon);color:#000;border:none;border-radius:6px;font-size:.7rem;font-weight:700;cursor:pointer"><i class="fas fa-user-edit"></i> ویرایش حساب کاربری</button>
+<div id="editSection" style="display:none;background:var(--bg);border:1px solid var(--gold);border-radius:6px;padding:0.5rem;margin-bottom:0.4rem">
+<div style="font-size:.55rem;color:var(--gold);margin-bottom:0.3rem;text-align:center"><i class="fas fa-user-edit"></i> ویرایش حساب</div>
+<div class="form-group" style="margin-bottom:0.3rem"><label style="font-size:.45rem;color:var(--ts)">نام نمایشی</label><input type="text" id="editFullname2" placeholder="نام شما" style="width:100%;padding:0.3rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.65rem"></div>
+<div style="font-size:.45rem;color:var(--ts);margin:0.2rem 0;text-align:center">انتخاب آواتار از بالا ↑ سپس ذخیره</div>
+<button class="profile-edit" onclick="saveProfileEditFromPanel()" style="background:var(--neon);color:#000;width:100%;margin-bottom:0.2rem;padding:0.35rem;border:none;border-radius:4px;cursor:pointer"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+<button type="button" onclick="document.getElementById('editSection').style.display='none'" style="width:100%;padding:0.25rem;background:transparent;border:1px solid var(--br);color:var(--ts);border-radius:4px;cursor:pointer;font-size:.55rem">بستن</button>
+</div>
+<div class="profile-stats"><div class="stat"><div class="num" id="statComments">0</div><div class="label">نظرات</div></div><div class="stat"><div class="num" id="statLikes">0</div><div class="label">لایک‌ها</div></div><div class="stat"><div class="num" id="statSaved">0</div><div class="label">ذخیره‌شده</div></div><div class="stat"><div class="num" id="statDate">-</div><div class="label">عضویت</div></div></div><div id="userInfo" style="display:none">
 <div style="font-size:.55rem;color:var(--gold);margin:0.3rem 0 0.15rem;text-align:center"><i class="fas fa-user-edit"></i> ویرایش حساب — انتخاب آواتار</div>
 <div class="form-group" style="margin-bottom:0.3rem"><label style="font-size:.45rem;color:var(--ts)">نام نمایشی</label><input type="text" id="editFullname" placeholder="نام شما" style="width:100%;padding:0.25rem;background:var(--bg);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.65rem"></div>
 <button class="profile-edit" onclick="saveProfileEdit()" style="background:var(--neon);color:#000;margin-bottom:0.2rem"><i class="fas fa-save"></i> ذخیره تغییرات</button>
@@ -1086,12 +1094,18 @@
             updateProfile(); }
 
         
+        function saveProfileEditFromPanel() {
+            const n2 = document.getElementById('editFullname2');
+            const n1 = document.getElementById('editFullname');
+            if (n2 && n1) n1.value = n2.value;
+            saveProfileEdit();
+        }
         async function saveProfileEdit() {
             if (!loggedUser || !allUsers[loggedUser]) {
                 alert('⚠️ ابتدا وارد حساب شوید');
                 return;
             }
-            const name = (document.getElementById('editFullname')?.value || '').trim();
+            const name = ((document.getElementById('editFullname2')?.value || document.getElementById('editFullname')?.value) || '').trim();
             const avatar = selectedAvatar || allUsers[loggedUser].avatar || 'fa-user';
             const id = allUsers[loggedUser].id;
             if (!id) {
@@ -1155,6 +1169,8 @@
                 document.getElementById('profileXP').textContent = 'XP: 0';
                 document.getElementById('userInfo').style.display = 'none';
                 document.getElementById('userNotLogged').style.display = 'block';
+                const btnEp=document.getElementById('btnEditProfile'); if(btnEp) btnEp.style.display='none';
+                const es=document.getElementById('editSection'); if(es) es.style.display='none';
                 const avSel = document.getElementById('avatarSelect');
                 if (avSel) avSel.style.display = 'none';
                 return;
@@ -1188,6 +1204,10 @@
             document.getElementById('statDate').textContent = u?.date || '—';
             const ui = document.getElementById('userInfo');
             if (ui) { ui.style.display = 'block'; ui.style.visibility = 'visible'; }
+            const btnEp = document.getElementById('btnEditProfile');
+            if (btnEp) btnEp.style.display = 'block';
+            const ef2 = document.getElementById('editFullname2');
+            if (ef2) ef2.value = u?.fullname || '';
             const ef = document.getElementById('editFullname');
             if (ef) { ef.value = u?.fullname || ''; ef.style.display = 'block'; }
             document.getElementById('userNotLogged').style.display = 'none';
