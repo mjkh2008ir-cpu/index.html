@@ -631,13 +631,14 @@
         }
         .monitor-radar {
             background: radial-gradient(circle, rgba(10, 20, 12, 0.98) 0%, rgba(6, 10, 12, 0.9) 70%);
-            border: 1px solid rgba(57, 255, 20, 0.35);
+            border: 1px solid rgba(57, 255, 20, 0.45);
             border-radius: 50%;
-            width: 90px;
-            height: 90px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto;
             position: relative;
-            box-shadow: inset 0 0 25px rgba(57, 255, 20, 0.15), 0 0 15px rgba(57, 255, 20, 0.1);
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(57, 255, 20, 0.2), 0 0 18px rgba(57, 255, 20, 0.12);
         }
         .monitor-radar .sweep {
             position: absolute;
@@ -1880,16 +1881,40 @@
                 container.innerHTML =
                     '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ کامنتی ثبت نشده</div>';
             } else {
-                container.innerHTML = allComments.slice(0, 15).map((c) => `
-                        <div class="list-item">
-                            <span class="name"><i class="fas fa-comment"></i> ${c.user}: ${c.text}</span>
-                            <span class="role">${c.post?.substring(0, 15) || ''}...</span>
+                container.innerHTML = allComments.slice(0, 30).map((c, idx) => `
+                        <div class="list-item" onclick="showCommentDetail(${c.postIndex},${c.commentIndex})" style="cursor:pointer">
+                            <span class="name"><i class="fas fa-comment"></i> ${c.user}: ${(c.text||'').substring(0,40)}</span>
+                            <span class="role">${(c.post||'').substring(0, 18)}...</span>
                             ${c.replies.length ? `<span class="status">${c.replies.length} پاسخ</span>` : ''}
-                            <button class="reply-btn" onclick="replyComment(${c.postIndex}, ${c.commentIndex})"><i class="fas fa-reply"></i></button>
-                            <button class="del-btn" onclick="deleteComment(${c.postIndex}, ${c.commentIndex})"><i class="fas fa-trash"></i></button>
+                            <button class="reply-btn" onclick="event.stopPropagation();replyComment(${c.postIndex}, ${c.commentIndex})"><i class="fas fa-reply"></i></button>
+                            <button class="del-btn" onclick="event.stopPropagation();deleteComment(${c.postIndex}, ${c.commentIndex})"><i class="fas fa-trash"></i></button>
                         </div>
                     `).join('');
             }
+        }
+
+        function showCommentDetail(postIndex, commentIndex) {
+            const p = allPosts[postIndex];
+            if (!p || !p.comments || !p.comments[commentIndex]) return;
+            const c = p.comments[commentIndex];
+            const popup = document.getElementById('userDetailPopup');
+            const content = document.getElementById('userDetailContent');
+            if (!popup || !content) return;
+            const titleEl = document.querySelector('#userDetailPopup .popup-title');
+            if (titleEl) titleEl.innerHTML = '<i class="fas fa-comment"></i> جزئیات کامنت';
+            selectedUser = c.user;
+            const repliesHtml = (c.replies||[]).map(r => `<div style="margin:0.2rem 0;padding:0.2rem;background:var(--bg-card);border-radius:3px;font-size:0.4rem"><b>${r.user||''}:</b> ${r.text||''} <span style="color:var(--text-secondary)">${r.time||''}</span></div>`).join('') || '<div style="font-size:0.35rem;color:var(--text-secondary)">بدون پاسخ</div>';
+            content.innerHTML = `
+                <div class="popup-row"><span class="label">کاربر</span><span class="value">${c.user||'—'}</span></div>
+                <div class="popup-row"><span class="label">متن کامنت</span><span class="value" style="white-space:pre-wrap">${c.text||'—'}</span></div>
+                <div class="popup-row"><span class="label">مطلب</span><span class="value">${(p.shobe||'').substring(0,80)}</span></div>
+                <div class="popup-row"><span class="label">پاسخ‌ها</span><span class="value">${repliesHtml}</span></div>
+                <div class="popup-actions" style="margin-top:0.5rem;display:flex;gap:0.3rem;flex-wrap:wrap">
+                    <button class="btn-msg" onclick="quickSendMessage('${c.user||''}','پاسخ به کامنت شما')"><i class="fas fa-envelope"></i> پیام</button>
+                    <button class="reply-btn" onclick="replyComment(${postIndex},${commentIndex});closeUserDetail()">پاسخ</button>
+                    <button class="del-btn" onclick="deleteComment(${postIndex},${commentIndex});closeUserDetail()">حذف</button>
+                </div>`;
+            popup.classList.add('show');
         }
 
         
@@ -1897,87 +1922,60 @@
             const container = document.getElementById('kartablList');
             if (!container) return;
             const pending = (allMessages || []).filter(m => !m.status || String(m.status).includes('انتظار'));
-            const approved = (allMessages || []).filter(m => m.status && String(m.status).includes('تأیید'));
             const unreadInbox = [];
             Object.keys(allInbox || {}).forEach(u => {
                 (allInbox[u] || []).forEach(m => {
-                    if (!m.read) unreadInbox.push(Object.assign({}, m, { _user: u }));
+                    if (!m.read && u !== 'command_replies') unreadInbox.push(Object.assign({}, m, { _user: u }));
                 });
             });
-            // replies from users to command
-            const userReplies = (allInbox['command_replies'] || []).slice().reverse().slice(0, 15);
+            const userReplies = (allInbox['command_replies'] || []).filter(m => !m.read);
             const reports = allReports || [];
-            const recentLog = (allCommanderLog || []).slice().reverse().slice(0, 8);
 
             let html = '';
-            html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.3rem;margin-bottom:0.5rem">
-                <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;text-align:center">
-                    <div style="font-size:1rem;color:var(--gold);font-weight:700">${pending.length}</div>
-                    <div style="font-size:0.3rem;color:var(--text-secondary)">شبهه در انتظار</div>
+            // خلاصه فشرده
+            html += `<div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem">
+                <div style="flex:1;min-width:80px;background:var(--bg-card);border:1px solid var(--border-military);border-radius:6px;padding:0.35rem;text-align:center">
+                    <div style="font-size:1.1rem;color:var(--gold);font-weight:700">${pending.length}</div>
+                    <div style="font-size:0.32rem;color:var(--text-secondary)">دستور بررسی شبهه</div>
                 </div>
-                <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;text-align:center">
-                    <div style="font-size:1rem;color:var(--neon-green);font-weight:700">${unreadInbox.length}</div>
-                    <div style="font-size:0.3rem;color:var(--text-secondary)">پیام خوانده‌نشده</div>
+                <div style="flex:1;min-width:80px;background:var(--bg-card);border:1px solid var(--border-military);border-radius:6px;padding:0.35rem;text-align:center">
+                    <div style="font-size:1.1rem;color:#39ff14;font-weight:700">${userReplies.length}</div>
+                    <div style="font-size:0.32rem;color:var(--text-secondary)">پاسخ دریافتی</div>
                 </div>
-                <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;text-align:center">
-                    <div style="font-size:1rem;color:var(--text-primary);font-weight:700">${reports.length}</div>
-                    <div style="font-size:0.3rem;color:var(--text-secondary)">گزارش</div>
-                </div>
-                <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.3rem;text-align:center">
-                    <div style="font-size:1rem;color:var(--neon);font-weight:700">${userReplies.length}</div>
-                    <div style="font-size:0.3rem;color:var(--text-secondary)">پاسخ کاربران</div>
+                <div style="flex:1;min-width:80px;background:var(--bg-card);border:1px solid var(--border-military);border-radius:6px;padding:0.35rem;text-align:center">
+                    <div style="font-size:1.1rem;color:var(--text-primary);font-weight:700">${reports.length}</div>
+                    <div style="font-size:0.32rem;color:var(--text-secondary)">گزارش جدید</div>
                 </div>
             </div>`;
 
-            html += '<div class="list-title">📥 شبهات در انتظار بررسی</div>';
-            if (!pending.length) html += '<div style="font-size:0.35rem;color:var(--text-secondary);padding:0.2rem">موردی در صف نیست</div>';
-            else html += pending.slice(0, 25).map((m) => {
+            // وظایف
+            html += '<div class="list-title"><i class="fas fa-tasks"></i> وظایف و دستورات</div>';
+            if (!pending.length && !userReplies.length && !reports.length) {
+                html += '<div style="font-size:0.4rem;color:var(--text-secondary);padding:0.4rem;text-align:center">هیچ وظیفه معلقی نیست ✅</div>';
+            }
+            pending.slice(0, 12).forEach(m => {
                 const i = allMessages.indexOf(m);
-                return `<div class="list-item" onclick="showMessageDetail(${i})" style="cursor:pointer">
-                    <span class="name">❓ ${(m.shobe || '').substring(0, 40)}</span>
-                    <span class="role">${m.priority || 'عادی'} • ${m.sender || ''}</span>
-                    <span class="status">${m.status || 'در انتظار'}</span>
+                html += `<div class="list-item" onclick="showMessageDetail(${i})" style="cursor:pointer;border-right:3px solid var(--gold)">
+                    <span class="name">📌 بررسی شبهه: ${(m.shobe||'').substring(0,35)}</span>
+                    <span class="role">${m.priority||'عادی'}</span>
+                    <span class="status">در انتظار</span>
                 </div>`;
-            }).join('');
-
-            html += '<div class="list-title" style="margin-top:0.4rem">💬 پاسخ کاربران به پیام‌ها</div>';
-            if (!userReplies.length) html += '<div style="font-size:0.35rem;color:var(--text-secondary);padding:0.2rem">پاسخی ثبت نشده</div>';
-            else html += userReplies.map(m => `
-                <div class="list-item">
-                    <span class="name">↩️ ${m.subject || 'پاسخ'}</span>
-                    <span class="role">${m.from_user || m.from || ''}</span>
-                    <span class="status">${m.date || ''}</span>
-                </div>`).join('');
-
-            html += '<div class="list-title" style="margin-top:0.4rem">📬 پیام‌های خوانده‌نشده سیستم</div>';
-            if (!unreadInbox.length) html += '<div style="font-size:0.35rem;color:var(--text-secondary);padding:0.2rem">موردی نیست</div>';
-            else html += unreadInbox.slice(0, 15).map(m => `
-                <div class="list-item">
-                    <span class="name">📩 ${m.subject || 'بدون موضوع'}</span>
-                    <span class="role">${m.from_user || m.from || ''} → ${m._user}</span>
-                    <span class="status">${m.date || ''}</span>
-                </div>`).join('');
-
-            html += '<div class="list-title" style="margin-top:0.4rem">📋 گزارش‌ها</div>';
-            if (!reports.length) html += '<div style="font-size:0.35rem;color:var(--text-secondary);padding:0.2rem">موردی نیست</div>';
-            else html += reports.slice().reverse().slice(0, 12).map((r) => {
+            });
+            userReplies.slice(0, 8).forEach(m => {
+                html += `<div class="list-item">
+                    <span class="name">💬 پاسخ کاربر: ${m.subject||''}</span>
+                    <span class="role">${m.from_user||m.from||''}</span>
+                    <span class="status">${m.date||''}</span>
+                </div>`;
+            });
+            reports.slice().reverse().slice(0, 6).forEach(r => {
                 const idx = allReports.indexOf(r);
-                return `<div class="list-item" onclick="showReportDetail(${idx})" style="cursor:pointer">
-                    <span class="name">📄 ${r.title || ''}</span>
-                    <span class="role">${r.author || ''}</span>
-                    <span class="status">${r.date || ''}</span>
+                html += `<div class="list-item" onclick="showReportDetail(${idx})" style="cursor:pointer">
+                    <span class="name">📄 ${r.title||'گزارش'}</span>
+                    <span class="role">${r.author||''}</span>
+                    <span class="status">${r.date||''}</span>
                 </div>`;
-            }).join('');
-
-            html += '<div class="list-title" style="margin-top:0.4rem">🕐 آخرین ورود/خروج فرماندهان</div>';
-            if (!recentLog.length) html += '<div style="font-size:0.35rem;color:var(--text-secondary);padding:0.2rem">ثبت نشده</div>';
-            else html += recentLog.map(l => `
-                <div class="list-item">
-                    <span class="name">${l.name}</span>
-                    <span class="role">${l.action === 'ورود' ? '🟢 ورود' : '🔴 خروج'}</span>
-                    <span class="status">${l.time}</span>
-                </div>`).join('');
-
+            });
             container.innerHTML = html;
         }
 
