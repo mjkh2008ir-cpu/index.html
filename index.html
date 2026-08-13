@@ -156,35 +156,13 @@
         .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
         .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
         .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
-        .defense-anim{width:100%;height:160px;position:relative;overflow:hidden;background:
-            linear-gradient(180deg, #061008 0%, #0a140c 40%, #050a06 100%);
-            border-radius:6px;margin-top:0.4rem;border:1px solid rgba(57,255,20,0.3);
-            box-shadow:inset 0 0 40px rgba(57,255,20,0.08),0 0 16px rgba(57,255,20,0.06)}
-        .defense-anim .pixel-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(57,255,20,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.05) 1px,transparent 1px);background-size:8px 8px;pointer-events:none;opacity:0.5}
-        .defense-anim .status-text{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:0.42rem;color:#39ff14;font-family:monospace;letter-spacing:1px;text-shadow:0 0 8px #39ff14;animation:neonPulse 2s infinite;z-index:6}
-        .defense-anim .defense-system{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:3;text-align:center}
-        .defense-anim .system-label{display:block;font-size:0.38rem;color:#39ff14;font-weight:700;text-shadow:0 0 8px #39ff14;margin-top:3px;font-family:monospace;letter-spacing:1px}
-        .defense-anim .pixel-turret{margin:0 auto;image-rendering:pixelated}
-        .defense-anim .turret-barrel{width:8px;height:18px;background:#39ff14;margin:0 auto;box-shadow:0 0 10px #39ff14;border:1px solid #6dff5a}
-        .defense-anim .turret-body{width:32px;height:14px;background:#1e4a1e;margin:0 auto;border:1px solid #39ff14;box-shadow:0 0 8px rgba(57,255,20,0.35)}
-        .defense-anim .turret-base{width:48px;height:10px;background:#0f2a0f;margin:0 auto;border:1px solid #2a6a2a}
-        .defense-anim .enemy-missile{position:absolute;top:18px;z-index:2;text-align:center;animation:enemyDive 6s linear infinite}
-        .defense-anim .enemy-missile .px-missile{display:block;width:10px;height:16px;margin:0 auto;background:#c0392b;box-shadow:0 0 8px #e74c3c;clip-path:polygon(50% 0,100% 100%,0 100%);image-rendering:pixelated}
-        .defense-anim .enemy-missile .px-tag{display:block;font-size:0.28rem;color:#e74c3c;font-family:monospace;margin-top:1px}
-        .defense-anim .enemy-missile.m1{left:15%;animation-duration:5.5s;animation-delay:0s}
-        .defense-anim .enemy-missile.m2{left:48%;animation-duration:5.5s;animation-delay:1.8s}
-        .defense-anim .enemy-missile.m3{left:78%;animation-duration:5.5s;animation-delay:3.6s}
-        .defense-anim .interceptor{position:absolute;bottom:42px;left:50%;width:6px;height:10px;background:#39ff14;box-shadow:0 0 10px #39ff14;clip-path:polygon(50% 0,100% 100%,0 100%);z-index:4;animation:intercept 5.5s linear infinite;opacity:0}
-        .defense-anim .interceptor.i1{animation-delay:0.9s}
-        .defense-anim .interceptor.i2{animation-delay:2.7s}
-        .defense-anim .interceptor.i3{animation-delay:4.5s}
-        .defense-anim .boom{position:absolute;z-index:5;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff 0%,#39ff14 40%,transparent 70%);box-shadow:0 0 16px #39ff14;opacity:0;animation:boomFlash 5.5s linear infinite}
-        .defense-anim .boom.b1{left:calc(15% + 0px);top:55%;animation-delay:1.6s}
-        .defense-anim .boom.b2{left:calc(48% + 0px);top:52%;animation-delay:3.4s}
-        .defense-anim .boom.b3{left:calc(78% + 0px);top:54%;animation-delay:5.2s}
-        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,#39ff14,#6dff5a,#39ff14,transparent);animation:neonPulse 1.5s infinite;opacity:0.9;box-shadow:0 0 12px #39ff14}
+        .defense-anim{width:100%;height:200px;position:relative;overflow:hidden;background:#020402;
+            border-radius:6px;margin-top:0.4rem;border:1px solid rgba(57,255,20,0.35);
+            box-shadow:inset 0 0 40px rgba(57,255,20,0.06),0 0 16px rgba(57,255,20,0.08)}
+        .defense-anim canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+        .defense-anim .status-text{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:0.4rem;
+            color:#39ff14;font-family:monospace;letter-spacing:1px;text-shadow:0 0 8px #39ff14;pointer-events:none;z-index:2}
 
-        @keyframes systemEnter{0%{right:-120px;opacity:0}12%{right:12px;opacity:1}75%{right:12px;opacity:1}100%{right:-120px;opacity:0}}
         @keyframes enemyDive{0%{transform:translateY(0) scale(1);opacity:1}55%{opacity:1}70%{opacity:0.4}100%{transform:translateY(100px) scale(0.6);opacity:0}}
         @keyframes intercept{0%{transform:translate(-50%,0);opacity:0}12%{opacity:1}45%{transform:translate(-50%,-75px);opacity:1}65%{opacity:0.3}100%{transform:translate(-50%,-95px);opacity:0}}
         @keyframes boomFlash{0%,45%{opacity:0;transform:scale(0.2)}52%{opacity:1;transform:scale(1.5)}62%{opacity:0.7;transform:scale(1.1)}75%,100%{opacity:0;transform:scale(0.4)}}
@@ -413,30 +391,8 @@
         <div class="foot-copy">PADAFAND v10.0</div>
     </div>
     <div class="defense-anim" id="defenseAnim">
-        <div class="pixel-grid"></div>
-        <div class="status-text">◈ سامانه پدافند شبهات ◈ ورود • رهگیری • انهدام</div>
-        <!-- دشمن: موشک‌های شبهه از بالا می‌آیند -->
-        <div class="enemy-missile m1"><span class="px-missile">▲</span><span class="px-tag">شبهه</span></div>
-        <div class="enemy-missile m2"><span class="px-missile">▲</span><span class="px-tag">شبهه</span></div>
-        <div class="enemy-missile m3"><span class="px-missile">▲</span><span class="px-tag">شبهه</span></div>
-        <!-- رهگیرهای پدافند -->
-        <div class="interceptor i1">◆</div>
-        <div class="interceptor i2">◆</div>
-        <div class="interceptor i3">◆</div>
-        <!-- انفجار -->
-        <div class="boom b1">✸</div>
-        <div class="boom b2">✸</div>
-        <div class="boom b3">✸</div>
-        <!-- سامانه پدافند پیکسلی -->
-        <div class="defense-system">
-            <div class="pixel-turret">
-                <div class="turret-barrel"></div>
-                <div class="turret-body"></div>
-                <div class="turret-base"></div>
-            </div>
-            <span class="system-label">سامانه پدافند شبهات</span>
-        </div>
-        <div class="neon-line"></div>
+        <canvas id="defenseCanvas" width="640" height="200"></canvas>
+        <div class="status-text">◈ سامانه پدافند شبهات ◈ TRACK · LIVE</div>
     </div>
 </footer>
 
@@ -1654,6 +1610,135 @@
                     .remove('show'); } });
         document.getElementById('cmdLink').addEventListener('click', function(e) { e.preventDefault();
             window.open(this.href, 'padafand_command', 'noopener'); });
+    
+        // ===== PIXEL DEFENSE ANIMATION (canvas) =====
+        (function initDefenseAnim() {
+            function start() {
+                const cv = document.getElementById('defenseCanvas');
+                if (!cv) return;
+                const ctx = cv.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                const U = 4;
+                function px(x, y, w, h, color) {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(Math.round(x / U) * U, Math.round(y / U) * U, w, h);
+                }
+                const NEON = '#39ff14', NEON_DIM = '#1c8a10', NEON_DARK = '#0c3a08';
+                const ENEMY = '#c0392b';
+                const groundY = 175;
+                const truckX = 50;
+
+                function drawGrid() {
+                    ctx.fillStyle = '#020402';
+                    ctx.fillRect(0, 0, cv.width, cv.height);
+                    ctx.strokeStyle = 'rgba(57,255,20,0.05)';
+                    ctx.lineWidth = 1;
+                    for (let gx = 0; gx < cv.width; gx += 20) {
+                        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, cv.height); ctx.stroke();
+                    }
+                    for (let gy = 0; gy < cv.height; gy += 20) {
+                        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(cv.width, gy); ctx.stroke();
+                    }
+                }
+                function drawGround() {
+                    px(0, groundY, cv.width, 4, NEON_DARK);
+                    px(0, groundY + 4, cv.width, 2, '#051505');
+                }
+                function drawTruck(bx, by) {
+                    px(bx, by - 40, 44, 28, NEON_DIM);
+                    px(bx + 4, by - 36, 16, 12, NEON);
+                    px(bx, by - 44, 4, 6, NEON_DIM);
+                    px(bx + 1, by - 56, 2, 14, NEON);
+                    px(bx + 44, by - 32, 120, 20, NEON_DIM);
+                    px(bx + 48, by - 28, 40, 10, NEON_DARK);
+                    px(bx + 96, by - 27, 60, 6, NEON);
+                    for (let i = 0; i < 4; i++) {
+                        const tx = bx + 150 + i * 20;
+                        px(tx, by - 110, 12, 78, NEON_DIM);
+                        px(tx + 2, by - 114, 8, 6, NEON);
+                        px(tx + 2, by - 40, 8, 4, NEON_DARK);
+                    }
+                    [bx + 10, bx + 34, bx + 64, bx + 96, bx + 150, bx + 180].forEach(wx => {
+                        px(wx, by - 12, 14, 14, '#04170a');
+                        px(wx + 3, by - 9, 8, 8, NEON_DIM);
+                    });
+                    px(bx - 4, by - 2, 220, 4, NEON_DARK);
+                }
+                function drawDiamond(x, y, size, color) {
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y - size);
+                    ctx.lineTo(x + size, y);
+                    ctx.lineTo(x, y + size);
+                    ctx.lineTo(x - size, y);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+                function drawExplosion(x, y, prog) {
+                    for (let r = 0; r < 3; r++) {
+                        const rp = Math.max(0, prog - r * 0.12);
+                        if (rp <= 0 || rp >= 1) continue;
+                        const radius = rp * 26 + r * 4;
+                        const alpha = 1 - rp;
+                        px(x - radius, y - 3, radius * 2, 6, 'rgba(57,255,20,' + alpha.toFixed(2) + ')');
+                        px(x - 3, y - radius, 6, radius * 2, 'rgba(57,255,20,' + alpha.toFixed(2) + ')');
+                    }
+                }
+                function drawLabel(x, y, text, color, size) {
+                    ctx.font = size + 'px monospace';
+                    ctx.fillStyle = color;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, x, y);
+                }
+                const missiles = [
+                    { x: 280, delay: 0, dur: 4200, label: 'شبهه' },
+                    { x: 400, delay: 1400, dur: 4600, label: 'شبهه' },
+                    { x: 520, delay: 2600, dur: 4000, label: 'شبهه' }
+                ];
+                const interceptOffset = 0.55;
+                const t0 = performance.now();
+                function frame(now) {
+                    const t = now - t0;
+                    drawGrid();
+                    drawGround();
+                    drawTruck(truckX, groundY);
+                    drawLabel(truckX + 110, groundY - 46, 'پدافند شبهات', NEON, 9);
+                    missiles.forEach(m => {
+                        const localT = ((t - m.delay) % m.dur + m.dur) % m.dur;
+                        if ((t - m.delay) < 0) return;
+                        const prog = localT / m.dur;
+                        const startY = -15;
+                        const enemyTravelEndY = groundY - 55;
+                        const interceptY = startY + (enemyTravelEndY - startY) * interceptOffset;
+                        if (prog < interceptOffset) {
+                            const y = startY + (interceptY - startY) * (prog / interceptOffset);
+                            drawDiamond(m.x, y, 7, ENEMY);
+                            drawLabel(m.x, y - 12, m.label, ENEMY, 9);
+                            const launchStart = interceptOffset * 0.45;
+                            if (prog > launchStart) {
+                                const ip = (prog - launchStart) / (interceptOffset - launchStart);
+                                const ix = truckX + 170 + (m.x - (truckX + 170)) * ip;
+                                const iy = (groundY - 100) + (y - (groundY - 100)) * ip;
+                                drawDiamond(ix, iy, 4, NEON);
+                                px(ix - 1, iy + 4, 2, Math.max(2, 10 * ip), NEON_DIM);
+                            }
+                        } else if (prog < interceptOffset + 0.2) {
+                            const ep = (prog - interceptOffset) / 0.2;
+                            drawExplosion(m.x, interceptY, ep);
+                            if (ep < 0.55) drawLabel(m.x, interceptY - 18, 'منهدم شد', NEON, 9);
+                        }
+                    });
+                    requestAnimationFrame(frame);
+                }
+                requestAnimationFrame(frame);
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', start);
+            } else {
+                start();
+            }
+        })();
+
     </script>
 </body>
 </html>
