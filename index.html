@@ -236,10 +236,10 @@
         #userPanel .profile-stats .stat:hover{border-color:var(--neon)}
         #userPanel .profile-stats .stat .num{font-size:.85rem;font-weight:900;color:var(--tp);font-family:monospace}
         #userPanel .profile-stats .stat .label{font-size:.4rem;color:var(--ts)}
-        #userPanel .avatar-select{display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center;margin:0.3rem 0}
-        #userPanel .avatar-select .av-item{font-size:1.8rem;cursor:pointer;border:2px solid transparent;border-radius:50%;padding:0.05rem;transition:.3s}
+        #userPanel .avatar-select{display:none;gap:0.35rem;flex-wrap:wrap;justify-content:center;margin:0.4rem 0;padding:0.35rem;background:var(--bg);border:1px solid var(--br);border-radius:6px}
+        #userPanel .avatar-select .av-item{font-size:1.6rem;cursor:pointer;border:2px solid var(--br);border-radius:50%;padding:0.25rem;width:2.4rem;height:2.4rem;display:inline-flex;align-items:center;justify-content:center;transition:.2s;background:var(--bgp)}
         #userPanel .avatar-select .av-item:hover{border-color:var(--neon);transform:scale(1.1)}
-        #userPanel .avatar-select .av-item.active{border-color:var(--am)}
+        #userPanel .avatar-select .av-item.active{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.35);background:rgba(57,255,20,0.08)}
         #userPanel .profile-edit{width:100%;padding:0.2rem;background:var(--am);border:none;border-radius:4px;color:#1a1000;font-weight:700;font-size:.6rem;cursor:pointer;transition:.3s}
         #userPanel .profile-edit:hover{transform:scale(1.02)}
         #userPanel .switch-link{color:var(--ts);font-size:.5rem;text-align:center;margin-top:0.2rem;cursor:pointer;transition:.3s}
@@ -1077,33 +1077,48 @@
             updateProfile(); }
 
         
-        async function saveProfileEdit() {
-            if (!loggedUser || !allUsers[loggedUser]) { alert('⚠️ وارد حساب شوید'); return; }
+        async async function saveProfileEdit() {
+            if (!loggedUser || !allUsers[loggedUser]) {
+                alert('⚠️ ابتدا وارد حساب شوید');
+                return;
+            }
             const name = (document.getElementById('editFullname')?.value || '').trim();
-            const data = { avatar: selectedAvatar || allUsers[loggedUser].avatar || 'fa-user' };
-            if (name) data.fullname = name;
+            const avatar = selectedAvatar || allUsers[loggedUser].avatar || 'fa-user';
             const id = allUsers[loggedUser].id;
-            if (!id) { alert('⚠️ شناسه کاربر یافت نشد'); return; }
-            const updated = await updateInSupabase('users', id, data);
-            if (updated) {
-                Object.assign(allUsers[loggedUser], data);
-                updateHeader();
-                updateProfile();
-                alert('✅ حساب به‌روز شد');
-            } else alert('❌ خطا در ذخیره');
+            if (!id) {
+                alert('⚠️ شناسه کاربر یافت نشد — یک‌بار خارج و دوباره وارد شوید');
+                return;
+            }
+            const data = { avatar: avatar };
+            if (name) data.fullname = name;
+            try {
+                const updated = await updateInSupabase('users', id, data);
+                if (updated) {
+                    Object.assign(allUsers[loggedUser], data);
+                    updateHeader();
+                    updateProfile();
+                    alert('✅ حساب کاربری ذخیره شد');
+                } else {
+                    alert('❌ خطا در ذخیره — اتصال را بررسی کنید');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('❌ خطا در ذخیره');
+            }
         }
+
 
         function selectAvatar(el) {
             document.querySelectorAll('.avatar-select .av-item').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
             selectedAvatar = el.dataset.avatar;
-            if (loggedUser && allUsers[loggedUser] && allUsers[loggedUser].id) {
-                allUsers[loggedUser].avatar = selectedAvatar;
-                updateInSupabase('users', allUsers[loggedUser].id, { avatar: selectedAvatar });
-                updateHeader();
-                updateProfile();
-            }
+            // پیش‌نمایش فوری
+            const av = document.getElementById('profileAvatar');
+            if (av) av.innerHTML = '<i class="fas ' + selectedAvatar + '"></i>';
+            const hdr = document.getElementById('hdrAvatar');
+            if (hdr) hdr.innerHTML = '<i class="fas ' + selectedAvatar + '"></i>';
         }
+
 
         function updateHeader() {
             const nameEl = document.getElementById('headerName');
@@ -1131,6 +1146,8 @@
                 document.getElementById('profileXP').textContent = 'XP: 0';
                 document.getElementById('userInfo').style.display = 'none';
                 document.getElementById('userNotLogged').style.display = 'block';
+                const avSel = document.getElementById('avatarSelect');
+                if (avSel) avSel.style.display = 'none';
                 return;
             }
             const u = allUsers[loggedUser];
@@ -1152,8 +1169,19 @@
             });
             document.getElementById('statDate').textContent = u?.date || '—';
             document.getElementById('userInfo').style.display = 'block';
-            const ef=document.getElementById('editFullname'); if(ef) ef.value = u?.fullname || '';
+            const ef = document.getElementById('editFullname');
+            if (ef) ef.value = u?.fullname || '';
             document.getElementById('userNotLogged').style.display = 'none';
+            // نمایش انتخاب آواتار و علامت‌گذاری آواتار فعلی
+            const avSel = document.getElementById('avatarSelect');
+            if (avSel) {
+                avSel.style.display = 'flex';
+                const current = u?.avatar || 'fa-user';
+                selectedAvatar = current;
+                avSel.querySelectorAll('.av-item').forEach(a => {
+                    a.classList.toggle('active', a.dataset.avatar === current);
+                });
+            }
             updateInboxBadge();
         }
 
