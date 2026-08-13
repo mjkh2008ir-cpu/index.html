@@ -156,38 +156,38 @@
         .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
         .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
         .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
-        .defense-anim{width:100%;height:140px;position:relative;overflow:hidden;background:
-            linear-gradient(180deg, rgba(6,12,8,0.2) 0%, rgba(10,20,12,0.85) 40%, rgba(5,15,8,0.95) 100%),
-            repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(57,255,20,0.03) 3px, rgba(57,255,20,0.03) 4px),
-            repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(57,255,20,0.03) 3px, rgba(57,255,20,0.03) 4px);
-            border-radius:6px;margin-top:0.3rem;border:1px solid rgba(57,255,20,0.25);box-shadow:inset 0 0 40px rgba(57,255,20,0.08),0 0 20px rgba(57,255,20,0.05)}
-        .defense-anim .pixel-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(57,255,20,0.04) 1px, transparent 1px),linear-gradient(90deg, rgba(57,255,20,0.04) 1px, transparent 1px);background-size:8px 8px;pointer-events:none;opacity:0.6}
-        .defense-anim .defense-system{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);z-index:3;text-align:center}
-        .defense-anim .system-label{display:block;font-size:0.4rem;color:var(--neon);font-weight:700;text-shadow:0 0 8px var(--neon);margin-top:2px;animation:neonPulse 2s infinite;font-family:monospace;letter-spacing:1px}
-        .defense-anim .pixel-turret{image-rendering:pixelated;margin:0 auto}
-        .defense-anim .turret-top{width:10px;height:14px;background:#39ff14;margin:0 auto;box-shadow:0 0 8px #39ff14;border-radius:1px}
-        .defense-anim .turret-body{width:28px;height:16px;background:#2a6a2a;margin:0 auto;border:1px solid #39ff14;box-shadow:0 0 6px rgba(57,255,20,0.4)}
-        .defense-anim .turret-base{width:40px;height:8px;background:#1a3a1a;margin:0 auto;border:1px solid #4a8a4a}
-        .defense-anim .enemy-missile{position:absolute;top:-20px;z-index:2;text-align:center;animation:enemyDive 6s linear infinite}
-        .defense-anim .enemy-missile .px-missile{display:block;color:#c0392b;font-size:1.2rem;text-shadow:0 0 8px #c0392b;filter:drop-shadow(0 0 4px #c0392b)}
-        .defense-anim .enemy-missile .px-tag{display:block;font-size:0.3rem;color:#e74c3c;font-family:monospace}
-        .defense-anim .enemy-missile.m1{left:12%;animation-duration:5.5s}
-        .defense-anim .enemy-missile.m2{left:48%;animation-duration:6.5s;animation-delay:1.5s}
-        .defense-anim .enemy-missile.m3{left:78%;animation-duration:5.8s;animation-delay:3s}
-        .defense-anim .interceptor{position:absolute;bottom:28px;left:50%;font-size:0.85rem;color:#39ff14;text-shadow:0 0 12px #39ff14;z-index:4;animation:intercept 6s linear infinite;opacity:0}
-        .defense-anim .interceptor.i1{animation-duration:5.5s;animation-delay:0.8s}
-        .defense-anim .interceptor.i2{animation-duration:6.5s;animation-delay:2.3s}
-        .defense-anim .interceptor.i3{animation-duration:5.8s;animation-delay:3.8s}
-        .defense-anim .boom{position:absolute;font-size:1.4rem;opacity:0;animation:boomFlash 6s linear infinite;z-index:5;color:#39ff14;text-shadow:0 0 15px #39ff14}
-        .defense-anim .boom.b1{left:12%;top:35%;animation-duration:5.5s;animation-delay:1.5s}
-        .defense-anim .boom.b2{left:48%;top:30%;animation-duration:6.5s;animation-delay:3s}
-        .defense-anim .boom.b3{left:78%;top:32%;animation-duration:5.8s;animation-delay:4.5s}
-        .defense-anim .status-text{position:absolute;top:4px;left:8px;font-size:0.38rem;color:var(--neon);font-family:monospace;letter-spacing:1px;opacity:0.85;animation:neonPulse 2s infinite;text-shadow:0 0 6px var(--neon)}
-        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,var(--neon),#39ff14,var(--neon),transparent);animation:neonPulse 1.5s infinite;opacity:0.9;box-shadow:0 0 14px var(--neon)}
+        .defense-anim{width:100%;height:160px;position:relative;overflow:hidden;background:
+            linear-gradient(180deg, #061008 0%, #0a140c 40%, #050a06 100%);
+            border-radius:6px;margin-top:0.4rem;border:1px solid rgba(57,255,20,0.3);
+            box-shadow:inset 0 0 40px rgba(57,255,20,0.08),0 0 16px rgba(57,255,20,0.06)}
+        .defense-anim .pixel-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(57,255,20,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.05) 1px,transparent 1px);background-size:8px 8px;pointer-events:none;opacity:0.5}
+        .defense-anim .status-text{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:0.42rem;color:#39ff14;font-family:monospace;letter-spacing:1px;text-shadow:0 0 8px #39ff14;animation:neonPulse 2s infinite;z-index:6}
+        .defense-anim .defense-system{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:3;text-align:center}
+        .defense-anim .system-label{display:block;font-size:0.38rem;color:#39ff14;font-weight:700;text-shadow:0 0 8px #39ff14;margin-top:3px;font-family:monospace;letter-spacing:1px}
+        .defense-anim .pixel-turret{margin:0 auto;image-rendering:pixelated}
+        .defense-anim .turret-barrel{width:8px;height:18px;background:#39ff14;margin:0 auto;box-shadow:0 0 10px #39ff14;border:1px solid #6dff5a}
+        .defense-anim .turret-body{width:32px;height:14px;background:#1e4a1e;margin:0 auto;border:1px solid #39ff14;box-shadow:0 0 8px rgba(57,255,20,0.35)}
+        .defense-anim .turret-base{width:48px;height:10px;background:#0f2a0f;margin:0 auto;border:1px solid #2a6a2a}
+        .defense-anim .enemy-missile{position:absolute;top:18px;z-index:2;text-align:center;animation:enemyDive 6s linear infinite}
+        .defense-anim .enemy-missile .px-missile{display:block;width:10px;height:16px;margin:0 auto;background:#c0392b;box-shadow:0 0 8px #e74c3c;clip-path:polygon(50% 0,100% 100%,0 100%);image-rendering:pixelated}
+        .defense-anim .enemy-missile .px-tag{display:block;font-size:0.28rem;color:#e74c3c;font-family:monospace;margin-top:1px}
+        .defense-anim .enemy-missile.m1{left:15%;animation-duration:5.5s;animation-delay:0s}
+        .defense-anim .enemy-missile.m2{left:48%;animation-duration:5.5s;animation-delay:1.8s}
+        .defense-anim .enemy-missile.m3{left:78%;animation-duration:5.5s;animation-delay:3.6s}
+        .defense-anim .interceptor{position:absolute;bottom:42px;left:50%;width:6px;height:10px;background:#39ff14;box-shadow:0 0 10px #39ff14;clip-path:polygon(50% 0,100% 100%,0 100%);z-index:4;animation:intercept 5.5s linear infinite;opacity:0}
+        .defense-anim .interceptor.i1{animation-delay:0.9s}
+        .defense-anim .interceptor.i2{animation-delay:2.7s}
+        .defense-anim .interceptor.i3{animation-delay:4.5s}
+        .defense-anim .boom{position:absolute;z-index:5;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff 0%,#39ff14 40%,transparent 70%);box-shadow:0 0 16px #39ff14;opacity:0;animation:boomFlash 5.5s linear infinite}
+        .defense-anim .boom.b1{left:calc(15% + 0px);top:55%;animation-delay:1.6s}
+        .defense-anim .boom.b2{left:calc(48% + 0px);top:52%;animation-delay:3.4s}
+        .defense-anim .boom.b3{left:calc(78% + 0px);top:54%;animation-delay:5.2s}
+        .defense-anim .neon-line{position:absolute;bottom:0;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,#39ff14,#6dff5a,#39ff14,transparent);animation:neonPulse 1.5s infinite;opacity:0.9;box-shadow:0 0 12px #39ff14}
+
         @keyframes systemEnter{0%{right:-120px;opacity:0}12%{right:12px;opacity:1}75%{right:12px;opacity:1}100%{right:-120px;opacity:0}}
-        @keyframes enemyDive{0%{transform:translateY(-20px) translateX(0);opacity:0}15%{opacity:1}55%{opacity:1}70%{transform:translateY(50px) translateX(-15px);opacity:0}100%{opacity:0}}
-        @keyframes intercept{0%{bottom:35px;opacity:0;transform:translateX(0)}20%{opacity:1}55%{bottom:70%;opacity:1;transform:translateX(-40px)}70%{opacity:0}100%{opacity:0}}
-        @keyframes boomFlash{0%,55%{opacity:0;transform:scale(0.3)}62%{opacity:1;transform:scale(1.3)}75%{opacity:0;transform:scale(0.5)}100%{opacity:0}}
+        @keyframes enemyDive{0%{transform:translateY(0) scale(1);opacity:1}55%{opacity:1}70%{opacity:0.4}100%{transform:translateY(100px) scale(0.6);opacity:0}}15%{opacity:1}55%{opacity:1}70%{transform:translateY(50px) translateX(-15px);opacity:0}100%{opacity:0}}
+        @keyframes intercept{0%{transform:translate(-50%,0);opacity:0}12%{opacity:1}45%{transform:translate(-50%,-75px);opacity:1}65%{opacity:0.3}100%{transform:translate(-50%,-95px);opacity:0}}20%{opacity:1}55%{bottom:70%;opacity:1;transform:translateX(-40px)}70%{opacity:0}100%{opacity:0}}
+        @keyframes boomFlash{0%,45%{opacity:0;transform:scale(0.2)}52%{opacity:1;transform:scale(1.5)}62%{opacity:0.7;transform:scale(1.1)}75%,100%{opacity:0;transform:scale(0.4)}}62%{opacity:1;transform:scale(1.3)}75%{opacity:0;transform:scale(0.5)}100%{opacity:0}}
 
 
         /* ===== MODAL ===== */
@@ -429,11 +429,11 @@
         <!-- سامانه پدافند پیکسلی -->
         <div class="defense-system">
             <div class="pixel-turret">
-                <div class="turret-top"></div>
+                <div class="turret-barrel"></div>
                 <div class="turret-body"></div>
                 <div class="turret-base"></div>
             </div>
-            <span class="system-label">پدافند شبهات</span>
+            <span class="system-label">سامانه پدافند شبهات</span>
         </div>
         <div class="neon-line"></div>
     </div>
