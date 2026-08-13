@@ -1801,7 +1801,8 @@
                 <div class="popup-row"><span class="label">لایک</span><span class="value">${p.likes || 0}</span></div>
                 <div class="popup-row"><span class="label">کامنت</span><span class="value">${(p.comments || []).length}</span></div>
                 <div class="popup-row"><span class="label">تاریخ</span><span class="value">${p.date || '—'}</span></div>
-                <div class="popup-actions" style="margin-top:0.5rem">
+                <div class="popup-actions" style="margin-top:0.5rem;display:flex;gap:0.3rem;flex-wrap:wrap">
+                    <button class="btn-msg" onclick="quickSendMessage('${p.sender || p.author || ''}', 'درباره مطلب')"><i class="fas fa-envelope"></i> ارسال پیام</button>
                     <button class="del-btn" onclick="deletePost(${index});closeUserDetail()">حذف مطلب</button>
                 </div>`;
             popup.classList.add('show');
