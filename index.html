@@ -930,13 +930,21 @@
 
         // ===== INBOX =====
         function updateInboxBadge() {
-            if (!loggedUser) { document.getElementById('inboxBadge').style.display = 'none'; return; }
+            const badge = document.getElementById('inboxBadge');
+            if (!badge) return;
+            if (!loggedUser) { badge.style.display = 'none'; return; }
             const msgs = allInbox[loggedUser] || [];
             const unread = msgs.filter(m => !m.read).length;
-            const badge = document.getElementById('inboxBadge');
-            if (unread > 0) { badge.textContent = unread;
-                badge.style.display = 'block'; } else { badge.style.display = 'none'; }
+            if (unread > 0) {
+                badge.style.display = 'inline-block';
+                badge.textContent = unread > 9 ? '9+' : String(unread);
+                badge.style.animation = 'neonPulse 1.2s infinite';
+            } else {
+                badge.style.display = 'none';
+                badge.style.animation = 'none';
+            }
         }
+
 
         function openInbox() {
             if (!loggedUser) { alert('⚠️ لطفاً وارد حساب خود شوید'); return; }
@@ -1160,9 +1168,18 @@
                 `<span class="rank-badge">🎖️ ${level.name}</span>` :
                 level.name;
             document.getElementById('profileXP').textContent = `XP: ${u?.xp || 0}`;
-            const comments = allPosts.filter(p => p.comments?.some(c => c.user === loggedUser)).length;
+            // تعداد کامنت‌های کاربر
+            let comments = 0;
+            let likesGiven = 0;
+            allPosts.forEach(p => {
+                if (p.comments) comments += p.comments.filter(c => c.user === loggedUser).length;
+                if (p.liked_by && p.liked_by.includes(loggedUser)) likesGiven++;
+            });
             document.getElementById('statComments').textContent = comments;
-            document.getElementById('statLikes').textContent = u?.likes || 0;
+            document.getElementById('statLikes').textContent = likesGiven;
+            // XP
+            const xpEl = document.getElementById('profileXP');
+            if (xpEl) xpEl.textContent = 'XP: ' + (u?.xp || 0);
             loadFromSupabase('saved').then(saved => {
                 const userSaved = saved.filter(s => s.user === loggedUser);
                 document.getElementById('statSaved').textContent = userSaved.length;
