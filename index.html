@@ -289,7 +289,13 @@
     </div>
 
     <!-- ===== SEARCH ===== -->
-    <div id="search-section"><div class="search-wrap"><i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i><input type="text" id="searchInput" placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..." onkeyup="if(event.key==='Enter') filterPosts()"><button onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
+    <div id="search-section"><div class="search-wrap"><i class="fas fa-search" style="color:var(--ts);font-size:.6rem"></i>
+<input type="search" id="searchInput" name="q" inputmode="search" enterkeyhint="search"
+ autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+ data-lpignore="true" data-form-type="other" role="searchbox"
+ placeholder="جستجوی شبهه، هشتگ یا کلمه کلیدی..."
+ onkeyup="if(event.key===&#39;Enter&#39;)filterPosts()">
+<button type="button" onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
 
     <!-- ===== NAV ===== -->
     <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
@@ -365,7 +371,7 @@
     <!-- ===== MODALS ===== -->
     <div class="modal" id="sendToCommandModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3><button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button></div><div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div><div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"><div class="form-group"><label>دسته‌بندی</label><select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select></div><div class="form-group"><label>اولویت</label><select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div></div><button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button><div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div></div></div>
 
-    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور"></div><button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button><div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div></div><div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div></div></div>
+    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور"></div><button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button><div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div></div><div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div></div></div>
 
     <div class="modal" id="inboxModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-envelope"></i> صندوق پیام‌ها <span id="inboxCount" style="font-size:.5rem;color:var(--ts)"></span></h3><button class="modal-close" onclick="closeModal('inboxModal')">×</button></div><div id="inboxContainer" style="max-height:400px;overflow-y:auto"></div></div></div>
 
@@ -771,61 +777,24 @@
         }
 
         function filterPosts() {
-            const s = document.getElementById('searchInput').value.trim().toLowerCase();
-            let list = allPosts;
-            if (s) list = list.filter(p =>
-                (p.shobe || '').toLowerCase().includes(s) ||
-                (p.answer || '').toLowerCase().includes(s) ||
-                (p.tags || []).some(t => t.includes(s))
-            );
-            renderPosts(list);
+            const s = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+            let list = allPosts || [];
+            if (s) {
+                list = list.filter(p =>
+                    (p.shobe || '').toLowerCase().includes(s) ||
+                    (p.answer || '').toLowerCase().includes(s) ||
+                    (p.cat || '').toLowerCase().includes(s) ||
+                    (p.tags || []).some(tg => String(tg).toLowerCase().includes(s))
+                );
+                switchPage('posts');
+            }
+            renderPosts(list, 'postContainer');
+            if (s && !list.length) {
+                const el = document.getElementById('postContainer');
+                if (el) el.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts)"><i class="fas fa-search"></i> نتیجه‌ای برای «' + s + '» یافت نشد</div>';
+            }
         }
 
-        // ===== LIKE & COMMENT =====
-        async function toggleLike(index) {
-            if (!loggedUser) { alert('⚠️ برای لایک کردن وارد حساب خود شوید.'); return; }
-            const post = allPosts[index];
-            if (!post || !post.id) return;
-            if (!Array.isArray(post.liked_by)) post.liked_by = [];
-            post.likes = Number(post.likes) || 0;
-            if (post.liked_by.includes(loggedUser)) {
-                post.likes = Math.max(0, post.likes - 1);
-                post.liked_by = post.liked_by.filter(u => u !== loggedUser);
-            } else {
-                post.likes++;
-                post.liked_by.push(loggedUser);
-                if (allUsers[loggedUser] && allUsers[loggedUser].id) {
-                    allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 1;
-                    await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
-                }
-            }
-            const updated = await updateInSupabase('posts', post.id, { likes: post.likes, liked_by: post.liked_by });
-            if (updated) allPosts[index] = { ...post, ...updated };
-            else allPosts[index] = post;
-            renderPosts(allPosts);
-            updateProfile();
-        }
-
-        async function addComment(index) {
-            if (!loggedUser) { alert('⚠️ برای نظر دادن وارد حساب خود شوید.'); return; }
-            const post = allPosts[index];
-            if (!post || !post.id) return;
-            const input = document.getElementById(`cmtInput${index}`);
-            const text = input.value.trim();
-            if (!text) return;
-            if (!Array.isArray(post.comments)) post.comments = [];
-            post.comments.push({ user: loggedUser, text: text, time: new Date().toLocaleString('fa-IR') });
-            if (allUsers[loggedUser] && allUsers[loggedUser].id) {
-                allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 2;
-                await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
-            }
-            input.value = '';
-            const updated = await updateInSupabase('posts', post.id, { comments: post.comments });
-            if (updated) allPosts[index] = { ...post, ...updated };
-            else allPosts[index] = post;
-            renderPosts(allPosts);
-            updateProfile();
-        }
 
         function sharePost(index) {
             const post = allPosts[index];
