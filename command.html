@@ -1270,21 +1270,36 @@
                         </div>
                         <div style="font-size:0.3rem;color:#5a7a65;font-family:monospace;margin-top:4px;letter-spacing:1px">TRACK · LIVE</div>
                     </div>
-                    <div class="map-panel-v2" style="flex:1;min-width:180px;min-height:130px;position:relative;background:linear-gradient(180deg,rgba(20,32,22,.9),rgba(10,16,11,.95));border:1px solid rgba(120,160,100,.25);border-radius:8px;overflow:hidden">
+                    <div class="map-panel-v2" style="flex:1;min-width:180px;min-height:160px;position:relative;background:linear-gradient(180deg,rgba(20,32,22,.9),rgba(10,16,11,.95));border:1px solid rgba(120,160,100,.25);border-radius:8px;overflow:hidden">
                         <div style="display:flex;justify-content:space-between;padding:6px 8px;border-bottom:1px solid rgba(120,160,100,.15);font-size:0.32rem;color:#9ab89f">
                             <b style="color:#e8c95c">رصد فضای مجازی</b><span>GLOBAL OPS MAP</span>
                         </div>
                         <div style="position:relative;height:110px">
-                            <svg viewBox="0 0 360 180" style="width:100%;height:100%;opacity:0.7" preserveAspectRatio="xMidYMid meet">
-                                <ellipse cx="80" cy="90" rx="50" ry="55" fill="none" stroke="#3a6a4a" stroke-width="2"/>
-                                <ellipse cx="200" cy="85" rx="60" ry="45" fill="none" stroke="#3a6a4a" stroke-width="2"/>
-                                <ellipse cx="300" cy="100" rx="35" ry="50" fill="none" stroke="#3a6a4a" stroke-width="2"/>
-                                <circle cx="100" cy="80" r="3" fill="#39ff14"><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle>
-                                <circle cx="210" cy="70" r="3" fill="#e8c95c"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite"/></circle>
-                                <circle cx="290" cy="95" r="3" fill="#39ff14"><animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/></circle>
-                                <circle cx="150" cy="100" r="2.5" fill="#e8c95c"/>
-                                <circle cx="250" cy="110" r="2.5" fill="#39ff14"/>
-                            </svg>
+                            <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.85">
+  <rect width="1000" height="500" fill="#060e08"/>
+  <!-- simplified continents as paths - military green -->
+  <g fill="#1a4a28" stroke="#39ff14" stroke-width="1.2" opacity="0.9">
+    <!-- N America -->
+    <path d="M120,80 L200,60 L280,90 L300,150 L260,200 L180,220 L120,180 L90,120 Z"/>
+    <!-- S America -->
+    <path d="M220,240 L260,230 L280,300 L250,380 L220,400 L200,350 L210,280 Z"/>
+    <!-- Europe -->
+    <path d="M480,70 L540,60 L560,100 L530,130 L480,120 Z"/>
+    <!-- Africa -->
+    <path d="M480,150 L560,140 L580,220 L550,320 L500,340 L470,280 L470,200 Z"/>
+    <!-- Asia -->
+    <path d="M560,50 L750,40 L850,80 L880,150 L800,200 L700,180 L620,160 L560,120 Z"/>
+    <!-- Australia -->
+    <path d="M780,300 L860,290 L880,340 L840,360 L780,340 Z"/>
+  </g>
+  <g fill="#39ff14">
+    <circle cx="520" cy="110" r="4"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="700" cy="120" r="4"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="240" cy="140" r="3.5"><animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="820" cy="320" r="3"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.1s" repeatCount="indefinite"/></circle>
+  </g>
+  <text x="20" y="480" fill="#5a7a65" font-size="14" font-family="monospace">GLOBAL OPS · WIKI-STYLE MAP</text>
+</svg>
                             <div style="position:absolute;bottom:4px;left:8px;font-size:0.28rem;color:#5a7a65;font-family:monospace">SIG ACTIVE</div>
                         </div>
                     </div>
