@@ -939,62 +939,88 @@
             if (!loggedUser) { alert('⚠️ برای ذخیره مطالب وارد حساب خود شوید.'); return; }
             const post = allPosts[index];
             if (!post) return;
-            const saved = await loadFromSupabase('saved');
-            const userSaved = saved.filter(s => s.user === loggedUser);
-            if (!userSaved.some(s => s.post_id === post.id)) {
-                await saveToSupabase('saved', {
+            const msgEl = document.getElementById('savedMsg' + index);
+            try {
+                const saved = await loadFromSupabase('saved') || [];
+                const userSaved = saved.filter(s => s.user === loggedUser);
+                const pid = post.id;
+                if (userSaved.some(s => String(s.post_id) === String(pid))) {
+                    if (msgEl) msgEl.textContent = 'قبلاً ذخیره شده';
+                    setTimeout(() => { if (msgEl) msgEl.textContent = ''; }, 2000);
+                    return;
+                }
+                const result = await saveToSupabase('saved', {
                     user: loggedUser,
-                    post_id: post.id,
-                    shobe: post.shobe,
-                    answer: post.answer,
-                    saved_at: new Date().toLocaleDateString('fa-IR')
+                    post_id: pid,
+                    data: {
+                        shobe: post.shobe || '',
+                        answer: post.answer || '',
+                        cat: post.cat || '',
+                        saved_at: new Date().toLocaleDateString('fa-IR')
+                    }
                 });
-                if (allUsers[loggedUser]) {
+                if (!result) {
+                    if (msgEl) msgEl.textContent = 'خطا در ذخیره';
+                    return;
+                }
+                if (allUsers[loggedUser] && allUsers[loggedUser].id) {
                     allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
                     await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
                 }
-                document.getElementById(`savedMsg${index}`).textContent = '✅ ذخیره شد!';
-                setTimeout(() => document.getElementById(`savedMsg${index}`).textContent = '', 2000);
-                renderSaved();
+                if (msgEl) msgEl.textContent = 'ذخیره شد';
+                setTimeout(() => { if (msgEl) msgEl.textContent = ''; }, 2000);
+            } catch (e) {
+                console.error(e);
+                if (msgEl) msgEl.textContent = 'خطا';
             }
         }
+
 
         async function renderSaved() {
             const container = document.getElementById('savedContainer');
+            if (!container) return;
             if (!loggedUser) {
-                container.innerHTML =
-                    '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem"><i class="fas fa-lock"></i> وارد حساب خود شوید.</div>';
+                container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.65rem"><i class="fas fa-lock"></i> وارد حساب خود شوید.</div>';
                 return;
             }
-            const saved = await loadFromSupabase('saved');
+            const saved = await loadFromSupabase('saved') || [];
             const userSaved = saved.filter(s => s.user === loggedUser);
             if (!userSaved.length) {
-                container.innerHTML =
-                    '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.6rem"><i class="fas fa-box-open"></i> جعبه مهمات خالی است</div>';
+                container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.65rem"><i class="fas fa-box-open"></i> جعبه مهمات خالی است</div>';
                 return;
             }
-            container.innerHTML = userSaved.map((p, i) => `
-                    <div class="saved-item">
-                        <div class="saved-hdr" onclick="toggleSaved(${i})">
-                            <h4><i class="fas fa-question-circle"></i> ${p.shobe || 'بدون عنوان'}</h4>
-                            <span class="arrow"><i class="fas fa-chevron-down"></i></span>
-                        </div>
-                        <div class="saved-body" id="savedBody${i}">
-                            <p>${(p.answer || '').replace(/\n/g, '<br>')}</p>
-                            <div style="color:var(--ts);font-size:.5rem"><i class="fas fa-calendar-alt"></i> ${p.saved_at || 'تاریخ نامشخص'}</div>
-                            <button class="del-btn" onclick="removeFromSaved(${i})"><i class="fas fa-trash"></i> حذف</button>
-                        </div>
+            container.innerHTML = userSaved.map((s, i) => {
+                const d = (typeof s.data === 'object' && s.data) ? s.data : {};
+                let shobe = d.shobe || s.shobe || '';
+                let answer = d.answer || s.answer || '';
+                if ((!shobe || !answer) && s.post_id && allPosts.length) {
+                    const p = allPosts.find(x => String(x.id) === String(s.post_id));
+                    if (p) { shobe = shobe || p.shobe || ''; answer = answer || p.answer || ''; }
+                }
+                return `<div class="saved-item">
+                    <div class="saved-hdr" onclick="this.nextElementSibling.classList.toggle('show');this.querySelector('.arrow')?.classList.toggle('open')">
+                        <h4>${(shobe || 'مطلب ذخیره‌شده').substring(0, 60)}</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
                     </div>
-                `).join('');
+                    <div class="saved-body">
+                        <p>${answer || '—'}</p>
+                        <button class="del-btn" onclick="deleteSaved(${s.id})"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        function toggleSaved(index) {
-            const body = document.getElementById(`savedBody${index}`);
-            const arrow = body.parentElement.querySelector('.arrow');
-            if (!body) return;
-            body.classList.toggle('show');
-            arrow.classList.toggle('open');
+        async function deleteSaved(id) {
+            if (!id) return;
+            try {
+                await fetch(SUPABASE_URL + '/rest/v1/saved?id=eq.' + id, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+                });
+                renderSaved();
+            } catch (e) { console.error(e); }
         }
+
 
         async function removeFromSaved(index) {
             if (!confirm('مطمئنی حذف کنی؟')) return;
