@@ -300,6 +300,30 @@
         .ai-card{transition:border-color .2s}
         .ai-card:hover{border-color:var(--neon)}
 
+    
+        /* انیمیشن و آیکون خفن‌تر */
+        @keyframes iconPop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+        @keyframes glowPulse{0%,100%{filter:drop-shadow(0 0 2px currentColor)}50%{filter:drop-shadow(0 0 8px currentColor)}}
+        @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+        .hdr-right .user-badge .avatar i{
+            color:var(--neon);animation:glowPulse 2.5s ease-in-out infinite;
+            font-size:1.15rem;
+        }
+        .hdr-right .user-badge:hover .avatar i{animation:iconPop .4s ease}
+        .nav-item i{transition:transform .2s,color .2s;font-size:1.05rem}
+        .nav-item:hover i,.nav-item.active i{transform:scale(1.2);color:#39ff14}
+        .page-title i{animation:floatY 3s ease-in-out infinite;color:#c8a000;font-size:1.1rem}
+        .game-card .icon i{font-size:1.8rem;animation:glowPulse 3s ease-in-out infinite}
+        .game-card:hover .icon i{animation:iconPop .35s ease}
+        .ai-card .ai-icon i{font-size:1.4rem;color:var(--neon);transition:transform .25s}
+        .ai-card:hover .ai-icon i{transform:scale(1.25) rotate(-8deg);color:#c8a000}
+        .btn i,.profile-edit i{transition:transform .2s}
+        .btn:hover i,.profile-edit:hover i{transform:scale(1.2)}
+        #headerLevel i{color:#c8a000;margin-right:0.15rem}
+        .post-hdr .title::before{content:'\f06e';font-family:'Font Awesome 6 Free';font-weight:900;color:#39ff14;margin-left:0.35rem;font-size:0.75rem}
+        .inbox-btn i{color:#c8a000;font-size:1.1rem}
+        .inbox-btn .badge{animation:iconPop 1.5s ease infinite}
+
     </style>
 </head>
 <body>
@@ -1277,8 +1301,9 @@
                 const u = allUsers[loggedUser];
                 nameEl.textContent = u?.fullname || loggedUser;
                 const level = getUserLevel(u?.xp || 0, u?.is_special || false);
-                levelEl.textContent = level.name + (u?.is_special ? ' <i class="fas fa-star ico-gold"></i>' : '');
+                levelEl.innerHTML = level.name + (u?.is_special ? ' <i class="fas fa-star ico-gold"></i>' : '');
                 avatarEl.innerHTML = `<i class="fas ${u?.avatar || 'fa-user'}"></i>`;
+                avatarEl.style.color = u?.is_special ? '#c8a000' : 'var(--neon)';
             } else {
                 nameEl.textContent = 'ورود';
                 levelEl.textContent = '';
