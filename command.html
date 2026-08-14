@@ -59,12 +59,12 @@
         }
         body {
             background: var(--bg-primary);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: Tahoma, 'Segoe UI', sans-serif;
             direction: rtl;
             min-height: 100vh;
             display: flex;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 16px;
             overflow: hidden;
         }
         ::-webkit-scrollbar {
@@ -1171,6 +1171,85 @@
         .launch-section,.list-container{border-radius:8px}
         .popup-row{padding:0.25rem 0;border-bottom:1px solid rgba(120,160,100,.12)}
         .user-detail-popup{border:1px solid rgba(57,255,20,0.3);box-shadow:0 8px 40px rgba(0,0,0,.6)}
+
+    
+        /* ===== خوانایی فرماندهی — فونت و فاصله بزرگ‌تر ===== */
+        body { font-size: 16px !important; }
+        .sidebar { width: 200px !important; }
+        .sidebar .logo { font-size: 1rem !important; }
+        .sidebar .nav-item, .sidebar a, .tab-btn, .side-btn {
+            font-size: 0.85rem !important;
+            padding: 0.55rem 0.7rem !important;
+            margin-bottom: 0.15rem !important;
+        }
+        .main { padding: 0.75rem 1rem !important; }
+        .main-header, .header-bar, .top-bar {
+            font-size: 0.95rem !important;
+            padding: 0.5rem 0 !important;
+        }
+        .stat-card .num, .stats .num { font-size: 1.35rem !important; }
+        .stat-card .lbl, .stat-card .label, .stats .label {
+            font-size: 0.7rem !important;
+        }
+        .list-title, .launch-title, .monitor-title {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.45rem !important;
+            letter-spacing: 0.5px !important;
+        }
+        .list-item {
+            font-size: 0.82rem !important;
+            padding: 0.45rem 0.55rem !important;
+            margin-bottom: 0.3rem !important;
+            line-height: 1.5 !important;
+            gap: 0.4rem !important;
+        }
+        .list-item .name { font-size: 0.85rem !important; }
+        .list-item .role, .list-item .status {
+            font-size: 0.7rem !important;
+        }
+        .list-item button, .reply-btn, .del-btn, .approve-btn, .reject-btn, .btn-msg {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.5rem !important;
+            min-height: 32px !important;
+        }
+        input, select, textarea {
+            font-size: 0.9rem !important;
+            padding: 0.45rem 0.6rem !important;
+            min-height: 40px !important;
+        }
+        textarea { min-height: 80px !important; }
+        .btn-launch, .btn-primary, button.btn {
+            font-size: 0.9rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+        .user-detail-popup, .popup-content {
+            font-size: 0.9rem !important;
+            max-width: 420px !important;
+        }
+        .user-detail-popup .popup-title {
+            font-size: 1rem !important;
+        }
+        .popup-row .label { font-size: 0.75rem !important; }
+        .popup-row .value { font-size: 0.88rem !important; line-height: 1.55 !important; }
+        .monitor-container { padding: 0.5rem !important; }
+        .radar-circle-v2 { width: 140px !important; height: 140px !important; }
+        .map-panel-v2 .ops-world-map { height: 180px !important; }
+        .security-box, #securityPage {
+            font-size: 1rem !important;
+        }
+        #securityPage input {
+            font-size: 1.05rem !important;
+            padding: 0.65rem !important;
+        }
+        #securityPage button {
+            font-size: 1rem !important;
+            padding: 0.65rem 1.2rem !important;
+        }
+        @media (max-width: 768px) {
+            body { font-size: 15px !important; }
+            .list-item { font-size: 0.88rem !important; padding: 0.55rem !important; }
+            .sidebar .nav-item, .tab-btn { font-size: 0.9rem !important; padding: 0.65rem !important; }
+        }
 
     </style>
 </head>
@@ -3175,6 +3254,85 @@
         .launch-section,.list-container{border-radius:8px}
         .popup-row{padding:0.25rem 0;border-bottom:1px solid rgba(120,160,100,.12)}
         .user-detail-popup{border:1px solid rgba(57,255,20,0.3);box-shadow:0 8px 40px rgba(0,0,0,.6)}
+
+    
+        /* ===== خوانایی فرماندهی — فونت و فاصله بزرگ‌تر ===== */
+        body { font-size: 16px !important; }
+        .sidebar { width: 200px !important; }
+        .sidebar .logo { font-size: 1rem !important; }
+        .sidebar .nav-item, .sidebar a, .tab-btn, .side-btn {
+            font-size: 0.85rem !important;
+            padding: 0.55rem 0.7rem !important;
+            margin-bottom: 0.15rem !important;
+        }
+        .main { padding: 0.75rem 1rem !important; }
+        .main-header, .header-bar, .top-bar {
+            font-size: 0.95rem !important;
+            padding: 0.5rem 0 !important;
+        }
+        .stat-card .num, .stats .num { font-size: 1.35rem !important; }
+        .stat-card .lbl, .stat-card .label, .stats .label {
+            font-size: 0.7rem !important;
+        }
+        .list-title, .launch-title, .monitor-title {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.45rem !important;
+            letter-spacing: 0.5px !important;
+        }
+        .list-item {
+            font-size: 0.82rem !important;
+            padding: 0.45rem 0.55rem !important;
+            margin-bottom: 0.3rem !important;
+            line-height: 1.5 !important;
+            gap: 0.4rem !important;
+        }
+        .list-item .name { font-size: 0.85rem !important; }
+        .list-item .role, .list-item .status {
+            font-size: 0.7rem !important;
+        }
+        .list-item button, .reply-btn, .del-btn, .approve-btn, .reject-btn, .btn-msg {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.5rem !important;
+            min-height: 32px !important;
+        }
+        input, select, textarea {
+            font-size: 0.9rem !important;
+            padding: 0.45rem 0.6rem !important;
+            min-height: 40px !important;
+        }
+        textarea { min-height: 80px !important; }
+        .btn-launch, .btn-primary, button.btn {
+            font-size: 0.9rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+        .user-detail-popup, .popup-content {
+            font-size: 0.9rem !important;
+            max-width: 420px !important;
+        }
+        .user-detail-popup .popup-title {
+            font-size: 1rem !important;
+        }
+        .popup-row .label { font-size: 0.75rem !important; }
+        .popup-row .value { font-size: 0.88rem !important; line-height: 1.55 !important; }
+        .monitor-container { padding: 0.5rem !important; }
+        .radar-circle-v2 { width: 140px !important; height: 140px !important; }
+        .map-panel-v2 .ops-world-map { height: 180px !important; }
+        .security-box, #securityPage {
+            font-size: 1rem !important;
+        }
+        #securityPage input {
+            font-size: 1.05rem !important;
+            padding: 0.65rem !important;
+        }
+        #securityPage button {
+            font-size: 1rem !important;
+            padding: 0.65rem 1.2rem !important;
+        }
+        @media (max-width: 768px) {
+            body { font-size: 15px !important; }
+            .list-item { font-size: 0.88rem !important; padding: 0.55rem !important; }
+            .sidebar .nav-item, .tab-btn { font-size: 0.9rem !important; padding: 0.65rem !important; }
+        }
 
     </style>
                 </head>
