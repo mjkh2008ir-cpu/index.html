@@ -371,7 +371,14 @@
     <!-- ===== MODALS ===== -->
     <div class="modal" id="sendToCommandModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3><button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button></div><div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div><div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"><div class="form-group"><label>دسته‌بندی</label><select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select></div><div class="form-group"><label>اولویت</label><select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div></div><button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button><div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div></div></div>
 
-    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" placeholder="رمز عبور"></div><button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button><div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div></div><div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div></div></div>
+    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder="رمز عبور"></div>
+<div style="margin:0.4rem 0;padding:0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:6px;font-size:.55rem;color:var(--ts);line-height:1.7">
+<label style="display:flex;gap:0.4rem;align-items:flex-start;cursor:pointer">
+<input type="checkbox" id="regAcceptTerms" style="margin-top:0.2rem;flex-shrink:0">
+<span>شرایط <a href="#" onclick="event.preventDefault();openLegalModal('terms')" style="color:var(--gold)">قوانین استفاده</a> و <a href="#" onclick="event.preventDefault();openLegalModal('privacy')" style="color:var(--gold)">حریم خصوصی</a> را خوانده‌ام و می‌پذیرم.</span>
+</label>
+</div>
+<button class="btn btn-gold btn-block" onclick="userRegister()"><i class="fas fa-user-plus"></i> ثبت‌نام</button><div class="switch-link" onclick="showLoginForm()">قبلاً ثبت‌نام کردی؟ وارد شو</div></div><div id="authMsg" style="font-size:.5rem;text-align:center;margin-top:0.1rem"></div></div></div>
 
     <div class="modal" id="inboxModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-envelope"></i> صندوق پیام‌ها <span id="inboxCount" style="font-size:.5rem;color:var(--ts)"></span></h3><button class="modal-close" onclick="closeModal('inboxModal')">×</button></div><div id="inboxContainer" style="max-height:400px;overflow-y:auto"></div></div></div>
 
@@ -396,13 +403,20 @@
 <button class="profile-edit" onclick="showLoginModal()" style="width:100%"><i class="fas fa-sign-in-alt"></i> ورود / ثبت‌نام</button>
 </div>
 <div id="userInfo" style="display:none">
-<div style="background:var(--bg);border:1px solid var(--gold);border-radius:8px;padding:0.6rem;margin:0.5rem 0">
-<div style="font-size:.7rem;color:var(--gold);text-align:center;margin-bottom:0.45rem;font-weight:700"><i class="fas fa-user-edit"></i> ویرایش حساب کاربری</div>
-<div class="form-group" style="margin-bottom:0.35rem">
+<div style="font-size:.55rem;color:var(--ts);text-align:center;margin:0.3rem 0;line-height:1.5;max-height:3.2em;overflow:hidden" id="profileBioPreview">—</div>
+<button type="button" id="btnOpenEdit" onclick="openEditProfile()" style="width:100%;margin:0.35rem 0;padding:0.45rem;background:var(--neon);color:#000;border:none;border-radius:6px;font-weight:700;font-size:.75rem;cursor:pointer"><i class="fas fa-user-edit"></i> ویرایش حساب کاربری</button>
+<div id="editSection" style="display:none;background:var(--bg);border:1px solid var(--gold);border-radius:8px;padding:0.6rem;margin:0.4rem 0">
+<div style="font-size:.7rem;color:var(--gold);text-align:center;margin-bottom:0.4rem;font-weight:700"><i class="fas fa-user-edit"></i> ویرایش حساب</div>
+<div class="form-group" style="margin-bottom:0.3rem">
 <label style="font-size:.5rem;color:var(--ts)">نام نمایشی</label>
 <input type="text" id="editFullname" placeholder="نام شما" autocomplete="nickname" style="width:100%;padding:0.35rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.7rem">
 </div>
-<div style="font-size:.5rem;color:var(--ts);text-align:center;margin:0.25rem 0">انتخاب آواتار</div>
+<div class="form-group" style="margin-bottom:0.3rem">
+<label style="font-size:.5rem;color:var(--ts)">بیوگرافی</label>
+<textarea id="editBio" rows="3" maxlength="300" placeholder="چند خط درباره خودت..." style="width:100%;padding:0.35rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;color:var(--tp);font-size:.65rem;resize:vertical;font-family:inherit"></textarea>
+<div style="font-size:.4rem;color:var(--ts);text-align:left" id="bioCount">0/300</div>
+</div>
+<div style="font-size:.5rem;color:var(--ts);text-align:center;margin:0.2rem 0">انتخاب آواتار</div>
 <div class="avatar-select" id="avatarSelect" style="display:flex;flex-wrap:wrap;justify-content:center;gap:0.3rem">
 <span class="av-item active" data-avatar="fa-user" onclick="selectAvatar(this)"><i class="fas fa-user"></i></span>
 <span class="av-item" data-avatar="fa-user-tie" onclick="selectAvatar(this)"><i class="fas fa-user-tie"></i></span>
@@ -415,7 +429,8 @@
 <span class="av-item" data-avatar="fa-user-cog" onclick="selectAvatar(this)"><i class="fas fa-user-cog"></i></span>
 <span class="av-item" data-avatar="fa-user-check" onclick="selectAvatar(this)"><i class="fas fa-user-check"></i></span>
 </div>
-<button type="button" onclick="saveProfileEdit()" style="width:100%;margin-top:0.45rem;padding:0.45rem;background:var(--neon);color:#000;border:none;border-radius:6px;font-weight:700;font-size:.75rem;cursor:pointer"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+<button type="button" onclick="saveProfileEdit()" style="width:100%;margin-top:0.4rem;padding:0.45rem;background:var(--neon);color:#000;border:none;border-radius:6px;font-weight:700;font-size:.75rem;cursor:pointer"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+<button type="button" onclick="closeEditProfile()" style="width:100%;margin-top:0.25rem;padding:0.3rem;background:transparent;border:1px solid var(--br);color:var(--ts);border-radius:6px;font-size:.6rem;cursor:pointer">بستن</button>
 </div>
 <button class="profile-edit" onclick="openInbox()" style="background:var(--gold);width:100%;margin-bottom:0.3rem"><i class="fas fa-envelope"></i> صندوق پیام <span id="inboxBadge" style="display:none;background:#c0392b;color:#fff;border-radius:10px;padding:0 0.35rem;font-size:.55rem">0</span></button>
 <button class="profile-edit" onclick="userLogout()" style="background:var(--rd);width:100%"><i class="fas fa-sign-out-alt"></i> خروج از حساب</button>
@@ -1097,19 +1112,74 @@
             if (n2 && n1) n1.value = n2.value;
             saveProfileEdit();
         }
+        
+        function openEditProfile() {
+            const sec = document.getElementById('editSection');
+            if (!sec) return;
+            sec.style.display = 'block';
+            const u = allUsers[loggedUser] || {};
+            const ef = document.getElementById('editFullname');
+            if (ef) ef.value = u.fullname || loggedUser || '';
+            const bio = document.getElementById('editBio');
+            if (bio) {
+                bio.value = u.bio || '';
+                updateBioCount();
+                bio.oninput = updateBioCount;
+            }
+            selectedAvatar = u.avatar || 'fa-user';
+            document.querySelectorAll('#avatarSelect .av-item').forEach(a => {
+                a.classList.toggle('active', a.dataset.avatar === selectedAvatar);
+            });
+        }
+        function closeEditProfile() {
+            const sec = document.getElementById('editSection');
+            if (sec) sec.style.display = 'none';
+        }
+        function updateBioCount() {
+            const bio = document.getElementById('editBio');
+            const c = document.getElementById('bioCount');
+            if (bio && c) c.textContent = (bio.value || '').length + '/300';
+        }
+        function openLegalModal(type) {
+            const title = document.getElementById('legalTitle');
+            const body = document.getElementById('legalBody');
+            if (type === 'privacy') {
+                title.textContent = 'حریم خصوصی';
+                body.innerHTML = `<p><b>سیاست حریم خصوصی — پدافند شبهات</b></p>
+                <p>۱. اطلاعاتی که هنگام ثبت‌نام وارد می‌کنید (نام، شماره، نام کاربری) صرفاً برای ارائه خدمات سایت نگهداری می‌شود.</p>
+                <p>۲. رمز عبور شما نباید با دیگران به اشتراک گذاشته شود؛ مسئولیت حفظ رمز با خود کاربر است.</p>
+                <p>۳. محتوای ارسالی (شبهه، کامنت، پیام) ممکن است توسط فرماندهی بررسی شود.</p>
+                <p>۴. از داده‌ها برای تبلیغات شخص ثالث استفاده نمی‌شود.</p>
+                <p>۵. می‌توانید درخواست حذف حساب را از طریق صندوق پیام به فرماندهی ارسال کنید.</p>
+                <p>۶. با استفاده از سایت، این سیاست را می‌پذیرید.</p>`;
+            } else {
+                title.textContent = 'قوانین استفاده';
+                body.innerHTML = `<p><b>قوانین استفاده — پدافند شبهات</b></p>
+                <p>۱. احترام به کاربران و پرهیز از توهین، افترا و محتوای مجرمانه الزامی است.</p>
+                <p>۲. انتشار محتوای خلاف شرع، اخلاق یا قوانین کشور ممنوع است.</p>
+                <p>۳. سوءاستفاده از سیستم، اسپم و دستکاری آمار ممنوع است.</p>
+                <p>۴. فرماندهی حق حذف محتوا یا تعلیق حساب متخلف را دارد.</p>
+                <p>۵. مطالب صرفاً جنبه اطلاع‌رسانی و پاسخ به شبهات دارند و جایگزین مشورت تخصصی نیستند.</p>
+                <p>۶. ادامه استفاده به منزله پذیرش این قوانین است.</p>`;
+            }
+            document.getElementById('legalModal').classList.add('show');
+        }
+
+
         async function saveProfileEdit() {
             if (!loggedUser || !allUsers[loggedUser]) {
                 alert('⚠️ ابتدا وارد حساب شوید');
                 return;
             }
             const name = (document.getElementById('editFullname')?.value || '').trim();
+            const bio = (document.getElementById('editBio')?.value || '').trim().slice(0, 300);
             const avatar = selectedAvatar || allUsers[loggedUser].avatar || 'fa-user';
             const id = allUsers[loggedUser].id;
             if (!id) {
                 alert('⚠️ شناسه کاربر یافت نشد — یک‌بار خارج و دوباره وارد شوید');
                 return;
             }
-            const data = { avatar };
+            const data = { avatar, bio };
             if (name) data.fullname = name;
             try {
                 const updated = await updateInSupabase('users', id, data);
@@ -1118,6 +1188,7 @@
                     updateHeader();
                     updateProfile();
                     alert('✅ حساب ذخیره شد');
+                    closeEditProfile();
                 } else {
                     alert('❌ خطا در ذخیره');
                 }
@@ -1209,12 +1280,10 @@
             const ui = document.getElementById('userInfo'); if (ui) ui.style.display = 'block';
             const nl = document.getElementById('userNotLogged'); if (nl) nl.style.display = 'none';
             const ef = document.getElementById('editFullname'); if (ef) ef.value = fullname;
+            const bioPrev = document.getElementById('profileBioPreview');
+            if (bioPrev) bioPrev.textContent = u.bio ? u.bio : 'بیوگرافی تنظیم نشده';
+            const es = document.getElementById('editSection'); if (es) es.style.display = 'none';
             selectedAvatar = u.avatar || 'fa-user';
-            const avSel = document.getElementById('avatarSelect');
-            if (avSel) {
-                avSel.style.display = 'flex';
-                avSel.querySelectorAll('.av-item').forEach(a => a.classList.toggle('active', a.dataset.avatar === selectedAvatar));
-            }
             updateInboxBadge();
         }
 
@@ -1244,6 +1313,11 @@
             const phone = document.getElementById('regPhone').value.trim();
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value.trim();
+            const accept = document.getElementById('regAcceptTerms');
+            if (!accept || !accept.checked) {
+                alert('⚠️ پذیرش قوانین استفاده و حریم خصوصی الزامی است');
+                return;
+            }
             if (!fullname || !phone || !username || !password) {
                 document.getElementById('authMsg').textContent = '⚠️ همه فیلدها را پر کنید';
                 document.getElementById('authMsg').style.color = '#c0392b';
@@ -1267,6 +1341,9 @@
                 fullname,
                 phone,
                 password,
+                accepted_terms: true,
+                accepted_at: new Date().toISOString(),
+                bio: '',
                 avatar: selectedAvatar || 'fa-user',
                 xp: isSpecial ? special.xp : 10,
                 is_special: isSpecial,
@@ -1646,7 +1723,13 @@
 
                         startGameLogic();
                     <\/script>
-                </body>
+                
+<div class="modal" id="legalModal"><div class="modal-content" style="max-width:520px;max-height:80vh;overflow:auto">
+<div class="modal-header"><h3 id="legalTitle">قوانین</h3><button class="modal-close" onclick="closeModal('legalModal')">×</button></div>
+<div id="legalBody" style="font-size:.65rem;line-height:1.9;color:var(--tp)"></div>
+</div></div>
+
+</body>
                 </html>
             `;
             win.document.write(gameHtml);
@@ -1802,5 +1885,11 @@
         })();
 
     </script>
+
+<div class="modal" id="legalModal"><div class="modal-content" style="max-width:520px;max-height:80vh;overflow:auto">
+<div class="modal-header"><h3 id="legalTitle">قوانین</h3><button class="modal-close" onclick="closeModal('legalModal')">×</button></div>
+<div id="legalBody" style="font-size:.65rem;line-height:1.9;color:var(--tp)"></div>
+</div></div>
+
 </body>
 </html>
