@@ -487,7 +487,9 @@
 
         async function loadFromSupabase(table) {
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
+                let q = `${SUPABASE_URL}/rest/v1/${table}?select=*`;
+                if (['posts','messages','inbox','users'].includes(table)) q += '&order=id.desc';
+                const res = await fetch(q, {
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
                 if (!res.ok) { console.error('Load error', table, res.status); return []; }
@@ -590,35 +592,51 @@
 
         // ===== LOAD DATA =====
         async function loadAllData() {
-            const users = await loadFromSupabase('users');
-            allUsers = {};
-            users.forEach(u => {
-                const special = checkSpecialUser(u.phone, u.fullname);
-                if (special) {
-                    u.is_special = true;
-                    u.rank = u.rank || special.rank || 'سردار';
-                    if (!u.xp || u.xp < special.xp) u.xp = special.xp;
+            try {
+                const [posts, users, messages, inbox] = await Promise.all([
+                    loadFromSupabase('posts'),
+                    loadFromSupabase('users'),
+                    loadFromSupabase('messages'),
+                    loadFromSupabase('inbox')
+                ]);
+                allPosts = posts || [];
+                allUsers = {};
+                (users || []).forEach(u => {
+                    if (!u.username) return;
+                    try {
+                        const special = checkSpecialUser(u.phone, u.fullname);
+                        if (special) {
+                            u.is_special = true;
+                            u.rank = u.rank || special.rank || 'سردار';
+                            if (!u.xp || u.xp < special.xp) u.xp = special.xp;
+                        }
+                    } catch (e) {}
+                    allUsers[u.username] = u;
+                });
+                allMessages = messages || [];
+                allInbox = {};
+                (inbox || []).forEach(row => {
+                    const u = row.user;
+                    if (!u) return;
+                    if (!allInbox[u]) allInbox[u] = [];
+                    allInbox[u].push(row);
+                });
+                renderPosts(allPosts);
+                renderPosts(allPosts.slice(0, 3), 'homePosts');
+                const pc = document.getElementById('postCount');
+                if (pc) pc.textContent = allPosts.length;
+                const uc = document.getElementById('userCount');
+                if (uc) uc.textContent = Object.keys(allUsers).length;
+                if (loggedUser) {
+                    updateHeader();
+                    updateProfile();
+                    updateInboxBadge();
                 }
-                allUsers[u.username] = u;
-            });
-            const posts = await loadFromSupabase('posts');
-            allPosts = posts || [];
-            const messages = await loadFromSupabase('messages');
-            allMessages = messages || [];
-            const inbox = await loadFromSupabase('inbox');
-            allInbox = {};
-            inbox.forEach(i => { if (!allInbox[i.user]) allInbox[i.user] = []; allInbox[i.user].push(i); });
-            const saved = await loadFromSupabase('saved');
-            allSaved = saved || [];
-            const savedUser = localStorage.getItem('padafand_logged_user');
-            if (savedUser && allUsers[savedUser]) { loggedUser = savedUser; }
-            renderAll();
-            document.getElementById('userCount').textContent = Object.keys(allUsers).length;
-            const specialCount = Object.keys(allUsers).filter(u => allUsers[u].is_special).length;
-            document.getElementById('specialCount').textContent = specialCount;
-            updateInboxBadge();
-            checkTutorialMessage();
+            } catch (e) {
+                console.error('loadAllData', e);
+            }
         }
+
 
         function renderAll() {
             renderPosts(allPosts);
@@ -664,7 +682,7 @@
                 
             });
             // هماهنگی زنده بین دو سایت (هر ۱۵ ثانیه)
-            setInterval(() => { loadAllData(); }, 15000);
+            setInterval(() => { loadAllData(); }, 12000);
 
         document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
             btn.addEventListener('click', () => switchPage(btn.dataset.page));
