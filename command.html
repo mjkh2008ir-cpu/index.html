@@ -2249,44 +2249,47 @@
         }
 
         function updateAll() {
-            updateStats();
-            updateLists();
-            updateMonitor();
-            updateCommanders();
-            updateComments();
-            updateSentMessages();
-            updateIncomingMessages();
-            updateKartabl();
-            updateReports();
-            updateCommanderLog();
-            updateSettings();
+            const run = (fn) => { try { fn(); } catch (e) { console.error(fn.name, e); } };
+            run(updateStats);
+            run(updateLists);
+            run(updateMonitor);
+            run(updateCommanders);
+            run(updateComments);
+            run(updateSentMessages);
+            run(updateIncomingMessages);
+            run(updateKartabl);
+            run(updateReports);
+            run(updateCommanderLog);
+            run(updateSettings);
         }
 
         function updateStats() {
-            document.getElementById('statPosts').textContent = allPosts.length;
-            document.getElementById('statUsers').textContent = Object.keys(allUsers).length;
+            const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            set('statPosts', allPosts.length);
+            set('statUsers', Object.keys(allUsers).length);
             const today = new Date().toLocaleDateString('fa-IR');
-            document.getElementById('statToday').textContent = allPosts.filter(p => p.date === today).length;
-            document.getElementById('statPending').textContent = allMessages.length || '—';
+            set('statToday', allPosts.filter(p => p.date === today).length);
+            set('statPending', allMessages.length || '0');
             const specialCount = Object.keys(allUsers).filter(u => allUsers[u].is_special).length;
-            document.getElementById('statSpecial').textContent = specialCount;
-            document.getElementById('statAllPosts').textContent = allPosts.length;
-            document.getElementById('statPublished').textContent = allPosts.length;
-            document.getElementById('statWaiting').textContent = allMessages.length || '—';
+            set('statSpecial', specialCount);
+            set('statAllPosts', allPosts.length);
+            set('statPublished', allPosts.length);
+            set('statWaiting', allMessages.length || '0');
             const totalComments = allPosts.reduce((sum, p) => sum + (p.comments?.length || 0), 0);
-            document.getElementById('statComments').textContent = totalComments;
-            document.getElementById('statLikes').textContent = allPosts.reduce((sum, p) => sum + (p.likes || 0), 0);
-            document.getElementById('statOnline').textContent = Math.floor(Object.keys(allUsers).length * 0.2) || '—';
-            document.getElementById('statSpecialCount').textContent = specialCount;
-            document.getElementById('monitorActivity').textContent = allPosts.length;
+            set('statComments', totalComments);
+            set('statLikes', allPosts.reduce((sum, p) => sum + (Number(p.likes) || 0), 0));
+            set('statOnline', Object.keys(allUsers).length);
+            set('statSpecialCount', specialCount);
+            set('monitorActivity', allPosts.length);
         }
 
         function updateLists() {
             const usersContainer = document.getElementById('usersList');
-            const userList = Object.keys(allUsers);
+            const userList = Object.keys(allUsers || {});
+            if (usersContainer) {
             if (!userList.length) {
                 usersContainer.innerHTML =
-                    '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ کاربری ثبت‌نام نکرده</div>';
+                    '<div style="color:var(--text-secondary);text-align:center;padding:0.5rem">هیچ کاربری ثبت‌نام نکرده</div>';
             } else {
                 usersContainer.innerHTML = userList.map(u => `
                         <div class="list-item" onclick="showUserDetail('${u}')">
@@ -2296,6 +2299,7 @@
                         </div>
                     `).join('');
             }
+            } // end usersContainer
 
             const postsContainer = document.getElementById('postsList');
             if (postsContainer) {
@@ -2389,7 +2393,7 @@
                     '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ ورود/خروجی ثبت نشده</div>';
                 return;
             }
-            container.innerHTML = log.slice(-10).reverse().map(l => `
+            container.innerHTML = log.slice().reverse().slice(0, 40).map(l => `
                     <div class="list-item">
                         <span class="name">${l.name}</span>
                         <span class="role">${l.action}</span>
