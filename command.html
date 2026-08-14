@@ -7,6 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -59,7 +61,7 @@
         }
         body {
             background: var(--bg-primary);
-            font-family: Tahoma, 'Segoe UI', sans-serif;
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
             direction: rtl;
             min-height: 100vh;
             display: flex;
@@ -1126,7 +1128,7 @@
             animation:radarSpin 3.5s linear infinite;
             will-change:transform;
         }
-        @keyframes radarSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        @keyframes radarSpin{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
         .radar-circle-v2 .center-v2{
             position:absolute;top:50%;left:50%;width:8px;height:8px;
             background:#39ff14;border-radius:50%;transform:translate(-50%,-50%);
@@ -1174,7 +1176,7 @@
 
     
         /* ===== خوانایی فرماندهی — فونت و فاصله بزرگ‌تر ===== */
-        body { font-size: 16px !important; }
+        body { font-size: 16px !important; font-family: 'Vazirmatn', Tahoma, sans-serif !important; }
         .sidebar { width: 200px !important; }
         .sidebar .logo { font-size: 1rem !important; }
         .sidebar .nav-item, .sidebar a, .tab-btn, .side-btn {
@@ -1250,6 +1252,22 @@
             .list-item { font-size: 0.88rem !important; padding: 0.55rem !important; }
             .sidebar .nav-item, .tab-btn { font-size: 0.9rem !important; padding: 0.65rem !important; }
         }
+
+    
+        /* آیکون‌های رنگی بدون ایموجی */
+        .list-item .name i, .list-title i, .launch-title i, .tab-btn i, .nav-item i, .monitor-title i {
+            margin-left: 0.35rem;
+        }
+        .ico-green { color: #39ff14 !important; }
+        .ico-gold { color: #e8c95c !important; }
+        .ico-cyan { color: #4a8aaa !important; }
+        .ico-red { color: #e74c3c !important; }
+        .ico-orange { color: #e67e22 !important; }
+        .ico-purple { color: #9b59b6 !important; }
+        .status-online { color: #39ff14; font-weight: 700; }
+        .status-offline { color: #7a9aaa; }
+        .status-pending { color: #e8c95c; }
+        .status-special { color: #e8c95c; }
 
     </style>
 </head>
@@ -2049,14 +2067,22 @@
         };
 
         async function loadFromSupabase(table) {
+            const ctrl = new AbortController();
+            const to = setTimeout(() => ctrl.abort(), 12000);
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                    signal: ctrl.signal
                 });
                 if (!res.ok) { console.error('Load error', table, res.status); return []; }
                 const data = await res.json();
                 return Array.isArray(data) ? data : [];
-            } catch (e) { console.error(e); return []; }
+            } catch (e) {
+                console.error('load', table, e.message || e);
+                return [];
+            } finally {
+                clearTimeout(to);
+            }
         }
 
         async function saveToSupabase(table, data) {
@@ -2161,49 +2187,61 @@
             setTimeout(() => { status.textContent = ''; }, 2000);
         }
 
+        let _loadBusy = false;
         async function loadAllData() {
             if (!document.body.classList.contains('authenticated') && !currentUser) {
                 console.warn('blocked: loadAllData without auth');
                 return;
             }
-            const users = await loadFromSupabase('users');
-            allUsers = {};
-            users.forEach(u => {
-                if (SPECIAL_USERS[u.phone] || Object.values(SPECIAL_USERS).some(s => s.name === u.fullname)) {
-                    u.is_special = true;
-                    u.rank = u.rank || 'سردار';
-                    const sp = SPECIAL_USERS[u.phone] || Object.values(SPECIAL_USERS).find(s => s.name === u.fullname);
-                    if (sp && (!u.xp || u.xp < sp.xp)) u.xp = sp.xp;
-                }
-                allUsers[u.username] = u;
-            });
-
-            const posts = await loadFromSupabase('posts');
-            allPosts = posts || [];
-
-            const messages = await loadFromSupabase('messages');
-            allMessages = messages || [];
-
-            const inbox = await loadFromSupabase('inbox');
-            allInbox = {};
-            inbox.forEach(i => { if (!allInbox[i.user]) allInbox[i.user] = []; allInbox[i.user].push(i); });
-
-            const reports = await loadFromSupabase('reports');
-            allReports = reports || [];
-
-            const commanderLog = await loadFromSupabase('commander_log');
-            allCommanderLog = commanderLog || [];
-
-            // بارگذاری رمز تنظیمات از سرور
+            if (_loadBusy) return;
+            _loadBusy = true;
+            const t0 = performance.now();
             try {
-                const settingsRows = await loadFromSupabase('settings');
-                const passRow = (settingsRows || []).find(s => s.key === 'settings_password');
-                if (passRow && passRow.value) settingsPassword = passRow.value;
-            } catch (e) { console.error('settings load', e); }
+                const results = await Promise.all([
+                    loadFromSupabase('users'),
+                    loadFromSupabase('posts'),
+                    loadFromSupabase('messages'),
+                    loadFromSupabase('inbox'),
+                    loadFromSupabase('reports'),
+                    loadFromSupabase('commander_log'),
+                    loadFromSupabase('settings')
+                ]);
+                const [users, posts, messages, inbox, reports, commanderLog, settingsRows] = results;
 
-            updateAll();
-            populateRecipients();
-            updateSettings();
+                allUsers = {};
+                (users || []).forEach(u => {
+                    if (SPECIAL_USERS[u.phone] || Object.values(SPECIAL_USERS).some(s => s.name === u.fullname)) {
+                        u.is_special = true;
+                        u.rank = u.rank || 'سردار';
+                        const sp = SPECIAL_USERS[u.phone] || Object.values(SPECIAL_USERS).find(s => s.name === u.fullname);
+                        if (sp && (!u.xp || u.xp < sp.xp)) u.xp = sp.xp;
+                    }
+                    allUsers[u.username] = u;
+                });
+                allPosts = posts || [];
+                allMessages = messages || [];
+                allInbox = {};
+                (inbox || []).forEach(i => { if (!allInbox[i.user]) allInbox[i.user] = []; allInbox[i.user].push(i); });
+                allReports = reports || [];
+                allCommanderLog = commanderLog || [];
+                try {
+                    const passRow = (settingsRows || []).find(s => s.key === 'settings_password');
+                    if (passRow && passRow.value) settingsPassword = passRow.value;
+                } catch (e) {}
+
+                updateAll();
+                populateRecipients();
+                updateSettings();
+                const ms = Math.round(performance.now() - t0);
+                const el = document.getElementById('lastSync');
+                if (el) el.textContent = 'همگام ' + ms + 'ms';
+            } catch (e) {
+                console.error('loadAllData', e);
+                const el = document.getElementById('lastSync');
+                if (el) el.textContent = 'خطا در سرور';
+            } finally {
+                _loadBusy = false;
+            }
         }
 
         function updateAll() {
@@ -2248,9 +2286,9 @@
             } else {
                 usersContainer.innerHTML = userList.map(u => `
                         <div class="list-item" onclick="showUserDetail('${u}')">
-                            <span class="name">${allUsers[u].is_special ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
+                            <span class="name">${allUsers[u].is_special ? '<i class="fas fa-star ico-gold"></i> ' : ''}${allUsers[u].fullname || u}</span>
                             <span class="phone">${allUsers[u].phone || '—'}</span>
-                            <span class="status">${allUsers[u].is_special ? '🎖️' : '🟢'}</span>
+                            <span class="status">${allUsers[u].is_special ? '<i class="fas fa-medal ico-gold"></i>' : '<i class="fas fa-circle ico-green" style="font-size:0.55rem"></i>'}</span>
                         </div>
                     `).join('');
             }
@@ -2272,7 +2310,7 @@
 
             document.getElementById('onlineUsers').innerHTML = userList.slice(0, 4).map(u => `
                     <div class="list-item">
-                        <span class="name">${allUsers[u].is_special ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
+                        <span class="name">${allUsers[u].is_special ? '<i class="fas fa-star ico-gold"></i> ' : ''}${allUsers[u].fullname || u}</span>
                         <span class="status">🟢</span>
                     </div>
                 `).join('') ||
@@ -2308,7 +2346,7 @@
             const log = allCommanderLog || [];
             let html = commanders.map(c => {
                 const lastLog = log.filter(l => l.name === c.name).slice(-1)[0];
-                const status = lastLog?.action === 'ورود' ? '🟢 آنلاین' : '⚪ آفلاین';
+                const status = lastLog?.action === 'ورود' ? '<i class="fas fa-circle ico-green" style="font-size:0.55rem"></i> آنلاین' : '<i class="fas fa-circle ico-cyan" style="font-size:0.55rem"></i> آفلاین';
                 const isSpecial = !!SPECIAL_USERS[c.phone];
                 const lastTime = lastLog ? lastLog.time : '—';
                 return `
@@ -2327,7 +2365,7 @@
                 html += log.slice().reverse().slice(0, 15).map(l => `
                     <div class="list-item">
                         <span class="name">${l.name}</span>
-                        <span class="role">${l.action === 'ورود' ? '🟢 ورود' : '🔴 خروج'}</span>
+                        <span class="role">${l.action === 'ورود' ? '<i class="fas fa-sign-in-alt ico-green"></i> ورود' : '<i class="fas fa-sign-out-alt ico-red"></i> خروج'}</span>
                         <span class="status">${l.time}</span>
                     </div>
                 `).join('');
@@ -2594,7 +2632,7 @@
             } else {
                 userMgmt.innerHTML = userList.map(u => `
                         <div class="list-item" style="font-size:0.4rem" onclick="selectUserForDelete('${u}')">
-                            <span class="name">${allUsers[u].is_special ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
+                            <span class="name">${allUsers[u].is_special ? '<i class="fas fa-star ico-gold"></i> ' : ''}${allUsers[u].fullname || u}</span>
                             <span class="phone">${allUsers[u].phone || '—'}</span>
                             <span class="status">${selectedUserForDelete === u ? '✅ انتخاب شده' : ''}</span>
                         </div>
@@ -2608,7 +2646,7 @@
             } else {
                 accessCtrl.innerHTML = accessList.map(u => `
                         <div class="list-item" style="font-size:0.4rem">
-                            <span class="name">${allUsers[u].is_special ? '⭐ ' : ''}${allUsers[u].fullname || u}</span>
+                            <span class="name">${allUsers[u].is_special ? '<i class="fas fa-star ico-gold"></i> ' : ''}${allUsers[u].fullname || u}</span>
                             <span class="phone">${allUsers[u].phone || '—'}</span>
                             <span class="status" id="accessStatus_${u}">
                                 ${allUsers[u].can_access_command ? '✅ مجاز' : '❌ غیرمجاز'}
@@ -3156,7 +3194,7 @@
             loadAllData();
             updateTime();
             setInterval(updateTime, 1000);
-            setInterval(() => { loadAllData(); }, 15000);
+            setInterval(() => { loadAllData(); }, 20000);
 
             window.addEventListener('beforeunload', function(e) {
                 // best-effort log on close
@@ -3257,7 +3295,7 @@
 
     
         /* ===== خوانایی فرماندهی — فونت و فاصله بزرگ‌تر ===== */
-        body { font-size: 16px !important; }
+        body { font-size: 16px !important; font-family: 'Vazirmatn', Tahoma, sans-serif !important; }
         .sidebar { width: 200px !important; }
         .sidebar .logo { font-size: 1rem !important; }
         .sidebar .nav-item, .sidebar a, .tab-btn, .side-btn {
@@ -3333,6 +3371,22 @@
             .list-item { font-size: 0.88rem !important; padding: 0.55rem !important; }
             .sidebar .nav-item, .tab-btn { font-size: 0.9rem !important; padding: 0.65rem !important; }
         }
+
+    
+        /* آیکون‌های رنگی بدون ایموجی */
+        .list-item .name i, .list-title i, .launch-title i, .tab-btn i, .nav-item i, .monitor-title i {
+            margin-left: 0.35rem;
+        }
+        .ico-green { color: #39ff14 !important; }
+        .ico-gold { color: #e8c95c !important; }
+        .ico-cyan { color: #4a8aaa !important; }
+        .ico-red { color: #e74c3c !important; }
+        .ico-orange { color: #e67e22 !important; }
+        .ico-purple { color: #9b59b6 !important; }
+        .status-online { color: #39ff14; font-weight: 700; }
+        .status-offline { color: #7a9aaa; }
+        .status-pending { color: #e8c95c; }
+        .status-special { color: #e8c95c; }
 
     </style>
                 </head>
