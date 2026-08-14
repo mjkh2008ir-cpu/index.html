@@ -282,6 +282,24 @@
         html, body, button, input, select, textarea {
             font-family: 'Vazirmatn', Tahoma, sans-serif !important;
         }
+    
+        /* آیکون رنگی — بدون ایموجی */
+        .ico-g{color:#39ff14!important}
+        .ico-gold{color:#c8a000!important}
+        .ico-red{color:#e74c3c!important}
+        .ico-cyan{color:#4a8aaa!important}
+        .ico-orange{color:#e67e22!important}
+        .nav-item i,.page-title i,.post-hdr .arrow i{margin-left:0.25rem}
+        .nav-item.active i{color:#39ff14}
+        .page-title i{color:#c8a000}
+        .btn i,.profile-edit i{margin-left:0.3rem}
+        .post{transition:border-color .2s,box-shadow .2s}
+        .post:hover{border-color:rgba(57,255,20,.35);box-shadow:0 0 12px rgba(57,255,20,.06)}
+        .game-card{transition:transform .15s,box-shadow .15s}
+        .game-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+        .ai-card{transition:border-color .2s}
+        .ai-card:hover{border-color:var(--neon)}
+
     </style>
 </head>
 <body>
@@ -411,7 +429,7 @@
 <button class="close" onclick="toggleUserPanel()" style="font-size:1.5rem;width:2.4rem;height:2.4rem;line-height:1"><i class="fas fa-times"></i></button>
 <div class="profile-header">
 <span class="avatar" id="profileAvatar"><i class="fas fa-user"></i></span>
-<div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none">⭐</span></div>
+<div class="name" id="profileName">کاربر مهمان <span class="special-star" id="profileSpecial" style="display:none"><i class="fas fa-star ico-gold"></i></span></div>
 <span class="level" id="profileLevel">سرباز</span>
 <span class="xp" id="profileXP">XP: 0</span>
 </div>
@@ -579,7 +597,7 @@
         { name: 'سروان', xp: 150 }, { name: 'سرگرد', xp: 250 }, { name: 'سرهنگ', xp: 400 }, { name: 'سردار', xp: 600 } ];
 
         function getUserLevel(xp, isSpecial) {
-            if (isSpecial) return { name: '🎖️ سردار', xp: 0 };
+            if (isSpecial) return { name: '<i class="fas fa-medal ico-gold"></i> سردار', xp: 0 };
             let level = LEVELS[0];
             for (let l of LEVELS) { if (xp >= l.xp) level = l; }
             return level;
@@ -669,7 +687,7 @@
             const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
             el.innerHTML = list.map((u, i) => `
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:0.15rem 0;border-bottom:1px solid var(--br)">
-                    <span>${medals[i] || (i+1)} <i class="fas ${u.avatar || 'fa-user'}"></i> ${u.fullname || u.username} ${u.is_special ? '⭐' : ''}</span>
+                    <span>${medals[i] || (i+1)} <i class="fas ${u.avatar || 'fa-user'}"></i> ${u.fullname || u.username} ${u.is_special ? '<i class="fas fa-star ico-gold"></i>' : ''}</span>
                     <span style="color:var(--neon);font-family:monospace">${u.xp || 0} XP</span>
                 </div>
             `).join('');
@@ -754,7 +772,7 @@
         function showTutorialStep() {
             if (tutorialStep >= tutorialSteps.length) {
                 document.getElementById('tutorialContent').innerHTML =
-                    `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🎖️</div><h3 style="color:var(--gold)">آموزش کامل شد!</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">حالا با همه بخش‌های قرارگاه آشنا شدی.<br>برو و از امکانات استفاده کن. موفق باشی سرباز! 💪</p><button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button></div>`;
+                    `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem"><i class="fas fa-medal ico-gold"></i></div><h3 style="color:var(--gold)">آموزش کامل شد!</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">حالا با همه بخش‌های قرارگاه آشنا شدی.<br>برو و از امکانات استفاده کن. موفق باشی سرباز! 💪</p><button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button></div>`;
                 return;
             }
             const step = tutorialSteps[tutorialStep];
@@ -803,7 +821,7 @@
                 return `
                     <div class="post">
                         <div class="post-hdr" onclick="togglePost('${uid}', this)">
-                            <span class="title"><i class="fas fa-question-circle"></i> ${isSpecialSender ? '⭐ ' : ''}${p.shobe || 'بدون عنوان'}</span>
+                            <span class="title"><i class="fas fa-question-circle"></i> ${isSpecialSender ? '<i class="fas fa-star ico-gold"></i> ' : ''}${p.shobe || 'بدون عنوان'}</span>
                             <span class="arrow"><i class="fas fa-chevron-down"></i></span>
                         </div>
                         <div class="post-body" id="${uid}">
@@ -811,7 +829,7 @@
                             <div class="meta">
                                 ${p.source ? `<span><i class="fas fa-book"></i> ${p.source}</span>` : ''}
                                 ${p.cat ? `<span><i class="fas fa-tag"></i> ${p.cat}</span>` : ''}
-                                ${p.sender ? `<span><i class="fas fa-user"></i> ${p.sender} ${isSpecialSender ? '⭐' : ''}</span>` : ''}
+                                ${p.sender ? `<span><i class="fas fa-user"></i> ${p.sender} ${isSpecialSender ? '<i class="fas fa-star ico-gold"></i>' : ''}</span>` : ''}
                                 ${p.date ? `<span><i class="fas fa-calendar"></i> ${p.date}</span>` : ''}
                                 ${updatedAt ? `<span><i class="fas fa-edit"></i> ${updatedAt}</span>` : ''}
                                 ${views ? `<span><i class="fas fa-eye"></i> ${views}</span>` : ''}
@@ -829,7 +847,7 @@
                                 <div id="comments${i}">
                                     ${(p.comments || []).map(c => `
                                         <div class="cmt">
-                                            <span class="cmt-user"><i class="fas ${allUsers[c.user]?.avatar || 'fa-user'}"></i> ${c.user || 'ناشناس'} ${allUsers[c.user]?.is_special ? '⭐' : ''}</span>
+                                            <span class="cmt-user"><i class="fas ${allUsers[c.user]?.avatar || 'fa-user'}"></i> ${c.user || 'ناشناس'} ${allUsers[c.user]?.is_special ? '<i class="fas fa-star ico-gold"></i>' : ''}</span>
                                             <span class="cmt-text">: ${c.text}</span>
                                             ${(c.replies || []).map(r => `
                                                 <div class="cmt-reply"><i class="fas fa-reply" style="color:var(--gold);font-size:.4rem"></i> <span style="color:var(--gold)">${r.user}</span>: ${r.text}</div>
@@ -1259,7 +1277,7 @@
                 const u = allUsers[loggedUser];
                 nameEl.textContent = u?.fullname || loggedUser;
                 const level = getUserLevel(u?.xp || 0, u?.is_special || false);
-                levelEl.textContent = level.name + (u?.is_special ? ' ⭐' : '');
+                levelEl.textContent = level.name + (u?.is_special ? ' <i class="fas fa-star ico-gold"></i>' : '');
                 avatarEl.innerHTML = `<i class="fas ${u?.avatar || 'fa-user'}"></i>`;
             } else {
                 nameEl.textContent = 'ورود';
@@ -1289,9 +1307,9 @@
             const isSpecial = !!(u.is_special);
             const fullname = u.fullname || loggedUser;
             set('profileAvatar', '<i class="fas ' + (u.avatar || 'fa-user') + '"></i>', true);
-            document.getElementById('profileName').innerHTML = fullname + ' <span class="special-star" id="profileSpecial" style="display:' + (isSpecial ? 'inline' : 'none') + '">⭐</span>';
+            document.getElementById('profileName').innerHTML = fullname + ' <span class="special-star" id="profileSpecial" style="display:' + (isSpecial ? 'inline' : 'none') + '"><i class="fas fa-star ico-gold"></i></span>';
             const level = getUserLevel(u.xp || 0, isSpecial);
-            set('profileLevel', isSpecial ? ('🎖️ ' + level.name) : level.name);
+            set('profileLevel', isSpecial ? ('<i class="fas fa-medal ico-gold"></i> ' + level.name) : level.name);
             set('profileXP', 'XP: ' + (u.xp || 0));
 
             // آمار واقعی
@@ -1394,14 +1412,14 @@
             allUsers[username] = savedUser ? { ...userData, ...savedUser } : userData;
             if (isSpecial) {
                 document.getElementById('authMsg').textContent =
-                    `🎖️ سردار گرامی ${special.name}، به قرارگاه پدافند شبهات خوش آمدید! ۱۰۰۰ XP دریافت کردید.`;
+                    `<i class="fas fa-medal ico-gold"></i> سردار گرامی ${special.name}، به قرارگاه پدافند شبهات خوش آمدید! ۱۰۰۰ XP دریافت کردید.`;
                 document.getElementById('authMsg').style.color = '#c8a000';
                 await saveToSupabase('inbox', {
                     user: username,
                     from_user: 'سیستم',
                     from_type: 'system',
-                    subject: '🎖️ خوش‌آمدگویی ویژه',
-                    body: `سردار گرامی ${special.name}\n\nبه قرارگاه پدافند شبهات خوش آمدید.\n\nشما به عنوان یکی از فرماندهان ارشد این مجموعه، از امکانات ویژه برخوردار هستید:\n- 🎖️ درجه سردار\n- ⭐ نشان ویژه در پروفایل\n- 🚀 ۱۰۰۰ XP جایزه\n- 🔓 دسترسی کامل به همه بخش‌ها\n\nاز همراهی شما سپاسگزاریم.`,
+                    subject: '<i class="fas fa-medal ico-gold"></i> خوش‌آمدگویی ویژه',
+                    body: `سردار گرامی ${special.name}\n\nبه قرارگاه پدافند شبهات خوش آمدید.\n\nشما به عنوان یکی از فرماندهان ارشد این مجموعه، از امکانات ویژه برخوردار هستید:\n- <i class="fas fa-medal ico-gold"></i> درجه سردار\n- <i class="fas fa-star ico-gold"></i> نشان ویژه در پروفایل\n- 🚀 ۱۰۰۰ XP جایزه\n- 🔓 دسترسی کامل به همه بخش‌ها\n\nاز همراهی شما سپاسگزاریم.`,
                     read: false,
                     date: new Date().toLocaleString('fa-IR')
                 });
@@ -1413,7 +1431,7 @@
                     from_user: 'سیستم',
                     from_type: 'system',
                     subject: 'خوش‌آمدگویی',
-                    body: '🎖️ به قرارگاه پدافند شبهات خوش آمدید!\n\n🛡️ مأموریت: پاسخ به شبهات دینی، اعتقادی و سیاسی\n📚 روش: با زبانی ساده و مستند\n🎯 هدف: روشنگری و دفاع از مرزهای اعتقادی\n\n⭐ ۱۰ XP جایزه به شما تعلق گرفت.',
+                    body: '<i class="fas fa-medal ico-gold"></i> به قرارگاه پدافند شبهات خوش آمدید!\n\n🛡️ مأموریت: پاسخ به شبهات دینی، اعتقادی و سیاسی\n📚 روش: با زبانی ساده و مستند\n🎯 هدف: روشنگری و دفاع از مرزهای اعتقادی\n\n<i class="fas fa-star ico-gold"></i> ۱۰ XP جایزه به شما تعلق گرفت.',
                     read: false,
                     date: new Date().toLocaleString('fa-IR')
                 });
