@@ -2070,7 +2070,11 @@
             const ctrl = new AbortController();
             const to = setTimeout(() => ctrl.abort(), 12000);
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
+                let q = `${SUPABASE_URL}/rest/v1/${table}?select=*`;
+                if (['posts','messages','inbox','reports','commander_log','users'].includes(table)) {
+                    q += '&order=id.desc';
+                }
+                const res = await fetch(q, {
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                     signal: ctrl.signal
                 });
@@ -2294,21 +2298,24 @@
             }
 
             const postsContainer = document.getElementById('postsList');
-            if (!allPosts.length) {
+            if (postsContainer) {
+            if (!allPosts || !allPosts.length) {
                 postsContainer.innerHTML =
-                    '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ مطلبی ارسال نشده</div>';
+                    '<div style="color:var(--text-secondary);text-align:center;padding:0.5rem">هیچ مطلبی ارسال نشده</div>';
             } else {
-                postsContainer.innerHTML = allPosts.slice(0, 30).map((p, i) => `
+                postsContainer.innerHTML = allPosts.map((p, i) => `
                         <div class="list-item" onclick="showPostDetail(${i})" style="cursor:pointer">
-                            <span class="name">${(p.shobe || 'بدون عنوان').substring(0, 30)}...</span>
-                            <span class="role">${p.cat || 'عمومی'} • ❤️ ${p.likes || 0}</span>
+                            <span class="name">${(p.shobe || 'بدون عنوان').substring(0, 45)}</span>
+                            <span class="role">${p.cat || 'عمومی'} • <i class="fas fa-heart ico-red"></i> ${p.likes || 0}</span>
                             <button class="edit-btn" onclick="event.stopPropagation();editPost(${i})"><i class="fas fa-edit"></i></button>
                             <button class="del-btn" onclick="event.stopPropagation();deletePost(${i})"><i class="fas fa-trash"></i></button>
                         </div>
                     `).join('');
             }
+            } // end postsContainer
 
-            document.getElementById('onlineUsers').innerHTML = userList.slice(0, 4).map(u => `
+            const onlineEl = document.getElementById('onlineUsers');
+            if (onlineEl) onlineEl.innerHTML = userList.slice(0, 4).map(u => `
                     <div class="list-item">
                         <span class="name">${allUsers[u].is_special ? '<i class="fas fa-star ico-gold"></i> ' : ''}${allUsers[u].fullname || u}</span>
                         <span class="status">🟢</span>
@@ -2375,6 +2382,7 @@
 
         function updateCommanderLog() {
             const container = document.getElementById('commanderLogList');
+            if (!container) return;
             const log = allCommanderLog || [];
             if (!log.length) {
                 container.innerHTML =
@@ -2535,14 +2543,15 @@
 
         function updateIncomingMessages() {
             const container = document.getElementById('incomingList');
-            if (!allMessages.length) {
+            if (!container) return;
+            if (!allMessages || !allMessages.length) {
                 container.innerHTML =
-                    '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ شبهه‌ای از سوی مردم ارسال نشده</div>';
+                    '<div style="color:var(--text-secondary);text-align:center;padding:0.5rem">هیچ شبهه‌ای از سوی مردم ارسال نشده</div>';
                 return;
             }
             container.innerHTML = allMessages.map((m, i) => `
                     <div class="list-item" onclick="showMessageDetail(${i})" style="cursor:pointer">
-                        <span class="name">❓ ${(m.shobe || 'بدون عنوان').substring(0, 28)}...</span>
+                        <span class="name"><i class="fas fa-question-circle ico-gold"></i> ${(m.shobe || 'بدون عنوان').substring(0, 40)}</span>
                         <span class="role">${m.category || 'عمومی'} • ${m.priority || 'عادی'}</span>
                         <span class="status">${m.status || 'در انتظار'}</span>
                         <button class="approve-btn" onclick="event.stopPropagation();approveMessage(${i})"><i class="fas fa-check"></i></button>
@@ -3069,6 +3078,8 @@
             if (tab === 'kartabl') updateKartabl();
             updateKartabl();
             if (tab === 'reports') updateReports();
+            if (tab === 'posts') updateLists();
+            if (tab === 'dashboard') updateAll();
             if (tab === 'settings') updateSettings();
         }
 
