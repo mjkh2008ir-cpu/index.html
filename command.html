@@ -1281,6 +1281,54 @@
             padding: 0.55rem !important;
         }
         .tab-content { padding-bottom: 1rem; }
+    
+        /* تم بهتر فرماندهی */
+        :root {
+            --bg-primary: #050a08 !important;
+            --bg-secondary: #0c1610 !important;
+            --bg-card: #0e1a12 !important;
+            --border-military: #1e3a28 !important;
+            --neon-green: #39ff14 !important;
+            --gold: #e8c95c !important;
+            --text-primary: #e2f0e4 !important;
+            --text-secondary: #8aaa90 !important;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #0c1610 0%, #050a08 100%) !important;
+            border-left: 1px solid rgba(57,255,20,0.2) !important;
+        }
+        .sidebar .nav-item {
+            border-radius: 8px !important;
+            margin: 0.2rem 0.4rem !important;
+        }
+        .sidebar .nav-item:hover, .sidebar .nav-item.active {
+            background: rgba(57,255,20,0.1) !important;
+            color: #39ff14 !important;
+        }
+        .list-container, .launch-section, .monitor-container, .stat-card {
+            background: linear-gradient(145deg, rgba(14,26,18,.95), rgba(8,16,12,.98)) !important;
+            border: 1px solid rgba(57,255,20,0.18) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,.35) !important;
+        }
+        .list-item {
+            border-radius: 8px !important;
+            border: 1px solid rgba(120,160,100,0.12) !important;
+            background: rgba(0,0,0,0.2) !important;
+        }
+        .list-item:hover {
+            background: rgba(57,255,20,0.08) !important;
+            border-color: rgba(57,255,20,0.3) !important;
+        }
+        .list-title {
+            color: #e8c95c !important;
+            border-bottom: 1px solid rgba(232,201,92,0.2) !important;
+            padding-bottom: 0.35rem !important;
+        }
+        .main {
+            background: radial-gradient(ellipse at top, #0a1410 0%, #050a08 50%) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -1781,13 +1829,6 @@
                 </div>
             </div>
 
-            <div class="list-container">
-                <div class="list-title"><i class="fas fa-clock"></i> آخرین ورود/خروج فرماندهان</div>
-                <div id="commanderLogList">
-                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div id="tab-launch" class="tab-content" style="display:none">
@@ -1831,15 +1872,21 @@
             </div>
         </div>
 
-        <div id="tab-commanders" class="tab-content" style="display:none">
+                <div id="tab-commanders" class="tab-content" style="display:none">
             <div class="list-container">
-                <div class="list-title"><i class="fas fa-star"></i> فرماندهان <span style="font-size:0.3rem;color:var(--text-secondary)">(ورود/خروج ثبت می‌شود)</span></div>
+                <div class="list-title"><i class="fas fa-star ico-gold"></i> فرماندهان</div>
                 <div id="commandersList">
-                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
-                    </div>
+                    <div style="color:var(--text-secondary);text-align:center;padding:0.4rem">در حال بارگذاری...</div>
+                </div>
+            </div>
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-history ico-cyan"></i> تاریخچه ورود و خروج</div>
+                <div id="commanderLogList">
+                    <div style="color:var(--text-secondary);text-align:center;padding:0.4rem">در حال بارگذاری...</div>
                 </div>
             </div>
         </div>
+
 
         <div id="tab-comments" class="tab-content" style="display:none">
             <div class="list-container">
@@ -3428,6 +3475,54 @@
             padding: 0.55rem !important;
         }
         .tab-content { padding-bottom: 1rem; }
+    
+        /* تم بهتر فرماندهی */
+        :root {
+            --bg-primary: #050a08 !important;
+            --bg-secondary: #0c1610 !important;
+            --bg-card: #0e1a12 !important;
+            --border-military: #1e3a28 !important;
+            --neon-green: #39ff14 !important;
+            --gold: #e8c95c !important;
+            --text-primary: #e2f0e4 !important;
+            --text-secondary: #8aaa90 !important;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #0c1610 0%, #050a08 100%) !important;
+            border-left: 1px solid rgba(57,255,20,0.2) !important;
+        }
+        .sidebar .nav-item {
+            border-radius: 8px !important;
+            margin: 0.2rem 0.4rem !important;
+        }
+        .sidebar .nav-item:hover, .sidebar .nav-item.active {
+            background: rgba(57,255,20,0.1) !important;
+            color: #39ff14 !important;
+        }
+        .list-container, .launch-section, .monitor-container, .stat-card {
+            background: linear-gradient(145deg, rgba(14,26,18,.95), rgba(8,16,12,.98)) !important;
+            border: 1px solid rgba(57,255,20,0.18) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,.35) !important;
+        }
+        .list-item {
+            border-radius: 8px !important;
+            border: 1px solid rgba(120,160,100,0.12) !important;
+            background: rgba(0,0,0,0.2) !important;
+        }
+        .list-item:hover {
+            background: rgba(57,255,20,0.08) !important;
+            border-color: rgba(57,255,20,0.3) !important;
+        }
+        .list-title {
+            color: #e8c95c !important;
+            border-bottom: 1px solid rgba(232,201,92,0.2) !important;
+            padding-bottom: 0.35rem !important;
+        }
+        .main {
+            background: radial-gradient(ellipse at top, #0a1410 0%, #050a08 50%) !important;
+        }
+
     </style>
                 </head>
                 <body>
