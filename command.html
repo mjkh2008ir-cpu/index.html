@@ -1275,30 +1275,45 @@
                             <b style="color:#e8c95c">رصد فضای مجازی</b><span>GLOBAL OPS MAP</span>
                         </div>
                         <div style="position:relative;height:110px">
-                            <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.85">
-  <rect width="1000" height="500" fill="#060e08"/>
-  <!-- simplified continents as paths - military green -->
-  <g fill="#1a4a28" stroke="#39ff14" stroke-width="1.2" opacity="0.9">
-    <!-- N America -->
-    <path d="M120,80 L200,60 L280,90 L300,150 L260,200 L180,220 L120,180 L90,120 Z"/>
-    <!-- S America -->
-    <path d="M220,240 L260,230 L280,300 L250,380 L220,400 L200,350 L210,280 Z"/>
+                            <svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <defs>
+    <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a1a12"/>
+      <stop offset="100%" stop-color="#061008"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="180" fill="url(#ocean)"/>
+  <!-- grid -->
+  <g stroke="rgba(57,255,20,0.06)" stroke-width="0.3">
+    <line x1="0" y1="45" x2="360" y2="45"/><line x1="0" y1="90" x2="360" y2="90"/><line x1="0" y1="135" x2="360" y2="135"/>
+    <line x1="90" y1="0" x2="90" y2="180"/><line x1="180" y1="0" x2="180" y2="180"/><line x1="270" y1="0" x2="270" y2="180"/>
+  </g>
+  <g fill="#1e5c32" stroke="#39ff14" stroke-width="0.6" stroke-linejoin="round">
+    <!-- North America -->
+    <path d="M50,35 L75,28 L95,32 L110,40 L118,55 L105,70 L95,78 L70,85 L55,75 L48,60 L42,45 Z"/>
+    <path d="M70,85 L85,90 L80,110 L65,120 L55,105 L60,92 Z"/>
+    <!-- South America -->
+    <path d="M95,115 L108,110 L115,125 L112,150 L100,165 L92,155 L90,130 Z"/>
     <!-- Europe -->
-    <path d="M480,70 L540,60 L560,100 L530,130 L480,120 Z"/>
+    <path d="M165,38 L185,35 L195,42 L190,55 L175,58 L165,50 Z"/>
     <!-- Africa -->
-    <path d="M480,150 L560,140 L580,220 L550,320 L500,340 L470,280 L470,200 Z"/>
+    <path d="M170,65 L195,62 L205,80 L200,110 L185,125 L170,120 L165,95 L168,75 Z"/>
     <!-- Asia -->
-    <path d="M560,50 L750,40 L850,80 L880,150 L800,200 L700,180 L620,160 L560,120 Z"/>
+    <path d="M195,30 L240,25 L280,35 L300,50 L290,70 L260,75 L230,68 L200,55 L195,40 Z"/>
+    <path d="M260,75 L285,80 L295,100 L275,105 L255,95 Z"/>
     <!-- Australia -->
-    <path d="M780,300 L860,290 L880,340 L840,360 L780,340 Z"/>
+    <path d="M290,120 L320,115 L330,130 L315,140 L295,135 Z"/>
+    <!-- Greenland -->
+    <path d="M130,20 L145,18 L150,30 L135,35 Z"/>
   </g>
-  <g fill="#39ff14">
-    <circle cx="520" cy="110" r="4"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/></circle>
-    <circle cx="700" cy="120" r="4"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.4s" repeatCount="indefinite"/></circle>
-    <circle cx="240" cy="140" r="3.5"><animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite"/></circle>
-    <circle cx="820" cy="320" r="3"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.1s" repeatCount="indefinite"/></circle>
+  <g>
+    <circle cx="100" cy="55" r="2.2" fill="#39ff14"><animate attributeName="opacity" values="1;0.25;1" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="180" cy="48" r="2.2" fill="#e8c95c"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.3s" repeatCount="indefinite"/></circle>
+    <circle cx="250" cy="50" r="2.2" fill="#39ff14"><animate attributeName="opacity" values="1;0.2;1" dur="1.9s" repeatCount="indefinite"/></circle>
+    <circle cx="310" cy="125" r="2" fill="#e8c95c"><animate attributeName="opacity" values="0.25;1;0.25" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="100" cy="140" r="2" fill="#39ff14"><animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/></circle>
   </g>
-  <text x="20" y="480" fill="#5a7a65" font-size="14" font-family="monospace">GLOBAL OPS · WIKI-STYLE MAP</text>
+  <text x="8" y="172" fill="#5a7a65" font-size="7" font-family="monospace">GLOBAL OPS MAP</text>
 </svg>
                             <div style="position:absolute;bottom:4px;left:8px;font-size:0.28rem;color:#5a7a65;font-family:monospace">SIG ACTIVE</div>
                         </div>
