@@ -354,7 +354,7 @@
 <button type="button" onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
 
     <!-- ===== NAV ===== -->
-    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
+    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" data-page="about"><i class="fas fa-shield-alt"></i> آشنایی</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
 
     <!-- ===== FAB ===== -->
     <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
@@ -366,6 +366,7 @@
         <button class="nav-item" onclick="switchPage('games')"><i class="fas fa-gamepad"></i><span>بازی</span></button>
         <button class="nav-item" onclick="switchPage('ai')"><i class="fas fa-robot"></i><span>AI</span></button>
         <button class="nav-item" onclick="switchPage('saved')"><i class="fas fa-box"></i><span>ذخیره</span></button>
+        <button class="nav-item" onclick="switchPage('about')"><i class="fas fa-shield-alt"></i><span>آشنایی</span></button>
         <button class="nav-item" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i><span>ارسال</span></button>
         <button class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></button>
     </div>
@@ -374,7 +375,7 @@
     <div id="content">
 
         <!-- HOME -->
-        <div id="page-home" class="page active">
+        <div id="page-home" class="page active"><div id="connStatus" style="display:none;background:rgba(192,57,43,.15);border:1px solid #c0392b;color:#e8a0a0;padding:0.4rem;border-radius:6px;margin-bottom:0.4rem;font-size:.65rem;text-align:center"></div>
             <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
             <div class="pie-launcher" id="pieLauncher" style="display:none"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
             <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span></div>
@@ -421,13 +422,34 @@
 <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">صندوق پیام چیست؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">پیام‌های فرماندهی، آموزش و پاسخ‌ها آنجا می‌آید. بج قرمز یعنی پیام خوانده‌نشده داری.</div></div></div>
 <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">حساب ویژه / سردار چیست؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">برخی شماره‌ها حساب ویژه دارند با امکانات بیشتر. اگر واجد شرایط باشی بعد از ثبت‌نام فعال می‌شود.</div></div></div>
 <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">داده‌های من امن است؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">طبق حریم خصوصی، اطلاعات برای ارائه خدمت نگهداری می‌شود. رمز را با کسی در میان نگذار. درخواست حذف حساب از طریق پیام به فرماندهی امکان‌پذیر است.</div></div></div>
-<div class="page-title" style="margin-top:1rem"><i class="fas fa-info-circle"></i> درباره قرارگاه</div>
-<div style="background:var(--bgp);border:1px solid var(--br);border-radius:6px;padding:0.6rem;font-size:.65rem;line-height:1.9;color:var(--tp)">
-<strong style="color:var(--gold)">پدافند شبهات</strong> سامانه‌ای برای پاسخ مستند به شبهات دینی و اعتقادی است.
-هدف: روشنگری، آموزش و مشارکت کاربران در فضای سالم.
-محتوای منتشرشده جنبه اطلاع‌رسانی دارد و جایگزین مشورت تخصصی نیست.
 </div>
-</div>
+
+        <div id="page-about" class="page">
+            <div class="page-title"><i class="fas fa-shield-alt"></i> آشنایی با پدافند شبهات</div>
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.85rem;font-size:.72rem;line-height:2;color:var(--tp);border-right:3px solid var(--gold)">
+                <p style="margin-bottom:0.7rem"><strong style="color:var(--gold)">پدافند شبهات</strong> در بحبوحه جنگ ۱۲ روزه، در <strong>۲ تیر ۱۴۰۴</strong> شکل گرفت.</p>
+                <p style="margin-bottom:0.7rem">در روزهایی که فضای جامعه و رسانه‌ها پر از خبر، تحلیل، ادعا و البته شبهات مختلف بود، تیمی از طلاب دغدغه‌مند تصمیم گرفتند بخشی از توان خود را برای پاسخ‌گویی به پرسش‌ها و شبهاتی که در میان مردم مطرح می‌شد، به کار بگیرند.</p>
+                <p style="margin-bottom:0.7rem">از همان ابتدا، هدف روشن بود:<br>
+                پاسخ به شبهات <strong>اعتقادی، دینی، سیاسی، اجتماعی</strong> و موضوعات روز؛ با زبانی روشن و قابل فهم برای عموم مردم.</p>
+                <p style="margin-bottom:0.7rem">فعالیت «پدافند شبهات» با راه‌اندازی کانال ایتا آغاز شد. پس از آن، دامنه فعالیت مجموعه به ویراستی و سپس روبیکا گسترش پیدا کرد تا مطالب و پاسخ‌ها در دسترس مخاطبان بیشتری قرار بگیرد.</p>
+                <p style="margin-bottom:0.7rem">امروز این مسیر در حال وارد شدن به مرحله‌ای تازه است؛ <strong>سایت و ربات</strong> پدافند شبهات نیز در حال راه‌اندازی هستند تا دسترسی به مطالب، پاسخ‌ها و خدمات مجموعه ساده‌تر و گسترده‌تر شود.</p>
+                <p style="margin-bottom:0.7rem">نام «پدافند شبهات» از همان روز نخست انتخاب شد و از ابتدا قرار بود این عنوان، بیانگر یک رویکرد باشد:</p>
+                <blockquote style="margin:0.6rem 0;padding:0.55rem 0.75rem;background:rgba(57,255,20,0.06);border-right:3px solid var(--neon);border-radius:4px;color:var(--gold);font-size:.7rem">
+                    در برابر شبهه، قبل از آنکه تردید ریشه بدواند، باید پاسخ درست را پیدا کرد.
+                </blockquote>
+                <p style="margin-bottom:0.7rem">پدافند شبهات امروز یک مسیر در حال رشد است؛ مسیری که از یک جمع کوچک و دغدغه‌مند آغاز شد و تلاش می‌کند با استفاده از ظرفیت فضای مجازی، پاسخ‌گویی به شبهات را برای عموم مردم ساده‌تر، سریع‌تر و قابل دسترس‌تر کند.</p>
+                <p style="text-align:center;margin-top:1rem;color:var(--neon);font-weight:700;font-size:.8rem">
+                    <i class="fas fa-shield-alt"></i> پدافند شبهات<br>
+                    <span style="color:var(--ts);font-weight:500;font-size:.65rem">برای هر شبهه، یک پاسخ روشن.</span>
+                </p>
+            </div>
+            <div style="margin-top:0.7rem;display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center">
+                <a href="https://eitaa.com/padafand_shobahat" target="_blank" rel="noopener" class="btn" style="font-size:.65rem;text-decoration:none"><i class="fas fa-broadcast-tower"></i> کانال ایتا</a>
+                <a href="https://t.me/padafand_shobahat" target="_blank" rel="noopener" class="btn btn-gold" style="font-size:.65rem;text-decoration:none"><i class="fab fa-telegram"></i> تلگرام</a>
+                <a href="https://takl.ink/padafand_shobahat/" target="_blank" rel="noopener" class="btn" style="font-size:.65rem;text-decoration:none"><i class="fas fa-link"></i> همه پیام‌رسان‌ها</a>
+            </div>
+        </div>
+
 
         <div id="page-saved" class="page"><div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div><div id="savedContainer"></div></div>
 
@@ -682,7 +704,11 @@
                 }
             } catch (e) {
                 console.error('loadAllData', e);
+                const tip = document.getElementById('connStatus');
+                if (tip) { tip.style.display='block'; tip.textContent='⚠️ ارتباط با سرور برقرار نیست — اتصال اینترنت یا وضعیت Supabase را بررسی کنید'; }
             }
+            const tip = document.getElementById('connStatus');
+            if (tip) tip.style.display = 'none';
         }
 
 
@@ -813,7 +839,7 @@
             document.getElementById(`page-${page}`).classList.add('active');
             document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.nav-btn[data-page]');
-            const map = { home: 0, posts: 1, games: 2, ai: 3, saved: 4, faq: 5 };
+            const map = { home: 0, posts: 1, games: 2, ai: 3, saved: 4, faq: 5, about: 6 };
             if (btns[map[page]]) btns[map[page]].classList.add('active');
             document.querySelectorAll('.sidebar-nav .nav-item').forEach(b => b.classList.remove('active'));
             const sMap = { home: 0, posts: 1, games: 2, ai: 3, saved: 4 };
