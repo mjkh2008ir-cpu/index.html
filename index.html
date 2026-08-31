@@ -325,6 +325,15 @@
         .inbox-btn i{color:#c8a000;font-size:1.1rem}
         .inbox-btn .badge{animation:iconPop 1.5s ease infinite}
 
+    
+        .reader-modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:0.6rem}
+        .reader-modal.show{display:flex}
+        .reader-box{background:var(--bgp);border:1px solid var(--neon);border-radius:12px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:1rem 1.1rem;box-shadow:0 0 40px rgba(57,255,20,.15)}
+        .reader-box h2{color:var(--gold);font-size:.95rem;line-height:1.8;margin:0 0 0.7rem;border-bottom:1px solid var(--br);padding-bottom:0.5rem}
+        .reader-box .reader-ans{color:var(--tp);font-size:.85rem;line-height:2;margin-bottom:0.8rem}
+        .reader-box .reader-meta{font-size:.6rem;color:var(--ts);display:flex;flex-wrap:wrap;gap:0.4rem}
+        .reader-close{float:left;background:transparent;border:1px solid var(--br);color:var(--tp);border-radius:8px;padding:0.25rem 0.55rem;cursor:pointer;font-size:.7rem}
+        .btn-read{background:transparent;border:1px solid var(--am);color:var(--am);border-radius:6px;padding:0.2rem 0.45rem;font-size:.55rem;cursor:pointer;font-family:inherit;margin-left:0.2rem}
     </style>
 </head>
 <body>
@@ -573,6 +582,15 @@
         <div class="status-text">PADAFAND-SYS · ARCADE PIXEL MODE · LOOP</div>
     </div>
 </footer>
+<div class="reader-modal" id="readerModal" onclick="if(event.target===this)closeReader()">
+  <div class="reader-box">
+    <button type="button" class="reader-close" onclick="closeReader()"><i class="fas fa-times"></i> بستن</button>
+    <h2 id="readerTitle"></h2>
+    <div class="reader-ans" id="readerAns"></div>
+    <div class="reader-meta" id="readerMeta"></div>
+  </div>
+</div>
+
 
 
     <script>
@@ -677,10 +695,15 @@
         { name: 'سروان', xp: 150 }, { name: 'سرگرد', xp: 250 }, { name: 'سرهنگ', xp: 400 }, { name: 'سردار', xp: 600 } ];
 
         function getUserLevel(xp, isSpecial) {
-            if (isSpecial) return { name: '<i class="fas fa-medal ico-gold"></i> سردار', xp: 0 };
+            if (isSpecial) return { name: 'سردار', xp: 0, special: true };
             let level = LEVELS[0];
             for (let l of LEVELS) { if (xp >= l.xp) level = l; }
-            return level;
+            return { name: level.name, xp: level.xp, special: false };
+        }
+        function formatLevelHtml(level) {
+            if (!level) return 'سرباز';
+            if (level.special) return '<i class="fas fa-medal ico-gold"></i> ' + level.name;
+            return level.name;
         }
 
         // ===== THEME =====
@@ -989,70 +1012,95 @@
         function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
         // ===== POSTS =====
+        function getOpenPostIds() {
+            const ids = new Set();
+            document.querySelectorAll('.post-body.show').forEach(el => {
+                if (el.dataset.postId) ids.add(String(el.dataset.postId));
+            });
+            return ids;
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function openReader(index) {
+            const post = allPosts[index];
+            if (!post) return;
+            const modal = document.getElementById('readerModal');
+            if (!modal) return;
+            document.getElementById('readerTitle').textContent = post.shobe || 'شبهه';
+            document.getElementById('readerAns').innerHTML = escapeHtml(post.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>');
+            const meta = [];
+            if (post.source) meta.push('<i class="fas fa-book"></i> ' + escapeHtml(post.source));
+            if (post.cat) meta.push('<i class="fas fa-tag"></i> ' + escapeHtml(post.cat));
+            if (post.date) meta.push('<i class="fas fa-calendar"></i> ' + escapeHtml(String(post.date)));
+            document.getElementById('readerMeta').innerHTML = meta.join(' · ');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeReader() {
+            const modal = document.getElementById('readerModal');
+            if (modal) modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
         function renderPosts(list, containerId = 'postContainer') {
             const el = document.getElementById(containerId);
             if (!el) return;
+            const openIds = getOpenPostIds();
             if (!list || !list.length) {
                 el.innerHTML =
                     '<div style="text-align:center;padding:0.4rem;color:var(--ts);font-size:.6rem"><i class="fas fa-search"></i> مطلبی یافت نشد</div>';
                 return;
             }
             el.innerHTML = list.map((p, i) => {
-                const uid = `pb-${containerId}-${i}`;
+                const pid = String(p.id != null ? p.id : (containerId + '-' + i));
+                const uid = 'pb-' + containerId + '-' + pid;
+                const isOpen = openIds.has(pid);
                 const isLiked = loggedUser && (p.liked_by || []).includes(loggedUser);
-                const avatar = (p.sender && allUsers[p.sender]) ? allUsers[p.sender].avatar || 'fa-user' : 'fa-user';
                 const isSpecialSender = (p.sender && allUsers[p.sender] && allUsers[p.sender].is_special);
                 const views = p.views || 0;
                 const updatedAt = p.updated_at ? new Date(p.updated_at).toLocaleDateString('fa-IR') : '';
-                return `
-                    <div class="post">
-                        <div class="post-hdr" onclick="togglePost('${uid}', this)">
-                            <span class="title"><i class="fas fa-question-circle"></i> ${isSpecialSender ? '<i class="fas fa-star ico-gold"></i> ' : ''}${p.shobe || 'بدون عنوان'}</span>
-                            <span class="arrow"><i class="fas fa-chevron-down"></i></span>
-                        </div>
-                        <div class="post-body" id="${uid}">
-                            <div class="ans">${(p.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>')}</div>
-                            <div class="meta">
-                                ${p.source ? `<span><i class="fas fa-book"></i> ${p.source}</span>` : ''}
-                                ${p.cat ? `<span><i class="fas fa-tag"></i> ${p.cat}</span>` : ''}
-                                ${p.sender ? `<span><i class="fas fa-user"></i> ${p.sender} ${isSpecialSender ? '<i class="fas fa-star ico-gold"></i>' : ''}</span>` : ''}
-                                ${p.date ? `<span><i class="fas fa-calendar"></i> ${p.date}</span>` : ''}
-                                ${updatedAt ? `<span><i class="fas fa-edit"></i> ${updatedAt}</span>` : ''}
-                                ${views ? `<span><i class="fas fa-eye"></i> ${views}</span>` : ''}
-                            </div>
-                            <div class="tags">${(p.tags || []).map(t => `<span>#${t}</span>`).join('')}</div>
-                            <div class="post-actions">
-                                <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike(${i})">
-                                    <i class="fas fa-heart"></i> <span id="likeCount${i}">${p.likes || 0}</span>
-                                </button>
-                                <button onclick="saveToBox(${i})"><i class="fas fa-box"></i> ذخیره</button>
-                                <button onclick="sharePost(${i})"><i class="fas fa-share-alt"></i> اشتراک</button>
-                                <span id="savedMsg${i}" class="saved-msg"></span>
-                            </div>
-                            <div class="comments-section">
-                                <div id="comments${i}">
-                                    ${(p.comments || []).map(c => `
-                                        <div class="cmt">
-                                            <span class="cmt-user"><i class="fas ${allUsers[c.user]?.avatar || 'fa-user'}"></i> ${c.user || 'ناشناس'} ${allUsers[c.user]?.is_special ? '<i class="fas fa-star ico-gold"></i>' : ''}</span>
-                                            <span class="cmt-text">: ${c.text}</span>
-                                            ${(c.replies || []).map(r => `
-                                                <div class="cmt-reply"><i class="fas fa-reply" style="color:var(--gold);font-size:.4rem"></i> <span style="color:var(--gold)">${r.user}</span>: ${r.text}</div>
-                                            `).join('')}
-                                        </div>
-                                    `).join('')}
-                                </div>
-                                ${loggedUser ? `
-                                    <div class="comment-form">
-                                        <input type="text" id="cmtInput${i}" placeholder="نظرت رو بنویس...">
-                                        <button onclick="addComment(${i})"><i class="fas fa-paper-plane"></i> ارسال</button>
-                                    </div>
-                                ` : `<p style="font-size:.5rem;color:var(--ts)"><i class="fas fa-lock"></i> برای نظر دادن وارد حساب خود شوید</p>`}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const tags = Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' && p.tags ? p.tags.split(/[,\s]+/).filter(Boolean) : []);
+                const realIndex = allPosts.findIndex(x => String(x.id) === String(p.id));
+                const idx = realIndex >= 0 ? realIndex : i;
+                return (
+                    '<div class="post" data-post-id="' + pid + '">' +
+                    '<div class="post-hdr" onclick="togglePost(\'' + uid + '\', this)">' +
+                    '<span class="title"><i class="fas fa-question-circle"></i> ' + (isSpecialSender ? '<i class="fas fa-star ico-gold"></i> ' : '') + escapeHtml(p.shobe || 'بدون عنوان') + '</span>' +
+                    '<span class="arrow' + (isOpen ? ' open' : '') + '"><i class="fas fa-chevron-down"></i></span>' +
+                    '</div>' +
+                    '<div class="post-body' + (isOpen ? ' show' : '') + '" id="' + uid + '" data-post-id="' + pid + '">' +
+                    '<div class="ans">' + escapeHtml(p.answer || 'پاسخی ثبت نشده').replace(/\\n/g, '<br>').replace(/\n/g, '<br>') + '</div>' +
+                    '<div class="meta">' +
+                    (p.source ? '<span><i class="fas fa-book"></i> ' + escapeHtml(p.source) + '</span>' : '') +
+                    (p.cat ? '<span><i class="fas fa-tag"></i> ' + escapeHtml(p.cat) + '</span>' : '') +
+                    (p.sender ? '<span><i class="fas fa-user"></i> ' + escapeHtml(p.sender) + (isSpecialSender ? ' <i class="fas fa-star ico-gold"></i>' : '') + '</span>' : '') +
+                    (p.date ? '<span><i class="fas fa-calendar"></i> ' + escapeHtml(String(p.date)) + '</span>' : '') +
+                    (updatedAt ? '<span><i class="fas fa-edit"></i> ' + updatedAt + '</span>' : '') +
+                    (views ? '<span><i class="fas fa-eye"></i> ' + views + '</span>' : '') +
+                    '</div>' +
+                    '<div class="tags">' + tags.map(tg => '<span>#' + escapeHtml(String(tg)) + '</span>').join('') + '</div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.4rem;align-items:center">' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();openReader(' + idx + ')"><i class="fas fa-book-open"></i> حالت مطالعه</button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره</button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک</button>' +
+                    '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
+                    '</div>' +
+                    '<div class="comments" id="comments' + idx + '"></div>' +
+                    (loggedUser
+                        ? '<div class="comment-form"><input type="text" id="cmtInput' + idx + '" placeholder="نظرت رو بنویس..."><button type="button" onclick="addComment(' + idx + ')"><i class="fas fa-paper-plane"></i> ارسال</button></div>'
+                        : '<p style="font-size:.5rem;color:var(--ts)"><i class="fas fa-lock"></i> برای نظر دادن وارد حساب خود شوید</p>') +
+                    '</div></div>'
+                );
             }).join('');
-            document.getElementById('postCount').textContent = allPosts.length;
+            const pc = document.getElementById('postCount');
+            if (pc) pc.textContent = allPosts.length;
         }
 
         function togglePost(id, hdr) {
@@ -1509,7 +1557,7 @@
                 set('profileAvatar', '<i class="fas fa-user"></i>', true);
                 set('profileName', 'کاربر مهمان');
                 const ps = document.getElementById('profileSpecial'); if (ps) ps.style.display = 'none';
-                set('profileLevel', 'سرباز');
+                set('profileLevel', 'سرباز', true);
                 set('profileXP', 'XP: 0');
                 set('statComments', '0'); set('statLikes', '0'); set('statSaved', '0'); set('statDate', '—');
                 const ui = document.getElementById('userInfo'); if (ui) ui.style.display = 'none';
@@ -1522,7 +1570,7 @@
             set('profileAvatar', '<i class="fas ' + (u.avatar || 'fa-user') + '"></i>', true);
             document.getElementById('profileName').innerHTML = fullname + ' <span class="special-star" id="profileSpecial" style="display:' + (isSpecial ? 'inline' : 'none') + '"><i class="fas fa-star ico-gold"></i></span>';
             const level = getUserLevel(u.xp || 0, isSpecial);
-            set('profileLevel', isSpecial ? ('<i class="fas fa-medal ico-gold"></i> ' + level.name) : level.name);
+            set('profileLevel', formatLevelHtml(level), true);
             set('profileXP', 'XP: ' + (u.xp || 0));
 
             // آمار واقعی
