@@ -1839,6 +1839,15 @@
                     <button type="button" class="btn-msg" onclick="aiGenerateChannelPost()"><i class="fas fa-robot"></i> دستیار AI — مطلب تصادفی (قالب کانال)</button>
                     <button type="button" class="btn-msg" onclick="aiImproveLaunchDraft()"><i class="fas fa-magic"></i> بهبود پیش‌نویس فعلی</button>
                 </div>
+                <div style="background:rgba(232,201,92,0.06);border:1px solid rgba(232,201,92,0.25);border-radius:8px;padding:0.45rem;margin-bottom:0.45rem">
+                    <label style="font-size:0.35rem;color:var(--gold);display:block;margin-bottom:0.25rem"><i class="fab fa-telegram"></i> چسباندن پست از کانال تلگرام / ایتا</label>
+                    <textarea id="channelPasteRaw" rows="5" placeholder="متن پست کانال را اینجا بچسبانید (کپی از تلگرام/ایتا)..." style="width:100%;font-size:0.38rem;line-height:1.7"></textarea>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem">
+                        <button type="button" class="approve-btn" onclick="aiFormatChannelPaste()"><i class="fas fa-wand-magic-sparkles"></i> مرتب‌سازی با AI و پر کردن فرم</button>
+                        <button type="button" class="btn-msg" onclick="document.getElementById('channelPasteRaw').value=''">پاک کردن</button>
+                    </div>
+                    <p style="font-size:0.3rem;color:var(--text-secondary);margin-top:0.25rem;line-height:1.6">AI عنوان سوالی، متن ویراسته، هشتگ رسمی و منبع را استخراج/اصلاح می‌کند. انتشار فقط با تأیید شماست.</p>
+                </div>
                 <div id="launchAiStatus" style="font-size:0.35rem;color:var(--text-secondary);margin-bottom:0.35rem;min-height:1.1em"></div>
                 <label style="font-size:0.35rem;color:var(--gold)">عنوان (درشت)</label>
                 <input type="text" id="newShobe" placeholder="عنوان مطلب..." style="font-weight:700;font-size:0.55rem">
@@ -3286,6 +3295,44 @@ BODY:
             'شبهه درباره غیبت امام زمان عجل‌الله‌تعالی‌فرجه‌الشریف',
             'آیا تحریم‌ها فقط نتیجه سیاست داخلی است؟'
         ];
+
+
+        async function aiFormatChannelPaste() {
+            const st = document.getElementById('launchAiStatus');
+            const raw = (document.getElementById('channelPasteRaw')?.value || '').trim();
+            if (!raw) {
+                if (st) st.textContent = '⚠️ ابتدا متن پست کانال را بچسبانید';
+                return;
+            }
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال مرتب‌سازی و قالب‌بندی...';
+            const tagSample = ALL_CHANNEL_TAGS.join(' ');
+            const prompt = CHANNEL_POST_RULES + `
+
+این متن خام از کانال «پدافند شبهات» کپی شده است. آن را مرتب کن و دقیقاً در قالب خروجی TITLE/CATEGORY/SOURCE/TAGS/AUTHOR/BODY بده.
+
+قوانین اضافه:
+- TITLE را حتماً به شکل یک شبهه سوالی با ؟ بنویس (اگر متن عنوان سوالی ندارد، از مضمون یک سوال طبیعی بساز).
+- متن را ویراستاری کن (نیم‌فاصله، علائم نگارشی). لحن رسمی.
+- ابتدای هر بند ایموجی مناسب بگذار اگر ندارد.
+- TAGS فقط از این فهرست: ${tagSample}
+- SOURCE را اگر در متن هست دقیق نگه دار؛ اگر نیست حدس نزن و بنویس: «مستخرج از کانال پدافند شبهات».
+- امضای کانال را در انتهای BODY نگه دار یا استاندارد کن.
+- محتوای اصلی را حذف یا تحریف نکن؛ فقط مرتب و قالب‌بندی کن.
+
+متن خام:
+"""
+${raw}
+"""
+`;
+            try {
+                const result = await askCommandAI(prompt);
+                fillLaunchFromAiRaw(result, '');
+                if (st) st.textContent = '✅ مرتب شد و فرم پر شد — بررسی کنید سپس «تأیید و شلیک مطلب»';
+            } catch (e) {
+                console.error(e);
+                if (st) st.textContent = '❌ خطا در مرتب‌سازی AI';
+            }
+        }
 
         async function aiGenerateChannelPost() {
             const st = document.getElementById('launchAiStatus');
