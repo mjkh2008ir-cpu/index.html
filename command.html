@@ -1383,6 +1383,7 @@
             <button class="nav-item" onclick="switchTab('comments')"><i class="fas fa-comment-dots"></i> کامنت‌ها</button>
             <button class="nav-item" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> پیام‌ها</button>
             <button class="nav-item" onclick="switchTab('incoming')"><i class="fas fa-inbox"></i> شبهات دریافتی</button>
+            <button class="nav-item" onclick="switchTab('aiassist')"><i class="fas fa-robot"></i> دستیار AI</button>
             <button class="nav-item" onclick="switchTab('kartabl')"><i class="fas fa-folder-open"></i> کارتابل</button>
             <button class="nav-item" onclick="switchTab('reports')"><i class="fas fa-clipboard"></i> گزارش‌ها</button>
             <button class="nav-item" onclick="switchTab('settings')"><i class="fas fa-cog"></i> تنظیمات</button>
@@ -1931,7 +1932,45 @@
             </div>
         </div>
 
-        <div id="tab-kartabl" class="tab-content" style="display:none">
+        
+        <div id="tab-aiassist" class="tab-content" style="display:none">
+            <div class="launch-section" style="margin-bottom:0.6rem">
+                <div class="launch-title"><i class="fas fa-robot"></i> دستیار فرماندهی هوش مصنوعی</div>
+                <p style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
+                    دستیار فقط <b style="color:var(--gold)">پیشنهاد</b> می‌دهد. انتشار مطلب یا ارسال پیام فقط بعد از تأیید شما انجام می‌شود.
+                </p>
+                <div class="form-group">
+                    <label>دستور / سؤال برای دستیار</label>
+                    <textarea id="aiAssistPrompt" rows="3" placeholder="مثال: برای این شبهه یک پاسخ کوتاه بنویس... یا: پیش‌نویس پیام تشکر به کاربر..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>متن پایه (شبهه، پیام کاربر، یا پیش‌نویس)</label>
+                    <textarea id="aiAssistContext" rows="4" placeholder="متن شبهه یا پیام را اینجا بچسبانید..."></textarea>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem">
+                    <button class="approve-btn" type="button" onclick="runAiAssist('reply')"><i class="fas fa-comment-dots"></i> پیشنهاد پاسخ به شبهه</button>
+                    <button class="btn-msg" type="button" onclick="runAiAssist('post')"><i class="fas fa-file-alt"></i> پیش‌نویس مطلب کامل</button>
+                    <button class="btn-msg" type="button" onclick="runAiAssist('message')"><i class="fas fa-envelope"></i> پیش‌نویس پیام به کاربر</button>
+                    <button class="btn-msg" type="button" onclick="runAiAssist('summary')"><i class="fas fa-list"></i> خلاصه و اولویت</button>
+                </div>
+                <div class="form-group">
+                    <label>خروجی دستیار (قابل ویرایش)</label>
+                    <textarea id="aiAssistOutput" rows="8" placeholder="پاسخ دستیار اینجا می‌آید..."></textarea>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem">
+                    <button class="approve-btn" type="button" onclick="applyAiToLaunch()"><i class="fas fa-rocket"></i> انتقال به شلیک مطلب</button>
+                    <button class="btn-msg" type="button" onclick="applyAiToMessageBox()"><i class="fas fa-paper-plane"></i> انتقال به فرم پیام</button>
+                    <button class="btn-msg" type="button" onclick="copyAiOutput()"><i class="fas fa-copy"></i> کپی</button>
+                </div>
+                <div id="aiAssistStatus" style="margin-top:0.35rem;font-size:0.35rem;color:var(--text-secondary)"></div>
+            </div>
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-inbox"></i> میانبر: آخرین شبهات دریافتی</div>
+                <div id="aiAssistIncoming" style="font-size:0.35rem"></div>
+            </div>
+        </div>
+
+<div id="tab-kartabl" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-folder-open"></i> کارتابل عملیاتی</div>
                 <div id="kartablList" style="max-height:60vh;overflow-y:auto">
@@ -2116,6 +2155,7 @@
     <script>
         // ===== SUPABASE CONFIG =====
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
+        const AI_WORKER_URL = 'https://padafand-shobahat.padafand-shobahat.workers.dev';
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
@@ -2641,9 +2681,16 @@
                 <div class="popup-row"><span class="label">اولویت</span><span class="value">${m.priority || '—'}</span></div>
                 <div class="popup-row"><span class="label">وضعیت</span><span class="value">${m.status || '—'}</span></div>
                 <div class="popup-row"><span class="label">تاریخ</span><span class="value">${m.date || '—'}</span></div>
+                <div class="form-group" style="margin-top:0.4rem">
+                    <label style="font-size:0.35rem;color:var(--gold)">پاسخ (قابل ویرایش — می‌توانید از AI پر کنید)</label>
+                    <textarea id="msgDetailAnswer" rows="5" style="width:100%;font-size:0.38rem;line-height:1.7">${(m.answer || '').replace(/</g,'&lt;')}</textarea>
+                </div>
+                <div id="msgAiStatus" style="font-size:0.32rem;color:var(--text-secondary);min-height:1em"></div>
                 <div class="popup-actions" style="margin-top:0.5rem;display:flex;gap:0.3rem;flex-wrap:wrap">
+                    <button class="btn-msg" type="button" onclick="aiSuggestForMessage(${index})"><i class="fas fa-robot"></i> پیشنهاد پاسخ AI</button>
+                    <button class="btn-msg" type="button" onclick="aiImproveMessageAnswer(${index})"><i class="fas fa-magic"></i> بهبود پاسخ</button>
                     <button class="btn-msg" onclick="quickSendMessage('${m.sender || ''}', 'پاسخ به شبهه شما')"><i class="fas fa-envelope"></i> پیام به فرستنده</button>
-                    <button class="approve-btn" onclick="approveMessage(${index});closeUserDetail()">تأیید و انتشار</button>
+                    <button class="approve-btn" onclick="approveMessageFromDetail(${index})">تأیید و انتشار</button>
                     <button class="reject-btn" onclick="rejectMessage(${index});closeUserDetail()">رد</button>
                 </div>`;
             document.querySelector('#userDetailPopup .popup-title') && (document.querySelector('#userDetailPopup .popup-title').textContent = 'جزئیات شبهه مردمی');
@@ -3148,6 +3195,174 @@
             document.getElementById('sidebar').classList.toggle('open');
         }
 
+
+        async function askCommandAI(promptText) {
+            const url = (AI_WORKER_URL || '').replace(/\/$/, '') + '/api/ai';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    question: promptText,
+                    session_id: 'command-' + (currentUser || 'admin')
+                })
+            });
+            if (!res.ok) throw new Error('AI HTTP ' + res.status);
+            const data = await res.json();
+            const ans = data.answer || data.reply || data.text || data.result || data.response;
+            if (!ans) throw new Error('پاسخ خالی');
+            return String(ans).trim();
+        }
+
+        function buildAdminPrompt(mode, context, extra) {
+            const base = `تو دستیار فرماندهی «پدافند شبهات» هستی. فقط فارسی بنویس. توهین نکن. منبع جعلی نساز.
+متن ورودی:
+"""
+${context || '—'}
+"""
+`;
+            if (mode === 'reply') {
+                return base + `\nبرای این شبهه یک پاسخ کامل، روشن و مؤدب بنویس با قالب:\n🔎 اصل شبهه\n🛡️ پاسخ\n📚 توضیح\n✅ جمع‌بندی\n${extra || ''}`;
+            }
+            if (mode === 'improve') {
+                return base + `\nپاسخ فعلی را بهتر، دقیق‌تر و روان‌تر بازنویسی کن. اگر پاسخ خالی است از نو بنویس.\nپاسخ فعلی:\n${extra || '—'}`;
+            }
+            if (mode === 'post') {
+                return base + `\nیک پیش‌نویس مطلب برای انتشار در سایت بنویس:\n- عنوان/متن شبهه (یک خط)\n- پاسخ کامل\n- دسته پیشنهادی (اعتقادی/سیاسی/اجتماعی/مذهبی)\nفقط متن قابل انتشار.`;
+            }
+            if (mode === 'message') {
+                return base + `\nیک پیام کوتاه و محترمانه برای ارسال به کاربر بنویس (حداکثر ۸ خط). ${extra || ''}`;
+            }
+            if (mode === 'summary') {
+                return base + `\nخلاصه کن: موضوع اصلی، سطح حساسیت (کم/متوسط/زیاد)، پیشنهاد اقدام فرماندهی (انتشار/رد/نیاز به بررسی بیشتر).`;
+            }
+            return base + '\n' + (extra || 'راهنمایی کن.');
+        }
+
+        async function runAiAssist(mode) {
+            const status = document.getElementById('aiAssistStatus');
+            const out = document.getElementById('aiAssistOutput');
+            const ctx = (document.getElementById('aiAssistContext')?.value || '').trim();
+            const extra = (document.getElementById('aiAssistPrompt')?.value || '').trim();
+            if (!ctx && !extra) {
+                if (status) status.textContent = '⚠️ متن پایه یا دستور را وارد کنید';
+                return;
+            }
+            if (status) status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال تولید پیشنهاد...';
+            try {
+                const prompt = buildAdminPrompt(mode, ctx || extra, extra);
+                const ans = await askCommandAI(prompt);
+                if (out) out.value = ans;
+                if (status) status.textContent = '✅ پیشنهاد آماده است — قبل از انتشار حتماً بررسی کنید';
+            } catch (e) {
+                console.error(e);
+                if (status) status.textContent = '❌ خطا در ارتباط با هوش مصنوعی';
+            }
+        }
+
+        function refreshAiAssistIncoming() {
+            const el = document.getElementById('aiAssistIncoming');
+            if (!el) return;
+            const list = (allMessages || []).slice(0, 8);
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.3rem">شبهه دریافتی نیست</div>';
+                return;
+            }
+            el.innerHTML = list.map((m, i) => {
+                const title = (m.shobe || 'بدون عنوان').substring(0, 90);
+                return `<div class="list-item" style="cursor:pointer" onclick="loadMessageIntoAiAssist(${i})">
+                    <span class="name">${title}</span>
+                    <span class="status">${m.category || ''} · ${m.status || ''}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function loadMessageIntoAiAssist(index) {
+            const m = allMessages[index];
+            if (!m) return;
+            const ctx = document.getElementById('aiAssistContext');
+            if (ctx) ctx.value = m.shobe || '';
+            const out = document.getElementById('aiAssistOutput');
+            if (out && m.answer) out.value = m.answer;
+            const st = document.getElementById('aiAssistStatus');
+            if (st) st.textContent = 'شبهه #' + (m.id || index) + ' بارگذاری شد — می‌توانید پیشنهاد AI بگیرید';
+            window._aiAssistMsgIndex = index;
+        }
+
+        function applyAiToLaunch() {
+            const out = (document.getElementById('aiAssistOutput')?.value || '').trim();
+            const ctx = (document.getElementById('aiAssistContext')?.value || '').trim();
+            if (!out) { alert('خروجی دستیار خالی است'); return; }
+            // try split: first line as shobe if looks short
+            const shobeEl = document.getElementById('newShobe');
+            const ansEl = document.getElementById('newAnswer');
+            if (shobeEl) shobeEl.value = ctx || (out.split('\n')[0] || '').substring(0, 200);
+            if (ansEl) ansEl.value = out;
+            switchTab('launch');
+            alert('✅ به بخش شلیک مطلب منتقل شد — بعد از بررسی منتشر کنید');
+        }
+
+        function applyAiToMessageBox() {
+            const out = (document.getElementById('aiAssistOutput')?.value || '').trim();
+            if (!out) { alert('خروجی دستیار خالی است'); return; }
+            const body = document.getElementById('msgBody');
+            const sub = document.getElementById('msgSubject');
+            if (body) body.value = out;
+            if (sub && !sub.value) sub.value = 'پیام از فرماندهی';
+            switchTab('messages');
+            alert('✅ به فرم پیام منتقل شد — گیرنده را انتخاب و ارسال کنید');
+        }
+
+        function copyAiOutput() {
+            const out = document.getElementById('aiAssistOutput');
+            if (!out || !out.value) return;
+            navigator.clipboard.writeText(out.value).then(() => alert('کپی شد')).catch(() => {
+                out.select(); document.execCommand('copy'); alert('کپی شد');
+            });
+        }
+
+        async function aiSuggestForMessage(index) {
+            const m = allMessages[index];
+            if (!m) return;
+            const st = document.getElementById('msgAiStatus');
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال پیشنهاد پاسخ...';
+            try {
+                const ans = await askCommandAI(buildAdminPrompt('reply', m.shobe || '', ''));
+                const ta = document.getElementById('msgDetailAnswer');
+                if (ta) ta.value = ans;
+                m.answer = ans;
+                if (st) st.textContent = '✅ پیشنهاد آماده — ویرایش کنید سپس تأیید و انتشار';
+            } catch (e) {
+                if (st) st.textContent = '❌ خطا در AI';
+            }
+        }
+
+        async function aiImproveMessageAnswer(index) {
+            const m = allMessages[index];
+            if (!m) return;
+            const ta = document.getElementById('msgDetailAnswer');
+            const current = ta ? ta.value : (m.answer || '');
+            const st = document.getElementById('msgAiStatus');
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال بهبود...';
+            try {
+                const ans = await askCommandAI(buildAdminPrompt('improve', m.shobe || '', current));
+                if (ta) ta.value = ans;
+                m.answer = ans;
+                if (st) st.textContent = '✅ بازنویسی شد';
+            } catch (e) {
+                if (st) st.textContent = '❌ خطا در AI';
+            }
+        }
+
+        async function approveMessageFromDetail(index) {
+            const m = allMessages[index];
+            if (!m) return;
+            const ta = document.getElementById('msgDetailAnswer');
+            if (ta) m.answer = ta.value.trim();
+            closeUserDetail();
+            await approveMessage(index);
+        }
+
+
         function switchTab(tab) {
             if (tab === 'settings') {
                 const pass = prompt('🔒 برای ورود به تنظیمات، رمز را وارد کنید:');
@@ -3162,15 +3377,15 @@
             document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
             const items = document.querySelectorAll('.sidebar .nav-item');
             const map = { dashboard: 0, launch: 1, posts: 2, users: 3, commanders: 4, comments: 5, messages: 6,
-                incoming: 7, kartabl: 8, reports: 9, settings: 10, stats: 11, rules: 12, games: 13 };
+                incoming: 7, aiassist: 8, kartabl: 9, reports: 10, settings: 11, stats: 12, rules: 13, games: 14 };
             if (map[tab] !== undefined && items[map[tab]]) items[map[tab]].classList.add('active');
             const title = document.getElementById('pageTitle');
             const icons = { dashboard: 'fa-chart-pie', launch: 'fa-rocket', posts: 'fa-file-alt', users: 'fa-users',
-                commanders: 'fa-star', comments: 'fa-comment-dots', messages: 'fa-envelope', incoming: 'fa-inbox', kartabl: 'fa-folder-open',
+                commanders: 'fa-star', comments: 'fa-comment-dots', messages: 'fa-envelope', incoming: 'fa-inbox', aiassist: 'fa-robot', kartabl: 'fa-folder-open',
                 reports: 'fa-clipboard', settings: 'fa-cog', stats: 'fa-chart-bar', rules: 'fa-scroll',
                 games: 'fa-gamepad' };
             const names = { dashboard: 'داشبورد', launch: 'شلیک مطلب', posts: 'مطالب', users: 'کاربران',
-                commanders: 'فرماندهان', comments: 'کامنت‌ها', messages: 'پیام‌ها', incoming: 'شبهات دریافتی', kartabl: 'کارتابل',
+                commanders: 'فرماندهان', comments: 'کامنت‌ها', messages: 'پیام‌ها', incoming: 'شبهات دریافتی', aiassist: 'دستیار AI', kartabl: 'کارتابل',
                 reports: 'گزارش‌ها', settings: 'تنظیمات', stats: 'آمار', rules: 'آیین‌نامه', games: 'بازی' };
             title.innerHTML = `<i class="fas ${icons[tab]}"></i> ${names[tab]} <span class="sub">مرکز عملیات</span>`;
             if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
@@ -3178,6 +3393,7 @@
             if (tab === 'commanders') updateCommanders();
             if (tab === 'messages') populateRecipients();
             if (tab === 'incoming') updateIncomingMessages();
+            if (tab === 'aiassist') refreshAiAssistIncoming();
             if (tab === 'kartabl') updateKartabl();
             updateKartabl();
             if (tab === 'reports') updateReports();
