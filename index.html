@@ -426,36 +426,59 @@
         <!-- AI -->
         <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> اتاق عملیات هوش مصنوعی</div>
             <div style="background:var(--bgp);border:1px solid var(--neon);border-radius:6px;padding:0.5rem;margin-bottom:0.5rem;border-right:3px solid var(--neon)">
-                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> ابتدا در آرشیو قرارگاه جستجو می‌شود؛ سپس می‌توانی همان پرسش را به سرویس‌های AI بفرستی.</p>
+                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> اول در مطالب سایت جستجو می‌شود؛ اگر چیزی مرتبط نبود، هوش مصنوعی پدافند شبهات پاسخ می‌دهد.</p>
             </div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.55rem;margin-bottom:0.55rem">
                 <label style="font-size:.65rem;color:var(--gold);display:block;margin-bottom:0.3rem"><i class="fas fa-terminal"></i> پرسش عملیاتی</label>
                 <textarea id="aiQuery" rows="3" placeholder="شبهه یا سؤال خود را بنویس..." style="width:100%;padding:0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--tp);font-size:.7rem;font-family:inherit;resize:vertical"></textarea>
                 <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem">
-                    <button class="btn" onclick="runLocalAI()" style="font-size:.65rem"><i class="fas fa-search"></i> جستجو در قرارگاه</button>
-                    <button class="btn btn-gold" onclick="openAIWithQuery('https://chatgpt.com/')" style="font-size:.65rem"><i class="fas fa-external-link-alt"></i> ارسال به ChatGPT</button>
-                    <button class="btn" onclick="openAIWithQuery('https://www.perplexity.ai/')" style="font-size:.65rem"><i class="fas fa-book"></i> Perplexity</button>
+                    <button class="btn btn-gold" onclick="runLocalAI()" style="font-size:.7rem;padding:0.4rem 0.85rem"><i class="fas fa-search"></i> جستجو</button>
                 </div>
                 <div id="aiLocalResult" style="margin-top:0.45rem;font-size:.65rem;line-height:1.8;color:var(--tp)"></div>
             </div>
+
+            <div style="background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.55rem;margin-bottom:0.55rem">
+                <div style="color:var(--gold);font-weight:700;font-size:.7rem;margin-bottom:0.35rem"><i class="fas fa-clipboard"></i> پرامپت پیشنهادی برای هوش مصنوعی‌های دیگر</div>
+                <p style="font-size:.58rem;color:var(--ts);margin-bottom:0.35rem;line-height:1.7">قبل از فرستادن سؤال به سرویس‌های زیر، این متن را کپی کن و همراه سؤال بفرست تا جواب دقیق‌تر و منصفانه‌تری بگیری:</p>
+                <textarea id="aiPromptTemplate" readonly rows="6" style="width:100%;padding:0.45rem;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--tp);font-size:.62rem;font-family:inherit;line-height:1.75;resize:vertical">تو یک دستیار پاسخ‌گو به شبهات هستی. فقط به فارسی روان جواب بده.
+قوانین:
+- مستقیم به اصل سؤال بپرداز؛ حاشیه نرو.
+- برای شبهات دینی از دیدگاه اسلامی (قرآن و معارف) پاسخ بده مگر خلافش خواسته شود.
+- اگر مطمئن نیستی صادقانه بگو؛ منبع جعلی نساز.
+- توهین و تمسخر نکن.
+قالب پاسخ:
+🔎 اصل شبهه
+🛡️ پاسخ
+📚 توضیح
+✅ جمع‌بندی
+
+سؤال من:
+</textarea>
+                <button type="button" class="btn" onclick="copyAIPrompt()" style="margin-top:0.35rem;font-size:.65rem"><i class="fas fa-copy"></i> کپی پرامپت</button>
+                <span id="promptCopyMsg" style="font-size:.55rem;color:var(--neon);margin-right:0.4rem"></span>
+            </div>
+
+            <div class="page-title" style="font-size:.7rem;margin-top:0.3rem"><i class="fas fa-external-link-alt"></i> میانبر هوش مصنوعی‌های دیگر</div>
             <div class="ai-grid">
-                <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ دقیق و مستند</span></a>
-                <a href="https://deepseek.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a>
-                <a href="https://claude.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">استدلال قوی</span></a>
-                <a href="https://gemini.google.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a>
-                <a href="https://noorai.ir/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">تخصصی اسلامی</span></a>
-                <a href="https://www.perplexity.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">جستجوی منابع</span></a>
-                <a href="https://grok.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-bolt"></i></span>Grok<span class="ai-desc">پاسخ سریع</span></a>
-                <a href="https://chat.qwen.ai/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-globe"></i></span>Qwen<span class="ai-desc">چندزبانه</span></a>
+                <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ دقیق</span></a>
+                <a href="https://www.perplexity.ai/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-search"></i></span>Perplexity<span class="ai-desc">با منبع</span></a>
+                <a href="https://claude.ai/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-message"></i></span>Claude<span class="ai-desc">استدلال</span></a>
+                <a href="https://gemini.google.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-star"></i></span>Gemini<span class="ai-desc">چندمنظوره</span></a>
+                <a href="https://grok.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-bolt"></i></span>Grok<span class="ai-desc">پاسخ سریع</span></a>
+                <a href="https://chat.deepseek.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-brain"></i></span>DeepSeek<span class="ai-desc">تحلیل عمیق</span></a>
+                <a href="https://chat.qwen.ai/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-globe"></i></span>Qwen<span class="ai-desc">چندزبانه</span></a>
+                <a href="https://noorai.ir/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-mosque"></i></span>نور AI<span class="ai-desc">اسلامی</span></a>
+                <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-windows"></i></span>Copilot<span class="ai-desc">مایکروسافت</span></a>
+                <a href="https://pi.ai/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-comments"></i></span>Pi<span class="ai-desc">گفتگو</span></a>
+                <a href="https://you.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-compass"></i></span>You.com<span class="ai-desc">جستجو+AI</span></a>
+                <a href="https://www.phind.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-code"></i></span>Phind<span class="ai-desc">فنی</span></a>
             </div>
             <div style="margin-top:0.5rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;font-size:.55rem;color:var(--ts);line-height:1.8">
                 <b style="color:var(--gold)"><i class="fas fa-scroll"></i> پروتکل عملیاتی:</b><br>
-                ۱. شبهه را دقیق بنویس &nbsp; ۲. از منبع معتبر بخواه &nbsp; ۳. پاسخ را با قرآن و روایات تطبیق بده &nbsp; ۴. در صورت نیاز به فرماندهی ارسال کن
+                ۱. سؤال را در کادر بالا بنویس و «جستجو» بزن &nbsp; ۲. اگر لازم شد پرامپت را کپی کن و به یکی از سرویس‌های بالا بده &nbsp; ۳. پاسخ را با منابع معتبر تطبیق بده &nbsp; ۴. در صورت نیاز به فرماندهی ارسال کن
             </div>
         </div>
 
-        <!-- SAVED -->
-        
         <div id="page-faq" class="page">
 <div class="page-title"><i class="fas fa-question-circle"></i> سوالات متداول</div>
 <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">چطور ثبت‌نام کنم؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">روی آیکون کاربر بزن، «ثبت‌نام» را انتخاب کن، نام و شماره و رمز را وارد کن و قوانین را بپذیر.</div></div></div>
@@ -947,41 +970,55 @@
             if (!out) return;
             if (!q) { out.innerHTML = '<span style="color:#e74c3c">ابتدا سؤال را بنویس.</span>'; return; }
 
-            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> جستجو در قرارگاه و سامانه هوش مصنوعی...</div>';
+            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال جستجو در مطالب سایت...</div>';
 
             const hits = searchArchivePosts(q, 5);
-            let html = '';
             if (hits.length) {
-                html += '<div style="color:var(--neon);margin-bottom:0.35rem"><i class="fas fa-check-circle"></i> مرتبط‌ترین مطالب قرارگاه:</div>';
-                html += hits.map(p =>
-                    '<div style="border:1px solid var(--br);border-radius:6px;padding:0.4rem;margin-bottom:0.3rem">' +
-                    '<div style="color:var(--gold);font-weight:700;cursor:pointer" onclick="const i=allPosts.findIndex(x=>String(x.id)===String(' + JSON.stringify(String(p.id)) + '));if(i>=0)openReader(i);">' +
+                let html = '<div style="color:var(--neon);margin-bottom:0.35rem"><i class="fas fa-check-circle"></i> مطالب مرتبط در سایت:</div>';
+                html += hits.map(p => {
+                    const pid = JSON.stringify(String(p.id != null ? p.id : ''));
+                    return '<div style="border:1px solid var(--br);border-radius:6px;padding:0.4rem;margin-bottom:0.3rem">' +
+                    '<div style="color:var(--gold);font-weight:700;cursor:pointer" onclick="const i=allPosts.findIndex(x=>String(x.id)===' + pid + ');if(i>=0)openReader(i);">' +
                     escapeHtml((p.shobe || '').substring(0, 120)) + '</div>' +
                     '<div style="color:var(--tp);font-size:.6rem;margin-top:0.2rem;line-height:1.7">' +
                     escapeHtml((p.answer || '').substring(0, 220)) + ((p.answer || '').length > 220 ? '…' : '') +
-                    '</div></div>'
-                ).join('');
-            } else {
-                html += '<div style="color:var(--ts);margin-bottom:0.35rem">مطلب خیلی مرتبطی در آرشیو پیدا نشد.</div>';
+                    '</div></div>';
+                }).join('');
+                html += '<div style="margin-top:0.35rem;font-size:.58rem;color:var(--ts)">اگر کافی نبود، سؤال را دقیق‌تر بنویس یا از پرامپت و میانبرهای پایین استفاده کن.</div>';
+                out.innerHTML = html;
+                return;
             }
 
-            html += '<div style="margin-top:0.45rem;color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال دریافت پاسخ از هوش مصنوعی پدافند...</div>';
-            out.innerHTML = html;
-
+            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در آرشیو نبود — در حال پرسش از هوش مصنوعی پدافند...</div>';
             const aiAns = await askPadafandAI(q);
-            // remove spinner line by rebuilding tail
             if (aiAns) {
-                html += '<div style="margin-top:0.5rem;padding:0.5rem;border:1px solid var(--neon);border-radius:8px;background:rgba(57,255,20,0.05)">' +
+                out.innerHTML = '<div style="padding:0.5rem;border:1px solid var(--neon);border-radius:8px;background:rgba(57,255,20,0.05)">' +
                     '<div style="color:var(--neon);font-weight:700;margin-bottom:0.3rem"><i class="fas fa-robot"></i> پاسخ هوش مصنوعی پدافند شبهات</div>' +
                     '<div style="line-height:1.95;font-size:.72rem">' + escapeHtml(aiAns).replace(/\n/g, '<br>') + '</div></div>';
             } else {
-                html += '<div style="margin-top:0.45rem;padding:0.45rem;border:1px solid var(--br);border-radius:8px;font-size:.62rem;color:var(--ts);line-height:1.8">' +
-                    '<i class="fas fa-info-circle"></i> سرویس هوش مصنوعی اختصاصی هنوز پاسخ متنی به وب برنمی‌گرداند (فقط تأیید OK). ' +
-                    'باید روی Worker مسیر <b style="color:var(--gold)">POST /api/ai</b> با خروجی JSON مثل ' +
-                    '<code style="color:var(--neon)">{ "answer": "..." }</code> فعال شود. تا آن زمان از آرشیو یا ارسال به فرماندهی استفاده کن.' +
-                    '</div>';
+                out.innerHTML = '<div style="color:var(--ts);line-height:1.8">پاسخی دریافت نشد. پرامپت را کپی کن و از میانبرهای پایین استفاده کن یا به فرماندهی بفرست.</div>';
             }
-            out.innerHTML = html;
+        }
+
+        function copyAIPrompt() {
+            const el = document.getElementById('aiPromptTemplate');
+            const q = (document.getElementById('aiQuery')?.value || '').trim();
+            let text = el ? el.value : '';
+            if (q) {
+                if (/سؤال من:\s*$/.test(text) || text.trim().endsWith('سؤال من:')) {
+                    text = text.trim() + '\n' + q;
+                } else {
+                    text = text.trim() + '\n\nسؤال من:\n' + q;
+                }
+            }
+            const msg = document.getElementById('promptCopyMsg');
+            const done = () => { if (msg) { msg.textContent = 'کپی شد'; setTimeout(() => { if (msg) msg.textContent = ''; }, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done).catch(() => { try { el && el.select(); document.execCommand('copy'); } catch(e) {} done(); });
+            } else {
+                try { if (el) { el.focus(); el.select(); document.execCommand('copy'); } } catch(e) {}
+                done();
+            }
         }
 
         function openAIWithQuery(base) {
