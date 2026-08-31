@@ -596,6 +596,7 @@
     <script>
         // ===== SUPABASE CONFIG =====
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
+        const AI_WORKER_URL = 'https://padafand-shobahat.padafand-shobahat.workers.dev';
         const SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2ZXhidGt4a2Rsa2Npd3RranJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMDM3MjksImV4cCI6MjEwMTg3OTcyOX0._4Ff4UDI72YeoV3AhgjPKXKcZQcETVKst4cZR_pd0qc';
 
@@ -850,7 +851,34 @@
             saveBadge('daily1', 'چالش روزانه');
         }
 
-        function runLocalAI() {
+        async function askPadafandAI(question) {
+            const endpoints = [
+                AI_WORKER_URL + '/api/ai',
+                AI_WORKER_URL + '/',
+                AI_WORKER_URL
+            ];
+            const body = JSON.stringify({ question: question, session_id: loggedUser || ('web-' + Date.now()) });
+            for (const url of endpoints) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: body
+                    });
+                    if (!res.ok) continue;
+                    const data = await res.json().catch(() => null);
+                    if (typeof data === 'string') return data;
+                    if (data && (data.answer || data.reply || data.text || data.result || data.response)) {
+                        return data.answer || data.reply || data.text || data.result || data.response;
+                    }
+                    const txt = await res.text();
+                    if (txt && txt.length < 8000) return txt;
+                } catch (e) { console.warn('AI worker', url, e); }
+            }
+            return null;
+        }
+
+        async function runLocalAI() {
             const q = (document.getElementById('aiQuery')?.value || '').trim();
             const out = document.getElementById('aiLocalResult');
             if (!out) return;
@@ -862,7 +890,13 @@
                 return terms.some(w => blob.includes(w.toLowerCase()));
             }).slice(0, 5);
             if (!hits.length) {
-                out.innerHTML = '<div style="color:var(--ts)">مطلبی در آرشیو پیدا نشد. می‌توانی همان متن را به ChatGPT یا Perplexity بفرستی، یا از «ارسال به فرماندهی» استفاده کن.</div>';
+                out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال دریافت پاسخ از هوش مصنوعی پدافند...</div>';
+                const aiAns = await askPadafandAI(q);
+                if (aiAns) {
+                    out.innerHTML = '<div style="color:var(--neon);margin-bottom:0.3rem"><i class="fas fa-robot"></i> پاسخ سامانه پدافند:</div><div style="line-height:1.9">' + escapeHtml(aiAns).replace(/\n/g, '<br>') + '</div>';
+                } else {
+                    out.innerHTML = '<div style="color:var(--ts)">مطلبی در آرشیو نبود و سرویس AI در دسترس قرار نگرفت. از لینک‌های زیر یا «ارسال به فرماندهی» استفاده کن.</div>';
+                }
                 return;
             }
             out.innerHTML = '<div style="color:var(--neon);margin-bottom:0.3rem"><i class="fas fa-check-circle"></i> یافته‌های قرارگاه:</div>' +
@@ -1071,7 +1105,7 @@
                 const idx = realIndex >= 0 ? realIndex : i;
                 return (
                     '<div class="post" data-post-id="' + pid + '">' +
-                    '<div class="post-hdr" onclick="togglePost(\'' + uid + '\', this)">' +
+                    '<div class="post-hdr" onclick="openReader(' + idx + ')" style="cursor:pointer">' +
                     '<span class="title"><i class="fas fa-question-circle"></i> ' + (isSpecialSender ? '<i class="fas fa-star ico-gold"></i> ' : '') + escapeHtml(p.shobe || 'بدون عنوان') + '</span>' +
                     '<span class="arrow' + (isOpen ? ' open' : '') + '"><i class="fas fa-chevron-down"></i></span>' +
                     '</div>' +
@@ -1087,7 +1121,7 @@
                     '</div>' +
                     '<div class="tags">' + tags.map(tg => '<span>#' + escapeHtml(String(tg)) + '</span>').join('') + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.4rem;align-items:center">' +
-                    '<button type="button" class="btn-read" onclick="event.stopPropagation();openReader(' + idx + ')"><i class="fas fa-book-open"></i> حالت مطالعه</button>' +
+                    '' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره</button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک</button>' +
                     '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
@@ -1186,7 +1220,7 @@
         }
 
 
-        async function renderSaved() {
+                async function renderSaved() {
             const container = document.getElementById('savedContainer');
             if (!container) return;
             if (!loggedUser) {
@@ -1199,26 +1233,53 @@
                 container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.65rem"><i class="fas fa-box-open"></i> جعبه مهمات خالی است</div>';
                 return;
             }
+            window._savedCache = userSaved;
             container.innerHTML = userSaved.map((s, i) => {
                 const d = (typeof s.data === 'object' && s.data) ? s.data : {};
                 let shobe = d.shobe || s.shobe || '';
-                let answer = d.answer || s.answer || '';
-                if ((!shobe || !answer) && s.post_id && allPosts.length) {
+                if (!shobe && s.post_id && allPosts.length) {
                     const p = allPosts.find(x => String(x.id) === String(s.post_id));
-                    if (p) { shobe = shobe || p.shobe || ''; answer = answer || p.answer || ''; }
+                    if (p) shobe = p.shobe || '';
                 }
-                return `<div class="saved-item">
-                    <div class="saved-hdr" onclick="this.nextElementSibling.classList.toggle('show');this.querySelector('.arrow')?.classList.toggle('open')">
-                        <h4>${(shobe || 'مطلب ذخیره‌شده').substring(0, 60)}</h4>
-                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
-                    </div>
-                    <div class="saved-body">
-                        <p>${answer || '—'}</p>
-                        <button class="del-btn" onclick="deleteSaved(${s.id})"><i class="fas fa-trash"></i> حذف</button>
-                    </div>
-                </div>`;
+                const sid = s.id != null ? s.id : 'null';
+                return (
+                    '<div class="post">' +
+                    '<div class="post-hdr" onclick="openSavedReaderAt(' + i + ')" style="cursor:pointer">' +
+                    '<span class="title"><i class="fas fa-box"></i> ' + escapeHtml((shobe || 'مطلب ذخیره‌شده').substring(0, 120)) + '</span>' +
+                    '<span class="arrow"><i class="fas fa-book-open"></i></span>' +
+                    '</div>' +
+                    '<div style="padding:0.35rem 0.6rem 0.55rem;display:flex;gap:0.3rem;flex-wrap:wrap;border-top:1px solid var(--br)">' +
+                    '<button type="button" class="btn-read" onclick="openSavedReaderAt(' + i + ')"><i class="fas fa-book-open"></i> مطالعه</button>' +
+                    '<button type="button" class="btn-read" onclick="deleteSaved(' + sid + ')"><i class="fas fa-trash"></i> حذف</button>' +
+                    '</div></div>'
+                );
             }).join('');
         }
+
+        function openSavedReaderAt(i) {
+            const s = (window._savedCache || [])[i];
+            if (!s) return;
+            const d = (typeof s.data === 'object' && s.data) ? s.data : {};
+            let shobe = d.shobe || s.shobe || '';
+            let answer = d.answer || s.answer || '';
+            let cat = d.cat || '';
+            if (s.post_id && allPosts.length) {
+                const p = allPosts.find(x => String(x.id) === String(s.post_id));
+                if (p) {
+                    if (!shobe) shobe = p.shobe || '';
+                    if (!answer) answer = p.answer || '';
+                    if (!cat) cat = p.cat || '';
+                }
+            }
+            const modal = document.getElementById('readerModal');
+            if (!modal) return;
+            document.getElementById('readerTitle').textContent = shobe || 'مطلب ذخیره‌شده';
+            document.getElementById('readerAns').innerHTML = escapeHtml(answer || '—').replace(/\n/g, '<br>');
+            document.getElementById('readerMeta').innerHTML = cat ? ('<i class="fas fa-tag"></i> ' + escapeHtml(cat)) : '';
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
 
         async function deleteSaved(id) {
             if (!id) return;
