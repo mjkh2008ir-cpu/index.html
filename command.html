@@ -3305,32 +3305,33 @@ BODY:
                 return;
             }
             if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال مرتب‌سازی و قالب‌بندی...';
-            const tagSample = ALL_CHANNEL_TAGS.join(' ');
-            const prompt = CHANNEL_POST_RULES + `
+            // فهرست کوتاه هشتگ تا پرامپت خیلی طولانی نشود
+            const tagSample = ['#اعتقادی','#مذهبی','#سیاسی','#اجتماعی','#نظامی','#حجاب','#قرآن','#ایران','#آمریکا','#اسرائیل','#هوش_مصنوعی','#ولایت_فقیه','#رهبری','#جنگ','#پدافند'].join(' ');
+            const clipped = raw.length > 2800 ? raw.slice(0, 2800) + '\n…' : raw;
+            const prompt = `تو ویراستار کانال پدافند شبهات هستی. متن خام زیر را مرتب کن.
+خروجی دقیقاً با همین برچسب‌ها:
+TITLE: <شبهه سوالی با ؟>
+CATEGORY: <اعتقادی|مذهبی|سیاسی|اجتماعی|نظامی>
+SOURCE: <منبع دقیق یا مستخرج از کانال پدافند شبهات>
+TAGS: <۲ تا ۴ هشتگ از: ${tagSample}>
+AUTHOR: ✍🏻 پدافند شبهات
+BODY:
+<متن ویراسته؛ نیم‌فاصله درست؛ ایموجی اول هر بند؛ امضای کانال در انتها>
 
-این متن خام از کانال «پدافند شبهات» کپی شده است. آن را مرتب کن و دقیقاً در قالب خروجی TITLE/CATEGORY/SOURCE/TAGS/AUTHOR/BODY بده.
-
-قوانین اضافه:
-- TITLE را حتماً به شکل یک شبهه سوالی با ؟ بنویس (اگر متن عنوان سوالی ندارد، از مضمون یک سوال طبیعی بساز).
-- متن را ویراستاری کن (نیم‌فاصله، علائم نگارشی). لحن رسمی.
-- ابتدای هر بند ایموجی مناسب بگذار اگر ندارد.
-- TAGS فقط از این فهرست: ${tagSample}
-- SOURCE را اگر در متن هست دقیق نگه دار؛ اگر نیست حدس نزن و بنویس: «مستخرج از کانال پدافند شبهات».
-- امضای کانال را در انتهای BODY نگه دار یا استاندارد کن.
-- محتوای اصلی را حذف یا تحریف نکن؛ فقط مرتب و قالب‌بندی کن.
+قوانین: محتوا را حذف نکن؛ منبع جعلی نساز؛ فقط فارسی.
 
 متن خام:
 """
-${raw}
-"""
-`;
+${clipped}
+"""`;
             try {
                 const result = await askCommandAI(prompt);
+                if (!result) throw new Error('پاسخ خالی');
                 fillLaunchFromAiRaw(result, '');
                 if (st) st.textContent = '✅ مرتب شد و فرم پر شد — بررسی کنید سپس «تأیید و شلیک مطلب»';
             } catch (e) {
                 console.error(e);
-                if (st) st.textContent = '❌ خطا در مرتب‌سازی AI';
+                if (st) st.textContent = '❌ خطا در مرتب‌سازی AI: ' + (e.message || e);
             }
         }
 
@@ -3463,19 +3464,29 @@ ${raw}
 
         async function askCommandAI(promptText) {
             const url = (AI_WORKER_URL || '').replace(/\/$/, '') + '/api/ai';
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({
-                    question: promptText,
-                    session_id: 'command-' + (currentUser || 'admin')
-                })
-            });
-            if (!res.ok) throw new Error('AI HTTP ' + res.status);
-            const data = await res.json();
-            const ans = data.answer || data.reply || data.text || data.result || data.response;
-            if (!ans) throw new Error('پاسخ خالی');
-            return String(ans).trim();
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 90000);
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        question: String(promptText || '').slice(0, 6000),
+                        session_id: 'command-' + (currentUser || 'admin')
+                    }),
+                    signal: ctrl.signal
+                });
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error('AI HTTP ' + res.status + (t ? (': ' + t.slice(0, 120)) : ''));
+                }
+                const data = await res.json();
+                const ans = data.answer || data.reply || data.text || data.result || data.response;
+                if (!ans) throw new Error(data.error || 'پاسخ خالی از سرور');
+                return String(ans).trim();
+            } finally {
+                clearTimeout(timer);
+            }
         }
 
         function buildAdminPrompt(mode, context, extra) {
