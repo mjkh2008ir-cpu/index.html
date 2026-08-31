@@ -389,12 +389,45 @@
         <div id="page-posts" class="page"><div class="page-title"><i class="fas fa-list"></i> شبهات</div><div id="postContainer"></div></div>
 
         <!-- GAMES -->
-        <div id="page-games" class="page"><div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div><div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;margin-bottom:0.4rem;text-align:center"><p style="font-size:.6rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> با بازی کردن و کسب امتیاز، XP واقعی به حسابت اضافه می‌شود</p></div><div class="games-grid" id="gamesGrid"></div></div>
+        <div id="page-games" class="page">
+            <div class="page-title"><i class="fas fa-gamepad"></i> بازی‌های قرارگاه</div>
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:6px;padding:0.45rem;margin-bottom:0.4rem;text-align:center">
+                <p style="font-size:.65rem;color:var(--ts)"><i class="fas fa-crosshairs"></i> با بازی کردن XP واقعی به حسابت اضافه می‌شود</p>
+            </div>
+            <div id="dailyChallenge" style="background:linear-gradient(135deg,rgba(200,160,0,.12),rgba(57,255,20,.06));border:1px solid var(--gold);border-radius:8px;padding:0.55rem;margin-bottom:0.5rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem">
+                    <div>
+                        <div style="color:var(--gold);font-weight:700;font-size:.7rem"><i class="fas fa-sun"></i> چالش روزانه</div>
+                        <div id="dailyChallengeText" style="font-size:.6rem;color:var(--ts);margin-top:0.15rem">هر روز یک بازی با XP دوبرابر</div>
+                    </div>
+                    <button class="btn btn-gold" id="dailyChallengeBtn" onclick="playDailyChallenge()" style="font-size:.6rem"><i class="fas fa-play"></i> شروع</button>
+                </div>
+            </div>
+            <div class="games-grid" id="gamesGrid"></div>
+            <div style="margin-top:0.7rem;background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.5rem">
+                <div class="page-title" style="font-size:.7rem;margin-bottom:0.3rem"><i class="fas fa-trophy"></i> لیدربورد رزمندگان</div>
+                <div id="gamesLeaderboard" style="font-size:.65rem"></div>
+            </div>
+            <div style="margin-top:0.5rem;background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.5rem">
+                <div class="page-title" style="font-size:.7rem;margin-bottom:0.3rem"><i class="fas fa-medal"></i> نشان‌های تو</div>
+                <div id="userBadges" style="display:flex;flex-wrap:wrap;gap:0.35rem;font-size:.6rem"></div>
+            </div>
+        </div>
 
         <!-- AI -->
         <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> اتاق عملیات هوش مصنوعی</div>
-            <div style="background:var(--bgp);border:1px solid var(--neon);border-radius:4px;padding:0.4rem 0.5rem;margin-bottom:0.4rem;border-right:3px solid var(--neon)">
-                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> سامانه اختصاصی در حال توسعه — تا آن زمان از پایگاه‌های زیر برای پشتیبانی عملیات استفاده کنید.</p>
+            <div style="background:var(--bgp);border:1px solid var(--neon);border-radius:6px;padding:0.5rem;margin-bottom:0.5rem;border-right:3px solid var(--neon)">
+                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> ابتدا در آرشیو قرارگاه جستجو می‌شود؛ سپس می‌توانی همان پرسش را به سرویس‌های AI بفرستی.</p>
+            </div>
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.55rem;margin-bottom:0.55rem">
+                <label style="font-size:.65rem;color:var(--gold);display:block;margin-bottom:0.3rem"><i class="fas fa-terminal"></i> پرسش عملیاتی</label>
+                <textarea id="aiQuery" rows="3" placeholder="شبهه یا سؤال خود را بنویس..." style="width:100%;padding:0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--tp);font-size:.7rem;font-family:inherit;resize:vertical"></textarea>
+                <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem">
+                    <button class="btn" onclick="runLocalAI()" style="font-size:.65rem"><i class="fas fa-search"></i> جستجو در قرارگاه</button>
+                    <button class="btn btn-gold" onclick="openAIWithQuery('https://chatgpt.com/')" style="font-size:.65rem"><i class="fas fa-external-link-alt"></i> ارسال به ChatGPT</button>
+                    <button class="btn" onclick="openAIWithQuery('https://www.perplexity.ai/')" style="font-size:.65rem"><i class="fas fa-book"></i> Perplexity</button>
+                </div>
+                <div id="aiLocalResult" style="margin-top:0.45rem;font-size:.65rem;line-height:1.8;color:var(--tp)"></div>
             </div>
             <div class="ai-grid">
                 <a href="https://chatgpt.com/" target="_blank" class="ai-card"><span class="ai-icon"><i class="fas fa-comment-dots"></i></span>ChatGPT<span class="ai-desc">پاسخ دقیق و مستند</span></a>
@@ -724,6 +757,107 @@
             renderLeaderboard();
         }
 
+        
+        function renderGamesLeaderboard() {
+            const el = document.getElementById('gamesLeaderboard');
+            if (!el) return;
+            const list = Object.values(allUsers || {})
+                .filter(u => u && (u.xp || 0) > 0)
+                .sort((a, b) => (b.xp || 0) - (a.xp || 0))
+                .slice(0, 10);
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--ts);text-align:center;padding:0.3rem">هنوز رزمنده‌ای ثبت نشده — بازی کن و اولین باش!</div>';
+                return;
+            }
+            el.innerHTML = list.map((u, i) => {
+                const rank = i === 0 ? '<i class="fas fa-trophy" style="color:#c8a000"></i>' :
+                    i === 1 ? '<i class="fas fa-medal" style="color:#aaa"></i>' :
+                    i === 2 ? '<i class="fas fa-medal" style="color:#cd7f32"></i>' : (i+1);
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.25rem 0;border-bottom:1px solid var(--br)">
+                    <span>${rank} <i class="fas ${u.avatar || 'fa-user'}"></i> ${u.fullname || u.username || 'رزمنده'}</span>
+                    <span style="color:var(--neon);font-family:monospace">${u.xp || 0} XP</span>
+                </div>`;
+            }).join('');
+        }
+
+        function getBadges() {
+            try { return JSON.parse(localStorage.getItem('padafand_badges') || '[]'); } catch(e) { return []; }
+        }
+        function saveBadge(id, title) {
+            const b = getBadges();
+            if (b.find(x => x.id === id)) return;
+            b.push({ id, title, at: Date.now() });
+            localStorage.setItem('padafand_badges', JSON.stringify(b));
+            renderUserBadges();
+        }
+        function renderUserBadges() {
+            const el = document.getElementById('userBadges');
+            if (!el) return;
+            const b = getBadges();
+            if (!b.length) {
+                el.innerHTML = '<span style="color:var(--ts)">هنوز نشانی نداری — یک بازی را تمام کن.</span>';
+                return;
+            }
+            el.innerHTML = b.map(x => `<span style="background:var(--bg);border:1px solid var(--gold);color:var(--gold);padding:0.2rem 0.4rem;border-radius:999px"><i class="fas fa-medal"></i> ${x.title}</span>`).join('');
+        }
+        function updateDailyChallengeUI() {
+            const key = 'padafand_daily_' + new Date().toISOString().slice(0,10);
+            const done = localStorage.getItem(key);
+            const txt = document.getElementById('dailyChallengeText');
+            const btn = document.getElementById('dailyChallengeBtn');
+            if (done) {
+                if (txt) txt.textContent = 'چالش امروز انجام شد — فردا دوباره بیا';
+                if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-check"></i> انجام شد'; }
+            } else {
+                if (txt) txt.textContent = 'امروز: پدافند کلامی با XP دوبرابر';
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-play"></i> شروع'; }
+            }
+        }
+        function playDailyChallenge() {
+            const key = 'padafand_daily_' + new Date().toISOString().slice(0,10);
+            window._dailyChallengeActive = true;
+            startGame('verbal_defense');
+        }
+        function markDailyDoneIfNeeded() {
+            if (!window._dailyChallengeActive) return;
+            const key = 'padafand_daily_' + new Date().toISOString().slice(0,10);
+            localStorage.setItem(key, '1');
+            window._dailyChallengeActive = false;
+            updateDailyChallengeUI();
+            saveBadge('daily1', 'چالش روزانه');
+        }
+
+        function runLocalAI() {
+            const q = (document.getElementById('aiQuery')?.value || '').trim();
+            const out = document.getElementById('aiLocalResult');
+            if (!out) return;
+            if (!q) { out.innerHTML = '<span style="color:#e74c3c">ابتدا سؤال را بنویس.</span>'; return; }
+            const posts = (typeof allPosts !== 'undefined' && allPosts) ? allPosts : [];
+            const terms = q.split(/\s+/).filter(w => w.length > 1);
+            const hits = posts.filter(p => {
+                const blob = ((p.shobe||'') + ' ' + (p.answer||'') + ' ' + (p.tags||'')).toLowerCase();
+                return terms.some(w => blob.includes(w.toLowerCase()));
+            }).slice(0, 5);
+            if (!hits.length) {
+                out.innerHTML = '<div style="color:var(--ts)">مطلبی در آرشیو پیدا نشد. می‌توانی همان متن را به ChatGPT یا Perplexity بفرستی، یا از «ارسال به فرماندهی» استفاده کن.</div>';
+                return;
+            }
+            out.innerHTML = '<div style="color:var(--neon);margin-bottom:0.3rem"><i class="fas fa-check-circle"></i> یافته‌های قرارگاه:</div>' +
+                hits.map(p => `<div style="border:1px solid var(--br);border-radius:6px;padding:0.35rem;margin-bottom:0.3rem">
+                    <div style="color:var(--gold);font-weight:700">${(p.shobe||'').substring(0,90)}</div>
+                    <div style="color:var(--tp);font-size:.6rem;margin-top:0.2rem">${(p.answer||'').substring(0,220)}${(p.answer||'').length>220?'…':''}</div>
+                </div>`).join('');
+        }
+        function openAIWithQuery(base) {
+            const q = (document.getElementById('aiQuery')?.value || '').trim();
+            const url = q ? (base.includes('perplexity') ? base + '/search?q=' + encodeURIComponent(q) : base) : base;
+            if (q && !base.includes('perplexity')) {
+                try { navigator.clipboard.writeText(q); } catch(e) {}
+                alert('متن پرسش کپی شد — در چت پیست کن.');
+            }
+            window.open(url, '_blank', 'noopener');
+        }
+
         function renderLeaderboard() {
             const el = document.getElementById('leaderboardList');
             if (!el) return;
@@ -848,6 +982,7 @@
             if (page === 'posts') filterPosts();
             if (page === 'home') renderPosts(allPosts.slice(0, 3), 'homePosts');
             if (page === 'saved') renderSaved();
+            if (page === 'games') { renderGamesLeaderboard(); renderUserBadges(); updateDailyChallengeUI(); }
             if (page === 'games') initGames();
         }
 
@@ -1596,7 +1731,12 @@
             }
             const bank = {
                 verbal_defense: [
-                    { q: 'بهترین واکنش به شبهه بی‌سند چیست؟', opts: ['جدل تند', 'درخواست منبع و پاسخ آرام', 'سکوت مطلق', 'حذف طرف مقابل'], a: 1 },
+                    
+                    { q: 'شبهه: دین مانع پیشرفت علم است.', options: ['علم و دین در تاریخ اسلام همراه بوده‌اند؛ دانشمندان مسلمان پیشگام بوده‌اند', 'علم فقط با رد دین ممکن است', 'دین همیشه مخالف آزمایش علمی است', 'پیشرفت فقط غربی است'], correct: 0 },
+                    { q: 'شبهه: نماز خواندن وقت را تلف می‌کند.', options: ['نظم، آرامش و معنویت بخشی از بهره‌وری است', 'نماز مانع کار است', 'باید فقط کار کرد', 'عبادت بی‌فایده است'], correct: 0 },
+                    { q: 'شبهه: همه ادیان یکی هستند و فرقی ندارد.', options: ['در اصول اخلاقی اشتراک هست اما در توحید و شریعت تفاوت‌های بنیادین وجود دارد', 'هیچ تفاوتی نیست', 'فقط ظاهر فرق دارد', 'ادیان جعلی‌اند'], correct: 0 },
+                    { q: 'شبهه: آزادی یعنی هر کاری بخواهی بکنی.', options: ['آزادی واقعی در چارچوب مسئولیت و حقوق دیگران معنا دارد', 'هیچ حدی برای آزادی نیست', 'قانون همیشه دشمن آزادی است', 'آزادی فقط فردی است'], correct: 0 },
+{ q: 'بهترین واکنش به شبهه بی‌سند چیست؟', opts: ['جدل تند', 'درخواست منبع و پاسخ آرام', 'سکوت مطلق', 'حذف طرف مقابل'], a: 1 },
                     { q: 'پاسخ قوی معمولاً متکی است به:', opts: ['شعار', 'دلیل و منبع', 'توهین', 'حجم پیام'], a: 1 },
                     { q: 'اگر جواب را نمی‌دانی؟', opts: ['حدس بزن', 'بگو بعداً بررسی می‌کنم', 'انکار کن', 'موضوع را عوض کن'], a: 1 }
                 ],
@@ -1653,14 +1793,22 @@
 
         async function finishGameXP(xp) {
             if (!loggedUser || !allUsers[loggedUser]) return;
+            if (window._dailyChallengeActive) xp = Math.round(xp * 2);
             allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + xp;
             try {
                 if (allUsers[loggedUser].id) {
                     await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
                 }
             } catch (e) {}
+            if (xp > 0) {
+                saveBadge('first_win', 'اولین پیروزی');
+                if ((allUsers[loggedUser].xp || 0) >= 50) saveBadge('xp50', '۵۰ XP');
+                if ((allUsers[loggedUser].xp || 0) >= 100) saveBadge('xp100', '۱۰۰ XP');
+                markDailyDoneIfNeeded();
+            }
             updateHeader();
             updateProfile();
+            renderGamesLeaderboard();
         }
 
 
