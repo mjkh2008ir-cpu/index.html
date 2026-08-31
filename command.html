@@ -2236,7 +2236,7 @@
         const themes = ['dark', 'light'];
         let themeIndex = 0;
 
-        function cycleTheme() {
+        async function cycleTheme() {
             themeIndex = (themeIndex + 1) % themes.length;
             document.documentElement.setAttribute('data-theme', themes[themeIndex]);
             localStorage.setItem('padafand_theme', themes[themeIndex]);
@@ -2308,7 +2308,7 @@
             }
         }
 
-        function updateAll() {
+        async function updateAll() {
             const run = (fn) => { try { fn(); } catch (e) { console.error(fn.name, e); } };
             run(updateStats);
             run(updateLists);
@@ -2827,7 +2827,7 @@
             selectedUser = null;
         }
 
-        function selectUserForDelete(username) {
+        async function selectUserForDelete(username) {
             if (!confirm(`آیا مطمئنی می‌خوای حساب "${username}" رو حذف کنی؟`)) return;
             selectedUserForDelete = username;
             updateSettings();
@@ -2991,7 +2991,7 @@
         }
 
 
-        function populateRecipients() {
+        async function populateRecipients() {
             const select = document.getElementById('msgRecipient');
             select.innerHTML = '<option value="all">همه کاربران</option>';
             Object.keys(allUsers).forEach(u => {
@@ -3091,7 +3091,7 @@
             updateAll();
         }
 
-        function editPost(index) {
+        async function editPost(index) {
             const post = allPosts[index];
             if (!post) return;
             document.getElementById('newShobe').value = post.shobe;
@@ -3771,7 +3771,7 @@
                             }
                         }
 
-                        function resetGame() {
+                        async function resetGame() {
                             score = 0;
                             gameOver = false;
                             targetsHit = 0;
