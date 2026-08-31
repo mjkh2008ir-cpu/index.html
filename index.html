@@ -426,7 +426,7 @@
         <!-- AI -->
         <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> اتاق عملیات هوش مصنوعی</div>
             <div style="background:var(--bgp);border:1px solid var(--neon);border-radius:6px;padding:0.5rem;margin-bottom:0.5rem;border-right:3px solid var(--neon)">
-                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> اول در مطالب سایت جستجو می‌شود؛ اگر چیزی مرتبط نبود، هوش مصنوعی پدافند شبهات پاسخ می‌دهد.</p>
+                <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> هوش مصنوعی پدافند پاسخ می‌دهد؛ در پایان مطالب مرتبط سایت هم پیشنهاد می‌شود.</p>
             </div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.55rem;margin-bottom:0.55rem">
                 <label style="font-size:.65rem;color:var(--gold);display:block;margin-bottom:0.3rem"><i class="fas fa-terminal"></i> پرسش عملیاتی</label>
@@ -970,34 +970,68 @@
             if (!out) return;
             if (!q) { out.innerHTML = '<span style="color:#e74c3c">ابتدا سؤال را بنویس.</span>'; return; }
 
-            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال جستجو در مطالب سایت...</div>';
+            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال دریافت پاسخ از هوش مصنوعی پدافند...</div>';
 
+            const aiAns = await askPadafandAI(q);
             const hits = searchArchivePosts(q, 5);
+            window._aiHits = hits;
+
+            let html = '';
+            if (aiAns) {
+                html += '<div style="padding:0.55rem;border:1px solid var(--neon);border-radius:8px;background:rgba(57,255,20,0.05);margin-bottom:0.5rem">' +
+                    '<div style="color:var(--neon);font-weight:700;margin-bottom:0.35rem"><i class="fas fa-robot"></i> پاسخ هوش مصنوعی پدافند شبهات</div>' +
+                    '<div style="line-height:1.95;font-size:.75rem;color:var(--tp)">' + escapeHtml(aiAns).replace(/\n/g, '<br>') + '</div></div>';
+            } else {
+                html += '<div style="color:#e8a0a0;margin-bottom:0.45rem">پاسخ هوش مصنوعی دریافت نشد. بعداً دوباره تلاش کن یا به فرماندهی ارسال کن.</div>';
+            }
+
             if (hits.length) {
-                let html = '<div style="color:var(--neon);margin-bottom:0.35rem"><i class="fas fa-check-circle"></i> مطالب مرتبط در سایت:</div>';
-                html += hits.map(p => {
-                    const pid = JSON.stringify(String(p.id != null ? p.id : ''));
-                    return '<div style="border:1px solid var(--br);border-radius:6px;padding:0.4rem;margin-bottom:0.3rem">' +
-                    '<div style="color:var(--gold);font-weight:700;cursor:pointer" onclick="const i=allPosts.findIndex(x=>String(x.id)===' + pid + ');if(i>=0)openReader(i);">' +
-                    escapeHtml((p.shobe || '').substring(0, 120)) + '</div>' +
-                    '<div style="color:var(--tp);font-size:.6rem;margin-top:0.2rem;line-height:1.7">' +
-                    escapeHtml((p.answer || '').substring(0, 220)) + ((p.answer || '').length > 220 ? '…' : '') +
-                    '</div></div>';
+                html += '<div style="color:var(--gold);font-weight:700;margin:0.4rem 0 0.3rem;font-size:.68rem"><i class="fas fa-book"></i> مطالب مرتبط در سایت (برای مطالعه لمس کن)</div>';
+                html += hits.map((p, hi) => {
+                    const title = escapeHtml((p.shobe || 'بدون عنوان').substring(0, 140));
+                    return '<div class="post" style="cursor:pointer;margin-bottom:0.35rem" onclick="openAiRelatedPost(' + hi + ')">' +
+                        '<div class="post-hdr" style="pointer-events:none">' +
+                        '<span class="title"><i class="fas fa-question-circle"></i> ' + title + '</span>' +
+                        '<span class="arrow"><i class="fas fa-book-open"></i></span>' +
+                        '</div></div>';
                 }).join('');
-                html += '<div style="margin-top:0.35rem;font-size:.58rem;color:var(--ts)">اگر کافی نبود، سؤال را دقیق‌تر بنویس یا از پرامپت و میانبرهای پایین استفاده کن.</div>';
-                out.innerHTML = html;
+            } else {
+                html += '<div style="font-size:.58rem;color:var(--ts);margin-top:0.3rem">مطلب مرتبطی در آرشیو سایت پیدا نشد.</div>';
+            }
+            out.innerHTML = html;
+
+            // ارسال سؤال و جواب به فرماندهی برای بررسی و انتشار احتمالی
+            try {
+                await saveToSupabase('messages', {
+                    shobe: q,
+                    answer: aiAns || '',
+                    category: 'هوش مصنوعی',
+                    priority: 'عادی',
+                    sender: loggedUser || 'مهمان',
+                    date: new Date().toLocaleString('fa-IR'),
+                    status: 'پاسخ AI — در انتظار بررسی',
+                    source: 'website-ai'
+                });
+            } catch (e) { console.warn('save AI message', e); }
+        }
+
+        function openAiRelatedPost(hi) {
+            const hits = window._aiHits || [];
+            const p = hits[hi];
+            if (!p) return;
+            let idx = allPosts.findIndex(x => String(x.id) === String(p.id));
+            if (idx < 0) {
+                // fallback: open reader with temporary data
+                const modal = document.getElementById('readerModal');
+                if (!modal) return;
+                document.getElementById('readerTitle').textContent = p.shobe || 'شبهه';
+                document.getElementById('readerAns').innerHTML = escapeHtml(p.answer || '—').replace(/\n/g, '<br>');
+                document.getElementById('readerMeta').innerHTML = p.cat ? ('<i class="fas fa-tag"></i> ' + escapeHtml(p.cat)) : '';
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
                 return;
             }
-
-            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در آرشیو نبود — در حال پرسش از هوش مصنوعی پدافند...</div>';
-            const aiAns = await askPadafandAI(q);
-            if (aiAns) {
-                out.innerHTML = '<div style="padding:0.5rem;border:1px solid var(--neon);border-radius:8px;background:rgba(57,255,20,0.05)">' +
-                    '<div style="color:var(--neon);font-weight:700;margin-bottom:0.3rem"><i class="fas fa-robot"></i> پاسخ هوش مصنوعی پدافند شبهات</div>' +
-                    '<div style="line-height:1.95;font-size:.72rem">' + escapeHtml(aiAns).replace(/\n/g, '<br>') + '</div></div>';
-            } else {
-                out.innerHTML = '<div style="color:var(--ts);line-height:1.8">پاسخی دریافت نشد. پرامپت را کپی کن و از میانبرهای پایین استفاده کن یا به فرماندهی بفرست.</div>';
-            }
+            openReader(idx);
         }
 
         function copyAIPrompt() {
