@@ -2746,8 +2746,8 @@
             ));
             const dbEl = document.getElementById('dbSize');
             const stEl = document.getElementById('storageSize');
-            if (dbEl) dbEl.textContent = approxKb + ' KB (تخمینی)';
-            if (stEl) stEl.textContent = 'بدون فایل آپلودشده / ' + approxKb + ' KB داده';
+            if (dbEl) dbEl.textContent = approxKb + ' KB (تقریبی از دادهٔ بارگذاری‌شده — نه حجم واقعی دیسک Supabase)';
+            if (stEl) stEl.textContent = 'فایل جداگانه اندازه‌گیری نمی‌شود؛ فقط تخمین JSON سمت کلاینت';
 
             const backups = await loadFromSupabase('backups');
             const backupList = document.getElementById('backupList');
