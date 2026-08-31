@@ -1964,8 +1964,9 @@
                 <div style="margin-bottom:0.5rem">
                     <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">📊 وضعیت سرور</h4>
                     <div style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8">
-                        <div>📁 فضای دیتابیس: <span id="dbSize">در حال محاسبه...</span></div>
-                        <div>🖼️ فضای فایل‌ها: <span id="storageSize">در حال محاسبه...</span></div>
+                        <div>📁 حجم کل دیتابیس: <span id="dbSize">در حال محاسبه...</span></div>
+                        <div>📊 جزئیات جداول: <span id="storageSize">—</span></div>
+                        <div id="dbTablesDetail" style="font-size:0.32rem;color:var(--text-secondary);margin:0.2rem 0 0.35rem;line-height:1.7"></div>
                         <div>👥 تعداد کاربران: <span id="totalUsers">۰</span></div>
                         <div>📝 تعداد شبهات: <span id="totalPosts">۰</span></div>
                         <div>💬 تعداد کامنت‌ها: <span id="totalComments">۰</span></div>
@@ -2320,6 +2321,51 @@
             run(updateReports);
             run(updateCommanderLog);
             run(updateSettings);
+        }
+
+
+        async function refreshDbStorageStats() {
+            const dbEl = document.getElementById('dbSize');
+            const stEl = document.getElementById('storageSize');
+            const detail = document.getElementById('dbTablesDetail');
+            const fmt = (bytes) => {
+                const n = Number(bytes) || 0;
+                if (n < 1024) return n + ' B';
+                if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+                if (n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(2) + ' MB';
+                return (n / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+            };
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_db_stats`, {
+                    method: 'POST',
+                    headers: sbHeaders,
+                    body: '{}'
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    // may be object or array
+                    const stats = Array.isArray(data) ? data[0] : data;
+                    if (stats && (stats.database_bytes != null || stats.database_pretty)) {
+                        if (dbEl) dbEl.textContent = stats.database_pretty || fmt(stats.database_bytes);
+                        const tables = stats.tables || [];
+                        if (stEl) stEl.textContent = tables.length ? (tables.length + ' جدول') : '—';
+                        if (detail && Array.isArray(tables)) {
+                            detail.innerHTML = tables.slice(0, 12).map(t =>
+                                `• ${t.name || t.relname || '?'}: <b style="color:var(--neon)">${t.pretty || fmt(t.bytes)}</b>`
+                            ).join('<br>');
+                        }
+                        return;
+                    }
+                }
+            } catch (e) { console.warn('get_db_stats', e); }
+
+            // fallback تخمینی
+            const approx = Math.max(1, Math.round(
+                (JSON.stringify(allUsers || {}).length + JSON.stringify(allPosts || []).length + JSON.stringify(allMessages || []).length) / 1024
+            ));
+            if (dbEl) dbEl.textContent = approx + ' KB (تخمینی — تابع get_db_stats نصب نیست)';
+            if (stEl) stEl.textContent = 'برای آمار دقیق SQL تابع را در Supabase اجرا کنید';
+            if (detail) detail.innerHTML = '<span style="color:#c0392b">تابع <code>get_db_stats</code> در دیتابیس یافت نشد.</span>';
         }
 
         function updateStats() {
@@ -2740,14 +2786,8 @@
             document.getElementById('totalComments').textContent = totalComments;
             document.getElementById('totalMessages').textContent = totalMessages;
 
-            // تخمین فضای داده‌ها (بدون دسترسی مستقیم به دیسک)
-            const approxKb = Math.max(1, Math.round(
-                (JSON.stringify(allUsers).length + JSON.stringify(allPosts).length + JSON.stringify(allMessages).length) / 1024
-            ));
-            const dbEl = document.getElementById('dbSize');
-            const stEl = document.getElementById('storageSize');
-            if (dbEl) dbEl.textContent = approxKb + ' KB (تقریبی از دادهٔ بارگذاری‌شده — نه حجم واقعی دیسک Supabase)';
-            if (stEl) stEl.textContent = 'فایل جداگانه اندازه‌گیری نمی‌شود؛ فقط تخمین JSON سمت کلاینت';
+            // آمار دقیق حجم از تابع RPC دیتابیس (get_db_stats) — در غیر این صورت تخمین موقت
+            await refreshDbStorageStats();
 
             const backups = await loadFromSupabase('backups');
             const backupList = document.getElementById('backupList');
