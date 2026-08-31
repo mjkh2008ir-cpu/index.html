@@ -1553,7 +1553,7 @@
         }
 
         
-        async async function replyInboxItem(index) {
+        async function replyInboxItem(index) {
             if (!loggedUser) return;
             const input = document.getElementById('replyInbox' + index);
             const text = (input?.value || '').trim();
