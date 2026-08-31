@@ -851,29 +851,92 @@
             saveBadge('daily1', 'چالش روزانه');
         }
 
+        
+        function normalizeFa(s) {
+            return String(s || '')
+                .toLowerCase()
+                .replace(/[ي]/g, 'ی')
+                .replace(/[ك]/g, 'ک')
+                .replace(/[‌]/g, ' ')
+                .replace(/[^\u0600-\u06FFa-z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        function tokenizeQuery(q) {
+            const stop = new Set(['از','به','با','در','که','را','این','آن','برای','یک','تا','هم','یا','و','است','هست','چیست','چی','آیا','چرا','اگر','روی','بعد','قبل','شده','میشود','می‌شود','های','ها']);
+            return normalizeFa(q).split(' ').filter(w => w.length >= 2 && !stop.has(w));
+        }
+        function scorePostAgainstQuery(p, terms) {
+            if (!terms.length) return 0;
+            const sh = normalizeFa(p.shobe || '');
+            const ans = normalizeFa(p.answer || '');
+            const tags = normalizeFa(Array.isArray(p.tags) ? p.tags.join(' ') : (p.tags || ''));
+            const cat = normalizeFa(p.cat || '');
+            let score = 0;
+            let matched = 0;
+            for (const w of terms) {
+                let hit = false;
+                if (sh.includes(w)) { score += 8; hit = true; if (sh.startsWith(w) || sh.split(' ').includes(w)) score += 4; }
+                if (tags.includes(w)) { score += 5; hit = true; }
+                if (cat.includes(w)) { score += 3; hit = true; }
+                if (ans.includes(w)) { score += 2; hit = true; }
+                if (hit) matched++;
+            }
+            // نیاز به پوشش کافی واژه‌ها تا نامرتبط نیاید
+            const coverage = matched / terms.length;
+            if (terms.length === 1 && matched === 1) return score;
+            if (terms.length >= 2 && coverage < 0.4) return 0;
+            if (terms.length >= 4 && matched < 2) return 0;
+            return score * (0.5 + coverage);
+        }
+        function searchArchivePosts(q, limit) {
+            limit = limit || 5;
+            const terms = tokenizeQuery(q);
+            if (!terms.length) return [];
+            const posts = (typeof allPosts !== 'undefined' && allPosts) ? allPosts : [];
+            return posts
+                .map(p => ({ p, s: scorePostAgainstQuery(p, terms) }))
+                .filter(x => x.s > 0)
+                .sort((a, b) => b.s - a.s)
+                .slice(0, limit)
+                .map(x => x.p);
+        }
+
         async function askPadafandAI(question) {
-            const endpoints = [
-                AI_WORKER_URL + '/api/ai',
-                AI_WORKER_URL + '/',
-                AI_WORKER_URL
+            const url = (typeof AI_WORKER_URL !== 'undefined' ? AI_WORKER_URL : 'https://padafand-shobahat.padafand-shobahat.workers.dev').replace(/\/$/, '');
+            const payloads = [
+                { question: question, session_id: loggedUser || ('web-' + Date.now()), source: 'website' },
+                { text: question, session_id: loggedUser || ('web-' + Date.now()), source: 'website' },
+                { message: question, source: 'website' }
             ];
-            const body = JSON.stringify({ question: question, session_id: loggedUser || ('web-' + Date.now()) });
-            for (const url of endpoints) {
-                try {
-                    const res = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: body
-                    });
-                    if (!res.ok) continue;
-                    const data = await res.json().catch(() => null);
-                    if (typeof data === 'string') return data;
-                    if (data && (data.answer || data.reply || data.text || data.result || data.response)) {
-                        return data.answer || data.reply || data.text || data.result || data.response;
-                    }
-                    const txt = await res.text();
-                    if (txt && txt.length < 8000) return txt;
-                } catch (e) { console.warn('AI worker', url, e); }
+            const paths = ['/api/ai', '/ai', '/chat', '/'];
+            for (const path of paths) {
+                for (const bodyObj of payloads) {
+                    try {
+                        const res = await fetch(url + path, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json, text/plain'
+                            },
+                            body: JSON.stringify(bodyObj)
+                        });
+                        if (!res.ok) continue;
+                        const raw = await res.text();
+                        if (!raw || raw.trim() === 'OK' || raw.trim() === 'ok') continue;
+                        try {
+                            const data = JSON.parse(raw);
+                            if (typeof data === 'string' && data.trim() && data.trim() !== 'OK') return data.trim();
+                            const ans = data.answer || data.reply || data.text || data.result || data.response || data.message || data.output;
+                            if (ans && String(ans).trim() && String(ans).trim() !== 'OK') return String(ans).trim();
+                            if (data.choices && data.choices[0] && data.choices[0].message) {
+                                return String(data.choices[0].message.content || '').trim();
+                            }
+                        } catch (e) {
+                            if (raw.length > 8 && raw.length < 12000 && !raw.includes('error code')) return raw.trim();
+                        }
+                    } catch (e) { console.warn('AI', path, e); }
+                }
             }
             return null;
         }
@@ -883,28 +946,44 @@
             const out = document.getElementById('aiLocalResult');
             if (!out) return;
             if (!q) { out.innerHTML = '<span style="color:#e74c3c">ابتدا سؤال را بنویس.</span>'; return; }
-            const posts = (typeof allPosts !== 'undefined' && allPosts) ? allPosts : [];
-            const terms = q.split(/\s+/).filter(w => w.length > 1);
-            const hits = posts.filter(p => {
-                const blob = ((p.shobe||'') + ' ' + (p.answer||'') + ' ' + (p.tags||'')).toLowerCase();
-                return terms.some(w => blob.includes(w.toLowerCase()));
-            }).slice(0, 5);
-            if (!hits.length) {
-                out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال دریافت پاسخ از هوش مصنوعی پدافند...</div>';
-                const aiAns = await askPadafandAI(q);
-                if (aiAns) {
-                    out.innerHTML = '<div style="color:var(--neon);margin-bottom:0.3rem"><i class="fas fa-robot"></i> پاسخ سامانه پدافند:</div><div style="line-height:1.9">' + escapeHtml(aiAns).replace(/\n/g, '<br>') + '</div>';
-                } else {
-                    out.innerHTML = '<div style="color:var(--ts)">مطلبی در آرشیو نبود و سرویس AI در دسترس قرار نگرفت. از لینک‌های زیر یا «ارسال به فرماندهی» استفاده کن.</div>';
-                }
-                return;
+
+            out.innerHTML = '<div style="color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> جستجو در قرارگاه و سامانه هوش مصنوعی...</div>';
+
+            const hits = searchArchivePosts(q, 5);
+            let html = '';
+            if (hits.length) {
+                html += '<div style="color:var(--neon);margin-bottom:0.35rem"><i class="fas fa-check-circle"></i> مرتبط‌ترین مطالب قرارگاه:</div>';
+                html += hits.map(p =>
+                    '<div style="border:1px solid var(--br);border-radius:6px;padding:0.4rem;margin-bottom:0.3rem">' +
+                    '<div style="color:var(--gold);font-weight:700;cursor:pointer" onclick="const i=allPosts.findIndex(x=>String(x.id)===String(' + JSON.stringify(String(p.id)) + '));if(i>=0)openReader(i);">' +
+                    escapeHtml((p.shobe || '').substring(0, 120)) + '</div>' +
+                    '<div style="color:var(--tp);font-size:.6rem;margin-top:0.2rem;line-height:1.7">' +
+                    escapeHtml((p.answer || '').substring(0, 220)) + ((p.answer || '').length > 220 ? '…' : '') +
+                    '</div></div>'
+                ).join('');
+            } else {
+                html += '<div style="color:var(--ts);margin-bottom:0.35rem">مطلب خیلی مرتبطی در آرشیو پیدا نشد.</div>';
             }
-            out.innerHTML = '<div style="color:var(--neon);margin-bottom:0.3rem"><i class="fas fa-check-circle"></i> یافته‌های قرارگاه:</div>' +
-                hits.map(p => `<div style="border:1px solid var(--br);border-radius:6px;padding:0.35rem;margin-bottom:0.3rem">
-                    <div style="color:var(--gold);font-weight:700">${(p.shobe||'').substring(0,90)}</div>
-                    <div style="color:var(--tp);font-size:.6rem;margin-top:0.2rem">${(p.answer||'').substring(0,220)}${(p.answer||'').length>220?'…':''}</div>
-                </div>`).join('');
+
+            html += '<div style="margin-top:0.45rem;color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> در حال دریافت پاسخ از هوش مصنوعی پدافند...</div>';
+            out.innerHTML = html;
+
+            const aiAns = await askPadafandAI(q);
+            // remove spinner line by rebuilding tail
+            if (aiAns) {
+                html += '<div style="margin-top:0.5rem;padding:0.5rem;border:1px solid var(--neon);border-radius:8px;background:rgba(57,255,20,0.05)">' +
+                    '<div style="color:var(--neon);font-weight:700;margin-bottom:0.3rem"><i class="fas fa-robot"></i> پاسخ هوش مصنوعی پدافند شبهات</div>' +
+                    '<div style="line-height:1.95;font-size:.72rem">' + escapeHtml(aiAns).replace(/\n/g, '<br>') + '</div></div>';
+            } else {
+                html += '<div style="margin-top:0.45rem;padding:0.45rem;border:1px solid var(--br);border-radius:8px;font-size:.62rem;color:var(--ts);line-height:1.8">' +
+                    '<i class="fas fa-info-circle"></i> سرویس هوش مصنوعی اختصاصی هنوز پاسخ متنی به وب برنمی‌گرداند (فقط تأیید OK). ' +
+                    'باید روی Worker مسیر <b style="color:var(--gold)">POST /api/ai</b> با خروجی JSON مثل ' +
+                    '<code style="color:var(--neon)">{ "answer": "..." }</code> فعال شود. تا آن زمان از آرشیو یا ارسال به فرماندهی استفاده کن.' +
+                    '</div>';
+            }
+            out.innerHTML = html;
         }
+
         function openAIWithQuery(base) {
             const q = (document.getElementById('aiQuery')?.value || '').trim();
             const url = q ? (base.includes('perplexity') ? base + '/search?q=' + encodeURIComponent(q) : base) : base;
