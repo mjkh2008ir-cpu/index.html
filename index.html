@@ -1002,16 +1002,19 @@
 
             // ارسال سؤال و جواب به فرماندهی برای بررسی و انتشار احتمالی
             try {
-                await saveToSupabase('messages', {
+                const saved = await saveToSupabase('messages', {
                     shobe: q,
                     answer: aiAns || '',
                     category: 'هوش مصنوعی',
                     priority: 'عادی',
                     sender: loggedUser || 'مهمان',
                     date: new Date().toLocaleString('fa-IR'),
-                    status: 'پاسخ AI — در انتظار بررسی',
-                    source: 'website-ai'
+                    status: 'پاسخ AI — در انتظار بررسی'
                 });
+                if (saved) {
+                    if (!Array.isArray(allMessages)) allMessages = [];
+                    allMessages.push(saved);
+                }
             } catch (e) { console.warn('save AI message', e); }
         }
 
@@ -1535,7 +1538,7 @@
             }).join('');
         }
 
-        function toggleInboxItem(index) {
+        async function toggleInboxItem(index) {
             const body = document.getElementById(`inboxBody${index}`);
             if (!body) return;
             body.classList.toggle('show');
@@ -1550,7 +1553,7 @@
         }
 
         
-        async function replyInboxItem(index) {
+        async async function replyInboxItem(index) {
             if (!loggedUser) return;
             const input = document.getElementById('replyInbox' + index);
             const text = (input?.value || '').trim();
@@ -1613,7 +1616,7 @@
                 document.getElementById('sendMsg').style.color = '#c0392b';
                 return;
             }
-            await saveToSupabase('messages', {
+            const savedMsg = await saveToSupabase('messages', {
                 shobe: shobe,
                 answer: answer,
                 category: document.getElementById('sendCategory').value,
@@ -1622,6 +1625,13 @@
                 date: new Date().toLocaleString('fa-IR'),
                 status: 'در انتظار بررسی'
             });
+            if (!savedMsg) {
+                document.getElementById('sendMsg').textContent = '❌ ارسال ناموفق — اتصال سرور را بررسی کنید';
+                document.getElementById('sendMsg').style.color = '#c0392b';
+                return;
+            }
+            if (!Array.isArray(allMessages)) allMessages = [];
+            allMessages.unshift(savedMsg);
             document.getElementById('sendMsg').textContent = '✅ شبهه با موفقیت به فرماندهی ارسال شد';
             document.getElementById('sendMsg').style.color = '#6db33f';
             document.getElementById('sendShobe').value = '';
