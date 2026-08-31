@@ -1835,12 +1835,20 @@
         <div id="tab-launch" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-rocket"></i> شلیک مطلب جدید</div>
-                <input type="text" id="newShobe" placeholder="شبهه...">
-                <textarea id="newAnswer" placeholder="پاسخ..."></textarea>
-                <div class="row">
-                    <input type="text" id="newSource" placeholder="منبع">
-                    <input type="text" id="newTags" placeholder="هشتگ‌ها">
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.45rem">
+                    <button type="button" class="btn-msg" onclick="aiGenerateChannelPost()"><i class="fas fa-robot"></i> دستیار AI — مطلب تصادفی (قالب کانال)</button>
+                    <button type="button" class="btn-msg" onclick="aiImproveLaunchDraft()"><i class="fas fa-magic"></i> بهبود پیش‌نویس فعلی</button>
                 </div>
+                <div id="launchAiStatus" style="font-size:0.35rem;color:var(--text-secondary);margin-bottom:0.35rem;min-height:1.1em"></div>
+                <label style="font-size:0.35rem;color:var(--gold)">عنوان (درشت)</label>
+                <input type="text" id="newShobe" placeholder="عنوان مطلب..." style="font-weight:700;font-size:0.55rem">
+                <label style="font-size:0.35rem;color:var(--gold)">مطلب / پاسخ</label>
+                <textarea id="newAnswer" rows="10" placeholder="متن کامل با قالب کانال..."></textarea>
+                <div class="row">
+                    <input type="text" id="newSource" placeholder="منبع 🔗">
+                    <input type="text" id="newTags" placeholder="هشتگ‌ها مثل #پدافند_شبهات">
+                </div>
+                <input type="text" id="newAuthor" placeholder="نویسنده ✍🏻 یا گوینده 🎙" style="margin-bottom:0.3rem">
                 <select id="newCategory">
                     <option value="اعتقادی">اعتقادی</option>
                     <option value="مذهبی">مذهبی</option>
@@ -1848,14 +1856,19 @@
                     <option value="اجتماعی">اجتماعی</option>
                     <option value="نظامی">نظامی</option>
                 </select>
-                <button class="btn-launch" onclick="firePost()"><i class="fas fa-rocket"></i> شلیک مطلب</button>
+                <div style="background:rgba(57,255,20,0.05);border:1px solid rgba(57,255,20,0.2);border-radius:6px;padding:0.4rem;margin:0.4rem 0;font-size:0.32rem;color:var(--text-secondary);line-height:1.7">
+                    پس از تولید AI، متن را بررسی کنید. انتشار فقط با زدن «شلیک مطلب» انجام می‌شود.
+                </div>
+                <button class="btn-launch" onclick="firePost()"><i class="fas fa-rocket"></i> تأیید و شلیک مطلب</button>
                 <div class="msg" id="fireMsg"></div>
             </div>
         </div>
 
         <div id="tab-posts" class="tab-content" style="display:none">
             <div class="list-container">
-                <div class="list-title"><i class="fas fa-file-alt"></i> مطالب ارسال‌شده</div>
+                <div class="list-title"><i class="fas fa-file-alt"></i> مطالب ارسال‌شده
+                    <button type="button" class="btn-msg" style="float:left;font-size:0.3rem" onclick="switchTab('launch');setTimeout(aiGenerateChannelPost,200)"><i class="fas fa-robot"></i> مطلب جدید با AI</button>
+                </div>
                 <div id="postsList">
                     <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
                     </div>
@@ -1902,6 +1915,10 @@
         <div id="tab-messages" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-envelope"></i> ارسال پیام به کاربران</div>
+                <div style="margin-bottom:0.35rem">
+                    <button type="button" class="btn-msg" onclick="aiDraftUserMessage()"><i class="fas fa-robot"></i> پیش‌نویس پیام با AI</button>
+                    <span id="msgAiBarStatus" style="font-size:0.32rem;color:var(--text-secondary);margin-right:0.3rem"></span>
+                </div>
                 <div class="row">
                     <select id="msgRecipient">
                         <option value="all">همه کاربران</option>
@@ -1924,7 +1941,9 @@
 
         <div id="tab-incoming" class="tab-content" style="display:none">
             <div class="list-container">
-                <div class="list-title"><i class="fas fa-inbox"></i> شبهات ارسالی از سوی مردم</div>
+                <div class="list-title"><i class="fas fa-inbox"></i> شبهات ارسالی از سوی مردم
+                    <span style="font-size:0.3rem;color:var(--text-secondary);font-weight:400"> — روی هر مورد بزنید؛ پیشنهاد AI داخل جزئیات است</span>
+                </div>
                 <div id="incomingList">
                     <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
                     </div>
@@ -1982,6 +2001,7 @@
         <div id="tab-reports" class="tab-content" style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-clipboard"></i> نوشتن گزارش جدید</div>
+                <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
                 <input type="text" id="reportTitle" placeholder="عنوان گزارش...">
                 <textarea id="reportBody" rows="4" placeholder="متن گزارش..."></textarea>
                 <button class="btn-launch" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
@@ -3108,17 +3128,30 @@
 
         async function firePost() {
             const shobe = document.getElementById('newShobe').value.trim();
-            const answer = document.getElementById('newAnswer').value.trim();
+            let answer = document.getElementById('newAnswer').value.trim();
             if (!shobe || !answer) {
-                document.getElementById('fireMsg').textContent = '⚠️ شبهه و پاسخ را وارد کنید';
+                document.getElementById('fireMsg').textContent = '⚠️ عنوان و مطلب را وارد کنید';
                 document.getElementById('fireMsg').style.color = '#c0392b';
                 return;
+            }
+            if (!confirm('تأیید انتشار این مطلب در سایت؟')) return;
+            const author = (document.getElementById('newAuthor')?.value || '').trim();
+            const source = document.getElementById('newSource').value.trim() || 'منبع معتبر';
+            const tagsRaw = document.getElementById('newTags').value.trim();
+            let tags = tagsRaw.split(/[\s#]+/).filter(Boolean).map(t => t.replace(/^#/, ''));
+            if (!tags.length) tags = ['پدافند_شبهات'];
+            // اطمینان از بلوک انتهایی کانال در متن (اگر نباشد اضافه می‌شود)
+            if (!answer.includes('@padafand_shobahat')) {
+                answer += '\n\n🛡 پدافند شبهات ؛ پاسخ به شبهات\n@padafand_shobahat';
+            }
+            if (author && !answer.includes(author)) {
+                answer += '\n\n' + author;
             }
             const newPost = {
                 shobe: shobe,
                 answer: answer,
-                source: document.getElementById('newSource').value.trim() || 'منبع معتبر',
-                tags: document.getElementById('newTags').value.trim().split(' ').filter(Boolean),
+                source: source,
+                tags: tags,
                 cat: document.getElementById('newCategory').value,
                 date: new Date().toLocaleDateString('fa-IR'),
                 time: new Date().toLocaleTimeString('fa-IR'),
@@ -3193,6 +3226,161 @@
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
+        }
+
+
+
+        const CHANNEL_POST_RULES = `قالب اجباری مطلب «پدافند شبهات» (رعایت دقیق):
+
+1) عنوان: یک خط واضح و رسمی (بعداً با فونت درشت نمایش داده می‌شود).
+2) مطلب: لحن رسمی. نیم‌فاصله درست (می‌کنم نه میکنم، می‌شود نه میشود). علامات نگارشی ، و . را بگذار.
+3) ابتدای هر بند یک ایموجی مناسب بگذار.
+4) نویسنده: در انتها با ✍🏻 نام نویسنده؛ اگر گوینده است با 🎙.
+5) منبع: با 🔗 یا 🗂 و اگر لینک داری داخل متن منبع بیاور.
+6) اگر مطلب خیلی طولانی است بگو سند کامل در اسناد پدافند شبهات بارگذاری شود و لینک فرضی/جایگاه لینک را مشخص کن.
+7) هشتگ: حداقل یک هشتگ؛ ترجیحاً از این‌ها: #پدافند_شبهات #شبهات #پاسخ_به_شبهه #معارف #بسیج_تبیین
+8) انتهای مطلب دقیقاً این امضا را بیاور:
+🛡 پدافند شبهات ؛ پاسخ به شبهات
+@padafand_shobahat
+
+خروجی را این‌گونه بده:
+TITLE: <عنوان>
+CATEGORY: <اعتقادی|مذهبی|سیاسی|اجتماعی|نظامی>
+SOURCE: <منبع>
+TAGS: <هشتگ‌ها با فاصله>
+AUTHOR: <✍🏻 ... یا 🎙 ...>
+BODY:
+<متن کامل مطلب با بندها و ایموجی>
+`;
+
+        const RANDOM_TOPICS = [
+            'شبهه درباره فایده نماز',
+            'شبهه درباره حجاب',
+            'شبهه درباره مقاومت و تحریم',
+            'شبهه درباره عدالت امام علی علیه‌السلام',
+            'شبهه درباره غیبت امام زمان عجل‌الله',
+            'شبهه درباره جنگ روایت‌ها در فضای مجازی',
+            'شبهه درباره رابطه علم و دین',
+            'شبهه درباره توکل و تلاش',
+            'شبهه درباره امر به معروف',
+            'شبهه درباره شهادت و ایثار',
+            'شبهه درباره استقلال کشور',
+            'شبهه درباره خانواده و فرزندآوری'
+        ];
+
+        async function aiGenerateChannelPost() {
+            const st = document.getElementById('launchAiStatus');
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال نوشتن مطلب با قالب کانال...';
+            const topic = RANDOM_TOPICS[Math.floor(Math.random() * RANDOM_TOPICS.length)];
+            const prompt = CHANNEL_POST_RULES + `\n\nیک مطلب جدید و غیرتکراری درباره این موضوع بنویس:\n«${topic}»\nمطلب باید برای انتشار در کانال و سایت مناسب باشد، حدود ۸ تا ۱۶ خط.`;
+            try {
+                const raw = await askCommandAI(prompt);
+                fillLaunchFromAiRaw(raw, topic);
+                if (st) st.textContent = '✅ پیش‌نویس آماده است — بررسی کنید و در صورت تأیید «تأیید و شلیک مطلب» را بزنید. موضوع: ' + topic;
+            } catch (e) {
+                console.error(e);
+                if (st) st.textContent = '❌ خطا در تولید مطلب';
+            }
+        }
+
+        async function aiImproveLaunchDraft() {
+            const st = document.getElementById('launchAiStatus');
+            const title = (document.getElementById('newShobe')?.value || '').trim();
+            const body = (document.getElementById('newAnswer')?.value || '').trim();
+            if (!title && !body) {
+                if (st) st.textContent = '⚠️ ابتدا متنی بنویسید یا مطلب تصادفی تولید کنید';
+                return;
+            }
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال بهبود قالب کانال...';
+            const prompt = CHANNEL_POST_RULES + `\n\nاین پیش‌نویس را دقیقاً مطابق قالب کانال بازنویسی و اصلاح کن:\nعنوان: ${title}\nمتن:\n${body}`;
+            try {
+                const raw = await askCommandAI(prompt);
+                fillLaunchFromAiRaw(raw, title);
+                if (st) st.textContent = '✅ بازنویسی شد — قبل از انتشار بررسی کنید';
+            } catch (e) {
+                if (st) st.textContent = '❌ خطا در بهبود';
+            }
+        }
+
+        function fillLaunchFromAiRaw(raw, fallbackTitle) {
+            const text = String(raw || '').trim();
+            let title = fallbackTitle || '';
+            let category = '';
+            let source = '';
+            let tags = '';
+            let author = '';
+            let body = text;
+
+            const titleM = text.match(/TITLE:\s*(.+)/i);
+            const catM = text.match(/CATEGORY:\s*(.+)/i);
+            const srcM = text.match(/SOURCE:\s*(.+)/i);
+            const tagsM = text.match(/TAGS:\s*(.+)/i);
+            const authM = text.match(/AUTHOR:\s*(.+)/i);
+            const bodyM = text.match(/BODY:\s*([\s\S]*)/i);
+
+            if (titleM) title = titleM[1].trim();
+            if (catM) category = catM[1].trim();
+            if (srcM) source = srcM[1].trim();
+            if (tagsM) tags = tagsM[1].trim();
+            if (authM) author = authM[1].trim();
+            if (bodyM) body = bodyM[1].trim();
+            else {
+                // fallback: first line title
+                const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+                if (lines.length > 1 && lines[0].length < 120) {
+                    title = title || lines[0].replace(/^#+\s*/, '');
+                    body = lines.slice(1).join('\n');
+                }
+            }
+
+            const sh = document.getElementById('newShobe');
+            const ans = document.getElementById('newAnswer');
+            const src = document.getElementById('newSource');
+            const tg = document.getElementById('newTags');
+            const au = document.getElementById('newAuthor');
+            const cat = document.getElementById('newCategory');
+            if (sh) sh.value = title;
+            if (ans) ans.value = body;
+            if (src && source) src.value = source;
+            if (tg) tg.value = tags || '#پدافند_شبهات';
+            if (au && author) au.value = author;
+            if (cat && category) {
+                const opts = Array.from(cat.options).map(o => o.value);
+                const hit = opts.find(o => category.includes(o));
+                if (hit) cat.value = hit;
+            }
+        }
+
+        async function aiDraftUserMessage() {
+            const st = document.getElementById('msgAiBarStatus');
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+            const sub = (document.getElementById('msgSubject')?.value || '').trim();
+            const prompt = `یک پیام رسمی، کوتاه و محترمانه از طرف فرماندهی پدافند شبهات برای کاربر بنویس.
+موضوع: ${sub || 'پیام عمومی'}
+فقط متن پیام را بنویس، بدون عنوان اضافه.`;
+            try {
+                const ans = await askCommandAI(prompt);
+                const body = document.getElementById('msgBody');
+                if (body) body.value = ans;
+                if (st) st.textContent = '✅ پیش‌نویس آماده — پس از بررسی ارسال کنید';
+            } catch (e) {
+                if (st) st.textContent = '❌ خطا';
+            }
+        }
+
+        async function aiDraftReport() {
+            const title = (document.getElementById('reportTitle')?.value || '').trim();
+            const bodyEl = document.getElementById('reportBody') || document.getElementById('reportContent');
+            const prompt = `یک گزارش عملیاتی کوتاه برای مرکز فرماندهی پدافند شبهات بنویس. لحن رسمی.
+عنوان پیشنهادی کاربر: ${title || 'گزارش روزانه'}
+قالب: خلاصه وضعیت، اقدامات، پیشنهاد.`;
+            try {
+                const ans = await askCommandAI(prompt);
+                if (bodyEl) bodyEl.value = ans;
+                alert('پیش‌نویس گزارش آماده شد');
+            } catch (e) {
+                alert('خطا در AI');
+            }
         }
 
 
