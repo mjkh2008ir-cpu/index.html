@@ -363,7 +363,7 @@
 <button type="button" onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
 
     <!-- ===== NAV ===== -->
-    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" data-page="about"><i class="fas fa-shield-alt"></i> آشنایی</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
+    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" data-page="news"><i class="fas fa-newspaper"></i> اخبار</button><button class="nav-btn" data-page="about"><i class="fas fa-shield-alt"></i> آشنایی</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
 
     <!-- ===== FAB ===== -->
     <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
@@ -375,7 +375,7 @@
         <button class="nav-item" onclick="switchPage('games')"><i class="fas fa-gamepad"></i><span>بازی</span></button>
         <button class="nav-item" onclick="switchPage('ai')"><i class="fas fa-robot"></i><span>AI</span></button>
         <button class="nav-item" onclick="switchPage('saved')"><i class="fas fa-box"></i><span>ذخیره</span></button>
-        <button class="nav-item" onclick="switchPage('about')"><i class="fas fa-shield-alt"></i><span>آشنایی</span></button>
+        <button class="nav-item" onclick="switchPage('news')"><i class="fas fa-newspaper"></i><span>اخبار</span></button><button class="nav-item" onclick="switchPage('about')"><i class="fas fa-shield-alt"></i><span>آشنایی</span></button>
         <button class="nav-item" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i><span>ارسال</span></button>
         <button class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></button>
     </div>
@@ -391,7 +391,10 @@
 
             
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)"><div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div><p style="color:var(--ts);font-size:.7rem;line-height:1.8">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br><span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span></p></div>
-            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div><div id="homePosts" style="margin-top:0.2rem"></div></div>
+            <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div><div 
+            <div class="page-title" style="margin-top:0.6rem"><i class="fas fa-newspaper"></i> اخبار پدافند</div>
+            <div id="homeNews" style="margin-bottom:0.6rem"></div>
+id="homePosts" style="margin-top:0.2rem"></div></div>
         </div>
 
         <!-- POSTS -->
@@ -489,7 +492,14 @@
 <div class="post"><div class="post-hdr" onclick="this.nextElementSibling.classList.toggle('show')"><span class="title">داده‌های من امن است؟</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div><div class="post-body"><div class="ans">طبق حریم خصوصی، اطلاعات برای ارائه خدمت نگهداری می‌شود. رمز را با کسی در میان نگذار. درخواست حذف حساب از طریق پیام به فرماندهی امکان‌پذیر است.</div></div></div>
 </div>
 
-        <div id="page-about" class="page">
+        <div
+        <div id="page-news" class="page">
+            <div class="page-title"><i class="fas fa-newspaper"></i> اخبار پدافند شبهات</div>
+            <p style="font-size:.65rem;color:var(--ts);line-height:1.8;margin-bottom:.5rem">آخرین خبرهای مربوط به مجموعه؛ راه‌اندازی بات‌ها، به‌روزرسانی سایت و اطلاع‌رسانی‌ها.</p>
+            <div id="newsList"></div>
+        </div>
+
+        id="page-about" class="page">
             <div class="page-title"><i class="fas fa-shield-alt"></i> آشنایی با پدافند شبهات</div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.85rem;font-size:.72rem;line-height:2;color:var(--tp);border-right:3px solid var(--gold)">
                 <p style="margin-bottom:0.7rem"><strong style="color:var(--gold)">پدافند شبهات</strong> در بحبوحه جنگ ۱۲ روزه، در <strong>۲ تیر ۱۴۰۴</strong> شکل گرفت.</p>
@@ -1235,6 +1245,53 @@
             if (modal) modal.classList.remove('show');
             document.body.style.overflow = '';
         }
+
+        
+        const SEED_NEWS = [
+            { title: 'راه‌اندازی بات تلگرام پدافند شبهات', body: 'بات رسمی @padafand_shobahat_bot در تلگرام فعال شد تا پاسخ‌گویی به شبهات سریع‌تر انجام شود.', date: '۱۴۰۴', icon: 'fa-paper-plane' },
+            { title: 'فعالیت در روبیکا', body: 'کانال و مسیر پاسخ‌گویی پدافند شبهات در روبیکا نیز در دسترس مخاطبان قرار گرفت.', date: '۱۴۰۴', icon: 'fa-comments' },
+            { title: 'راه‌اندازی سایت پدافند شبهات', body: 'سایت رسمی برای مطالعه شبهات، ارسال سؤال و ارتباط با فرماندهی منتشر شد.', date: '۱۴۰۴', icon: 'fa-globe' },
+            { title: 'همگام‌سازی کانال با سایت', body: 'پست‌های متنی شبهه از کانال تلگرام پس از مرتب‌سازی هوشمند، روی سایت نیز منتشر می‌شوند.', date: '۱۴۰۵', icon: 'fa-sync' }
+        ];
+
+        function renderNews() {
+            const items = [...SEED_NEWS];
+            // مطالب با دسته اخبار از سرور
+            (allPosts || []).forEach(p => {
+                const cat = (p.cat || '');
+                const tags = (Array.isArray(p.tags) ? p.tags.join(' ') : (p.tags || '')).toString();
+                if (cat === 'اخبار' || /اخبار|اطلاعیه/.test(tags) || /اخبار|اطلاعیه/.test(p.shobe || '')) {
+                    items.unshift({
+                        title: p.shobe || 'خبر',
+                        body: (p.answer || '').substring(0, 280),
+                        date: p.date || '',
+                        icon: 'fa-bullhorn',
+                        postId: p.id
+                    });
+                }
+            });
+            const html = items.slice(0, 12).map(n => `
+                <div class="post" style="margin-bottom:0.4rem">
+                    <div class="post-hdr" style="cursor:default">
+                        <span class="title"><i class="fas ${n.icon || 'fa-newspaper'}"></i> ${escapeHtml(n.title)}</span>
+                        <span class="arrow" style="font-size:.55rem;color:var(--ts)">${escapeHtml(n.date || '')}</span>
+                    </div>
+                    <div class="post-body show" style="display:block;padding:0.45rem 0.5rem;font-size:.68rem;line-height:1.85;color:var(--tp)">
+                        ${escapeHtml(n.body || '')}
+                    </div>
+                </div>`).join('');
+            const a = document.getElementById('newsList');
+            const b = document.getElementById('homeNews');
+            if (a) a.innerHTML = html;
+            if (b) b.innerHTML = items.slice(0, 3).map(n => `
+                <div class="post" style="margin-bottom:0.35rem">
+                    <div class="post-hdr" style="cursor:default">
+                        <span class="title"><i class="fas ${n.icon || 'fa-newspaper'}"></i> ${escapeHtml(n.title)}</span>
+                    </div>
+                    <div class="post-body show" style="display:block;padding:0.4rem;font-size:.62rem;line-height:1.8">${escapeHtml((n.body||'').substring(0,160))}…</div>
+                </div>`).join('') + `<div style="text-align:center;margin-top:0.3rem"><button class="btn" onclick="switchPage('news')" style="font-size:.6rem">همه اخبار</button></div>`;
+        }
+
 
         function renderPosts(list, containerId = 'postContainer') {
             const el = document.getElementById(containerId);
