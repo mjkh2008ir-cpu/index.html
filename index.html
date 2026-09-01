@@ -67,7 +67,7 @@
 
         /* ===== NAV ===== */
         #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
-        .more-sheet{display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
+        .more-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
         .more-sheet.show{display:flex}
         .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
         .more-sheet-title{color:var(--gold);font-weight:700;font-size:.75rem;margin-bottom:0.55rem;display:flex;justify-content:space-between;align-items:center}
@@ -1144,31 +1144,8 @@
 
         // ===== PIE LAUNCHER =====
         function checkTutorialMessage() {
-            if (!loggedUser) return;
-            const tutorialSent = localStorage.getItem('padafand_tutorial_sent_' + loggedUser);
-            if (!tutorialSent) {
-                if (!allInbox[loggedUser]) allInbox[loggedUser] = [];
-                allInbox[loggedUser].push({
-                    id: Date.now(),
-                    from_user: 'سیستم',
-                    from_type: 'system',
-                    subject: '🎯 آموزش قرارگاه',
-                    body: 'سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.',
-                    read: false,
-                    date: new Date().toLocaleString('fa-IR')
-                });
-                saveToSupabase('inbox', {
-                    user: loggedUser,
-                    from_user: 'سیستم',
-                    from_type: 'system',
-                    subject: '🎯 آموزش قرارگاه',
-                    body: 'سلام سرباز! 👋\n\nمن پای لانچر هستم، راهنمای تو توی قرارگاه پدافند شبهات.\n\nآماده‌ای که بخش‌های مختلف سایت رو یاد بگیری؟\n\n✅ روی دکمه "شروع آموزش" کلیک کن تا با هم قرارگاه رو بگردیم.',
-                    read: false,
-                    date: new Date().toLocaleString('fa-IR')
-                });
-                localStorage.setItem('padafand_tutorial_sent_' + loggedUser, 'true');
-                updateInboxBadge();
-            }
+            // آموزش فقط با offerTutorialAfterAuth بعد از ورود/ثبت‌نام — نه روی هر رفرش
+            return;
         }
 
         function openTutorialFromInbox() {
@@ -1209,7 +1186,67 @@
                 `<div style="text-align:center;padding:0.5rem"><div style="font-size:2.5rem;margin-bottom:0.5rem"><i class="fas ${step.icon}"></i></div><h3 style="color:var(--gold)">${step.title}</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">${step.desc}</p><div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem">${tutorialStep > 0 ? `<button class="btn btn-sm" onclick="tutorialStep--;showTutorialStep()"><i class="fas fa-chevron-right"></i> قبلی</button>` : ''}<button class="btn btn-neon" onclick="tutorialStep++;showTutorialStep()">${tutorialStep === tutorialSteps.length - 1 ? '🎯 پایان' : 'بعدی →'}</button></div><div style="font-size:.4rem;color:var(--ts);margin-top:0.3rem">${tutorialStep + 1} از ${tutorialSteps.length}</div></div>`;
         }
 
-        function closePieLauncher() { document.getElementById('pieLauncher').style.display = 'none'; }
+        function closePieLauncher() { const el=document.getElementById('pieLauncher'); if(el) el.style.display = 'none'; }
+
+        function shouldOfferTutorial() {
+            if (!loggedUser) return false;
+            if (localStorage.getItem('padafand_tutorial_done_' + loggedUser)) return false;
+            if (localStorage.getItem('padafand_tutorial_declined_' + loggedUser)) return false;
+            if (localStorage.getItem('padafand_tutorial_offered_' + loggedUser)) return false;
+            return true;
+        }
+
+        function offerTutorialAfterAuth() {
+            if (!loggedUser) return;
+            if (localStorage.getItem('padafand_tutorial_done_' + loggedUser)) return;
+            if (localStorage.getItem('padafand_tutorial_declined_' + loggedUser)) return;
+            if (localStorage.getItem('padafand_tutorial_offered_' + loggedUser)) return;
+            localStorage.setItem('padafand_tutorial_offered_' + loggedUser, '1');
+            try {
+                if (!allInbox[loggedUser]) allInbox[loggedUser] = [];
+                const body = 'سلام! 👋\n\nآیا می‌خواهید با بخش‌های سایت آشنا شوید؟\n\nدر صورت تمایل آموزش را از صندوق پیام یا پس از ورود بعدی شروع کنید.';
+                allInbox[loggedUser].unshift({
+                    id: 'tut-' + Date.now(),
+                    from_user: 'سیستم',
+                    from_type: 'system',
+                    subject: 'آموزش سایت پدافند شبهات',
+                    body: body + '\n\n[آموزش]',
+                    read: false,
+                    date: new Date().toLocaleString('fa-IR')
+                });
+                saveToSupabase('inbox', {
+                    user: loggedUser,
+                    from_user: 'سیستم',
+                    from_type: 'system',
+                    subject: 'آموزش سایت پدافند شبهات',
+                    body: body + '\n\n[آموزش]',
+                    read: false,
+                    date: new Date().toLocaleString('fa-IR')
+                });
+                if (typeof updateInboxBadge === 'function') updateInboxBadge();
+            } catch (e) {}
+            setTimeout(() => {
+                const ok = confirm('به پدافند شبهات خوش آمدید.\n\nآیا می‌خواهید با بخش‌های سایت آشنا شوید؟');
+                if (ok) startTutorialStepsSafe();
+                else localStorage.setItem('padafand_tutorial_declined_' + loggedUser, '1');
+            }, 500);
+        }
+
+        function startTutorialStepsSafe() {
+            if (typeof startTutorial === 'function') {
+                startTutorial();
+            } else if (typeof startTutorialSteps === 'function') {
+                startTutorialSteps();
+            }
+        }
+
+        function markTutorialDone() {
+            if (loggedUser) localStorage.setItem('padafand_tutorial_done_' + loggedUser, '1');
+            const pie = document.getElementById('pieLauncher');
+            if (pie) pie.style.display = 'none';
+        }
+
+
 
         // ===== NAVIGATION =====
         function openMoreMenu() {
@@ -1221,21 +1258,34 @@
             if (el) el.classList.remove('show');
         }
         function switchPage(page) {
+            if (!page) return;
+            closeMoreMenu();
+            const target = document.getElementById('page-' + page);
+            if (!target) {
+                console.error('صفحه یافت نشد:', page);
+                return;
+            }
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${page}`).classList.add('active');
-            document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
-            const btns = document.querySelectorAll('.nav-btn[data-page]');
-            const map = { home: 0, posts: 1, games: 2, ai: 3, saved: 4, faq: 5, about: 6 };
-            if (btns[map[page]]) btns[map[page]].classList.add('active');
+            target.classList.add('active');
+            // نوار بالا
+            document.querySelectorAll('.nav-btn[data-page]').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-page') === page);
+            });
+            // نوار پایین
             document.querySelectorAll('.sidebar-nav .nav-item').forEach(b => b.classList.remove('active'));
-            const sMap = { home: 0, posts: 1, games: 2, ai: 3, saved: 4 };
+            const sMap = { home: 0, posts: 1, ai: 2, account: 3 };
             const sItems = document.querySelectorAll('.sidebar-nav .nav-item');
-            if (sItems[sMap[page]]) sItems[sMap[page]].classList.add('active');
-            if (page === 'posts') filterPosts();
-            if (page === 'home') renderPosts(allPosts.slice(0, 3), 'homePosts');
-            if (page === 'saved') renderSaved();
-            if (page === 'games') { renderGamesLeaderboard(); renderUserBadges(); updateDailyChallengeUI(); }
-            if (page === 'games') initGames();
+            if (page === 'home' || page === 'posts' || page === 'ai') {
+                if (sItems[sMap[page]]) sItems[sMap[page]].classList.add('active');
+            }
+            if (page === 'posts' && typeof filterPosts === 'function') filterPosts();
+            if (page === 'home') {
+                if (typeof renderPosts === 'function') renderPosts((allPosts || []).slice(0, 3), 'homePosts');
+                if (typeof renderNews === 'function') renderNews();
+            }
+            if (page === 'news' && typeof renderNews === 'function') renderNews();
+            if (page === 'saved' && typeof renderSaved === 'function') renderSaved();
+            try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
         }
 
         function closeModal(id) { document.getElementById(id).classList.remove('show'); }
@@ -1290,17 +1340,17 @@
             const items = [...SEED_NEWS];
             // مطالب با دسته اخبار از سرور
             (allPosts || []).forEach(p => {
-                const cat = (p.cat || '');
-                const tags = (Array.isArray(p.tags) ? p.tags.join(' ') : (p.tags || '')).toString();
-                if (cat === 'اخبار' || /اخبار|اطلاعیه/.test(tags) || /اخبار|اطلاعیه/.test(p.shobe || '')) {
-                    items.unshift({
-                        title: p.shobe || 'خبر',
-                        body: (p.answer || '').substring(0, 280),
-                        date: p.date || '',
-                        icon: 'fa-bullhorn',
-                        postId: p.id
-                    });
-                }
+                const cat = String(p.cat || '').trim();
+                const tags = Array.isArray(p.tags) ? p.tags.map(String) : String(p.tags || '').split(/[\s,]+/).filter(Boolean);
+                const isNews = cat === 'اخبار' || tags.includes('اخبار');
+                if (!isNews) return;
+                items.unshift({
+                    title: p.shobe || 'خبر',
+                    body: (p.answer || '').substring(0, 280),
+                    date: p.date || '',
+                    icon: 'fa-bullhorn',
+                    postId: p.id
+                });
             });
             const html = items.slice(0, 12).map(n => `
                 <div class="post" style="margin-bottom:0.4rem">
@@ -2014,6 +2064,7 @@
             updateProfile();
             renderAll();
             setTimeout(showRandomShobeAfterRegister, 500);
+            setTimeout(offerTutorialAfterAuth, 700);
         }
 
         async function userLogin() {
@@ -2040,7 +2091,7 @@
             renderAll();
             // پیام خوش‌آمد / آموزش در صندوق
             localStorage.removeItem('padafand_tutorial_sent_' + loggedUser);
-            checkTutorialMessage();
+            offerTutorialAfterAuth();
             updateInboxBadge();
         }
 
@@ -2174,7 +2225,7 @@
             if (localStorage.getItem('padafand_welcome_shown')) return;
             localStorage.setItem('padafand_welcome_shown', 'true');
             // آموزش فقط از طریق صندوق پیام (نه روی صفحه اصلی)
-            if (loggedUser) checkTutorialMessage();
+            if (loggedUser) offerTutorialAfterAuth();
             if (loggedUser && allUsers[loggedUser] && allUsers[loggedUser].id) {
                 allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + 5;
                 updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
