@@ -2975,7 +2975,7 @@
             alert('✅ دسترسی به کاربر افزوده شد');
         }
 
-        async async function changeSettingsPassword() {
+        async function changeSettingsPassword() {
             if (!(await requireCmdAuth(true))) return;
             const newPass = document.getElementById('settingsPassword').value.trim();
             if (!newPass) { alert('⚠️ رمز جدید را وارد کنید'); return; }
