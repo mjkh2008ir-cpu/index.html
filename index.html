@@ -660,6 +660,17 @@
 
 
 
+    
+<div class="modal" id="gameArenaModal">
+  <div class="modal-content" style="max-width:520px;width:94%;max-height:92vh;overflow:auto;padding:0.75rem">
+    <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+      <h3 id="gameArenaTitle" style="margin:0;color:var(--gold);font-size:.85rem"><i class="fas fa-gamepad"></i> بازی</h3>
+      <button type="button" class="modal-close" onclick="closeGameArena()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="gameArenaBody" style="min-height:200px"></div>
+  </div>
+</div>
+
     <script>
         // ===== SUPABASE CONFIG =====
         const SUPABASE_URL = 'https://yvexbtkxkdlkciwtkjrv.supabase.co';
@@ -907,7 +918,7 @@
         function playDailyChallenge() {
             const key = 'padafand_daily_' + new Date().toISOString().slice(0,10);
             window._dailyChallengeActive = true;
-            startGame('verbal_defense');
+            startGame('ai_ladder');
         }
         function markDailyDoneIfNeeded() {
             if (!window._dailyChallengeActive) return;
@@ -2120,18 +2131,10 @@
             const grid = document.getElementById('gamesGrid');
             if (!grid) return;
             const games = [
-                { id: 'shobe_hunter', name: 'شکار شبهه', icon: 'fa-crosshairs', desc: 'به شبهات هدف بزن!',
-                    color: '#c0392b', status: '🎯 تیراندازی' },
-                { id: 'verbal_defense', name: 'پدافند کلامی', icon: 'fa-shield-alt', desc: 'پاسخ درست رو انتخاب کن',
-                    color: '#c8a000', status: '🧠 دانش' },
-                { id: 'truth_warrior', name: 'جنگجوی حقیقت', icon: 'fa-fist-raised', desc: 'شبهه یا واقعیت؟',
-                    color: '#6db33f', status: '⚔️ تشخیص' },
-                { id: 'minesweeper', name: 'مین‌یاب شبهات', icon: 'fa-bomb', desc: 'میدان شبهات رو پاک کن',
-                    color: '#4a8aaa', status: '💣 استراتژی' },
-                { id: 'quiz', name: 'آزمون پدافندی', icon: 'fa-question-circle', desc: '۱۰ سوال چهارگزینه‌ای',
-                    color: '#8e44ad', status: '📝 امتحان' },
-                { id: 'reaction', name: 'واکنش سریع', icon: 'fa-bolt', desc: 'سریع پاسخ بده!', color: '#e67e22',
-                    status: '⚡ سرعت' }
+                { id: 'ai_ladder', name: 'نردبان شبهه (AI)', icon: 'fa-robot', desc: 'از آسان تا سخت؛ هوش مصنوعی سؤال می‌سازد', color: '#39ff14', status: '🧠 پلکانی' },
+                { id: 'pixel_defense', name: 'پدافند پیکسلی', icon: 'fa-rocket', desc: 'موشک‌های شبهه را رهگیری کن', color: '#c8a000', status: '🎮 اکشن' },
+                { id: 'story_responder', name: 'پاسخگوی قرارگاه', icon: 'fa-comments', desc: 'مردم شبهه می‌پرسند؛ تو جواب بده؛ AI امتیاز می‌دهد', color: '#4a8aaa', status: '📖 داستانی' },
+                { id: 'verbal_defense', name: 'پدافند کلامی', icon: 'fa-shield-alt', desc: 'چهارگزینه‌ای سخت‌تر', color: '#c0392b', status: '⚔️ کلاسیک' }
             ];
             grid.innerHTML = games.map(g => `
                     <div class="game-card" onclick="startGame('${g.id}')" style="border-color:${g.color}">
@@ -2144,71 +2147,304 @@
                 `).join('');
         }
 
+        
+        async function siteGameAI(prompt) {
+            const url = (typeof AI_WORKER_URL !== 'undefined' ? AI_WORKER_URL : '').replace(/\/$/, '') + '/api/ai';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ question: String(prompt).slice(0, 5000), session_id: 'game-' + (loggedUser || 'guest') })
+            });
+            if (!res.ok) throw new Error('AI ' + res.status);
+            const data = await res.json();
+            const ans = data.answer || data.reply || data.text || '';
+            if (!ans) throw new Error('پاسخ خالی');
+            return String(ans).trim();
+        }
+
+        function openGameArena(title) {
+            const m = document.getElementById('gameArenaModal');
+            const tEl = document.getElementById('gameArenaTitle');
+            if (tEl) tEl.innerHTML = '<i class="fas fa-gamepad"></i> ' + title;
+            if (m) m.classList.add('show');
+            if (m) m.style.display = 'flex';
+        }
+        function closeGameArena() {
+            const m = document.getElementById('gameArenaModal');
+            if (m) { m.classList.remove('show'); m.style.display = 'none'; }
+            if (window._pixelDefenseRAF) { cancelAnimationFrame(window._pixelDefenseRAF); window._pixelDefenseRAF = null; }
+        }
+
         function startGame(gameId) {
             if (!loggedUser) {
                 alert('⚠️ برای بازی ابتدا وارد حساب شوید');
                 return;
             }
+            if (gameId === 'ai_ladder') return startAiLadderGame();
+            if (gameId === 'pixel_defense') return startPixelDefenseGame();
+            if (gameId === 'story_responder') return startStoryResponderGame();
+            // classic fallback
+            return startClassicQuizGame(gameId);
+        }
+
+        function startClassicQuizGame(gameId) {
             const bank = {
                 verbal_defense: [
-                    
-                    { q: 'شبهه: دین مانع پیشرفت علم است.', options: ['علم و دین در تاریخ اسلام همراه بوده‌اند؛ دانشمندان مسلمان پیشگام بوده‌اند', 'علم فقط با رد دین ممکن است', 'دین همیشه مخالف آزمایش علمی است', 'پیشرفت فقط غربی است'], correct: 0 },
-                    { q: 'شبهه: نماز خواندن وقت را تلف می‌کند.', options: ['نظم، آرامش و معنویت بخشی از بهره‌وری است', 'نماز مانع کار است', 'باید فقط کار کرد', 'عبادت بی‌فایده است'], correct: 0 },
-                    { q: 'شبهه: همه ادیان یکی هستند و فرقی ندارد.', options: ['در اصول اخلاقی اشتراک هست اما در توحید و شریعت تفاوت‌های بنیادین وجود دارد', 'هیچ تفاوتی نیست', 'فقط ظاهر فرق دارد', 'ادیان جعلی‌اند'], correct: 0 },
-                    { q: 'شبهه: آزادی یعنی هر کاری بخواهی بکنی.', options: ['آزادی واقعی در چارچوب مسئولیت و حقوق دیگران معنا دارد', 'هیچ حدی برای آزادی نیست', 'قانون همیشه دشمن آزادی است', 'آزادی فقط فردی است'], correct: 0 },
-{ q: 'بهترین واکنش به شبهه بی‌سند چیست؟', opts: ['جدل تند', 'درخواست منبع و پاسخ آرام', 'سکوت مطلق', 'حذف طرف مقابل'], a: 1 },
-                    { q: 'پاسخ قوی معمولاً متکی است به:', opts: ['شعار', 'دلیل و منبع', 'توهین', 'حجم پیام'], a: 1 },
-                    { q: 'اگر جواب را نمی‌دانی؟', opts: ['حدس بزن', 'بگو بعداً بررسی می‌کنم', 'انکار کن', 'موضوع را عوض کن'], a: 1 }
-                ],
-                truth_warrior: [
-                    { q: '«هر چیزی در اینترنت هست پس درست است»', opts: ['واقعیت', 'شبهه'], a: 1 },
-                    { q: 'استناد به متن معتبر و قابل بررسی', opts: ['واقعیت', 'شبهه'], a: 0 },
-                    { q: 'ادعا بدون هیچ منبعی', opts: ['واقعیت', 'شبهه'], a: 1 }
-                ],
-                quiz: [
-                    { q: 'هدف اصلی پدافند شبهات چیست؟', opts: ['سرگرمی', 'روشنگری و پاسخ مستند', 'تبلیغات تجاری', 'حذف همه نظرات'], a: 1 },
-                    { q: 'XP چگونه بالا می‌رود؟', opts: ['فقط ورود', 'لایک و کامنت و بازی', 'پرداخت پول', 'تصادفی'], a: 1 },
-                    { q: 'ارسال شبهه به فرماندهی برای چیست؟', opts: ['اسپم', 'بررسی و پاسخ', 'حذف کاربر', 'تست'], a: 1 },
-                    { q: 'حریم خصوصی یعنی:', opts: ['نادیده گرفتن قوانین', 'مراقبت از داده کاربر', 'اشتراک‌گذاری رمز', 'بدون قانون'], a: 1 }
-                ],
-                reaction: [
-                    { q: 'روی پاسخ درست سریع بزن!', opts: ['پاسخ مستند', 'توهین', 'شایعه', 'بی‌توجهی'], a: 0 },
-                    { q: 'کدام رفتار حرفه‌ای است؟', opts: ['فحاشی', 'استدلال', 'مسخره کردن', ' تهدید'], a: 1 }
-                ],
-                shobe_hunter: [
-                    { q: 'هدف را شناسایی کن: ادعای بدون دلیل', opts: ['رها کن', 'بپرس منبعش چیست؟', 'با داد بزن', 'بلاک فوری'], a: 1 },
-                    { q: 'موشک شبهه آمد؛ واکنش صحیح؟', opts: ['پاسخ با دلیل', 'سکوت همیشگی', 'حمله شخصی', 'تکرید بدون فکر'], a: 0 }
-                ],
-                minesweeper: [
-                    { q: 'کدام «مین» است؟', opts: ['پرسش علمی', 'تهمت بی‌اساس', 'درخواست منبع', 'گفتگوی مؤدب'], a: 1 },
-                    { q: 'پاکسازی میدان یعنی:', opts: ['حذف همه', 'جدا کردن ادعا از دلیل', 'قفل چت', 'ترک سایت'], a: 1 }
+                    { q: 'شبهه: «دین مانع پیشرفت علم است.» پاسخ دقیق‌تر کدام است؟', options: ['در تمدن اسلامی علم و ایمان اغلب همراه بودند و مانع‌تراشی دین نیست بلکه تفسیر غلط است', 'علم فقط با رد دین ممکن است', 'دین همیشه مخالف آزمایش است', 'پیشرفت فقط غربی است'], correct: 0 },
+                    { q: 'شبهه: «آزادی یعنی هر کاری بخواهی.» اشکال این تعریف؟', options: ['آزادی مطلق حقوق دیگران را نقض می‌کند؛ آزادی مسئولانه معنا دارد', 'هیچ حدی برای آزادی نیست', 'قانون همیشه دشمن آزادی است', 'آزادی فقط فردی است'], correct: 0 },
+                    { q: 'کدام پاسخ به ادعای بدون سند حرفه‌ای‌تر است؟', options: ['درخواست منبع و بررسی آرام ادعا', 'جدل تند شخصی', 'حذف فوری طرف', 'تکرید بدون دلیل'], correct: 0 },
+                    { q: 'شبهه: «نماز وقت را تلف می‌کند.» بهترین پاسخ؟', options: ['نظم، آرامش و جهت‌دهی معنوی می‌تواند بهره‌وری را افزایش دهد نه لزوماً کاهش', 'عبادت همیشه مانع کار است', 'باید فقط کار کرد', 'هیچ فایده‌ای ندارد'], correct: 0 },
+                    { q: 'در جهاد تبیین، اولویت چیست؟', options: ['استدلال روشن و احترام به مخاطب', 'شعار بدون محتوا', 'تحقیر مخالف', 'سکوت دائمی'], correct: 0 },
+                    { q: 'کدام ادعا «شبهه‌گونه»تر است؟', options: ['ادعای کلی بدون هیچ شاهد قابل بررسی', 'گزاره با منبع مشخص', 'سؤال علمی دقیق', 'درخواست توضیح'], correct: 0 }
                 ]
             };
-            const questions = bank[gameId] || bank.quiz;
+            const questions = bank[gameId] || bank.verbal_defense;
             let i = 0, score = 0;
-            const win = window.open('', '_blank', 'width=560,height=520');
-            if (!win) { alert('اجازه پاپ‌آپ را بدهید'); return; }
-            const names = { shobe_hunter: 'شکار شبهه', verbal_defense: 'پدافند کلامی', truth_warrior: 'جنگجوی حقیقت', minesweeper: 'مین‌یاب', quiz: 'آزمون', reaction: 'واکنش سریع' };
+            openGameArena('پدافند کلامی');
+            const body = document.getElementById('gameArenaBody');
             function render() {
                 if (i >= questions.length) {
-                    const xp = Math.max(3, score * 4);
+                    const xp = Math.max(5, score * 5);
                     finishGameXP(xp);
-                    win.document.body.innerHTML = '<div style="font-family:Tahoma;direction:rtl;background:#0a0e08;color:#d4e8b0;padding:24px;text-align:center"><h2 style="color:#39ff14">پایان بازی</h2><p>پاسخ درست: ' + score + ' از ' + questions.length + '</p><p style="color:#c8a000;font-size:1.2rem">+' + xp + ' XP</p><button onclick="window.close()" style="margin-top:12px;padding:8px 16px;background:#39ff14;border:none;border-radius:6px;cursor:pointer">بستن</button></div>';
+                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان</h3><p>درست: ${score} از ${questions.length}</p><p style="color:var(--gold);font-size:1.1rem">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
                     return;
                 }
                 const q = questions[i];
-                win.document.body.innerHTML = '<div style="font-family:Tahoma;direction:rtl;background:#0a0e08;color:#d4e8b0;padding:20px"><h3 style="color:#c8a000">' + (names[gameId]||'بازی') + ' — سوال ' + (i+1) + '/' + questions.length + '</h3><p style="margin:16px 0;line-height:1.8">' + q.q + '</p><div id="opts"></div></div>';
-                const box = win.document.getElementById('opts');
-                q.opts.forEach((opt, oi) => {
-                    const b = win.document.createElement('button');
-                    b.textContent = opt;
-                    b.style.cssText = 'display:block;width:100%;margin:6px 0;padding:10px;background:#111c0a;border:1px solid #2e4018;color:#d4e8b0;border-radius:6px;cursor:pointer;font-family:Tahoma';
-                    b.onclick = () => { if (oi === q.a) score++; i++; render(); };
-                    box.appendChild(b);
+                body.innerHTML = `<div style="font-size:.72rem;color:var(--ts);margin-bottom:.3rem">سؤال ${i+1} / ${questions.length}</div>
+                    <div style="font-size:.8rem;line-height:1.85;margin-bottom:.5rem;color:var(--tp)">${q.q}</div>
+                    <div style="display:flex;flex-direction:column;gap:.35rem">${q.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem;line-height:1.6" onclick="window._classicAns(${idx})">${op}</button>`).join('')}</div>`;
+            }
+            window._classicAns = (idx) => {
+                if (idx === qCorrect()) score++;
+                i++;
+                render();
+            };
+            function qCorrect(){ return questions[i] ? questions[i].correct : -1; }
+            // fix closure - redefine
+            window._classicAns = (idx) => {
+                if (questions[i] && idx === questions[i].correct) score++;
+                else { /* hard mode: no feedback spam */ }
+                i++;
+                render();
+            };
+            render();
+        }
+
+        async function startAiLadderGame() {
+            openGameArena('نردبان شبهه (AI)');
+            const body = document.getElementById('gameArenaBody');
+            let level = 1, score = 0, total = 8;
+            let current = null;
+
+            async function nextQ() {
+                if (level > total) {
+                    const xp = Math.max(8, score * 6 + level);
+                    finishGameXP(xp);
+                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان نردبان</h3><p>امتیاز: ${score} / ${total}</p><p style="color:var(--gold)">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
+                    return;
+                }
+                body.innerHTML = `<div style="text-align:center;color:var(--ts);padding:1rem"><i class="fas fa-spinner fa-spin"></i> در حال ساخت شبهه سطح ${level}…</div>`;
+                const prompt = `برای بازی آموزشی یک شبهه سطح دشواری ${level} از 8 بساز (1 خیلی آسان، 8 خیلی سخت).
+موضوع: اعتقادی یا دینی یا سیاسی‌اجتماعی مرتبط با ایران/اسلام.
+خروجی دقیقاً:
+Q: <متن شبهه در یک تا دو جمله>
+A: <گزینه درست>
+B: <گزینه غلط نزدیک>
+C: <گزینه غلط>
+D: <گزینه غلط>
+CORRECT: <A یا B یا C یا D>
+فقط همین قالب. فارسی.`;
+                try {
+                    const raw = await siteGameAI(prompt);
+                    const q = (raw.match(/Q:\s*(.+)/i)||[])[1] || 'شبهه: آیا دین با عقل سازگار است؟';
+                    const A = (raw.match(/A:\s*(.+)/i)||[])[1] || 'بله، عقل و وحی مکمل‌اند';
+                    const B = (raw.match(/B:\s*(.+)/i)||[])[1] || 'خیر هیچ سازگاری نیست';
+                    const C = (raw.match(/C:\s*(.+)/i)||[])[1] || 'فقط احساسات مهم است';
+                    const D = (raw.match(/D:\s*(.+)/i)||[])[1] || 'سؤال بی‌معناست';
+                    let cor = ((raw.match(/CORRECT:\s*([ABCD])/i)||[])[1]||'A').toUpperCase();
+                    const map = {A:0,B:1,C:2,D:3};
+                    current = { q, options:[A,B,C,D], correct: map[cor]??0, level };
+                    body.innerHTML = `<div style="font-size:.65rem;color:var(--gold);margin-bottom:.25rem">سطح ${level} / ${total} — امتیاز ${score}</div>
+                        <div style="font-size:.78rem;line-height:1.85;margin-bottom:.5rem">${current.q}</div>
+                        <div style="display:flex;flex-direction:column;gap:.35rem">${current.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem" onclick="window._ladderPick(${idx})">${op}</button>`).join('')}</div>`;
+                } catch (e) {
+                    body.innerHTML = `<div style="color:#e74c3c">خطا در AI. <button class="btn" onclick="startAiLadderGame()">تلاش دوباره</button></div>`;
+                }
+            }
+            window._ladderPick = (idx) => {
+                if (!current) return;
+                const ok = idx === current.correct;
+                if (ok) score++;
+                const tip = ok ? '✅ درست' : '❌ نادرست — گزینه صحیح: ' + current.options[current.correct];
+                body.innerHTML = `<div style="padding:0.6rem;font-size:.75rem;line-height:1.8">${tip}</div><button class="btn" onclick="window._ladderNext()">ادامه</button>`;
+            };
+            window._ladderNext = () => { level++; nextQ(); };
+            nextQ();
+        }
+
+        function startPixelDefenseGame() {
+            openGameArena('پدافند پیکسلی');
+            const body = document.getElementById('gameArenaBody');
+            body.innerHTML = `
+              <p style="font-size:.62rem;color:var(--ts);margin-bottom:.3rem">موشک‌های «شبهه» از بالا می‌آیند. برای شلیک روی بوم بزن / لمس کن. ۱۰ شبهه را بزن تا موج تمام شود.</p>
+              <canvas id="pixelDefCanvas" width="360" height="280" style="width:100%;max-width:360px;height:auto;background:#0a1008;border:1px solid var(--br);border-radius:8px;image-rendering:pixelated;touch-action:none;display:block;margin:0 auto"></canvas>
+              <div style="display:flex;justify-content:space-between;font-size:.65rem;margin-top:.3rem;color:var(--tp)">
+                <span id="pdScore">امتیاز: 0</span><span id="pdLives">جان: 3</span><span id="pdWave">موج: 1</span>
+              </div>
+              <button class="btn" style="margin-top:.4rem;width:100%" onclick="closeGameArena()">خروج</button>`;
+            const canvas = document.getElementById('pixelDefCanvas');
+            const ctx = canvas.getContext('2d');
+            let score = 0, lives = 3, wave = 1, frame = 0;
+            const base = { x: 180, y: 250 };
+            let missiles = [], shots = [];
+            let over = false;
+
+            function spawn() {
+                const labels = ['شبهه','ادعا','شایعه','تکذیب'];
+                missiles.push({
+                    x: 40 + Math.random() * 280,
+                    y: -20,
+                    vy: 0.7 + wave * 0.15 + Math.random() * 0.4,
+                    label: labels[Math.floor(Math.random()*labels.length)],
+                    w: 16, h: 22
                 });
             }
-            win.document.head.innerHTML = '<title>بازی</title>';
-            render();
+            function shoot(x) {
+                shots.push({ x: base.x, y: base.y - 10, tx: x, ty: 20, life: 0 });
+            }
+            function onPtr(e) {
+                if (over) return;
+                const r = canvas.getBoundingClientRect();
+                const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+                const x = (clientX - r.left) * (canvas.width / r.width);
+                shoot(x);
+            }
+            canvas.onmousedown = onPtr;
+            canvas.ontouchstart = (e) => { e.preventDefault(); onPtr(e); };
+
+            let spawnEvery = 90;
+            function loop() {
+                if (over) return;
+                frame++;
+                ctx.fillStyle = '#0a1008';
+                ctx.fillRect(0,0,360,280);
+                // grid
+                ctx.strokeStyle = 'rgba(57,255,20,0.06)';
+                for (let x=0;x<360;x+=20){ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,280);ctx.stroke(); }
+                // base
+                ctx.fillStyle = '#2d4a1e';
+                ctx.fillRect(base.x-22, base.y-8, 44, 16);
+                ctx.fillStyle = '#39ff14';
+                ctx.fillRect(base.x-3, base.y-18, 6, 12);
+                // missiles
+                if (frame % spawnEvery === 0) spawn();
+                missiles.forEach(m => {
+                    m.y += m.vy;
+                    ctx.fillStyle = '#c0392b';
+                    ctx.fillRect(m.x-6, m.y, 12, 18);
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fillRect(m.x-2, m.y+18, 4, 6);
+                    ctx.fillStyle = '#f1c40f';
+                    ctx.font = '9px monospace';
+                    ctx.fillText(m.label, m.x-14, m.y-3);
+                    if (m.y > base.y - 10) { lives--; m.dead = true; }
+                });
+                missiles = missiles.filter(m => !m.dead && m.y < 300);
+                // shots
+                shots.forEach(s => {
+                    s.life++;
+                    const t = Math.min(1, s.life / 18);
+                    const x = s.x + (s.tx - s.x) * t;
+                    const y = s.y + (s.ty - s.y) * t;
+                    ctx.fillStyle = '#39ff14';
+                    ctx.fillRect(x-2, y-2, 4, 4);
+                    missiles.forEach(m => {
+                        if (Math.abs(m.x - x) < 14 && Math.abs(m.y - y) < 16) {
+                            m.dead = true; s.done = true; score += 10;
+                        }
+                    });
+                    if (t >= 1) s.done = true;
+                });
+                shots = shots.filter(s => !s.done);
+                document.getElementById('pdScore').textContent = 'امتیاز: ' + score;
+                document.getElementById('pdLives').textContent = 'جان: ' + lives;
+                document.getElementById('pdWave').textContent = 'موج: ' + wave;
+                if (score >= 100 && wave === 1) { wave = 2; spawnEvery = 70; }
+                if (score >= 220 && wave === 2) { wave = 3; spawnEvery = 55; }
+                if (lives <= 0 || score >= 350) {
+                    over = true;
+                    const xp = Math.max(5, Math.floor(score / 12));
+                    finishGameXP(xp);
+                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                    ctx.fillRect(0,0,360,280);
+                    ctx.fillStyle = '#39ff14';
+                    ctx.font = '16px Tahoma';
+                    ctx.fillText(lives<=0 ? 'شکست — امتیاز '+score : 'پیروزی موج‌ها!', 100, 130);
+                    ctx.fillStyle = '#c8a000';
+                    ctx.fillText('+' + xp + ' XP', 140, 160);
+                    return;
+                }
+                window._pixelDefenseRAF = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        async function startStoryResponderGame() {
+            openGameArena('پاسخگوی قرارگاه');
+            const body = document.getElementById('gameArenaBody');
+            let round = 1, total = 5, points = 0;
+            let currentShobe = '';
+
+            async function nextRound() {
+                if (round > total) {
+                    const xp = Math.max(10, Math.floor(points / 8));
+                    finishGameXP(xp);
+                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان مأموریت</h3><p>مجموع کیفیت: ${points}</p><p style="color:var(--gold)">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
+                    return;
+                }
+                body.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> شهروندی شبهه‌اش را می‌گوید… (دور ${round}/${total})</div>`;
+                try {
+                    const raw = await siteGameAI(`برای بازی نقش‌آفرینی، یک «شبهه مردمی» واقعی‌نما و کوتاه بنویس که یک شهروند می‌پرسد.
+سطح سختی ${round} از ${total}.
+فقط متن شبهه را در ۲ تا ۳ جمله بنویس، بدون عنوان و بدون پاسخ.`);
+                    currentShobe = raw.split('\n').filter(Boolean).slice(0,4).join(' ');
+                    body.innerHTML = `
+                      <div style="font-size:.65rem;color:var(--gold)">دور ${round} / ${total} — امتیاز کیفی: ${points}</div>
+                      <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:.55rem;margin:.4rem 0;font-size:.75rem;line-height:1.85">
+                        <b style="color:var(--neon)">شهروند:</b> ${currentShobe.replace(/</g,'&lt;')}
+                      </div>
+                      <label style="font-size:.65rem;color:var(--ts)">پاسخ تو به‌عنوان پاسخگوی قرارگاه:</label>
+                      <textarea id="storyAns" rows="5" style="width:100%;margin:.3rem 0;padding:.4rem;background:#0a1008;color:var(--tp);border:1px solid var(--br);border-radius:6px;font-family:inherit;font-size:.72rem"></textarea>
+                      <button class="btn btn-gold" style="width:100%" onclick="window._storySubmit()">ارسال برای ارزیابی AI</button>`;
+                } catch (e) {
+                    body.innerHTML = `<div style="color:#e74c3c">خطا. <button class="btn" onclick="startStoryResponderGame()">دوباره</button></div>`;
+                }
+            }
+            window._storySubmit = async () => {
+                const ans = (document.getElementById('storyAns')?.value || '').trim();
+                if (ans.length < 20) { alert('پاسخ کامل‌تری بنویس (حداقل چند جمله).'); return; }
+                body.innerHTML = `<div style="text-align:center;padding:1rem"><i class="fas fa-spinner fa-spin"></i> ارزیابی پاسخ…</div>`;
+                try {
+                    const raw = await siteGameAI(`تو داور آموزشی پدافند شبهات هستی.
+شبهه شهروند:
+"""${currentShobe}"""
+پاسخ کاربر:
+"""${ans}"""
+سخت‌گیرانه امتیاز بده از 0 تا 20.
+خروجی دقیقاً:
+SCORE: <عدد>
+FEEDBACK: <۳ تا ۶ جمله فارسی؛ نقاط قوت و ضعف؛ چه چیزی کم داشت>`);
+                    const sc = parseInt((raw.match(/SCORE:\s*(\d+)/i)||[])[1]||'8',10);
+                    const fb = ((raw.match(/FEEDBACK:\s*([\s\S]+)/i)||[])[1]||raw).trim();
+                    points += Math.min(20, Math.max(0, sc));
+                    body.innerHTML = `<div style="font-size:.75rem;line-height:1.85"><b style="color:var(--gold)">امتیاز این دور: ${sc}/20</b><p>${fb.replace(/</g,'&lt;')}</p>
+                      <button class="btn" onclick="window._storyNext()">دور بعد</button></div>`;
+                } catch (e) {
+                    body.innerHTML = `<div style="color:#e74c3c">خطا در ارزیابی<button class="btn" onclick="window._storyNext()">رد شدن</button></div>`;
+                }
+            };
+            window._storyNext = () => { round++; nextRound(); };
+            nextRound();
         }
 
         async function finishGameXP(xp) {
