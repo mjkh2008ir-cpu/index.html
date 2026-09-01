@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="no-referrer">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مرکز فرماندهی پدافند شبهات</title>
@@ -2327,7 +2331,7 @@
             sentMessages = [],
             selectedUser = null,
             selectedUserForDelete = null;
-        let settingsPassword = 'Padafand313';
+        let settingsPassword = ''; // رمز سمت سرور بررسی می‌شود
 
         const themes = ['dark', 'light'];
         let themeIndex = 0;
@@ -3750,13 +3754,20 @@ ${body || '—'}`;
         }
 
 
-        function switchTab(tab) {
+        async function switchTab(tab) {
             if (tab === 'settings') {
-                const pass = prompt('🔒 برای ورود به تنظیمات، رمز را وارد کنید:');
-                if (pass !== settingsPassword) {
-                    alert('⛔ رمز اشتباه است');
-                    return;
-                }
+                const pass = prompt('🔒 برای ورود به تنظیمات، رمز فرماندهی را وارد کنید:');
+                if (!pass) return;
+                try {
+                    const res = await fetch(CMD_WORKER + '/api/command-auth', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code: pass })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!data.ok) { alert('⛔ رمز اشتباه است'); return; }
+                    cmdSessionToken = data.token;
+                } catch (e) { alert('⛔ خطا در احراز هویت'); return; }
             }
             currentTab = tab;
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
@@ -3854,45 +3865,81 @@ ${body || '—'}`;
             reader.readAsDataURL(file);
         });
 
-        function checkAccess() {
-            const unitInput = document.getElementById('cmdUnit').value.trim();
+        
+        let cmdSessionToken = null;
+        const CMD_WORKER = (typeof AI_WORKER_URL !== 'undefined' && AI_WORKER_URL)
+            ? AI_WORKER_URL.replace(/\/$/, '')
+            : 'https://padafand-shobahat.padafand-shobahat.workers.dev';
 
-            if (unitInput === 'Khayyatzadeh') {
-                currentUser = 'محمد جواد خیاط زاده';
-                currentUnit = 'شورای فرماندهی';
-                document.getElementById('cmdError').textContent = '🎖️ سردار خیاط زاده خوش آمدید!';
-                document.getElementById('cmdError').style.color = '#c8a000';
-                enterCommand();
+        async function checkAccess() {
+            const unitInput = (document.getElementById('cmdUnit')?.value || '').trim();
+            const err = document.getElementById('cmdError');
+            if (!unitInput) {
+                if (err) { err.textContent = '⚠️ کد / واحد دسترسی را وارد کنید'; err.style.color = '#c0392b'; }
                 return;
             }
-
-            if (!unitInput || !['شورای فرماندهی', 'واحد اطلاعات عملیات'].includes(unitInput)) {
-                document.getElementById('cmdError').textContent = '⚠️ واحد عملیاتی را دقیقاً وارد کنید';
-                document.getElementById('cmdError').style.color = '#c0392b';
-                return;
+            if (err) { err.textContent = 'در حال احراز هویت امن…'; err.style.color = '#c8a000'; }
+            try {
+                const res = await fetch(CMD_WORKER + '/api/command-auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ code: unitInput })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.ok || !data.token) {
+                    if (err) {
+                        err.textContent = res.status === 429
+                            ? '⛔ تعداد تلاش بیش از حد — کمی بعد دوباره'
+                            : '⛔ دسترسی رد شد';
+                        err.style.color = '#c0392b';
+                    }
+                    return;
+                }
+                cmdSessionToken = data.token;
+                currentUser = data.user || 'فرمانده';
+                currentUnit = data.unit || 'مرکز فرماندهی';
+                try {
+                    sessionStorage.setItem('padafand_cmd_token', cmdSessionToken);
+                    sessionStorage.setItem('padafand_cmd_user', currentUser);
+                    sessionStorage.setItem('padafand_cmd_unit', currentUnit);
+                } catch (e) {}
+                if (err) { err.textContent = '✅ خوش آمدید ' + currentUser; err.style.color = '#39ff14'; }
+                if (typeof enterCommand === 'function') {
+                    if (enterCommand.constructor.name === 'AsyncFunction') await enterCommand();
+                    else enterCommand();
+                }
+            } catch (e) {
+                console.error(e);
+                if (err) { err.textContent = '⛔ خطا در ارتباط امن'; err.style.color = '#c0392b'; }
             }
-            if (!isCardVerified || !uploadedCardData) {
-                document.getElementById('cmdError').textContent = '⚠️ لطفاً کارت شناسایی معتبر آپلود کنید';
-                document.getElementById('cmdError').style.color = '#c0392b';
-                return;
-            }
-            if (unitInput === 'شورای فرماندهی' && !uploadedCardData.role.includes('شورای فرماندهی')) {
-                document.getElementById('cmdError').textContent = '⛔ این کارت برای شورای فرماندهی مجاز نیست';
-                document.getElementById('cmdError').style.color = '#c0392b';
-                return;
-            }
-            if (unitInput === 'واحد اطلاعات عملیات' && !uploadedCardData.role.includes('اطلاعات عملیات')) {
-                document.getElementById('cmdError').textContent = '⛔ این کارت برای واحد اطلاعات عملیات مجاز نیست';
-                document.getElementById('cmdError').style.color = '#c0392b';
-                return;
-            }
-
-            currentUser = uploadedCardData.name;
-            currentUnit = unitInput;
-            document.getElementById('cmdError').textContent = '✅ خوش آمدید ' + currentUser;
-            document.getElementById('cmdError').style.color = '#6db33f';
-            enterCommand();
         }
+
+        async function ensureCmdSession() {
+            let token = cmdSessionToken;
+            try { if (!token) token = sessionStorage.getItem('padafand_cmd_token'); } catch (e) {}
+            if (!token) return false;
+            try {
+                const res = await fetch(CMD_WORKER + '/api/command-verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Cmd-Token': token },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!data.ok) {
+                    cmdSessionToken = null;
+                    try {
+                        sessionStorage.removeItem('padafand_cmd_token');
+                    } catch (e) {}
+                    return false;
+                }
+                cmdSessionToken = token;
+                currentUser = data.user || currentUser;
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
 
         async function enterCommand() {
             document.body.classList.add('authenticated');
@@ -3908,6 +3955,7 @@ ${body || '—'}`;
                 time: new Date().toLocaleString('fa-IR')
             });
 
+            try { sessionStorage.setItem('padafand_cmd_token', cmdSessionToken || ''); } catch(e) {}
             localStorage.setItem('padafand_commander', JSON.stringify({ user: currentUser, time: new Date().toISOString() }));
             loadAllData();
             updateTime();
