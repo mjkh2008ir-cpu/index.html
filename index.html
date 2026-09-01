@@ -2107,14 +2107,19 @@
             const fullname = document.getElementById('regFullname').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
             const username = document.getElementById('regUsername').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
+            const passwordRaw = document.getElementById('regPassword').value.trim();
             const accept = document.getElementById('regAcceptTerms');
             if (!accept || !accept.checked) {
                 alert('⚠️ پذیرش قوانین استفاده و حریم خصوصی الزامی است');
                 return;
             }
-            if (!fullname || !phone || !username || !password) {
+            if (!fullname || !phone || !username || !passwordRaw) {
                 document.getElementById('authMsg').textContent = '⚠️ همه فیلدها را پر کنید';
+                document.getElementById('authMsg').style.color = '#c0392b';
+                return;
+            }
+            if (passwordRaw.length < 6) {
+                document.getElementById('authMsg').textContent = '⚠️ رمز عبور حداقل ۶ کاراکتر';
                 document.getElementById('authMsg').style.color = '#c0392b';
                 return;
             }
@@ -2131,11 +2136,13 @@
             }
             const special = checkSpecialUser(phone, fullname);
             const isSpecial = !!special;
+            const password = await hashPassword(passwordRaw, username.toLowerCase());
             const userData = {
                 username,
                 fullname,
                 phone,
                 password,
+                pass_algo: 'sha256-salt',
                 accepted_terms: true,
                 accepted_at: new Date().toISOString(),
                 bio: '',
