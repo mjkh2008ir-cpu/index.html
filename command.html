@@ -1384,6 +1384,7 @@
             <button class="nav-item" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> پیام‌ها</button>
             <button class="nav-item" onclick="switchTab('incoming')"><i class="fas fa-inbox"></i> شبهات دریافتی</button>
             <button class="nav-item" onclick="switchTab('aiassist')"><i class="fas fa-robot"></i> دستیار AI</button>
+            <button class="nav-item" onclick="switchTab('news')"><i class="fas fa-newspaper"></i> اخبار سایت</button>
             <button class="nav-item" onclick="switchTab('kartabl')"><i class="fas fa-folder-open"></i> کارتابل</button>
             <button class="nav-item" onclick="switchTab('reports')"><i class="fas fa-clipboard"></i> گزارش‌ها</button>
             <button class="nav-item" onclick="switchTab('settings')"><i class="fas fa-cog"></i> تنظیمات</button>
@@ -1961,7 +1962,33 @@
         </div>
 
         
-        <div id="tab-aiassist" class="tab-content" style="display:none">
+        
+        <div id="tab-news" class="tab-content" style="display:none">
+            <div class="launch-section">
+                <div class="launch-title"><i class="fas fa-newspaper"></i> انتشار خبر در سایت</div>
+                <p style="font-size:0.35rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
+                    خبرهای مربوط به پدافند (بات تلگرام/روبیکا، به‌روزرسانی سایت و …). دستیار AI متن را مرتب می‌کند؛ انتشار با تأیید شماست.
+                </p>
+                <div class="form-group">
+                    <label>عنوان خبر</label>
+                    <input type="text" id="newsTitle" placeholder="مثلاً: راه‌اندازی بات تلگرام پدافند شبهات">
+                </div>
+                <div class="form-group">
+                    <label>متن خبر (خام یا پیش‌نویس)</label>
+                    <textarea id="newsBody" rows="6" placeholder="متن خبر را بنویسید یا بچسبانید..."></textarea>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem">
+                    <button type="button" class="btn-msg" onclick="aiFormatNews()"><i class="fas fa-robot"></i> مرتب‌سازی با AI</button>
+                    <button type="button" class="approve-btn" onclick="publishNewsToSite()"><i class="fas fa-bullhorn"></i> تأیید و انتشار در سایت</button>
+                </div>
+                <div id="newsStatus" style="font-size:0.35rem;color:var(--text-secondary);min-height:1.1em"></div>
+            </div>
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-list"></i> اخبار منتشرشده (دسته: اخبار)</div>
+                <div id="publishedNewsList" style="font-size:0.35rem">—</div>
+            </div>
+        </div>
+<div id="tab-aiassist" class="tab-content" style="display:none">
             <div class="launch-section" style="margin-bottom:0.6rem">
                 <div class="launch-title"><i class="fas fa-robot"></i> دستیار فرماندهی هوش مصنوعی</div>
                 <p style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
@@ -3639,6 +3666,90 @@ ${context || '—'}
         }
 
 
+
+        async function aiFormatNews() {
+            const st = document.getElementById('newsStatus');
+            const title = (document.getElementById('newsTitle')?.value || '').trim();
+            const body = (document.getElementById('newsBody')?.value || '').trim();
+            if (!title && !body) {
+                if (st) st.textContent = '⚠️ عنوان یا متن خبر را وارد کنید';
+                return;
+            }
+            if (st) st.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال مرتب‌سازی خبر...';
+            const prompt = `این متن یک «خبر» برای بخش اخبار سایت پدافند شبهات است (نه شبهه اعتقادی).
+مرتب و رسمی بازنویسی کن.
+خروجی:
+TITLE: <عنوان خبر کوتاه>
+BODY:
+<متن خبر ۲ تا ۶ بند، واضح و خبری>
+
+عنوان فعلی: ${title || '—'}
+متن:
+${body || '—'}`;
+            try {
+                const raw = await askCommandAI(prompt);
+                const tm = raw.match(/TITLE:\s*(.+)/i);
+                const bm = raw.match(/BODY:\s*([\s\S]*)/i);
+                if (tm) document.getElementById('newsTitle').value = tm[1].trim();
+                if (bm) document.getElementById('newsBody').value = bm[1].trim();
+                else if (!tm) document.getElementById('newsBody').value = raw;
+                if (st) st.textContent = '✅ مرتب شد — در صورت تأیید منتشر کنید';
+            } catch (e) {
+                if (st) st.textContent = '❌ خطا: ' + (e.message || e);
+            }
+        }
+
+        async function publishNewsToSite() {
+            const st = document.getElementById('newsStatus');
+            const title = (document.getElementById('newsTitle')?.value || '').trim();
+            const body = (document.getElementById('newsBody')?.value || '').trim();
+            if (!title || !body) {
+                if (st) st.textContent = '⚠️ عنوان و متن الزامی است';
+                return;
+            }
+            if (!confirm('انتشار این خبر در بخش اخبار سایت؟')) return;
+            const post = {
+                shobe: title,
+                answer: body,
+                source: 'فرماندهی — اخبار',
+                tags: ['اخبار'],
+                cat: 'اخبار',
+                date: new Date().toLocaleDateString('fa-IR'),
+                time: new Date().toLocaleTimeString('fa-IR'),
+                sender: currentUser || 'فرماندهی',
+                comments: [],
+                likes: 0,
+                liked_by: []
+            };
+            const saved = await saveToSupabase('posts', post);
+            if (!saved) {
+                if (st) st.textContent = '❌ انتشار ناموفق';
+                return;
+            }
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsBody').value = '';
+            if (st) st.textContent = '✅ خبر در سایت منتشر شد';
+            await loadAllData();
+            updateAll();
+            refreshPublishedNewsList();
+        }
+
+        function refreshPublishedNewsList() {
+            const el = document.getElementById('publishedNewsList');
+            if (!el) return;
+            const list = (allPosts || []).filter(p => p.cat === 'اخبار' || (Array.isArray(p.tags) && p.tags.includes('اخبار')));
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.3rem">هنوز خبری منتشر نشده</div>';
+                return;
+            }
+            el.innerHTML = list.slice(0, 20).map(p => `
+                <div class="list-item">
+                    <span class="name">${(p.shobe || '').substring(0, 80)}</span>
+                    <span class="status">${p.date || ''}</span>
+                </div>`).join('');
+        }
+
+
         function switchTab(tab) {
             if (tab === 'settings') {
                 const pass = prompt('🔒 برای ورود به تنظیمات، رمز را وارد کنید:');
@@ -3653,15 +3764,15 @@ ${context || '—'}
             document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
             const items = document.querySelectorAll('.sidebar .nav-item');
             const map = { dashboard: 0, launch: 1, posts: 2, users: 3, commanders: 4, comments: 5, messages: 6,
-                incoming: 7, aiassist: 8, kartabl: 9, reports: 10, settings: 11, stats: 12, rules: 13, games: 14 };
+                incoming: 7, aiassist: 8, news: 9, kartabl: 10, reports: 11, settings: 12, stats: 13, rules: 14, games: 15 };
             if (map[tab] !== undefined && items[map[tab]]) items[map[tab]].classList.add('active');
             const title = document.getElementById('pageTitle');
             const icons = { dashboard: 'fa-chart-pie', launch: 'fa-rocket', posts: 'fa-file-alt', users: 'fa-users',
-                commanders: 'fa-star', comments: 'fa-comment-dots', messages: 'fa-envelope', incoming: 'fa-inbox', aiassist: 'fa-robot', kartabl: 'fa-folder-open',
+                commanders: 'fa-star', comments: 'fa-comment-dots', messages: 'fa-envelope', incoming: 'fa-inbox', aiassist: 'fa-robot', news: 'fa-newspaper', kartabl: 'fa-folder-open',
                 reports: 'fa-clipboard', settings: 'fa-cog', stats: 'fa-chart-bar', rules: 'fa-scroll',
                 games: 'fa-gamepad' };
             const names = { dashboard: 'داشبورد', launch: 'شلیک مطلب', posts: 'مطالب', users: 'کاربران',
-                commanders: 'فرماندهان', comments: 'کامنت‌ها', messages: 'پیام‌ها', incoming: 'شبهات دریافتی', aiassist: 'دستیار AI', kartabl: 'کارتابل',
+                commanders: 'فرماندهان', comments: 'کامنت‌ها', messages: 'پیام‌ها', incoming: 'شبهات دریافتی', aiassist: 'دستیار AI', news: 'اخبار سایت', kartabl: 'کارتابل',
                 reports: 'گزارش‌ها', settings: 'تنظیمات', stats: 'آمار', rules: 'آیین‌نامه', games: 'بازی' };
             title.innerHTML = `<i class="fas ${icons[tab]}"></i> ${names[tab]} <span class="sub">مرکز عملیات</span>`;
             if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
@@ -3670,6 +3781,7 @@ ${context || '—'}
             if (tab === 'messages') populateRecipients();
             if (tab === 'incoming') updateIncomingMessages();
             if (tab === 'aiassist') refreshAiAssistIncoming();
+            if (tab === 'news') refreshPublishedNewsList();
             if (tab === 'kartabl') updateKartabl();
             updateKartabl();
             if (tab === 'reports') updateReports();
