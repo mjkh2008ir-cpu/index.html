@@ -67,6 +67,14 @@
 
         /* ===== NAV ===== */
         #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
+        .more-sheet{display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
+        .more-sheet.show{display:flex}
+        .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
+        .more-sheet-title{color:var(--gold);font-weight:700;font-size:.75rem;margin-bottom:0.55rem;display:flex;justify-content:space-between;align-items:center}
+        .more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.45rem}
+        .more-item{background:var(--bgp);border:1px solid var(--br);border-radius:10px;padding:0.65rem 0.3rem;text-align:center;color:var(--tp);font-size:.6rem;cursor:pointer;font-family:inherit}
+        .more-item i{display:block;font-size:1.15rem;color:var(--neon);margin-bottom:0.25rem}
+        .more-item:active{border-color:var(--neon)}
         .nav-inner{max-width:800px;margin:0 auto;display:flex;gap:0.1rem}
         .nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.3rem 0.5rem;color:var(--ts);font-weight:700;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.3s}
         .nav-btn:hover{color:var(--tp);border-bottom-color:var(--neon)}
@@ -363,7 +371,12 @@
 <button type="button" onclick="filterPosts()"><i class="fas fa-search"></i> جستجو</button></div></div>
 
     <!-- ===== NAV ===== -->
-    <nav id="main-nav"><div class="nav-inner"><button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button><button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button><button class="nav-btn" data-page="games"><i class="fas fa-gamepad"></i> بازی‌ها</button><button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button><button class="nav-btn" data-page="saved"><i class="fas fa-box"></i> جعبه مهمات</button><button class="nav-btn" data-page="faq"><i class="fas fa-question-circle"></i> سوالات</button><button class="nav-btn" data-page="news"><i class="fas fa-newspaper"></i> اخبار</button><button class="nav-btn" data-page="about"><i class="fas fa-shield-alt"></i> آشنایی</button><button class="nav-btn" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</button></div></nav>
+    <nav id="main-nav"><div class="nav-inner">
+        <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i> خانه</button>
+        <button class="nav-btn" data-page="posts"><i class="fas fa-list"></i> شبهات</button>
+        <button class="nav-btn" data-page="ai"><i class="fas fa-robot"></i> هوش مصنوعی</button>
+        <button class="nav-btn" type="button" onclick="openMoreMenu()"><i class="fas fa-ellipsis-h"></i> بیشتر</button>
+    </div></nav>
 
     <!-- ===== FAB ===== -->
     <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
@@ -372,12 +385,24 @@
     <div class="sidebar-nav" id="sidebarNav">
         <button class="nav-item active" onclick="switchPage('home')"><i class="fas fa-home"></i><span>خانه</span></button>
         <button class="nav-item" onclick="switchPage('posts')"><i class="fas fa-list"></i><span>شبهات</span></button>
-        <button class="nav-item" onclick="switchPage('games')"><i class="fas fa-gamepad"></i><span>بازی</span></button>
         <button class="nav-item" onclick="switchPage('ai')"><i class="fas fa-robot"></i><span>AI</span></button>
-        <button class="nav-item" onclick="switchPage('saved')"><i class="fas fa-box"></i><span>ذخیره</span></button>
-        <button class="nav-item" onclick="switchPage('news')"><i class="fas fa-newspaper"></i><span>اخبار</span></button><button class="nav-item" onclick="switchPage('about')"><i class="fas fa-shield-alt"></i><span>آشنایی</span></button>
-        <button class="nav-item" onclick="openSendToCommand()"><i class="fas fa-paper-plane"></i><span>ارسال</span></button>
         <button class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></button>
+        <button class="nav-item" onclick="openMoreMenu()"><i class="fas fa-ellipsis-h"></i><span>بیشتر</span></button>
+    </div>
+    <div class="more-sheet" id="moreSheet" onclick="if(event.target===this)closeMoreMenu()">
+        <div class="more-sheet-panel">
+            <div class="more-sheet-title"><span><i class="fas fa-th-large"></i> بخش‌های بیشتر</span>
+                <button type="button" onclick="closeMoreMenu()" style="background:none;border:none;color:var(--ts);font-size:1rem;cursor:pointer"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="more-grid">
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('faq')"><i class="fas fa-question-circle"></i>سوالات</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('news')"><i class="fas fa-newspaper"></i>اخبار</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('about')"><i class="fas fa-shield-alt"></i>آشنایی</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('games')"><i class="fas fa-gamepad"></i>بازی‌ها</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('saved')"><i class="fas fa-box"></i>جعبه مهمات</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();openSendToCommand()"><i class="fas fa-paper-plane"></i>ارسال شبهه</button>
+            </div>
+        </div>
     </div>
 
     <!-- ===== CONTENT ===== -->
@@ -1187,6 +1212,14 @@
         function closePieLauncher() { document.getElementById('pieLauncher').style.display = 'none'; }
 
         // ===== NAVIGATION =====
+        function openMoreMenu() {
+            const el = document.getElementById('moreSheet');
+            if (el) el.classList.add('show');
+        }
+        function closeMoreMenu() {
+            const el = document.getElementById('moreSheet');
+            if (el) el.classList.remove('show');
+        }
         function switchPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(`page-${page}`).classList.add('active');
