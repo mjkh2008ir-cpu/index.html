@@ -2250,6 +2250,7 @@
         }
 
         async function saveToSupabase(table, data) {
+            if (!(await requireCmdAuth(true))) return null;
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
                     method: 'POST',
@@ -2267,6 +2268,7 @@
         }
 
         async function updateInSupabase(table, id, data) {
+            if (!(await requireCmdAuth(true))) return null;
             if (id === undefined || id === null || id === '') {
                 console.error('updateInSupabase: missing id for', table);
                 return null;
@@ -2288,6 +2290,7 @@
         }
 
         async function deleteFromSupabase(table, id) {
+            if (!(await requireCmdAuth(true))) return false;
             if (id === undefined || id === null || id === '') return false;
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
@@ -2353,8 +2356,8 @@
 
         let _loadBusy = false;
         async function loadAllData() {
-            if (!document.body.classList.contains('authenticated') && !currentUser) {
-                console.warn('blocked: loadAllData without auth');
+            if (!(await requireCmdAuth(false))) {
+                console.warn('blocked: loadAllData without server session');
                 return;
             }
             if (_loadBusy) return;
@@ -2972,12 +2975,27 @@
             alert('✅ دسترسی به کاربر افزوده شد');
         }
 
-        async function changeSettingsPassword() {
+        async async function changeSettingsPassword() {
+            if (!(await requireCmdAuth(true))) return;
             const newPass = document.getElementById('settingsPassword').value.trim();
             if (!newPass) { alert('⚠️ رمز جدید را وارد کنید'); return; }
-            if (newPass.length < 4) { alert('⚠️ رمز باید حداقل ۴ کاراکتر باشد'); return; }
-            if (currentUser !== 'محمد جواد خیاط زاده' && currentUser !== 'محمد برزکار') {
-                alert('⛔ فقط سردار خیاط‌زاده و سردار برزکار مجاز به تغییر رمز هستند');
+            if (newPass.length < 8) { alert('⚠️ رمز باید حداقل ۸ کاراکتر باشد'); return; }
+            // نقش از سرور
+            let role = '';
+            try {
+                const res = await fetch(CMD_WORKER + '/api/command-verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Cmd-Token': cmdSessionToken || '' },
+                    body: JSON.stringify({ token: cmdSessionToken })
+                });
+                const data = await res.json();
+                role = data.role || '';
+                if (!data.ok || role !== 'owner') {
+                    alert('⛔ فقط نقش owner (سردار اصلی) مجاز به تغییر رمز است — محدودیت سمت سرور');
+                    return;
+                }
+            } catch (e) {
+                alert('⛔ خطا در بررسی نقش');
                 return;
             }
             settingsPassword = newPass;
@@ -3914,6 +3932,42 @@ ${body || '—'}`;
             }
         }
 
+        
+        async function requireCmdAuth(hard = true) {
+            const ok = await ensureCmdSession();
+            if (ok) return true;
+            if (hard) {
+                forceCommandLock('نشست نامعتبر — دوباره وارد شوید');
+            }
+            return false;
+        }
+
+        function forceCommandLock(msg) {
+            try {
+                cmdSessionToken = null;
+                currentUser = null;
+                sessionStorage.removeItem('padafand_cmd_token');
+                sessionStorage.removeItem('padafand_cmd_user');
+                sessionStorage.removeItem('padafand_cmd_unit');
+                localStorage.removeItem('padafand_commander');
+            } catch (e) {}
+            document.body.classList.remove('authenticated');
+            const side = document.getElementById('sidebar');
+            const main = document.querySelector('.main');
+            const sec = document.getElementById('securityPage');
+            if (side) { side.style.display = 'none'; side.innerHTML = side.innerHTML; }
+            if (main) {
+                // خالی کردن داده‌های حساس از DOM
+                main.querySelectorAll('[id$="List"], #postsList, #usersList, #incomingList, #sentMessagesList, #publishedNewsList').forEach(el => {
+                    if (el) el.innerHTML = '';
+                });
+                main.style.display = 'none';
+            }
+            if (sec) sec.style.display = 'flex';
+            const err = document.getElementById('cmdError');
+            if (err && msg) { err.textContent = '⛔ ' + msg; err.style.color = '#c0392b'; }
+        }
+
         async function ensureCmdSession() {
             let token = cmdSessionToken;
             try { if (!token) token = sessionStorage.getItem('padafand_cmd_token'); } catch (e) {}
@@ -3942,6 +3996,10 @@ ${body || '—'}`;
 
 
         async function enterCommand() {
+            if (!(await requireCmdAuth(false))) {
+                forceCommandLock('ورود بدون توکن سرور ممکن نیست');
+                return;
+            }
             document.body.classList.add('authenticated');
             document.getElementById('securityPage').style.display = 'none';
             document.getElementById('sidebar').style.display = 'block';
@@ -4463,18 +4521,27 @@ ${body || '—'}`;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const savedTheme = localStorage.getItem('padafand_theme') || 'dark';
             themeIndex = themes.indexOf(savedTheme);
             if (themeIndex === -1) themeIndex = 0;
             document.documentElement.setAttribute('data-theme', themes[themeIndex]);
-            document.body.classList.remove('authenticated');
-            document.getElementById('sidebar').style.display = 'none';
-            document.querySelector('.main').style.display = 'none';
-            var sec = document.getElementById('securityPage');
-            if (sec) sec.style.display = 'flex';
-            localStorage.removeItem('padafand_commander');
-            // ورود مجدد اجباری برای امنیت — بدون نشست خودکار
+            forceCommandLock();
+            // بازیابی نشست فقط اگر توکن سمت سرور معتبر باشد
+            try {
+                const tok = sessionStorage.getItem('padafand_cmd_token');
+                if (tok) {
+                    cmdSessionToken = tok;
+                    const ok = await ensureCmdSession();
+                    if (ok) {
+                        currentUser = sessionStorage.getItem('padafand_cmd_user') || currentUser;
+                        currentUnit = sessionStorage.getItem('padafand_cmd_unit') || currentUnit;
+                        await enterCommand();
+                        return;
+                    }
+                }
+            } catch (e) {}
+            forceCommandLock('برای ورود کد دسترسی را وارد کنید');
         });
     </script>
 </body>
