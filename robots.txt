@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /command.html
+Sitemap: https://index-html-delta-nine.vercel.app/sitemap.xml
