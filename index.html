@@ -7,7 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="پدافند شبهات">
-    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پدافند شبهات | پاسخ مستند به شبهات دینی و اعتقادی</title>
@@ -2547,19 +2549,39 @@ requestAnimationFrame(frame);
             }
         });
         async function installPadafandApp() {
-            if (!deferredInstallPrompt) {
-                alert('برای نصب: از منوی مرورگر گزینه «افزودن به صفحه اصلی» یا Add to Home Screen را انتخاب کنید.');
+            // اگر قبلاً نصب شده
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+                alert('اپ هم‌اکنون در حالت نصب‌شده باز است.');
                 return;
             }
-            const ok = confirm('نصب اپلیکیشن پدافند شبهات روی این دستگاه؟');
-            if (!ok) return;
-            deferredInstallPrompt.prompt();
-            const choice = await deferredInstallPrompt.userChoice;
-            deferredInstallPrompt = null;
-            const btn = document.getElementById('installAppBtn');
-            if (btn) btn.style.display = 'none';
-            if (choice && choice.outcome === 'accepted') {
-                localStorage.setItem('padafand_install_asked', '1');
+            if (deferredInstallPrompt) {
+                const ok = confirm('نصب اپلیکیشن پدافند شبهات روی این دستگاه؟');
+                if (!ok) return;
+                try {
+                    deferredInstallPrompt.prompt();
+                    const choice = await deferredInstallPrompt.userChoice;
+                    localStorage.setItem('padafand_install_asked', '1');
+                    if (choice && choice.outcome === 'accepted') {
+                        alert('در حال افزودن به صفحه اصلی…');
+                    } else {
+                        alert('نصب لغو شد. هر زمان از منوی «بیشتر» دوباره می‌توانید نصب کنید.');
+                    }
+                } catch (err) {
+                    console.warn(err);
+                    alert('مرورگر نصب خودکار را کامل نکرد. از منوی مرورگر: «افزودن به صفحه اصلی» را بزنید.');
+                }
+                deferredInstallPrompt = null;
+                const btn = document.getElementById('installAppBtn');
+                if (btn) btn.style.display = 'none';
+                return;
+            }
+            // راهنمای دستی (iOS و بعضی مرورگرها prompt نمی‌دهند)
+            const ua = navigator.userAgent || '';
+            const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                alert('در آیفون/سافاری:\n۱) دکمه Share (اشتراک‌گذاری) را بزنید\n۲) گزینه «Add to Home Screen» / «افزودن به صفحه اصلی» را انتخاب کنید\n۳) Add را بزنید');
+            } else {
+                alert('نصب خودکار الان در دسترس نیست.\nاز منوی مرورگر (⋮) گزینه «نصب اپ» یا «افزودن به صفحه اصلی» / Add to Home Screen را انتخاب کنید.\nاگر ندیدید: Chrome به‌روز، سایت با HTTPS، و قبلاً نصب‌نشده باشد.');
             }
         }
     </script>
