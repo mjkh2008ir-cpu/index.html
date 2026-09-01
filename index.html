@@ -424,9 +424,9 @@
             
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.6rem;text-align:center;margin-bottom:0.4rem;border-right:3px solid var(--gold)"><div style="font-size:2rem;animation:float 3s ease-in-out infinite"><i class="fas fa-shield-alt"></i></div><p style="color:var(--ts);font-size:.7rem;line-height:1.8">به قرارگاه <b style="color:var(--gl)">پدافند شبهات</b> خوش آمدید<br><span style="font-size:.55rem;color:var(--gold)">🛡️ دفاع از مرزهای اعتقادی • 💡 پاسخ به شبهات • 🎯 روشنگری</span></p></div>
             <div style="background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.2rem"><span style="color:var(--ts);font-size:.6rem"><i class="fas fa-clock"></i> آخرین مطالب</span><button class="nav-btn" onclick="switchPage('posts')" style="font-size:.55rem;color:var(--am);border-bottom:1px solid var(--am);padding:0.05rem 0.3rem">مشاهده همه</button></div>
+            <div id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
             <div class="page-title" style="margin-top:0.6rem"><i class="fas fa-newspaper"></i> اخبار پدافند</div>
             <div id="homeNews" style="margin-bottom:0.6rem"></div>
-            <div id="homePosts" style="margin-top:0.2rem"></div>
         </div>
         </div>
 
@@ -2529,22 +2529,38 @@ requestAnimationFrame(frame);
         }
         // Install prompt
         let deferredInstallPrompt = null;
+        let installPromptShown = false;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredInstallPrompt = e;
             const btn = document.getElementById('installAppBtn');
             if (btn) btn.style.display = 'inline-flex';
+            // یک‌بار پیشنهاد نصب بعد از ورود به سایت
+            if (!installPromptShown && !localStorage.getItem('padafand_install_asked')) {
+                installPromptShown = true;
+                setTimeout(() => {
+                    if (!deferredInstallPrompt) return;
+                    const ok = confirm('می‌خواهید «پدافند شبهات» را روی گوشی/دستگاه خود نصب کنید تا مثل اپ در دسترس باشد؟');
+                    localStorage.setItem('padafand_install_asked', '1');
+                    if (ok) installPadafandApp();
+                }, 2500);
+            }
         });
         async function installPadafandApp() {
             if (!deferredInstallPrompt) {
-                alert('برای نصب: از منوی مرورگر گزینه «افزودن به صفحه اصلی» / Add to Home Screen را بزنید.');
+                alert('برای نصب: از منوی مرورگر گزینه «افزودن به صفحه اصلی» یا Add to Home Screen را انتخاب کنید.');
                 return;
             }
+            const ok = confirm('نصب اپلیکیشن پدافند شبهات روی این دستگاه؟');
+            if (!ok) return;
             deferredInstallPrompt.prompt();
-            await deferredInstallPrompt.userChoice;
+            const choice = await deferredInstallPrompt.userChoice;
             deferredInstallPrompt = null;
             const btn = document.getElementById('installAppBtn');
             if (btn) btn.style.display = 'none';
+            if (choice && choice.outcome === 'accepted') {
+                localStorage.setItem('padafand_install_asked', '1');
+            }
         }
     </script>
 
