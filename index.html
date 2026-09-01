@@ -863,21 +863,20 @@
         function renderGamesLeaderboard() {
             const el = document.getElementById('gamesLeaderboard');
             if (!el) return;
-            const list = Object.values(allUsers || {})
-                .filter(u => u && (u.xp || 0) > 0)
-                .sort((a, b) => (b.xp || 0) - (a.xp || 0))
-                .slice(0, 10);
+            const list = Object.keys(allUsers || {}).map(name => {
+                const u = allUsers[name] || {};
+                return { name: u.username || u.name || name, xp: Number(u.xp) || 0 };
+            }).filter(u => u.xp > 0).sort((a, b) => b.xp - a.xp).slice(0, 12);
             if (!list.length) {
-                el.innerHTML = '<div style="color:var(--ts);text-align:center;padding:0.3rem">هنوز رزمنده‌ای ثبت نشده — بازی کن و اولین باش!</div>';
+                el.innerHTML = '<div style="color:var(--ts);text-align:center;padding:0.35rem">هنوز رزمنده‌ای با XP ثبت نشده. یک بازی را تمام کن!</div>';
                 return;
             }
             el.innerHTML = list.map((u, i) => {
-                const rank = i === 0 ? '<i class="fas fa-trophy" style="color:#c8a000"></i>' :
-                    i === 1 ? '<i class="fas fa-medal" style="color:#aaa"></i>' :
-                    i === 2 ? '<i class="fas fa-medal" style="color:#cd7f32"></i>' : (i+1);
-                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.25rem 0;border-bottom:1px solid var(--br)">
-                    <span>${rank} <i class="fas ${u.avatar || 'fa-user'}"></i> ${u.fullname || u.username || 'رزمنده'}</span>
-                    <span style="color:var(--neon);font-family:monospace">${u.xp || 0} XP</span>
+                const rank = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+                const me = (loggedUser && (u.name === loggedUser)) ? 'style="border-color:var(--neon)"' : '';
+                return `<div class="list-item" ${me} style="display:flex;justify-content:space-between;padding:0.35rem 0.4rem;border:1px solid var(--br);border-radius:6px;margin-bottom:0.25rem">
+                    <span><b>${rank}</b> ${String(u.name).replace(/</g,'')}</span>
+                    <span style="color:var(--gold)">${u.xp} XP</span>
                 </div>`;
             }).join('');
         }
@@ -2230,15 +2229,45 @@
             render();
         }
 
+        function ladderProgressKey() {
+            const day = new Date().toISOString().slice(0,10);
+            const mode = window._dailyChallengeActive ? 'daily' : 'normal';
+            return 'padafand_ladder_' + mode + '_' + day + '_' + (loggedUser || 'guest');
+        }
+        function loadLadderProgress() {
+            try { return JSON.parse(localStorage.getItem(ladderProgressKey()) || 'null'); } catch(e) { return null; }
+        }
+        function saveLadderProgress(level, score, total) {
+            localStorage.setItem(ladderProgressKey(), JSON.stringify({ level, score, total, ts: Date.now() }));
+        }
+        function clearLadderProgress() {
+            localStorage.removeItem(ladderProgressKey());
+        }
+        function shuffleOptions(options, correctIdx) {
+            const arr = options.map((text, i) => ({ text, correct: i === correctIdx }));
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return { options: arr.map(x => x.text), correct: arr.findIndex(x => x.correct) };
+        }
+
         async function startAiLadderGame() {
-            openGameArena('نردبان شبهه (AI)');
+            openGameArena(window._dailyChallengeActive ? 'چالش روزانه — نردبان شبهه' : 'نردبان شبهه (AI)');
             const body = document.getElementById('gameArenaBody');
-            let level = 1, score = 0, total = 8;
+            const total = 8;
+            const saved = loadLadderProgress();
+            let level = (saved && saved.level) ? saved.level : 1;
+            let score = (saved && saved.score) ? saved.score : 0;
             let current = null;
+            if (saved && saved.level > 1) {
+                // ادامه از قبل
+            }
 
             async function nextQ() {
                 if (level > total) {
-                    const xp = Math.max(8, score * 6 + level);
+                    const xp = Math.max(8, score * 6);
+                    clearLadderProgress();
                     finishGameXP(xp);
                     body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان نردبان</h3><p>امتیاز: ${score} / ${total}</p><p style="color:var(--gold)">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
                     return;
@@ -2263,10 +2292,13 @@ CORRECT: <A یا B یا C یا D>
                     const D = (raw.match(/D:\s*(.+)/i)||[])[1] || 'سؤال بی‌معناست';
                     let cor = ((raw.match(/CORRECT:\s*([ABCD])/i)||[])[1]||'A').toUpperCase();
                     const map = {A:0,B:1,C:2,D:3};
-                    current = { q, options:[A,B,C,D], correct: map[cor]??0, level };
+                    const sh = shuffleOptions([A,B,C,D], map[cor]??0);
+                    current = { q, options: sh.options, correct: sh.correct, level };
+                    saveLadderProgress(level, score, total);
                     body.innerHTML = `<div style="font-size:.65rem;color:var(--gold);margin-bottom:.25rem">سطح ${level} / ${total} — امتیاز ${score}</div>
                         <div style="font-size:.78rem;line-height:1.85;margin-bottom:.5rem">${current.q}</div>
-                        <div style="display:flex;flex-direction:column;gap:.35rem">${current.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem" onclick="window._ladderPick(${idx})">${op}</button>`).join('')}</div>`;
+                        <div style="display:flex;flex-direction:column;gap:.35rem">${current.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem" onclick="window._ladderPick(${idx})">${op}</button>`).join('')}</div>
+                        <button type="button" class="btn" style="margin-top:.45rem;font-size:.6rem;opacity:.85" onclick="closeGameArena()">خروج — بعداً از همین‌جا ادامه می‌دهی</button>`;
                 } catch (e) {
                     body.innerHTML = `<div style="color:#e74c3c">خطا در AI. <button class="btn" onclick="startAiLadderGame()">تلاش دوباره</button></div>`;
                 }
@@ -2275,10 +2307,11 @@ CORRECT: <A یا B یا C یا D>
                 if (!current) return;
                 const ok = idx === current.correct;
                 if (ok) score++;
+                saveLadderProgress(level, score, total);
                 const tip = ok ? '✅ درست' : '❌ نادرست — گزینه صحیح: ' + current.options[current.correct];
-                body.innerHTML = `<div style="padding:0.6rem;font-size:.75rem;line-height:1.8">${tip}</div><button class="btn" onclick="window._ladderNext()">ادامه</button>`;
+                body.innerHTML = `<div style="padding:0.6rem;font-size:.75rem;line-height:1.8">${tip}</div><button class="btn" onclick="window._ladderNext()">ادامه</button><button class="btn" style="margin-top:.3rem" onclick="closeGameArena()">خروج و ادامه بعداً</button>`;
             };
-            window._ladderNext = () => { level++; nextQ(); };
+            window._ladderNext = () => { level++; saveLadderProgress(level, score, total); nextQ(); };
             nextQ();
         }
 
@@ -2448,25 +2481,34 @@ FEEDBACK: <۳ تا ۶ جمله فارسی؛ نقاط قوت و ضعف؛ چه چ�
         }
 
         async function finishGameXP(xp) {
-            if (!loggedUser || !allUsers[loggedUser]) return;
+            if (!loggedUser) return;
+            if (!allUsers[loggedUser]) allUsers[loggedUser] = { username: loggedUser, xp: 0 };
             if (window._dailyChallengeActive) xp = Math.round(xp * 2);
-            allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + xp;
+            allUsers[loggedUser].xp = (Number(allUsers[loggedUser].xp) || 0) + (Number(xp) || 0);
             try {
                 if (allUsers[loggedUser].id) {
                     await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
+                } else {
+                    // try match by scanning
+                    const u = Object.values(allUsers).find(x => x && (x.username === loggedUser || x.name === loggedUser));
+                    if (u && u.id) await updateInSupabase('users', u.id, { xp: allUsers[loggedUser].xp });
                 }
-            } catch (e) {}
+            } catch (e) { console.warn(e); }
+            // نشان‌ها
+            const totalXp = allUsers[loggedUser].xp || 0;
+            if (xp > 0) saveBadge('first_game', 'اولین مأموریت');
+            if (totalXp >= 50) saveBadge('xp50', '۵۰ امتیاز تجربه');
+            if (totalXp >= 150) saveBadge('xp150', 'رزمنده سخت‌کوش');
+            if (window._dailyChallengeActive) saveBadge('daily_' + new Date().toISOString().slice(0,10), 'چالش روزانه');
+            window._dailyChallengeActive = false;
+            try { localStorage.setItem('padafand_user_xp_' + loggedUser, String(totalXp)); } catch(e) {}
+            if (typeof renderGamesLeaderboard === 'function') renderGamesLeaderboard();
+            if (typeof renderUserBadges === 'function') renderUserBadges();
+            if (typeof updateProfile === 'function') updateProfile();
             if (xp > 0) {
-                saveBadge('first_win', 'اولین پیروزی');
-                if ((allUsers[loggedUser].xp || 0) >= 50) saveBadge('xp50', '۵۰ XP');
-                if ((allUsers[loggedUser].xp || 0) >= 100) saveBadge('xp100', '۱۰۰ XP');
-                markDailyDoneIfNeeded();
+                try { alert('+' + xp + ' XP'); } catch(e) {}
             }
-            updateHeader();
-            updateProfile();
-            renderGamesLeaderboard();
         }
-
 
         function showWelcomeMessage() {
             if (localStorage.getItem('padafand_welcome_shown')) return;
