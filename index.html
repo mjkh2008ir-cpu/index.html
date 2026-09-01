@@ -900,7 +900,7 @@
                 const rank = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
                 const me = (loggedUser && (u.name === loggedUser)) ? 'style="border-color:var(--neon)"' : '';
                 return `<div class="list-item" ${me} style="display:flex;justify-content:space-between;padding:0.35rem 0.4rem;border:1px solid var(--br);border-radius:6px;margin-bottom:0.25rem">
-                    <span><b>${rank}</b> ${String(u.name).replace(/</g,'')}</span>
+                    <span><b>${rank}</b> ${String(u.name).replace(/\u003c/g,'')}</span>
                     <span style="color:var(--gold)">${u.xp} XP</span>
                 </div>`;
             }).join('');
@@ -1197,13 +1197,13 @@
         function openTutorialFromInbox() {
             document.getElementById('tutorialModal').classList.add('show');
             document.getElementById('tutorialContent').innerHTML =
-                `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div>`;
+                `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش<\/button></div>`;
         }
 
         function startTutorial() {
             document.getElementById('tutorialModal').classList.add('show');
             document.getElementById('tutorialContent').innerHTML =
-                `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش</button></div>`;
+                `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem">🤖</div><h3 style="color:var(--gold)">سلام سرباز! من پای لانچر هستم</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">میخوام قرارگاه پدافند شبهات رو بهت نشون بدم.<br>با من همراه باش تا همه بخش‌ها رو یاد بگیری.</p><button class="btn btn-neon" onclick="startTutorialSteps()"><i class="fas fa-play"></i> شروع آموزش<\/button></div>`;
         }
 
         const tutorialSteps = [
@@ -1224,12 +1224,12 @@
         function showTutorialStep() {
             if (tutorialStep >= tutorialSteps.length) {
                 document.getElementById('tutorialContent').innerHTML =
-                    `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem"><i class="fas fa-medal ico-gold"></i></div><h3 style="color:var(--gold)">آموزش کامل شد!</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">حالا با همه بخش‌های قرارگاه آشنا شدی.<br>برو و از امکانات استفاده کن. موفق باشی سرباز! 💪</p><button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم</button></div>`;
+                    `<div style="text-align:center;padding:0.5rem"><div style="font-size:3rem;margin-bottom:0.5rem"><i class="fas fa-medal ico-gold"></i></div><h3 style="color:var(--gold)">آموزش کامل شد!</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">حالا با همه بخش‌های قرارگاه آشنا شدی.<br>برو و از امکانات استفاده کن. موفق باشی سرباز! 💪</p><button class="btn btn-gold" onclick="closeModal('tutorialModal')"><i class="fas fa-check"></i> فهمیدم<\/button></div>`;
                 return;
             }
             const step = tutorialSteps[tutorialStep];
             document.getElementById('tutorialContent').innerHTML =
-                `<div style="text-align:center;padding:0.5rem"><div style="font-size:2.5rem;margin-bottom:0.5rem"><i class="fas ${step.icon}"></i></div><h3 style="color:var(--gold)">${step.title}</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">${step.desc}</p><div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem">${tutorialStep > 0 ? `<button class="btn btn-sm" onclick="tutorialStep--;showTutorialStep()"><i class="fas fa-chevron-right"></i> قبلی</button>` : ''}<button class="btn btn-neon" onclick="tutorialStep++;showTutorialStep()">${tutorialStep === tutorialSteps.length - 1 ? '🎯 پایان' : 'بعدی →'}</button></div><div style="font-size:.4rem;color:var(--ts);margin-top:0.3rem">${tutorialStep + 1} از ${tutorialSteps.length}</div></div>`;
+                `<div style="text-align:center;padding:0.5rem"><div style="font-size:2.5rem;margin-bottom:0.5rem"><i class="fas ${step.icon}"></i></div><h3 style="color:var(--gold)">${step.title}</h3><p style="font-size:.7rem;color:var(--ts);line-height:1.8;margin:0.5rem 0">${step.desc}</p><div style="display:flex;gap:0.3rem;justify-content:center;margin-top:0.5rem">${tutorialStep > 0 ? `<button class="btn btn-sm" onclick="tutorialStep--;showTutorialStep()"><i class="fas fa-chevron-right"></i> قبلی<\/button>` : ''}<button class="btn btn-neon" onclick="tutorialStep++;showTutorialStep()">${tutorialStep === tutorialSteps.length - 1 ? '🎯 پایان' : 'بعدی →'}<\/button></div><div style="font-size:.4rem;color:var(--ts);margin-top:0.3rem">${tutorialStep + 1} از ${tutorialSteps.length}</div></div>`;
         }
 
         function closePieLauncher() { const el=document.getElementById('pieLauncher'); if(el) el.style.display = 'none'; }
@@ -1348,7 +1348,7 @@
         function escapeHtml(s) {
             return String(s == null ? '' : s)
                 .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
+                .replace(/\u003c/g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;');
         }
@@ -1417,7 +1417,7 @@
                         <span class="title"><i class="fas ${n.icon || 'fa-newspaper'}"></i> ${escapeHtml(n.title)}</span>
                     </div>
                     <div class="post-body show" style="display:block;padding:0.4rem;font-size:.62rem;line-height:1.8">${escapeHtml((n.body||'').substring(0,160))}…</div>
-                </div>`).join('') + `<div style="text-align:center;margin-top:0.3rem"><button class="btn" onclick="switchPage('news')" style="font-size:.6rem">همه اخبار</button></div>`;
+                </div>`).join('') + `<div style="text-align:center;margin-top:0.3rem"><button class="btn" onclick="switchPage('news')" style="font-size:.6rem">همه اخبار<\/button></div>`;
         }
 
 
@@ -1460,13 +1460,13 @@
                     '<div class="tags">' + tags.map(tg => '<span>#' + escapeHtml(String(tg)) + '</span>').join('') + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.4rem;align-items:center">' +
                     '' +
-                    '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره</button>' +
-                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک</button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره<\/button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک<\/button>' +
                     '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
                     '</div>' +
                     '<div class="comments" id="comments' + idx + '"></div>' +
                     (loggedUser
-                        ? '<div class="comment-form"><input type="text" id="cmtInput' + idx + '" placeholder="نظرت رو بنویس..."><button type="button" onclick="addComment(' + idx + ')"><i class="fas fa-paper-plane"></i> ارسال</button></div>'
+                        ? '<div class="comment-form"><input type="text" id="cmtInput' + idx + '" placeholder="نظرت رو بنویس..."><button type="button" onclick="addComment(' + idx + ')"><i class="fas fa-paper-plane"></i> ارسال<\/button></div>'
                         : '<p style="font-size:.5rem;color:var(--ts)"><i class="fas fa-lock"></i> برای نظر دادن وارد حساب خود شوید</p>') +
                     '</div></div>'
                 );
@@ -1587,8 +1587,8 @@
                     '<span class="arrow"><i class="fas fa-book-open"></i></span>' +
                     '</div>' +
                     '<div style="padding:0.35rem 0.6rem 0.55rem;display:flex;gap:0.3rem;flex-wrap:wrap;border-top:1px solid var(--br)">' +
-                    '<button type="button" class="btn-read" onclick="openSavedReaderAt(' + i + ')"><i class="fas fa-book-open"></i> مطالعه</button>' +
-                    '<button type="button" class="btn-read" onclick="deleteSaved(' + sid + ')"><i class="fas fa-trash"></i> حذف</button>' +
+                    '<button type="button" class="btn-read" onclick="openSavedReaderAt(' + i + ')"><i class="fas fa-book-open"></i> مطالعه<\/button>' +
+                    '<button type="button" class="btn-read" onclick="deleteSaved(' + sid + ')"><i class="fas fa-trash"></i> حذف<\/button>' +
                     '</div></div>'
                 );
             }).join('');
@@ -1711,11 +1711,11 @@
                             <div class="inbox-subject">${m.subject}</div>
                             <div class="inbox-body" id="inboxBody${i}">
                                 <p style="white-space:pre-wrap">${m.body}</p>
-                                ${hasAction ? `<button class="inbox-btn-action" onclick="openTutorialFromInbox()"><i class="fas fa-play"></i> شروع آموزش</button>` : ''}
+                                ${hasAction ? `<button class="inbox-btn-action" onclick="openTutorialFromInbox()"><i class="fas fa-play"></i> شروع آموزش<\/button>` : ''}
                                 <div style="display:flex;gap:0.3rem;margin-top:0.3rem;flex-wrap:wrap">
                                     <input type="text" id="replyInbox${i}" placeholder="پاسخ شما..." style="flex:1;min-width:100px;padding:0.2rem 0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:3px;color:var(--tp);font-size:.55rem">
-                                    <button class="inbox-btn-action" onclick="event.stopPropagation();replyInboxItem(${i})"><i class="fas fa-reply"></i> پاسخ</button>
-                                    <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف</button>
+                                    <button class="inbox-btn-action" onclick="event.stopPropagation();replyInboxItem(${i})"><i class="fas fa-reply"></i> پاسخ<\/button>
+                                    <button class="inbox-delete" onclick="event.stopPropagation();deleteInboxItem(${i})"><i class="fas fa-trash"></i> حذف<\/button>
                                 </div>
                             </div>
                         </div>
@@ -2172,6 +2172,25 @@
         }
 
         
+        
+        const GAME_USED_DOUBTS_KEY = 'padafand_game_used_doubts_v1';
+        function getUsedDoubts() {
+            try { return JSON.parse(sessionStorage.getItem(GAME_USED_DOUBTS_KEY) || '[]'); } catch(e) { return []; }
+        }
+        function rememberDoubt(text) {
+            const u = getUsedDoubts();
+            const s = String(text || '').slice(0, 120);
+            if (!s) return;
+            if (!u.includes(s)) u.push(s);
+            while (u.length > 40) u.shift();
+            sessionStorage.setItem(GAME_USED_DOUBTS_KEY, JSON.stringify(u));
+        }
+        function usedDoubtsPromptBlock() {
+            const u = getUsedDoubts();
+            if (!u.length) return '';
+            return '\nاین شبهات اخیراً استفاده شده‌اند و نباید تکرار شوند:\n- ' + u.slice(-15).join('\n- ') + '\n';
+        }
+
         async function siteGameAI(prompt) {
             const url = (typeof AI_WORKER_URL !== 'undefined' ? AI_WORKER_URL : '').replace(/\/$/, '') + '/api/ai';
             const res = await fetch(url, {
@@ -2230,13 +2249,13 @@
                 if (i >= questions.length) {
                     const xp = Math.max(5, score * 5);
                     finishGameXP(xp);
-                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان</h3><p>درست: ${score} از ${questions.length}</p><p style="color:var(--gold);font-size:1.1rem">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
+                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان</h3><p>درست: ${score} از ${questions.length}</p><p style="color:var(--gold);font-size:1.1rem">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن<\/button></div>`;
                     return;
                 }
                 const q = questions[i];
                 body.innerHTML = `<div style="font-size:.72rem;color:var(--ts);margin-bottom:.3rem">سؤال ${i+1} / ${questions.length}</div>
                     <div style="font-size:.8rem;line-height:1.85;margin-bottom:.5rem;color:var(--tp)">${q.q}</div>
-                    <div style="display:flex;flex-direction:column;gap:.35rem">${q.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem;line-height:1.6" onclick="window._classicAns(${idx})">${op}</button>`).join('')}</div>`;
+                    <div style="display:flex;flex-direction:column;gap:.35rem">${q.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem;line-height:1.6" onclick="window._classicAns(${idx})">${op}<\/button>`).join('')}</div>`;
             }
             window._classicAns = (idx) => {
                 if (idx === qCorrect()) score++;
@@ -2294,23 +2313,25 @@
                     const xp = Math.max(8, score * 6);
                     clearLadderProgress();
                     finishGameXP(xp);
-                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان نردبان</h3><p>امتیاز: ${score} / ${total}</p><p style="color:var(--gold)">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
+                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان نردبان</h3><p>امتیاز: ${score} / ${total}</p><p style="color:var(--gold)">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن<\/button></div>`;
                     return;
                 }
                 body.innerHTML = `<div style="text-align:center;color:var(--ts);padding:1rem"><i class="fas fa-spinner fa-spin"></i> در حال ساخت شبهه سطح ${level}…</div>`;
-                const prompt = `برای بازی آموزشی یک شبهه سطح دشواری ${level} از 8 بساز (1 خیلی آسان، 8 خیلی سخت).
-موضوع: اعتقادی یا دینی یا سیاسی‌اجتماعی مرتبط با ایران/اسلام.
+                const prompt = `برای بازی «نردبان شبهه» یک شبهه کاملاً جدید سطح ${level} از 8 بساز (1 آسان، 8 خیلی سخت).
+موضوع را هر بار عوض کن (عقاید، تاریخ اسلام، اخلاق، جامعه، رسانه، مقاومت، عبادات، شبهات روز).
+${usedDoubtsPromptBlock()}
 خروجی دقیقاً:
-Q: <متن شبهه در یک تا دو جمله>
+Q: <متن شبهه در یک تا دو جمله — لحن شبهه واقعی نه سؤال امتحانی>
 A: <گزینه درست>
 B: <گزینه غلط نزدیک>
 C: <گزینه غلط>
 D: <گزینه غلط>
 CORRECT: <A یا B یا C یا D>
-فقط همین قالب. فارسی.`;
+فقط همین قالب. فارسی. بدون تکرار.`;
                 try {
                     const raw = await siteGameAI(prompt);
                     const q = (raw.match(/Q:\s*(.+)/i)||[])[1] || 'شبهه: آیا دین با عقل سازگار است؟';
+                    rememberDoubt(q);
                     const A = (raw.match(/A:\s*(.+)/i)||[])[1] || 'بله، عقل و وحی مکمل‌اند';
                     const B = (raw.match(/B:\s*(.+)/i)||[])[1] || 'خیر هیچ سازگاری نیست';
                     const C = (raw.match(/C:\s*(.+)/i)||[])[1] || 'فقط احساسات مهم است';
@@ -2322,10 +2343,10 @@ CORRECT: <A یا B یا C یا D>
                     saveLadderProgress(level, score, total);
                     body.innerHTML = `<div style="font-size:.65rem;color:var(--gold);margin-bottom:.25rem">سطح ${level} / ${total} — امتیاز ${score}</div>
                         <div style="font-size:.78rem;line-height:1.85;margin-bottom:.5rem">${current.q}</div>
-                        <div style="display:flex;flex-direction:column;gap:.35rem">${current.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem" onclick="window._ladderPick(${idx})">${op}</button>`).join('')}</div>
-                        <button type="button" class="btn" style="margin-top:.45rem;font-size:.6rem;opacity:.85" onclick="closeGameArena()">خروج — بعداً از همین‌جا ادامه می‌دهی</button>`;
+                        <div style="display:flex;flex-direction:column;gap:.35rem">${current.options.map((op,idx)=>`<button class="btn" style="text-align:right;font-size:.68rem" onclick="window._ladderPick(${idx})">${op}<\/button>`).join('')}</div>
+                        <button type="button" class="btn" style="margin-top:.45rem;font-size:.6rem;opacity:.85" onclick="closeGameArena()">خروج — بعداً از همین‌جا ادامه می‌دهی<\/button>`;
                 } catch (e) {
-                    body.innerHTML = `<div style="color:#e74c3c">خطا در AI. <button class="btn" onclick="startAiLadderGame()">تلاش دوباره</button></div>`;
+                    body.innerHTML = `<div style="color:#e74c3c">خطا در AI. <button class="btn" onclick="startAiLadderGame()">تلاش دوباره<\/button></div>`;
                 }
             }
             window._ladderPick = (idx) => {
@@ -2334,7 +2355,7 @@ CORRECT: <A یا B یا C یا D>
                 if (ok) score++;
                 saveLadderProgress(level, score, total);
                 const tip = ok ? '✅ درست' : '❌ نادرست — گزینه صحیح: ' + current.options[current.correct];
-                body.innerHTML = `<div style="padding:0.6rem;font-size:.75rem;line-height:1.8">${tip}</div><button class="btn" onclick="window._ladderNext()">ادامه</button><button class="btn" style="margin-top:.3rem" onclick="closeGameArena()">خروج و ادامه بعداً</button>`;
+                body.innerHTML = `<div style="padding:0.6rem;font-size:.75rem;line-height:1.8">${tip}</div><button class="btn" onclick="window._ladderNext()">ادامه<\/button><button class="btn" style="margin-top:.3rem" onclick="closeGameArena()">خروج و ادامه بعداً<\/button>`;
             };
             window._ladderNext = () => { level++; saveLadderProgress(level, score, total); nextQ(); };
             nextQ();
@@ -2344,102 +2365,147 @@ CORRECT: <A یا B یا C یا D>
             openGameArena('پدافند پیکسلی');
             const body = document.getElementById('gameArenaBody');
             body.innerHTML = `
-              <p style="font-size:.62rem;color:var(--ts);margin-bottom:.3rem">موشک‌های «شبهه» از بالا می‌آیند. برای شلیک روی بوم بزن / لمس کن. ۱۰ شبهه را بزن تا موج تمام شود.</p>
-              <canvas id="pixelDefCanvas" width="360" height="280" style="width:100%;max-width:360px;height:auto;background:#0a1008;border:1px solid var(--br);border-radius:8px;image-rendering:pixelated;touch-action:none;display:block;margin:0 auto"></canvas>
+              <p style="font-size:.62rem;color:var(--ts);margin-bottom:.3rem">شب قرارگاه. موشک‌های «شبهه» از چپ می‌آیند. لمس/کلیک = شلیک رهگیر. ماشین پدافند را حفظ کن.</p>
+              <canvas id="pixelDefCanvas" width="400" height="260" style="width:100%;max-width:400px;height:auto;background:#050a06;border:1px solid var(--br);border-radius:8px;image-rendering:pixelated;touch-action:none;display:block;margin:0 auto"></canvas>
               <div style="display:flex;justify-content:space-between;font-size:.65rem;margin-top:.3rem;color:var(--tp)">
                 <span id="pdScore">امتیاز: 0</span><span id="pdLives">جان: 3</span><span id="pdWave">موج: 1</span>
               </div>
-              <button class="btn" style="margin-top:.4rem;width:100%" onclick="closeGameArena()">خروج</button>`;
+              <button class="btn" style="margin-top:.4rem;width:100%" onclick="closeGameArena()">خروج<\/button>`;
             const canvas = document.getElementById('pixelDefCanvas');
             const ctx = canvas.getContext('2d');
-            let score = 0, lives = 3, wave = 1, frame = 0;
-            const base = { x: 180, y: 250 };
-            let missiles = [], shots = [];
-            let over = false;
+            ctx.imageSmoothingEnabled = false;
+            let score = 0, lives = 3, wave = 1, frame = 0, over = false;
+            const ground = 220;
+            const truck = { x: 300, y: ground };
+            let missiles = [], shots = [], stars = [];
+            for (let i=0;i<35;i++) stars.push({x:Math.random()*400,y:Math.random()*120,p:Math.random()});
 
+            function drawTruck(x, y) {
+                // pixel launcher truck
+                ctx.fillStyle = '#1a3d12';
+                ctx.fillRect(x, y-18, 70, 18);
+                ctx.fillStyle = '#2f6b22';
+                ctx.fillRect(x+4, y-28, 40, 12);
+                ctx.fillStyle = '#39ff14';
+                ctx.fillRect(x+48, y-36, 8, 20); // launcher arm
+                ctx.fillRect(x+50, y-42, 18, 6);
+                ctx.fillStyle = '#0a0f08';
+                ctx.fillRect(x+8, y-8, 12, 8);
+                ctx.fillRect(x+40, y-8, 12, 8);
+                ctx.fillStyle = '#c8a000';
+                ctx.fillRect(x+58, y-22, 10, 8); // radar box
+                ctx.fillStyle = '#5dff3a';
+                ctx.fillRect(x+60, y-30, 3, 8);
+            }
             function spawn() {
-                const labels = ['شبهه','ادعا','شایعه','تکذیب'];
+                const labels = ['شبهه','شایعه','ادعا','تکذیب','رسانه'];
                 missiles.push({
-                    x: 40 + Math.random() * 280,
-                    y: -20,
-                    vy: 0.7 + wave * 0.15 + Math.random() * 0.4,
-                    label: labels[Math.floor(Math.random()*labels.length)],
-                    w: 16, h: 22
+                    x: -20, y: 40 + Math.random()*120,
+                    vx: 1.1 + wave*0.25 + Math.random()*0.5,
+                    vy: (Math.random()-0.5)*0.3,
+                    label: labels[(frame+score)%labels.length],
+                    dead: false
                 });
             }
-            function shoot(x) {
-                shots.push({ x: base.x, y: base.y - 10, tx: x, ty: 20, life: 0 });
+            function shoot(tx, ty) {
+                shots.push({ x: truck.x+60, y: truck.y-40, tx, ty, life: 0 });
             }
             function onPtr(e) {
                 if (over) return;
                 const r = canvas.getBoundingClientRect();
-                const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-                const x = (clientX - r.left) * (canvas.width / r.width);
-                shoot(x);
+                const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+                const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+                const x = (cx - r.left) * (canvas.width / r.width);
+                const y = (cy - r.top) * (canvas.height / r.height);
+                shoot(x, y);
             }
             canvas.onmousedown = onPtr;
             canvas.ontouchstart = (e) => { e.preventDefault(); onPtr(e); };
 
-            let spawnEvery = 90;
+            let spawnEvery = 70;
             function loop() {
                 if (over) return;
                 frame++;
-                ctx.fillStyle = '#0a1008';
-                ctx.fillRect(0,0,360,280);
-                // grid
-                ctx.strokeStyle = 'rgba(57,255,20,0.06)';
-                for (let x=0;x<360;x+=20){ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,280);ctx.stroke(); }
-                // base
-                ctx.fillStyle = '#2d4a1e';
-                ctx.fillRect(base.x-22, base.y-8, 44, 16);
+                // sky
+                ctx.fillStyle = '#050a06';
+                ctx.fillRect(0,0,400,260);
+                stars.forEach(s => {
+                    ctx.fillStyle = s.p > 0.7 ? '#9f7' : '#3a5a32';
+                    ctx.fillRect(s.x, s.y, 1, 1);
+                });
+                // city silhouette
+                ctx.fillStyle = '#0c1810';
+                for (let i=0;i<12;i++) {
+                    const h = 20 + (i*17)%40;
+                    ctx.fillRect(i*34, ground-h, 30, h);
+                }
+                // ground
+                ctx.fillStyle = '#0f2414';
+                ctx.fillRect(0, ground, 400, 40);
                 ctx.fillStyle = '#39ff14';
-                ctx.fillRect(base.x-3, base.y-18, 6, 12);
-                // missiles
+                ctx.globalAlpha = 0.15;
+                ctx.fillRect(0, ground, 400, 2);
+                ctx.globalAlpha = 1;
+
                 if (frame % spawnEvery === 0) spawn();
+
+                // missiles
                 missiles.forEach(m => {
-                    m.y += m.vy;
+                    m.x += m.vx; m.y += m.vy;
                     ctx.fillStyle = '#c0392b';
-                    ctx.fillRect(m.x-6, m.y, 12, 18);
-                    ctx.fillStyle = '#e74c3c';
-                    ctx.fillRect(m.x-2, m.y+18, 4, 6);
+                    ctx.fillRect(m.x, m.y, 16, 8);
+                    ctx.fillStyle = '#ff6b4a';
+                    ctx.fillRect(m.x-4, m.y+2, 5, 4);
                     ctx.fillStyle = '#f1c40f';
                     ctx.font = '9px monospace';
-                    ctx.fillText(m.label, m.x-14, m.y-3);
-                    if (m.y > base.y - 10) { lives--; m.dead = true; }
+                    ctx.fillText(m.label, m.x-2, m.y-3);
+                    if (m.x > truck.x - 5 && m.y > truck.y - 40) { m.dead = true; lives--; }
+                    if (m.x > 420) m.dead = true;
                 });
-                missiles = missiles.filter(m => !m.dead && m.y < 300);
+                missiles = missiles.filter(m => !m.dead);
+
                 // shots
                 shots.forEach(s => {
                     s.life++;
-                    const t = Math.min(1, s.life / 18);
-                    const x = s.x + (s.tx - s.x) * t;
-                    const y = s.y + (s.ty - s.y) * t;
+                    const t = Math.min(1, s.life/16);
+                    const x = s.x + (s.tx-s.x)*t;
+                    const y = s.y + (s.ty-s.y)*t;
                     ctx.fillStyle = '#39ff14';
-                    ctx.fillRect(x-2, y-2, 4, 4);
+                    ctx.fillRect(x-2,y-2,4,4);
+                    // trail
+                    ctx.fillStyle = 'rgba(57,255,20,0.3)';
+                    ctx.fillRect(x-6,y-1,4,2);
                     missiles.forEach(m => {
-                        if (Math.abs(m.x - x) < 14 && Math.abs(m.y - y) < 16) {
-                            m.dead = true; s.done = true; score += 10;
+                        if (Math.abs(m.x-x)<14 && Math.abs(m.y-y)<12) {
+                            m.dead = true; s.done = true; score += 12;
                         }
                     });
-                    if (t >= 1) s.done = true;
+                    if (t>=1) s.done = true;
                 });
                 shots = shots.filter(s => !s.done);
+
+                drawTruck(truck.x, truck.y);
+
+                // HUD line
+                ctx.strokeStyle = 'rgba(57,255,20,0.2)';
+                ctx.strokeRect(4,4,392,252);
+
                 document.getElementById('pdScore').textContent = 'امتیاز: ' + score;
                 document.getElementById('pdLives').textContent = 'جان: ' + lives;
                 document.getElementById('pdWave').textContent = 'موج: ' + wave;
-                if (score >= 100 && wave === 1) { wave = 2; spawnEvery = 70; }
-                if (score >= 220 && wave === 2) { wave = 3; spawnEvery = 55; }
-                if (lives <= 0 || score >= 350) {
+                if (score >= 90 && wave===1) { wave=2; spawnEvery=55; }
+                if (score >= 200 && wave===2) { wave=3; spawnEvery=40; }
+                if (lives<=0 || score>=320) {
                     over = true;
-                    const xp = Math.max(5, Math.floor(score / 12));
+                    const xp = Math.max(6, Math.floor(score/11));
                     finishGameXP(xp);
-                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
-                    ctx.fillRect(0,0,360,280);
-                    ctx.fillStyle = '#39ff14';
-                    ctx.font = '16px Tahoma';
-                    ctx.fillText(lives<=0 ? 'شکست — امتیاز '+score : 'پیروزی موج‌ها!', 100, 130);
-                    ctx.fillStyle = '#c8a000';
-                    ctx.fillText('+' + xp + ' XP', 140, 160);
+                    ctx.fillStyle='rgba(0,0,0,0.72)';
+                    ctx.fillRect(0,0,400,260);
+                    ctx.fillStyle='#39ff14';
+                    ctx.font='15px Tahoma';
+                    ctx.fillText(lives<=0?'شکست قرارگاه':'دفاع موفق!', 130, 120);
+                    ctx.fillStyle='#c8a000';
+                    ctx.fillText('+'+xp+' XP', 160, 150);
                     return;
                 }
                 window._pixelDefenseRAF = requestAnimationFrame(loop);
@@ -2447,6 +2513,7 @@ CORRECT: <A یا B یا C یا D>
             loop();
         }
 
+        
         async function startStoryResponderGame() {
             openGameArena('پاسخگوی قرارگاه');
             const body = document.getElementById('gameArenaBody');
@@ -2457,53 +2524,48 @@ CORRECT: <A یا B یا C یا D>
                 if (round > total) {
                     const xp = Math.max(10, Math.floor(points / 8));
                     finishGameXP(xp);
-                    body.innerHTML = `<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان مأموریت</h3><p>مجموع کیفیت: ${points}</p><p style="color:var(--gold)">+${xp} XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>`;
+                    body.innerHTML = '<div style="text-align:center;padding:1rem"><h3 style="color:var(--neon)">پایان مأموریت</h3><p>مجموع کیفیت: ' + points + '</p><p style="color:var(--gold)">+' + xp + ' XP</p><button class="btn" onclick="closeGameArena()">بستن</button></div>';
                     return;
                 }
-                body.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> شهروندی شبهه‌اش را می‌گوید… (دور ${round}/${total})</div>`;
+                body.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts)"><i class="fas fa-spinner fa-spin"></i> شهروندی شبهه‌اش را می‌گوید… (دور ' + round + '/' + total + ')</div>';
                 try {
-                    const raw = await siteGameAI(`برای بازی نقش‌آفرینی، یک «شبهه مردمی» واقعی‌نما و کوتاه بنویس که یک شهروند می‌پرسد.
-سطح سختی ${round} از ${total}.
-فقط متن شبهه را در ۲ تا ۳ جمله بنویس، بدون عنوان و بدون پاسخ.`);
-                    currentShobe = raw.split('\n').filter(Boolean).slice(0,4).join(' ');
-                    body.innerHTML = `
-                      <div style="font-size:.65rem;color:var(--gold)">دور ${round} / ${total} — امتیاز کیفی: ${points}</div>
-                      <div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:.55rem;margin:.4rem 0;font-size:.75rem;line-height:1.85">
-                        <b style="color:var(--neon)">شهروند:</b> ${currentShobe.replace(/</g,'&lt;')}
-                      </div>
-                      <label style="font-size:.65rem;color:var(--ts)">پاسخ تو به‌عنوان پاسخگوی قرارگاه:</label>
-                      <textarea id="storyAns" rows="5" style="width:100%;margin:.3rem 0;padding:.4rem;background:#0a1008;color:var(--tp);border:1px solid var(--br);border-radius:6px;font-family:inherit;font-size:.72rem"></textarea>
-                      <button class="btn btn-gold" style="width:100%" onclick="window._storySubmit()">ارسال برای ارزیابی AI</button>`;
+                    const prompt = 'برای بازی پاسخگوی قرارگاه یک شبهه مردمی جدید و غیرتکراری بنویس. سطح ' + round + ' از ' + total + '. لحن محاوره مردم عادی. موضوع متفاوت.' + usedDoubtsPromptBlock() + '\nفقط متن شبهه در ۲ تا ۳ جمله. بدون پاسخ.';
+                    const raw = await siteGameAI(prompt);
+                    currentShobe = raw.split('\n').filter(Boolean).slice(0, 4).join(' ');
+                    rememberDoubt(currentShobe);
+                    const safe = String(currentShobe).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+                    body.innerHTML = '<div style="font-size:.65rem;color:var(--gold)">دور ' + round + ' / ' + total + ' — امتیاز کیفی: ' + points + '</div>'
+                        + '<div style="background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:.55rem;margin:.4rem 0;font-size:.75rem;line-height:1.85">'
+                        + '<b style="color:var(--neon)">شهروند:</b> ' + safe + '</div>'
+                        + '<label style="font-size:.65rem;color:var(--ts)">پاسخ تو به‌عنوان پاسخگوی قرارگاه:</label>'
+                        + '<textarea id="storyAns" rows="5" style="width:100%;margin:.3rem 0;padding:.4rem;background:#0a1008;color:var(--tp);border:1px solid var(--br);border-radius:6px;font-family:inherit;font-size:.72rem"></textarea>'
+                        + '<button class="btn btn-gold" style="width:100%" onclick="window._storySubmit()">ارسال برای ارزیابی AI</button>';
                 } catch (e) {
-                    body.innerHTML = `<div style="color:#e74c3c">خطا. <button class="btn" onclick="startStoryResponderGame()">دوباره</button></div>`;
+                    body.innerHTML = '<div style="color:#e74c3c">خطا. <button class="btn" onclick="startStoryResponderGame()">دوباره</button></div>';
                 }
             }
-            window._storySubmit = async () => {
-                const ans = (document.getElementById('storyAns')?.value || '').trim();
+            window._storySubmit = async function() {
+                const ans = (document.getElementById('storyAns') && document.getElementById('storyAns').value || '').trim();
                 if (ans.length < 20) { alert('پاسخ کامل‌تری بنویس (حداقل چند جمله).'); return; }
-                body.innerHTML = `<div style="text-align:center;padding:1rem"><i class="fas fa-spinner fa-spin"></i> ارزیابی پاسخ…</div>`;
+                body.innerHTML = '<div style="text-align:center;padding:1rem"><i class="fas fa-spinner fa-spin"></i> ارزیابی پاسخ…</div>';
                 try {
-                    const raw = await siteGameAI(`تو داور آموزشی پدافند شبهات هستی.
-شبهه شهروند:
-"""${currentShobe}"""
-پاسخ کاربر:
-"""${ans}"""
-سخت‌گیرانه امتیاز بده از 0 تا 20.
-خروجی دقیقاً:
-SCORE: <عدد>
-FEEDBACK: <۳ تا ۶ جمله فارسی؛ نقاط قوت و ضعف؛ چه چیزی کم داشت>`);
-                    const sc = parseInt((raw.match(/SCORE:\s*(\d+)/i)||[])[1]||'8',10);
-                    const fb = ((raw.match(/FEEDBACK:\s*([\s\S]+)/i)||[])[1]||raw).trim();
+                    const prompt = 'تو داور سخت‌گیر پدافند شبهات هستی.\nشبهه:\n' + currentShobe + '\nپاسخ کاربر:\n' + ans
+                        + '\nامتیاز 0 تا 20 با معیارها: استدلال (0-10)، ادب و لحن (0-4)، سلام و احترام ابتدا/انتها در صورت تناسب (0-3)، نظم و شفافیت (0-3).\nخروجی دقیقاً:\nSCORE: عدد\nFEEDBACK: سه تا شش جمله فارسی';
+                    const raw = await siteGameAI(prompt);
+                    const sc = parseInt((raw.match(/SCORE:\s*(\d+)/i) || [])[1] || '8', 10);
+                    const fb = ((raw.match(/FEEDBACK:\s*([\s\S]+)/i) || [])[1] || raw).trim();
                     points += Math.min(20, Math.max(0, sc));
-                    body.innerHTML = `<div style="font-size:.75rem;line-height:1.85"><b style="color:var(--gold)">امتیاز این دور: ${sc}/20</b><p>${fb.replace(/</g,'&lt;')}</p>
-                      <button class="btn" onclick="window._storyNext()">دور بعد</button></div>`;
+                    const safeFb = String(fb).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+                    body.innerHTML = '<div style="font-size:.75rem;line-height:1.85"><b style="color:var(--gold)">امتیاز این دور: ' + sc + '/20</b><p>' + safeFb + '</p>'
+                        + '<button class="btn" onclick="window._storyNext()">دور بعد</button></div>';
                 } catch (e) {
-                    body.innerHTML = `<div style="color:#e74c3c">خطا در ارزیابی<button class="btn" onclick="window._storyNext()">رد شدن</button></div>`;
+                    body.innerHTML = '<div style="color:#e74c3c">خطا در ارزیابی<button class="btn" onclick="window._storyNext()">رد شدن</button></div>';
                 }
             };
-            window._storyNext = () => { round++; nextRound(); };
+            window._storyNext = function() { round++; nextRound(); };
             nextRound();
         }
+
 
         async function finishGameXP(xp) {
             if (!loggedUser) return;
@@ -2558,18 +2620,13 @@ FEEDBACK: <۳ تا ۶ جمله فارسی؛ نقاط قوت و ضعف؛ چه چ�
                 
 const cv = document.getElementById('defenseCanvas');
 if (!cv) return;
-// رزولوشن کمتر + مقیاس CSS برای روان‌تر شدن
-// بافر داخلی نصف برای عملکرد بهتر؛ با CSS کش می‌شود
-const CSS_W = cv.clientWidth || 640;
-cv.width = 400; cv.height = 150;
+cv.width = 640;
+cv.height = 240;
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-const U = 2;
-const SX = cv.width / 640;
-const SY = cv.height / 240;
-ctx.setTransform(SX, 0, 0, SY, 0, 0);
+const U = 3;
 let lastFrameT = 0;
-const TARGET_MS = 33;
+const TARGET_MS = 28;
 let animVisible = true;
 try {
   const io = new IntersectionObserver((entries) => {
@@ -2830,13 +2887,13 @@ function frame(now){
   });
 
   drawHUD(t);
-  requestAnimationFrame(frame);
+  requestAnimationFrame(frameWrapped);
 }
-function frameWrapped(t) {
+function frameWrapped(ts) {
   if (!animVisible) { requestAnimationFrame(frameWrapped); return; }
-  if (t - lastFrameT < TARGET_MS) { requestAnimationFrame(frameWrapped); return; }
-  lastFrameT = t;
-  frame(t);
+  if (ts - lastFrameT < TARGET_MS) { requestAnimationFrame(frameWrapped); return; }
+  lastFrameT = ts;
+  frame(ts);
 }
 requestAnimationFrame(frameWrapped);
 
