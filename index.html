@@ -356,6 +356,41 @@
         .reader-close{float:left;background:transparent;border:1px solid var(--br);color:var(--tp);border-radius:8px;padding:0.25rem 0.55rem;cursor:pointer;font-size:.7rem}
         .btn-read{background:transparent;border:1px solid var(--am);color:var(--am);border-radius:6px;padding:0.2rem 0.45rem;font-size:.55rem;cursor:pointer;font-family:inherit;margin-left:0.2rem}
     </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "پدافند شبهات چیست؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "پدافند شبهات مجموعه‌ای برای پاسخ مستند و قابل فهم به شبهات اعتقادی، دینی، سیاسی و اجتماعی است."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "چگونه شبهه خود را ارسال کنم؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "از بخش ارسال به فرماندهی یا دکمه ارسال شبهه می‌توانید پرسش خود را ثبت کنید."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "آیا پاسخ‌های هوش مصنوعی قطعی هستند؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "خیر. پاسخ هوش مصنوعی باید با منابع معتبر تطبیق داده شود و جایگزین تحقیق تخصصی نیست."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="alternate" type="application/rss+xml" title="اخبار پدافند شبهات" href="/rss.xml">
 </head>
 <body>
 
@@ -492,6 +527,7 @@
 
         <!-- AI -->
         <div id="page-ai" class="page"><div class="page-title"><i class="fas fa-robot"></i> اتاق عملیات هوش مصنوعی</div>
+            <p style="font-size:.62rem;color:var(--ts);line-height:1.75;margin:0.3rem 0 0.5rem">پاسخ هوش مصنوعی‌ها را همیشه با منابع معتبر تطبیق دهید؛ مدل‌ها ممکن است در جزئیات دینی خطا کنند.</p>
             <div style="background:var(--bgp);border:1px solid var(--neon);border-radius:6px;padding:0.5rem;margin-bottom:0.5rem;border-right:3px solid var(--neon)">
                 <p style="font-size:.65rem;color:var(--ts);line-height:1.8"><i class="fas fa-satellite-dish" style="color:var(--neon)"></i> <b style="color:var(--neon)">وضعیت:</b> هوش مصنوعی پدافند پاسخ می‌دهد؛ در پایان مطالب مرتبط سایت هم پیشنهاد می‌شود.</p>
             </div>
@@ -538,7 +574,7 @@
                 <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-windows"></i></span>Copilot<span class="ai-desc">مایکروسافت</span></a>
                 <a href="https://pi.ai/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-comments"></i></span>Pi<span class="ai-desc">گفتگو</span></a>
                 <a href="https://you.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-compass"></i></span>You.com<span class="ai-desc">جستجو+AI</span></a>
-                <a href="https://www.phind.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-code"></i></span>Phind<span class="ai-desc">فنی</span></a>
+                <a href="https://www.phind.com/" target="_blank" rel="noopener" class="ai-card"><span class="ai-icon"><i class="fas fa-code"></i></span>You.com<span class="ai-desc">فنی</span></a>
             </div>
             <div style="margin-top:0.5rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.4rem;font-size:.55rem;color:var(--ts);line-height:1.8">
                 <b style="color:var(--gold)"><i class="fas fa-scroll"></i> پروتکل عملیاتی:</b><br>
@@ -1473,8 +1509,10 @@
                     '' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک<\/button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();reportPost(' + idx + ')" style="opacity:.9"><i class="fas fa-flag"></i> گزارش بازبینی<\/button>' +
                     '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
                     '</div>' +
+                    '<div style="font-size:.5rem;color:var(--ts);margin-top:0.25rem"><i class="fas fa-clock"></i> آخرین به‌روزرسانی: ' + escapeHtml(p.updated_at || p.date || p.time || '—') + '</div>' +
                     '<div class="comments" id="comments' + idx + '"></div>' +
                     (loggedUser
                         ? '<div class="comment-form"><input type="text" id="cmtInput' + idx + '" placeholder="نظرت رو بنویس..."><button type="button" onclick="addComment(' + idx + ')"><i class="fas fa-paper-plane"></i> ارسال<\/button></div>'
