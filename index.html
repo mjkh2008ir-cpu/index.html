@@ -1552,6 +1552,27 @@
         }
 
 
+        
+        async function reportPost(index) {
+            const p = (allPosts || [])[index];
+            if (!p) return;
+            const reason = prompt('دلیل گزارش بازبینی (اختیاری):') || 'نیاز به بازبینی';
+            try {
+                await saveToSupabase('messages', {
+                    type: 'report_content',
+                    shobe: String(p.shobe || '').slice(0, 300),
+                    answer: String(reason).slice(0, 500),
+                    sender: loggedUser || 'مهمان',
+                    category: 'بازبینی',
+                    date: new Date().toLocaleDateString('fa-IR'),
+                    time: new Date().toLocaleTimeString('fa-IR')
+                });
+                alert('گزارش ثبت شد. سپاس از دقت شما.');
+            } catch (e) {
+                alert('ثبت گزارش ممکن نشد.');
+            }
+        }
+
         function sharePost(index) {
             const post = allPosts[index];
             if (!post) return;
