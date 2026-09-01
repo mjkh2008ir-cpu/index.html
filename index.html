@@ -1349,6 +1349,13 @@
             return ids;
         }
 
+        
+        async function hashPassword(password, salt) {
+            const enc = new TextEncoder();
+            const data = enc.encode((salt || 'padafand') + '::' + String(password));
+            const buf = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+        }
         function escapeHtml(s) {
             return String(s == null ? '' : s)
                 .replace(/&/g, '&amp;')
@@ -2127,7 +2134,9 @@
                 document.getElementById('authMsg').style.color = '#c0392b';
                 return;
             }
-            if (user.password !== password) {
+            const hashed = await hashPassword(password, username.toLowerCase());
+            const passOk = (user.password === hashed) || (user.password === password); // سازگاری با رمزهای قدیمی
+            if (!passOk) {
                 document.getElementById('authMsg').textContent = '⚠️ رمز عبور اشتباه است';
                 document.getElementById('authMsg').style.color = '#c0392b';
                 return;
