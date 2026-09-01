@@ -183,7 +183,7 @@
         .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
         .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
         .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
-        .defense-anim{width:100%;height:180px;position:relative;overflow:hidden;
+        .defense-anim{width:100%;height:150px;will-change:transform;position:relative;overflow:hidden;
             background:linear-gradient(180deg,#0c1a0d,#050a05);margin-bottom:70px;
             border-radius:8px;margin-top:0.4rem;border:2px solid #133a15;
             box-shadow:0 0 0 1px #000,0 0 30px rgba(57,255,20,.12),inset 0 0 40px rgba(0,0,0,.6)}
@@ -450,7 +450,32 @@
                     <button class="btn btn-gold" id="dailyChallengeBtn" onclick="playDailyChallenge()" style="font-size:.6rem"><i class="fas fa-play"></i> شروع</button>
                 </div>
             </div>
-            <div class="games-grid" id="gamesGrid"></div>
+            <div class="games-grid" id="gamesGrid">
+                <div class="game-card" onclick="startGame('ai_ladder')" style="border-color:#39ff14">
+                    <span class="icon" style="color:#39ff14"><i class="fas fa-robot"></i></span>
+                    <span class="name">نردبان شبهه (AI)</span>
+                    <span class="desc">از آسان تا سخت</span>
+                    <span class="game-status" style="color:#39ff14">🧠 پلکانی</span>
+                </div>
+                <div class="game-card" onclick="startGame('pixel_defense')" style="border-color:#c8a000">
+                    <span class="icon" style="color:#c8a000"><i class="fas fa-rocket"></i></span>
+                    <span class="name">پدافند پیکسلی</span>
+                    <span class="desc">رهگیری موشک شبهه</span>
+                    <span class="game-status" style="color:#c8a000">🎮 اکشن</span>
+                </div>
+                <div class="game-card" onclick="startGame('story_responder')" style="border-color:#4a8aaa">
+                    <span class="icon" style="color:#4a8aaa"><i class="fas fa-comments"></i></span>
+                    <span class="name">پاسخگوی قرارگاه</span>
+                    <span class="desc">پاسخ بده؛ AI امتیاز بدهد</span>
+                    <span class="game-status" style="color:#4a8aaa">📖 داستانی</span>
+                </div>
+                <div class="game-card" onclick="startGame('verbal_defense')" style="border-color:#c0392b">
+                    <span class="icon" style="color:#c0392b"><i class="fas fa-shield-alt"></i></span>
+                    <span class="name">پدافند کلامی</span>
+                    <span class="desc">چهارگزینه‌ای</span>
+                    <span class="game-status" style="color:#c0392b">⚔️ کلاسیک</span>
+                </div>
+            </div>
             <div style="margin-top:0.7rem;background:var(--bgp);border:1px solid var(--br);border-radius:8px;padding:0.5rem">
                 <div class="page-title" style="font-size:.7rem;margin-bottom:0.3rem"><i class="fas fa-trophy"></i> لیدربورد رزمندگان</div>
                 <div id="gamesLeaderboard" style="font-size:.65rem"></div>
@@ -2532,10 +2557,27 @@ FEEDBACK: <۳ تا ۶ جمله فارسی؛ نقاط قوت و ضعف؛ چه چ�
             function start() {
                 
 const cv = document.getElementById('defenseCanvas');
-cv.width = 640; cv.height = 240;
+if (!cv) return;
+// رزولوشن کمتر + مقیاس CSS برای روان‌تر شدن
+// بافر داخلی نصف برای عملکرد بهتر؛ با CSS کش می‌شود
+const CSS_W = cv.clientWidth || 640;
+cv.width = 400; cv.height = 150;
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-const U = 3;
+const U = 2;
+const SX = cv.width / 640;
+const SY = cv.height / 240;
+ctx.setTransform(SX, 0, 0, SY, 0, 0);
+let lastFrameT = 0;
+const TARGET_MS = 33;
+let animVisible = true;
+try {
+  const io = new IntersectionObserver((entries) => {
+    animVisible = !!(entries[0] && entries[0].isIntersecting);
+  }, { threshold: 0.02 });
+  io.observe(cv.parentElement || cv);
+} catch (e) {}
+
 
 function px(x, y, w, h, color) {
   ctx.fillStyle = color;
@@ -2790,7 +2832,13 @@ function frame(now){
   drawHUD(t);
   requestAnimationFrame(frame);
 }
-requestAnimationFrame(frame);
+function frameWrapped(t) {
+  if (!animVisible) { requestAnimationFrame(frameWrapped); return; }
+  if (t - lastFrameT < TARGET_MS) { requestAnimationFrame(frameWrapped); return; }
+  lastFrameT = t;
+  frame(t);
+}
+requestAnimationFrame(frameWrapped);
 
             }
             if (document.readyState === 'loading') {
