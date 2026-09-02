@@ -1342,6 +1342,9 @@
         #cyberAlertBox p{color:#f0c0c0;font-size:.7rem;line-height:1.7;margin:.2rem 0}
         #cyberSirenBar{display:none;position:fixed;top:0;left:0;right:0;z-index:99998;background:#8b0000;color:#fff;text-align:center;padding:0.35rem;font-size:.65rem;font-weight:700}
         #cyberSirenBar.show{display:block;animation:cyberPulse .5s infinite alternate}
+    
+        .btn-ai-assist,.btn-launch.ai{background:linear-gradient(135deg,#1a3d12,#0d2818)!important;border:1px solid #39ff14!important;color:#d4e8b0!important;border-radius:8px!important;padding:0.35rem 0.55rem!important;font-size:0.45rem!important;box-shadow:0 0 12px rgba(57,255,20,0.15)}
+        .btn-ai-assist:hover{box-shadow:0 0 18px rgba(57,255,20,0.3)}
     </style>
 </head>
 <body>
@@ -1355,7 +1358,7 @@
         <h2>🚨 آژیر پدافند سایبری</h2>
         <p id="cyberAlertReason">حمله سایبری / تلاش برای نفوذ یا سرقت داده شناسایی شد.</p>
         <p style="color:#ffaa00">دسترسی‌ها در حال قفل اضطراری هستند. فرماندهان مطلع شوند.</p>
-        <button type="button" class="btn-launch" style="margin-top:0.6rem" onclick="silenceCyberAlert()">قطع آژیر</button>
+        <button class="btn-launch btn-ai-assist" style="margin-top:0.6rem" onclick="silenceCyberAlert()">قطع آژیر</button>
       </div>
     </div>
     <div id="securityPage">
@@ -1363,11 +1366,6 @@
             <span class="logo"><i class="fas fa-shield-alt"></i></span>
             <h2>مرکز فرماندهی <span>پدافند</span></h2>
             <div class="sub">══ سامانه دسترسی سطح یک ══</div>
-            <div style="margin:0.35rem 0;padding:0.35rem;border:1px solid rgba(255,80,80,0.3);border-radius:6px;background:rgba(40,0,0,0.35)">
-                <div style="color:#ff6666;font-size:0.45rem;font-weight:700;margin-bottom:0.2rem"><i class="fas fa-desktop"></i> مانیتور تلاش‌های ورود</div>
-                <div id="accessMonitorList" style="max-height:130px;overflow-y:auto;font-size:0.38rem"></div>
-                <button type="button" class="btn-upload" style="margin-top:0.25rem;font-size:0.35rem" onclick="renderAccessMonitor()">بروزرسانی</button>
-            </div>
             <div class="upload-area">
                 <div class="icon"><i class="fas fa-id-card"></i></div>
                 <div class="title">کارت شناسایی</div>
@@ -1897,7 +1895,7 @@
                 <div style="background:rgba(57,255,20,0.05);border:1px solid rgba(57,255,20,0.2);border-radius:6px;padding:0.4rem;margin:0.4rem 0;font-size:0.32rem;color:var(--text-secondary);line-height:1.7">
                     پس از تولید AI، متن را بررسی کنید. انتشار فقط با زدن «شلیک مطلب» انجام می‌شود.
                 </div>
-                <button class="btn-launch" onclick="firePost()"><i class="fas fa-rocket"></i> تأیید و شلیک مطلب</button>
+                <button class="btn-launch btn-ai-assist" onclick="firePost()"><i class="fas fa-rocket"></i> تأیید و شلیک مطلب</button>
                 <div class="msg" id="fireMsg"></div>
             </div>
         </div>
@@ -2068,7 +2066,7 @@
                 <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
                 <input type="text" id="reportTitle" placeholder="عنوان گزارش...">
                 <textarea id="reportBody" rows="4" placeholder="متن گزارش..."></textarea>
-                <button class="btn-launch" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
+                <button class="btn-launch btn-ai-assist" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
                 <div class="msg" id="reportMsg"></div>
             </div>
             <div class="list-container" style="margin-top:0.3rem">
@@ -2081,6 +2079,18 @@
         </div>
 
         <div id="tab-settings" class="tab-content" style="display:none">
+            <div style="margin:0.35rem 0;padding:0.4rem;border:1px solid rgba(255,80,80,0.35);border-radius:6px;background:rgba(40,0,0,0.4)">
+                <div style="color:#ff6666;font-size:0.5rem;font-weight:700;margin-bottom:0.25rem"><i class="fas fa-desktop"></i> مانیتور تلاش‌های ورود</div>
+                <div id="accessMonitorList" style="max-height:160px;overflow-y:auto;font-size:0.4rem"></div>
+                <button type="button" class="btn-launch" style="margin-top:0.3rem;font-size:0.4rem" onclick="renderAccessMonitor()">بروزرسانی مانیتور</button>
+                <div style="margin-top:0.4rem;border-top:1px solid rgba(255,255,255,0.1);padding-top:0.3rem">
+                    <div style="color:var(--gold);font-size:0.45rem;margin-bottom:0.2rem">افزودن فرمانده مجاز (نام کامل)</div>
+                    <input type="text" id="newAllowedCommander" placeholder="نام کامل مطابق ثبت‌نام" style="width:100%;font-size:0.4rem;margin-bottom:0.2rem">
+                    <button type="button" class="btn-launch" style="font-size:0.4rem" onclick="addAllowedCommander()">افزودن به لیست مجاز</button>
+                    <div id="allowedListView" style="margin-top:0.25rem;font-size:0.38rem;color:var(--text-secondary)"></div>
+                </div>
+            </div>
+
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-cog"></i> تنظیمات مرکز فرماندهی</div>
 
@@ -3971,6 +3981,10 @@ ${body || '—'}`;
             }catch(e){}
         }
         function silenceCyberAlert(){
+            if (!document.body.classList.contains('authenticated') || !currentUser) {
+                alert('فقط فرماندهان داخل سامانه می‌توانند آژیر را قطع کنند');
+                return;
+            }
             const ov=document.getElementById('cyberAlertOverlay');
             const bar=document.getElementById('cyberSirenBar');
             if(ov) ov.classList.remove('show');
@@ -4105,84 +4119,112 @@ ${body || '—'}`;
         }
         try { setTimeout(detectHostileEnvironment, 2000); } catch(e){}
 
+        
         async function checkAccess() {
             const unitInput = (document.getElementById('cmdUnit') && document.getElementById('cmdUnit').value || '').trim();
             const err = document.getElementById('cmdError');
             const siteUser = getSiteLoggedUser();
-
-            if (!siteUser) {
-                if (err) { err.textContent = '⛔ ابتدا در سایت اصلی ثبت‌نام/ورود کنید؛ سپس به فرماندهی بیایید.'; err.style.color = '#c0392b'; }
-                logAccessAttempt({ user: 'بدون ورود سایت', code: unitInput, result: 'رد', reason: 'عدم ورود به سایت' });
-                noteAuthFailure();
-                return;
-            }
-
-            // بارگذاری نام کامل از users اگر ممکن باشد
-            let fullname = siteUser;
-            try {
-                if (typeof allUsers === 'object' && allUsers[siteUser]) {
-                    fullname = allUsers[siteUser].fullname || allUsers[siteUser].name || siteUser;
-                }
-            } catch (e) {}
-
-            const allowed = COMMAND_ALLOWED.some(function(n) {
-                return n === fullname || n === siteUser || fullname.indexOf(n) >= 0;
-            });
-            if (!allowed) {
-                if (err) { err.textContent = '⛔ ورود شما به اینجا ممنوع است. این بخش فقط برای فرماندهان مجاز است.'; err.style.color = '#c0392b'; }
-                logAccessAttempt({ user: fullname || siteUser, code: unitInput, result: 'ممنوع', reason: 'نام در لیست فرماندهان نیست' });
-                warnIntruder(fullname || siteUser);
-                noteAuthFailure();
-                if (_failAuthCount >= 4) {
-                    triggerCyberAlert('تلاش ورود ممنوع به فرماندهی توسط: ' + (fullname || siteUser));
-                }
-                return;
-            }
+            let allowedList = getAllowedCommanders();
 
             if (!unitInput) {
-                if (err) { err.textContent = '⚠️ کد / واحد دسترسی را وارد کنید'; err.style.color = '#c0392b'; }
+                if (err) { err.textContent = '⚠️ کد دسترسی را وارد کنید (مثلاً Khayyatzadeh)'; err.style.color = '#c0392b'; }
                 return;
             }
+
+            // کدهای اصلی سرور همیشه مجازند (حتی اگر نام در لیست نباشد) — بعد از تأیید سرور
             if (err) { err.textContent = 'در حال احراز هویت امن…'; err.style.color = '#c8a000'; }
+
+            // اگر کاربر سایت لاگین نیست، فقط کدهای اصلی را بپذیر (با هشدار)
+            const primaryCodes = ['Khayyatzadeh', 'Padafand313'];
+            const isPrimary = primaryCodes.indexOf(unitInput) >= 0;
+
+            if (!siteUser && !isPrimary) {
+                if (err) { err.textContent = '⛔ ابتدا در سایت وارد شوید یا از کد فرماندهی اصلی استفاده کنید.'; err.style.color = '#c0392b'; }
+                logAccessAttempt({ user: 'بدون ورود', code: unitInput, result: 'رد', reason: 'بدون نشست سایت' });
+                noteAuthFailure();
+                return;
+            }
+
             try {
                 const res = await fetch(CMD_WORKER + '/api/command-auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ code: unitInput, site_user: siteUser, fullname: fullname })
+                    body: JSON.stringify({ code: unitInput, site_user: siteUser || '' })
                 });
                 const data = await res.json().catch(function(){ return {}; });
                 if (!res.ok || !data.ok || !data.token) {
                     if (err) {
-                        err.textContent = res.status === 429
-                            ? '⛔ تعداد تلاش بیش از حد — سیستم پدافند فعال شد'
-                            : '⛔ دسترسی رد شد — کد نادرست یا مسدود';
+                        err.textContent = res.status === 429 ? '⛔ تلاش بیش از حد' : '⛔ کد نادرست یا دسترسی رد شد';
                         err.style.color = '#c0392b';
                     }
-                    logAccessAttempt({ user: fullname, code: unitInput, result: 'شکست', reason: 'کد/توکن نامعتبر' });
+                    logAccessAttempt({ user: siteUser || 'ناشناس', code: unitInput, result: 'شکست', reason: 'کد نامعتبر' });
                     noteAuthFailure();
                     return;
                 }
+
+                // بعد از تأیید سرور: اگر کد اصلی نیست، نام باید در لیست مجاز باشد
+                let fullname = data.user || siteUser || '';
+                if (!isPrimary && siteUser) {
+                    try {
+                        if (typeof allUsers === 'object' && allUsers[siteUser]) {
+                            fullname = allUsers[siteUser].fullname || fullname;
+                        }
+                    } catch (e) {}
+                    const okName = allowedList.some(function(n){ return n === fullname || n === siteUser; });
+                    if (!okName) {
+                        if (err) { err.textContent = '⛔ ورود شما به اینجا ممنوع است. از فرمانده بخواهید نامتان را در تنظیمات اضافه کند.'; err.style.color = '#c0392b'; }
+                        logAccessAttempt({ user: fullname, code: unitInput, result: 'ممنوع', reason: 'خارج از لیست مجاز' });
+                        warnIntruder(fullname);
+                        noteAuthFailure();
+                        return;
+                    }
+                }
+
                 cmdSessionToken = data.token;
-                currentUser = data.user || fullname;
+                currentUser = data.user || fullname || 'فرمانده';
                 currentUnit = data.unit || 'شورای فرماندهی';
                 try {
                     sessionStorage.setItem('padafand_cmd_token', cmdSessionToken);
                     sessionStorage.setItem('padafand_cmd_user', currentUser);
                     sessionStorage.setItem('padafand_cmd_unit', currentUnit);
                 } catch (e) {}
-                logAccessAttempt({ user: currentUser, code: '***', result: 'موفق', reason: 'ورود فرماندهی' });
+                logAccessAttempt({ user: currentUser, code: '***', result: 'موفق', reason: 'ورود' });
                 _failAuthCount = 0;
                 if (err) { err.textContent = '✅ خوش آمدید ' + currentUser; err.style.color = '#39ff14'; }
                 if (typeof enterCommand === 'function') {
                     if (enterCommand.constructor.name === 'AsyncFunction') await enterCommand();
                     else enterCommand();
                 }
+                try { renderAccessMonitor(); renderAllowedList(); } catch (e) {}
             } catch (e) {
                 console.error(e);
-                if (err) { err.textContent = '⛔ خطا در ارتباط امن'; err.style.color = '#c0392b'; }
-                logAccessAttempt({ user: fullname, code: unitInput, result: 'خطا', reason: 'شبکه' });
+                if (err) { err.textContent = '⛔ خطا در ارتباط امن — اتصال اینترنت/Worker را چک کنید'; err.style.color = '#c0392b'; }
                 noteAuthFailure();
             }
+        }
+
+        function getAllowedCommanders() {
+            const base = ['محمد جواد خیاط زاده','محمد برزکار','محمد مهدی سعیدی','محمد باقر متوسل'];
+            let extra = [];
+            try { extra = JSON.parse(localStorage.getItem('padafand_cmd_allowed') || '[]'); } catch (e) {}
+            return base.concat(Array.isArray(extra) ? extra : []);
+        }
+        function addAllowedCommander() {
+            const inp = document.getElementById('newAllowedCommander');
+            const name = (inp && inp.value || '').trim();
+            if (!name) { alert('نام را وارد کنید'); return; }
+            let extra = [];
+            try { extra = JSON.parse(localStorage.getItem('padafand_cmd_allowed') || '[]'); } catch (e) {}
+            if (extra.indexOf(name) < 0) extra.push(name);
+            localStorage.setItem('padafand_cmd_allowed', JSON.stringify(extra));
+            if (inp) inp.value = '';
+            renderAllowedList();
+            alert('اضافه شد: ' + name);
+        }
+        function renderAllowedList() {
+            const el = document.getElementById('allowedListView');
+            if (!el) return;
+            el.innerHTML = 'مجازها: ' + getAllowedCommanders().map(function(n){ return n; }).join(' | ');
         }
 
         async function ensureCmdSession() {
@@ -4499,6 +4541,9 @@ ${body || '—'}`;
         #cyberAlertBox p{color:#f0c0c0;font-size:.7rem;line-height:1.7;margin:.2rem 0}
         #cyberSirenBar{display:none;position:fixed;top:0;left:0;right:0;z-index:99998;background:#8b0000;color:#fff;text-align:center;padding:0.35rem;font-size:.65rem;font-weight:700}
         #cyberSirenBar.show{display:block;animation:cyberPulse .5s infinite alternate}
+    
+        .btn-ai-assist,.btn-launch.ai{background:linear-gradient(135deg,#1a3d12,#0d2818)!important;border:1px solid #39ff14!important;color:#d4e8b0!important;border-radius:8px!important;padding:0.35rem 0.55rem!important;font-size:0.45rem!important;box-shadow:0 0 12px rgba(57,255,20,0.15)}
+        .btn-ai-assist:hover{box-shadow:0 0 18px rgba(57,255,20,0.3)}
     </style>
                 </head>
                 <body>
