@@ -1370,6 +1370,29 @@ html.cmd-open #securityPage { display:none !important; }
         .btn-ai-assist,.btn-launch.ai{background:linear-gradient(135deg,#1a3d12,#0d2818)!important;border:1px solid #39ff14!important;color:#d4e8b0!important;border-radius:8px!important;padding:0.35rem 0.55rem!important;font-size:0.45rem!important;box-shadow:0 0 12px rgba(57,255,20,0.15)}
         .btn-ai-assist:hover{box-shadow:0 0 18px rgba(57,255,20,0.3)}
     </style>
+
+<style id="cmd-btn-force">
+button, .btn, .btn-launch, .btn-upload, .btn-ai-assist, input[type="button"], input[type="submit"] {
+  background: linear-gradient(180deg, #1f4a18, #0d2810) !important;
+  border: 1px solid #39ff14 !important;
+  color: #e8ffd8 !important;
+  border-radius: 8px !important;
+  font-family: inherit !important;
+  box-shadow: 0 0 10px rgba(57,255,20,0.15) !important;
+}
+button.danger, .btn-danger {
+  background: linear-gradient(180deg, #4a1818, #280d0d) !important;
+  border-color: #ff4d3d !important;
+  color: #ffd8d8 !important;
+}
+/* white boxes user showed - assistant chips */
+.btn-launch, .ai-assist-btn, [onclick*="ai"], [onclick*="AI"] {
+  background: linear-gradient(180deg, #1a3d12, #0c2010) !important;
+  border: 1px solid #39ff14 !important;
+  color: #d4e8b0 !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1458,7 +1481,7 @@ html.cmd-open #securityPage { display:none !important; }
                 <span class="dot"></span>
                 <span id="timeDisplay">--:--</span>
                 <button class="theme-btn" onclick="cycleTheme()"><i class="fas fa-adjust"></i></button>
-                <button class="btn-neon" onclick="refreshData()" style="font-size:0.4rem;padding:0.1rem 0.4rem;border-radius:4px;border:none;cursor:pointer;background:var(--neon);color:#000">
+                <button class="btn-neon" onclick="refreshData()" style="font-size:0.4rem;padding:0.1rem 0.4rem;border-radius:4px;border:none;cursor:pointer;background:var(--neon);color:#e8ffd8">
                     <i class="fas fa-sync"></i> تازه‌سازی
                 </button>
                 <span id="refreshStatus" style="font-size:0.3rem;color:var(--neon)"></span>
