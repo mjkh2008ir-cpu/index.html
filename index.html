@@ -125,7 +125,7 @@
         .post-actions button{background:var(--bgm);border:1px solid var(--br);color:var(--ts);padding:0.15rem 0.4rem;border-radius:3px;cursor:pointer;font-size:.55rem;transition:.3s;display:flex;align-items:center;gap:0.15rem}
         .post-actions button:hover{background:var(--g);color:var(--tp);border-color:var(--neon)}
         .post-actions .liked{color:var(--rd);border-color:var(--rd);background:rgba(192,57,43,0.1)}
-        .comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
+        .user-rank-badge{display:inline-block;font-size:.48rem;padding:0.05rem 0.28rem;border-radius:999px;border:1px solid var(--gold);color:var(--gold);margin-right:0.2rem;vertical-align:middle}.comment-item{background:var(--bgp);border:1px solid var(--br);border-radius:6px;padding:0.35rem 0.4rem;margin:0.25rem 0;font-size:.62rem;line-height:1.7}.comment-item .c-user{color:var(--neon);font-weight:700}.comments{margin-top:0.35rem}.comments-section{margin-top:0.3rem;border-top:1px solid var(--br);padding-top:0.3rem}
         .comments-section .cmt{background:var(--bg);padding:0.2rem 0.5rem;border-radius:3px;margin:0.15rem 0;font-size:.6rem;border-right:2px solid var(--neon)}
         .comments-section .cmt .cmt-user{color:var(--neon);font-weight:700}
         .comments-section .cmt .cmt-reply{color:var(--am);font-size:.5rem;padding-right:0.5rem;border-right:1px solid var(--br);margin-right:0.3rem}
@@ -647,7 +647,7 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
     <!-- ===== MODALS ===== -->
     <div class="modal" id="sendToCommandModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3><button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button></div><div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div><div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"><div class="form-group"><label>دسته‌بندی</label><select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select></div><div class="form-group"><label>اولویت</label><select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div></div><button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button><div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div></div></div>
 
-    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder="رمز عبور"></div>
+    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regWebsite" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" aria-hidden="true"><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder="رمز عبور"></div>
 <div style="margin:0.4rem 0;padding:0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:6px;font-size:.55rem;color:var(--ts);line-height:1.7">
 <label style="display:flex;gap:0.4rem;align-items:flex-start;cursor:pointer">
 <input type="checkbox" id="regAcceptTerms" style="margin-top:0.2rem;flex-shrink:0">
@@ -1524,6 +1524,7 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
                     '' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک<\/button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePostImage(' + idx + ')"><i class="fas fa-image"></i> استوری<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();reportPost(' + idx + ')" style="opacity:.9"><i class="fas fa-flag"></i> گزارش بازبینی<\/button>' +
                     '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
                     '</div>' +
@@ -1537,6 +1538,11 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
             }).join('');
             const pc = document.getElementById('postCount');
             if (pc) pc.textContent = allPosts.length;
+            list.forEach((p, i) => {
+                const realIndex = allPosts.findIndex(x => String(x.id) === String(p.id));
+                const idx = realIndex >= 0 ? realIndex : i;
+                fillPostComments(idx);
+            });
         }
 
         function togglePost(id, hdr) {
@@ -1586,6 +1592,166 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
             } catch (e) {
                 alert('ثبت گزارش ممکن نشد.');
             }
+        }
+
+        
+        function getUserRankLabel(username) {
+            const u = allUsers && allUsers[username];
+            if (!u) return 'سرباز';
+            if (u.rank) return String(u.rank);
+            if (u.is_special) return 'سردار';
+            const xp = Number(u.xp) || 0;
+            if (xp >= 500) return 'سردار';
+            if (xp >= 200) return 'افسر';
+            if (xp >= 50) return 'رزمی‌جو';
+            return 'سرباز';
+        }
+        function parsePostComments(p) {
+            if (!p) return [];
+            let c = p.comments;
+            if (typeof c === 'string') {
+                try { c = JSON.parse(c); } catch (e) { c = []; }
+            }
+            return Array.isArray(c) ? c : [];
+        }
+        function fillPostComments(idx) {
+            const p = allPosts[idx];
+            const el = document.getElementById('comments' + idx);
+            if (!el || !p) return;
+            const list = parsePostComments(p);
+            if (!list.length) {
+                el.innerHTML = '<div style="font-size:.55rem;color:var(--ts);padding:0.2rem 0">هنوز نظری نیست — اولین نفر باشید.</div>';
+                return;
+            }
+            el.innerHTML = list.map(c => {
+                const user = escapeHtml(c.user || c.username || 'ناشناس');
+                const rank = escapeHtml(getUserRankLabel(c.user || c.username || ''));
+                const text = escapeHtml(c.text || c.body || '');
+                const when = escapeHtml(c.date || c.time || '');
+                return '<div class="comment-item"><span class="c-user">' + user + '</span> <span class="user-rank-badge">' + rank + '</span>'
+                    + (when ? ' <span style="color:var(--ts);font-size:.5rem">' + when + '</span>' : '')
+                    + '<div>' + text + '</div></div>';
+            }).join('');
+        }
+        async function addComment(idx) {
+            if (!loggedUser) { alert('ابتدا وارد حساب شوید'); return; }
+            const input = document.getElementById('cmtInput' + idx);
+            const text = (input && input.value || '').trim();
+            if (!text) return;
+            if (text.length > 500) { alert('نظر خیلی بلند است'); return; }
+            const p = allPosts[idx];
+            if (!p || p.id == null) { alert('مطلب معتبر نیست'); return; }
+            const list = parsePostComments(p);
+            list.push({
+                user: loggedUser,
+                text: text,
+                date: new Date().toLocaleDateString('fa-IR'),
+                time: new Date().toLocaleTimeString('fa-IR')
+            });
+            try {
+                await updateInSupabase('posts', p.id, { comments: list });
+                p.comments = list;
+                if (input) input.value = '';
+                fillPostComments(idx);
+            } catch (e) {
+                alert('ثبت نظر ممکن نشد');
+            }
+        }
+        async function sharePostImage(index) {
+            const post = allPosts[index];
+            if (!post) return;
+            function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+                const words = String(text).split(' ');
+                let line = '';
+                let yy = y;
+                for (let n = 0; n < words.length; n++) {
+                    const test = line + words[n] + ' ';
+                    if (ctx.measureText(test).width > maxWidth && n > 0) {
+                        ctx.fillText(line, x, yy);
+                        line = words[n] + ' ';
+                        yy += lineHeight;
+                        if (yy > 1650) break;
+                    } else line = test;
+                }
+                ctx.fillText(line, x, yy);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1920;
+            const ctx = canvas.getContext('2d');
+            const g = ctx.createLinearGradient(0, 0, 0, 1920);
+            g.addColorStop(0, '#0a1206');
+            g.addColorStop(1, '#12200c');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 1080, 1920);
+            ctx.strokeStyle = '#39ff14';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(40, 40, 1000, 1840);
+            ctx.fillStyle = '#c8a000';
+            ctx.font = 'bold 42px Tahoma, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.direction = 'rtl';
+            ctx.fillText('پدافند شبهات', 540, 140);
+            ctx.fillStyle = '#99ff77';
+            ctx.font = '28px Tahoma, sans-serif';
+            ctx.fillText('پاسخ به شبهات با مستندات معتبر', 540, 190);
+            ctx.fillStyle = '#39ff14';
+            ctx.font = 'bold 36px Tahoma, sans-serif';
+            ctx.textAlign = 'right';
+            const q = String(post.shobe || '').slice(0, 180);
+            wrapText(ctx, q, 1000, 280, 900, 48);
+            ctx.fillStyle = '#d4e8b0';
+            ctx.font = '32px Tahoma, sans-serif';
+            const a = String(post.answer || '').slice(0, 500);
+            wrapText(ctx, a, 1000, 520, 900, 44);
+            ctx.fillStyle = '#c8a000';
+            ctx.font = '26px Tahoma, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('@padafand_shobahat', 540, 1800);
+            ctx.fillStyle = '#668866';
+            ctx.font = '22px Tahoma, sans-serif';
+            ctx.fillText('index-html-delta-nine.vercel.app', 540, 1850);
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({ files: [file], title: 'پدافند شبهات', text: post.shobe || '' });
+                        return;
+                    } catch (e) {}
+                }
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'padafand-story.png';
+                a.click();
+                URL.revokeObjectURL(a.href);
+                alert('تصویر استوری ذخیره شد');
+            }, 'image/png');
+        }
+        function requestNotifyPermission() {
+            try {
+                if (!('Notification' in window)) return;
+                if (Notification.permission === 'default') Notification.requestPermission().catch(() => {});
+            } catch (e) {}
+        }
+        function notifyUser(title, body) {
+            try {
+                if (!('Notification' in window) || Notification.permission !== 'granted') return;
+                new Notification(title, { body: body, icon: '/icon-192.png?v=3', badge: '/icon-192.png?v=3' });
+            } catch (e) {}
+        }
+        let _lastMsgCount = 0;
+        function checkReplyNotifications() {
+            if (!loggedUser || !Array.isArray(allMessages)) return;
+            const mine = allMessages.filter(m => {
+                const to = m.to || m.receiver || m.recipient || '';
+                const sender = m.sender || m.from || '';
+                return String(to) === String(loggedUser) || (m.type === 'reply' && String(m.user) === String(loggedUser));
+            });
+            if (_lastMsgCount && mine.length > _lastMsgCount) {
+                notifyUser('پدافند شبهات', 'پیام یا پاسخ جدیدی برای شما آمده است');
+            }
+            _lastMsgCount = mine.length;
         }
 
         function sharePost(index) {
@@ -2119,6 +2285,8 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
 
         // ===== REGISTER / LOGIN =====
         async function userRegister() {
+            const hp = document.getElementById('regWebsite');
+            if (hp && hp.value) { alert('خطا'); return; } // honeypot
             const fullname = document.getElementById('regFullname').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
             const username = document.getElementById('regUsername').value.trim();
@@ -2196,6 +2364,7 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
                 });
             }
             loggedUser = username;
+            requestNotifyPermission();
             localStorage.setItem('padafand_logged_user', username);
             closeModal('loginModal');
             updateHeader();
