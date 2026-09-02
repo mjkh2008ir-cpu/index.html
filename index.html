@@ -850,14 +850,35 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
         let loggedUser = null,
             selectedAvatar = 'fa-user',
             tutorialStep = 0;
-        const LEVELS = [{ name: 'سرباز', xp: 0 }, { name: 'سرجوخه', xp: 30 }, { name: 'گروهبان', xp: 80 },
-        { name: 'سروان', xp: 150 }, { name: 'سرگرد', xp: 250 }, { name: 'سرهنگ', xp: 400 }, { name: 'سردار', xp: 600 } ];
+        const LEVELS = [
+            { name: 'سرباز عادی', xp: 0, icon: '🪖' },
+            { name: 'سرباز دوم', xp: 25, icon: '🪖' },
+            { name: 'سرباز یکم', xp: 50, icon: '🪖' },
+            { name: 'سرجوخه', xp: 80, icon: '🪖' },
+            { name: 'گروهبان سوم', xp: 120, icon: '⚔️' },
+            { name: 'گروهبان دوم', xp: 160, icon: '⚔️' },
+            { name: 'گروهبان', xp: 210, icon: '⚔️' },
+            { name: 'استوار دوم', xp: 270, icon: '⚔️' },
+            { name: 'استوار', xp: 330, icon: '⚔️' },
+            { name: 'ستوان سوم', xp: 400, icon: '⭐' },
+            { name: 'ستوان دوم', xp: 480, icon: '⭐' },
+            { name: 'ستوان یکم', xp: 560, icon: '⭐' },
+            { name: 'سروان', xp: 650, icon: '⭐' },
+            { name: 'سرگرد', xp: 750, icon: '⭐⭐' },
+            { name: 'سرهنگ دوم', xp: 860, icon: '⭐⭐' },
+            { name: 'سرهنگ', xp: 980, icon: '⭐⭐' },
+            { name: 'سرتیپ دوم', xp: 1120, icon: '🎖️' },
+            { name: 'سرتیپ', xp: 1280, icon: '🎖️' },
+            { name: 'سرلشکر', xp: 1450, icon: '🎖️' },
+            { name: 'سپهبد', xp: 1650, icon: '🎖️' },
+            { name: 'ارتشبد', xp: 1900, icon: '🎖️' }
+        ];
 
         function getUserLevel(xp, isSpecial) {
-            if (isSpecial) return { name: 'سردار', xp: 0, special: true };
+            if (isSpecial) return { name: 'سردار', xp: 9999, special: true, icon: '🛡️' };
             let level = LEVELS[0];
             for (let l of LEVELS) { if (xp >= l.xp) level = l; }
-            return { name: level.name, xp: level.xp, special: false };
+            return { name: level.name, xp: level.xp, special: false, icon: level.icon || '' };
         }
         function formatLevelHtml(level) {
             if (!level) return 'سرباز';
@@ -943,21 +964,25 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
         function renderGamesLeaderboard() {
             const el = document.getElementById('gamesLeaderboard');
             if (!el) return;
-            const list = Object.keys(allUsers || {}).map(name => {
-                const u = allUsers[name] || {};
-                return { name: u.username || u.name || name, xp: Number(u.xp) || 0 };
-            }).filter(u => u.xp > 0).sort((a, b) => b.xp - a.xp).slice(0, 12);
+            const list = Object.keys(allUsers || {}).map(key => {
+                const u = allUsers[key] || {};
+                const name = u.username || u.fullname || u.name || key;
+                const xp = Number(u.xp) || 0;
+                const lvl = getUserLevel(xp, !!u.is_special);
+                return { name: name, xp: xp, rankName: (u.rank && u.is_special) ? u.rank : lvl.name, special: !!u.is_special };
+            }).filter(u => u.name).sort((a, b) => b.xp - a.xp).slice(0, 15);
             if (!list.length) {
-                el.innerHTML = '<div style="color:var(--ts);text-align:center;padding:0.35rem">هنوز رزمنده‌ای با XP ثبت نشده. یک بازی را تمام کن!</div>';
+                el.innerHTML = '<div style="color:var(--ts);text-align:center;padding:0.4rem">هنوز کسی در لیدربورد نیست. بازی کن یا XP بگیر!</div>';
                 return;
             }
             el.innerHTML = list.map((u, i) => {
-                const rank = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-                const me = (loggedUser && (u.name === loggedUser)) ? 'style="border-color:var(--neon)"' : '';
-                return `<div class="list-item" ${me} style="display:flex;justify-content:space-between;padding:0.35rem 0.4rem;border:1px solid var(--br);border-radius:6px;margin-bottom:0.25rem">
-                    <span><b>${rank}</b> ${String(u.name).replace(/\u003c/g,'')}</span>
-                    <span style="color:var(--gold)">${u.xp} XP</span>
-                </div>`;
+                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+                const me = (loggedUser && (u.name === loggedUser || (allUsers[loggedUser] && allUsers[loggedUser].fullname === u.name)));
+                return '<div style="display:flex;justify-content:space-between;align-items:center;gap:0.3rem;padding:0.4rem;border:1px solid '+(me?'var(--neon)':'var(--br)')+';border-radius:6px;margin-bottom:0.28rem;background:var(--bgp)">'
+                    + '<span style="font-size:.68rem"><b style="color:var(--gold)">' + medal + '</b> '
+                    + escapeHtml(u.name)
+                    + ' <span class="user-rank-badge">' + escapeHtml(u.rankName) + '</span></span>'
+                    + '<span style="color:var(--neon);font-size:.65rem;white-space:nowrap">' + u.xp + ' XP</span></div>';
             }).join('');
         }
 
@@ -975,12 +1000,37 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
             const el = document.getElementById('userBadges');
             if (!el) return;
             const b = getBadges();
+            // جدول نشان‌های ممکن
+            const catalog = [
+                { id: 'first_game', title: 'اولین مأموریت', desc: 'اولین بازی را تمام کن' },
+                { id: 'xp50', title: '۵۰ تجربه', desc: 'رسیدن به ۵۰ XP' },
+                { id: 'xp150', title: 'رزمنده سخت‌کوش', desc: 'رسیدن به ۱۵۰ XP' },
+                { id: 'xp500', title: 'افسر میدان', desc: 'رسیدن به ۵۰۰ XP' },
+                { id: 'commenter', title: 'صدای قرارگاه', desc: 'ثبت نظر زیر مطالب' },
+                { id: 'liker', title: 'حامی حقیقت', desc: 'لایک مطالب' }
+            ];
+            const owned = new Set(b.map(x => x.id));
+            // daily badge
+            b.forEach(x => { if (x.id && x.id.indexOf('daily_')===0) owned.add(x.id); });
+            let html = '<div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:0.3rem">';
+            catalog.forEach(c => {
+                const ok = owned.has(c.id);
+                html += '<div style="border:1px solid '+(ok?'var(--gold)':'var(--br)')+';border-radius:6px;padding:0.35rem;background:'+(ok?'rgba(200,160,0,.08)':'var(--bgp)')+'">'
+                    + '<div style="font-size:.62rem;color:'+(ok?'var(--gold)':'var(--ts)')+'">'+(ok?'🏅 ':'🔒 ')+escapeHtml(c.title)+'</div>'
+                    + '<div style="font-size:.5rem;color:var(--ts);margin-top:0.1rem">'+escapeHtml(c.desc)+'</div></div>';
+            });
+            // daily ones
+            b.filter(x => x.id && String(x.id).indexOf('daily_')===0).forEach(x => {
+                html += '<div style="border:1px solid var(--neon);border-radius:6px;padding:0.35rem;grid-column:1/-1">'
+                    + '<div style="font-size:.62rem;color:var(--neon)">☀️ '+escapeHtml(x.title||'چالش روزانه')+'</div></div>';
+            });
+            html += '</div>';
             if (!b.length) {
-                el.innerHTML = '<span style="color:var(--ts)">هنوز نشانی نداری — یک بازی را تمام کن.</span>';
-                return;
+                html += '<div style="font-size:.55rem;color:var(--ts);margin-top:0.3rem;text-align:center">با بازی و فعالیت نشان باز می‌شود</div>';
             }
-            el.innerHTML = b.map(x => `<span style="background:var(--bg);border:1px solid var(--gold);color:var(--gold);padding:0.2rem 0.4rem;border-radius:999px"><i class="fas fa-medal"></i> ${x.title}</span>`).join('');
+            el.innerHTML = html;
         }
+
         function updateDailyChallengeUI() {
             const key = 'padafand_daily_' + new Date().toISOString().slice(0,10);
             const done = localStorage.getItem(key);
@@ -2911,6 +2961,7 @@ CORRECT: <A یا B یا C یا D>
             if (xp > 0) saveBadge('first_game', 'اولین مأموریت');
             if (totalXp >= 50) saveBadge('xp50', '۵۰ امتیاز تجربه');
             if (totalXp >= 150) saveBadge('xp150', 'رزمنده سخت‌کوش');
+            if (totalXp >= 500) saveBadge('xp500', 'افسر میدان');
             if (window._dailyChallengeActive) saveBadge('daily_' + new Date().toISOString().slice(0,10), 'چالش روزانه');
             window._dailyChallengeActive = false;
             try { localStorage.setItem('padafand_user_xp_' + loggedUser, String(totalXp)); } catch(e) {}
