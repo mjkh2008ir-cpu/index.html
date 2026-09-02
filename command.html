@@ -3975,7 +3975,7 @@ ${body || '—'}`;
         function noteAuthFailure(){
             _failAuthCount++;
             if(_failAuthCount>=5){
-                triggerCyberAlert('۵ تلاش ناموفق ورود به فرماندهی — احتمال حمله Brute-force');
+                triggerCyberAlert('۵ تلاش ناموفق ورود — احتمال حمله Brute-force / نفوذ');
                 _failAuthCount=0;
             }
         }
@@ -3996,9 +3996,144 @@ ${body || '—'}`;
             }
         };
 
+        
+        
+        function detectHostileEnvironment(){
+            try {
+                // باز بودن تقریبی DevTools (نه دقیق)
+                var threshold=160;
+                if(window.outerWidth-window.innerWidth>threshold || window.outerHeight-window.innerHeight>threshold){
+                    logAccessAttempt({user:getSiteLoggedUser()||'ناشناس', code:'—', result:'مشکوک', reason:'محیط غیرعادی / ابزار توسعه'});
+                }
+            } catch(e){}
+            // تلاش برای دسترسی به توابع حساس بدون توکن
+            document.addEventListener('visibilitychange', function(){
+                if(document.visibilityState==='hidden') return;
+            });
+        }
+        try { setTimeout(detectHostileEnvironment, 2000); } catch(e){}
+
+        const COMMAND_ALLOWED = [
+            'محمد جواد خیاط زاده',
+            'محمد برزکار',
+            'محمد مهدی سعیدی',
+            'محمد باقر متوسل'
+        ];
+
+        function getSiteLoggedUser() {
+            try {
+                const u = localStorage.getItem('padafand_logged_user');
+                return u ? String(u).trim() : '';
+            } catch (e) { return ''; }
+        }
+
+        function logAccessAttempt(payload) {
+            const row = Object.assign({
+                time: new Date().toLocaleString('fa-IR'),
+                ts: Date.now()
+            }, payload || {});
+            let list = [];
+            try { list = JSON.parse(localStorage.getItem('padafand_access_monitor') || '[]'); } catch (e) {}
+            list.unshift(row);
+            if (list.length > 80) list = list.slice(0, 80);
+            try { localStorage.setItem('padafand_access_monitor', JSON.stringify(list)); } catch (e) {}
+            renderAccessMonitor();
+            try {
+                if (typeof saveToSupabase === 'function') {
+                    saveToSupabase('commander_log', {
+                        name: row.user || row.code || 'ناشناس',
+                        action: 'تلاش ورود: ' + (row.result || '') + (row.reason ? (' — ' + row.reason) : ''),
+                        time: row.time
+                    });
+                }
+            } catch (e) {}
+            return row;
+        }
+
+        function renderAccessMonitor() {
+            const el = document.getElementById('accessMonitorList');
+            if (!el) return;
+            let list = [];
+            try { list = JSON.parse(localStorage.getItem('padafand_access_monitor') || '[]'); } catch (e) {}
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.4rem">هنوز تلاشی ثبت نشده</div>';
+                return;
+            }
+            el.innerHTML = list.slice(0, 25).map(function(r) {
+                const color = r.result === 'موفق' ? '#39ff14' : (r.result === 'ممنوع' ? '#ffaa00' : '#ff4444');
+                return '<div style="border:1px solid rgba(255,80,80,0.25);border-radius:4px;padding:0.25rem;margin-bottom:0.2rem;font-size:0.38rem;line-height:1.6">'
+                    + '<span style="color:' + color + '">● ' + (r.result || '') + '</span> '
+                    + '<b>' + (r.user || '—') + '</b> | کد: ' + (r.code || '—')
+                    + '<br><span style="color:var(--text-secondary)">' + (r.time || '') + (r.reason ? (' | ' + r.reason) : '') + '</span></div>';
+            }).join('');
+        }
+
+        function warnIntruder(userLabel) {
+            try {
+                if (typeof saveToSupabase === 'function') {
+                    saveToSupabase('messages', {
+                        type: 'security_warning',
+                        sender: 'سامانه پدافند سایبری',
+                        to: userLabel || 'unknown',
+                        answer: 'هشدار: تلاش غیرمجاز برای ورود به مرکز فرماندهی ثبت شد. در صورت تکرار، دسترسی شما محدود خواهد شد.',
+                        category: 'امنیتی',
+                        date: new Date().toLocaleDateString('fa-IR'),
+                        time: new Date().toLocaleTimeString('fa-IR')
+                    });
+                }
+            } catch (e) {}
+        }
+
+        
+        function detectHostileEnvironment(){
+            try {
+                // باز بودن تقریبی DevTools (نه دقیق)
+                var threshold=160;
+                if(window.outerWidth-window.innerWidth>threshold || window.outerHeight-window.innerHeight>threshold){
+                    logAccessAttempt({user:getSiteLoggedUser()||'ناشناس', code:'—', result:'مشکوک', reason:'محیط غیرعادی / ابزار توسعه'});
+                }
+            } catch(e){}
+            // تلاش برای دسترسی به توابع حساس بدون توکن
+            document.addEventListener('visibilitychange', function(){
+                if(document.visibilityState==='hidden') return;
+            });
+        }
+        try { setTimeout(detectHostileEnvironment, 2000); } catch(e){}
+
         async function checkAccess() {
-            const unitInput = (document.getElementById('cmdUnit')?.value || '').trim();
+            const unitInput = (document.getElementById('cmdUnit') && document.getElementById('cmdUnit').value || '').trim();
             const err = document.getElementById('cmdError');
+            const siteUser = getSiteLoggedUser();
+
+            if (!siteUser) {
+                if (err) { err.textContent = '⛔ ابتدا در سایت اصلی ثبت‌نام/ورود کنید؛ سپس به فرماندهی بیایید.'; err.style.color = '#c0392b'; }
+                logAccessAttempt({ user: 'بدون ورود سایت', code: unitInput, result: 'رد', reason: 'عدم ورود به سایت' });
+                noteAuthFailure();
+                return;
+            }
+
+            // بارگذاری نام کامل از users اگر ممکن باشد
+            let fullname = siteUser;
+            try {
+                if (typeof allUsers === 'object' && allUsers[siteUser]) {
+                    fullname = allUsers[siteUser].fullname || allUsers[siteUser].name || siteUser;
+                }
+            } catch (e) {}
+
+            const allowed = COMMAND_ALLOWED.some(function(n) {
+                return n === fullname || n === siteUser || fullname.indexOf(n) >= 0;
+            });
+            if (!allowed) {
+                if (err) { err.textContent = '⛔ ورود شما به اینجا ممنوع است. این بخش فقط برای فرماندهان مجاز است.'; err.style.color = '#c0392b'; }
+                logAccessAttempt({ user: fullname || siteUser, code: unitInput, result: 'ممنوع', reason: 'نام در لیست فرماندهان نیست' });
+                warnIntruder(fullname || siteUser);
+                noteAuthFailure();
+                if (_failAuthCount >= 4) {
+                    triggerCyberAlert('تلاش ورود ممنوع به فرماندهی توسط: ' + (fullname || siteUser));
+                }
+                return;
+            }
+
             if (!unitInput) {
                 if (err) { err.textContent = '⚠️ کد / واحد دسترسی را وارد کنید'; err.style.color = '#c0392b'; }
                 return;
@@ -4008,27 +4143,30 @@ ${body || '—'}`;
                 const res = await fetch(CMD_WORKER + '/api/command-auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ code: unitInput })
+                    body: JSON.stringify({ code: unitInput, site_user: siteUser, fullname: fullname })
                 });
-                const data = await res.json().catch(() => ({}));
+                const data = await res.json().catch(function(){ return {}; });
                 if (!res.ok || !data.ok || !data.token) {
                     if (err) {
                         err.textContent = res.status === 429
-                            ? '⛔ تعداد تلاش بیش از حد — کمی بعد دوباره'
-                            : '⛔ دسترسی رد شد';
-                    noteAuthFailure();
+                            ? '⛔ تعداد تلاش بیش از حد — سیستم پدافند فعال شد'
+                            : '⛔ دسترسی رد شد — کد نادرست یا مسدود';
                         err.style.color = '#c0392b';
                     }
+                    logAccessAttempt({ user: fullname, code: unitInput, result: 'شکست', reason: 'کد/توکن نامعتبر' });
+                    noteAuthFailure();
                     return;
                 }
                 cmdSessionToken = data.token;
-                currentUser = data.user || 'فرمانده';
-                currentUnit = data.unit || 'مرکز فرماندهی';
+                currentUser = data.user || fullname;
+                currentUnit = data.unit || 'شورای فرماندهی';
                 try {
                     sessionStorage.setItem('padafand_cmd_token', cmdSessionToken);
                     sessionStorage.setItem('padafand_cmd_user', currentUser);
                     sessionStorage.setItem('padafand_cmd_unit', currentUnit);
                 } catch (e) {}
+                logAccessAttempt({ user: currentUser, code: '***', result: 'موفق', reason: 'ورود فرماندهی' });
+                _failAuthCount = 0;
                 if (err) { err.textContent = '✅ خوش آمدید ' + currentUser; err.style.color = '#39ff14'; }
                 if (typeof enterCommand === 'function') {
                     if (enterCommand.constructor.name === 'AsyncFunction') await enterCommand();
@@ -4037,43 +4175,9 @@ ${body || '—'}`;
             } catch (e) {
                 console.error(e);
                 if (err) { err.textContent = '⛔ خطا در ارتباط امن'; err.style.color = '#c0392b'; }
+                logAccessAttempt({ user: fullname, code: unitInput, result: 'خطا', reason: 'شبکه' });
+                noteAuthFailure();
             }
-        }
-
-        
-        async function requireCmdAuth(hard = true) {
-            const ok = await ensureCmdSession();
-            if (ok) return true;
-            if (hard) {
-                forceCommandLock('نشست نامعتبر — دوباره وارد شوید');
-            }
-            return false;
-        }
-
-        function forceCommandLock(msg) {
-            try {
-                cmdSessionToken = null;
-                currentUser = null;
-                sessionStorage.removeItem('padafand_cmd_token');
-                sessionStorage.removeItem('padafand_cmd_user');
-                sessionStorage.removeItem('padafand_cmd_unit');
-                localStorage.removeItem('padafand_commander');
-            } catch (e) {}
-            document.body.classList.remove('authenticated');
-            const side = document.getElementById('sidebar');
-            const main = document.querySelector('.main');
-            const sec = document.getElementById('securityPage');
-            if (side) { side.style.display = 'none'; side.innerHTML = side.innerHTML; }
-            if (main) {
-                // خالی کردن داده‌های حساس از DOM
-                main.querySelectorAll('[id$="List"], #postsList, #usersList, #incomingList, #sentMessagesList, #publishedNewsList').forEach(el => {
-                    if (el) el.innerHTML = '';
-                });
-                main.style.display = 'none';
-            }
-            if (sec) sec.style.display = 'flex';
-            const err = document.getElementById('cmdError');
-            if (err && msg) { err.textContent = '⛔ ' + msg; err.style.color = '#c0392b'; }
         }
 
         async function ensureCmdSession() {
@@ -4644,6 +4748,7 @@ ${body || '—'}`;
             if (themeIndex === -1) themeIndex = 0;
             document.documentElement.setAttribute('data-theme', themes[themeIndex]);
             forceCommandLock();
+            try { renderAccessMonitor(); } catch(e) {}
             // بازیابی نشست فقط اگر توکن سمت سرور معتبر باشد
             try {
                 const tok = sessionStorage.getItem('padafand_cmd_token');
