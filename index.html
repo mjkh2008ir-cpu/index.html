@@ -49,7 +49,7 @@
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
         /* ===== HEADER ===== */
-        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
+        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.15rem 0.7rem;position:sticky;top:0;z-index:100}
         .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
         .hdr-top .online{display:flex;gap:.2rem;align-items:center}
         .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
@@ -100,7 +100,7 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.6rem 0.6rem 100px}
+        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.25rem 0.55rem 100px}
         .page{display:none;animation:fadeIn .4s ease}
         .page.active{display:block}
         .page-title{font-size:.8rem;font-weight:700;color:var(--neon);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem;animation:neonPulse 2s infinite}
@@ -2627,51 +2627,65 @@ CORRECT: <A یا B یا C یا D>
         function startPixelDefenseGame() {
             openGameArena('پدافند پیکسلی');
             const body = document.getElementById('gameArenaBody');
-            body.innerHTML = `
-              <p style="font-size:.62rem;color:var(--ts);margin-bottom:.3rem">شب قرارگاه. موشک‌های «شبهه» از چپ می‌آیند. لمس/کلیک = شلیک رهگیر. ماشین پدافند را حفظ کن.</p>
-              <canvas id="pixelDefCanvas" width="400" height="260" style="width:100%;max-width:400px;height:auto;background:#050a06;border:1px solid var(--br);border-radius:8px;image-rendering:pixelated;touch-action:none;display:block;margin:0 auto"></canvas>
-              <div style="display:flex;justify-content:space-between;font-size:.65rem;margin-top:.3rem;color:var(--tp)">
-                <span id="pdScore">امتیاز: 0</span><span id="pdLives">جان: 3</span><span id="pdWave">موج: 1</span>
-              </div>
-              <button class="btn" style="margin-top:.4rem;width:100%" onclick="closeGameArena()">خروج<\/button>`;
+            body.innerHTML = '<p style="font-size:.6rem;color:var(--ts);margin:0 0 .3rem">مثل انیمیشن پایین سایت — موشک شبهه را با لمس بزن. ماشین پدافند را حفظ کن.</p>'
+                + '<canvas id="pixelDefCanvas" width="640" height="280" style="width:100%;max-width:640px;height:auto;background:#070f08;border:1px solid var(--br);border-radius:8px;image-rendering:pixelated;touch-action:none;display:block;margin:0 auto"></canvas>'
+                + '<div style="display:flex;justify-content:space-between;font-size:.65rem;margin-top:.3rem;color:var(--tp)">'
+                + '<span id="pdScore">امتیاز: 0</span><span id="pdLives">جان: 3</span><span id="pdWave">موج: 1</span></div>'
+                + '<button type="button" class="btn" style="margin-top:.4rem;width:100%" onclick="closeGameArena()">خروج</button>';
             const canvas = document.getElementById('pixelDefCanvas');
             const ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = false;
+            const U = 3;
+            const NEON = '#5dff3a', NEON_HI = '#baffa0', ENEMY = '#ff4d3d', GOLD = '#c8a000';
             let score = 0, lives = 3, wave = 1, frame = 0, over = false;
-            const ground = 220;
-            const truck = { x: 300, y: ground };
-            let missiles = [], shots = [], stars = [];
-            for (let i=0;i<35;i++) stars.push({x:Math.random()*400,y:Math.random()*120,p:Math.random()});
-
+            const groundY = 240;
+            const truckX = 520;
+            let missiles = [], shots = [], sparks = [];
+            function px(x, y, w, h, color) {
+                ctx.fillStyle = color;
+                ctx.fillRect(Math.round(x / U) * U, Math.round(y / U) * U, Math.max(U, w), Math.max(U, h));
+            }
             function drawTruck(x, y) {
-                // pixel launcher truck
-                ctx.fillStyle = '#1a3d12';
-                ctx.fillRect(x, y-18, 70, 18);
-                ctx.fillStyle = '#2f6b22';
-                ctx.fillRect(x+4, y-28, 40, 12);
-                ctx.fillStyle = '#39ff14';
-                ctx.fillRect(x+48, y-36, 8, 20); // launcher arm
-                ctx.fillRect(x+50, y-42, 18, 6);
-                ctx.fillStyle = '#0a0f08';
-                ctx.fillRect(x+8, y-8, 12, 8);
-                ctx.fillRect(x+40, y-8, 12, 8);
-                ctx.fillStyle = '#c8a000';
-                ctx.fillRect(x+58, y-22, 10, 8); // radar box
-                ctx.fillStyle = '#5dff3a';
-                ctx.fillRect(x+60, y-30, 3, 8);
+                // بدنه
+                px(x, y - 20, 72, 20, '#1a3d12');
+                px(x + 4, y - 32, 44, 14, '#2f6b22');
+                px(x + 52, y - 40, 10, 24, NEON); // لانچر
+                px(x + 54, y - 48, 22, 8, NEON_HI);
+                px(x + 60, y - 28, 12, 10, GOLD); // رادار
+                px(x + 64, y - 36, 4, 10, NEON);
+                px(x + 10, y - 8, 14, 8, '#0a0f08');
+                px(x + 42, y - 8, 14, 8, '#0a0f08');
+            }
+            function drawBG() {
+                ctx.fillStyle = '#070f08';
+                ctx.fillRect(0, 0, 640, 280);
+                // ستاره
+                ctx.fillStyle = 'rgba(57,255,20,0.25)';
+                for (let i = 0; i < 30; i++) {
+                    const sx = (i * 97 + frame) % 640, sy = (i * 53) % 120;
+                    ctx.fillRect(sx, sy, 2, 2);
+                }
+                // خط افق شهر
+                ctx.fillStyle = '#0c1810';
+                for (let i = 0; i < 16; i++) {
+                    const h = 16 + (i * 19) % 36;
+                    ctx.fillRect(i * 40, groundY - h, 36, h);
+                }
+                px(0, groundY, 640, 40, '#0f2414');
+                px(0, groundY, 640, 2, NEON);
             }
             function spawn() {
-                const labels = ['شبهه','شایعه','ادعا','تکذیب','رسانه'];
+                const labels = ['شبهه', 'شایعه', 'ادعا', 'تکذیب'];
                 missiles.push({
-                    x: -20, y: 40 + Math.random()*120,
-                    vx: 1.1 + wave*0.25 + Math.random()*0.5,
-                    vy: (Math.random()-0.5)*0.3,
-                    label: labels[(frame+score)%labels.length],
+                    x: -20,
+                    y: 50 + Math.random() * 140,
+                    vx: 1.2 + wave * 0.28 + Math.random() * 0.5,
+                    label: labels[Math.floor(Math.random() * labels.length)],
                     dead: false
                 });
             }
             function shoot(tx, ty) {
-                shots.push({ x: truck.x+60, y: truck.y-40, tx, ty, life: 0 });
+                shots.push({ x: truckX + 70, y: groundY - 44, tx: tx, ty: ty, life: 0 });
             }
             function onPtr(e) {
                 if (over) return;
@@ -2683,92 +2697,66 @@ CORRECT: <A یا B یا C یا D>
                 shoot(x, y);
             }
             canvas.onmousedown = onPtr;
-            canvas.ontouchstart = (e) => { e.preventDefault(); onPtr(e); };
-
-            let spawnEvery = 70;
+            canvas.ontouchstart = function(e) { e.preventDefault(); onPtr(e); };
+            let spawnEvery = 65;
             function loop() {
                 if (over) return;
                 frame++;
-                // sky
-                ctx.fillStyle = '#050a06';
-                ctx.fillRect(0,0,400,260);
-                stars.forEach(s => {
-                    ctx.fillStyle = s.p > 0.7 ? '#9f7' : '#3a5a32';
-                    ctx.fillRect(s.x, s.y, 1, 1);
-                });
-                // city silhouette
-                ctx.fillStyle = '#0c1810';
-                for (let i=0;i<12;i++) {
-                    const h = 20 + (i*17)%40;
-                    ctx.fillRect(i*34, ground-h, 30, h);
-                }
-                // ground
-                ctx.fillStyle = '#0f2414';
-                ctx.fillRect(0, ground, 400, 40);
-                ctx.fillStyle = '#39ff14';
-                ctx.globalAlpha = 0.15;
-                ctx.fillRect(0, ground, 400, 2);
-                ctx.globalAlpha = 1;
-
+                drawBG();
                 if (frame % spawnEvery === 0) spawn();
-
-                // missiles
-                missiles.forEach(m => {
-                    m.x += m.vx; m.y += m.vy;
-                    ctx.fillStyle = '#c0392b';
-                    ctx.fillRect(m.x, m.y, 16, 8);
-                    ctx.fillStyle = '#ff6b4a';
-                    ctx.fillRect(m.x-4, m.y+2, 5, 4);
-                    ctx.fillStyle = '#f1c40f';
-                    ctx.font = '9px monospace';
-                    ctx.fillText(m.label, m.x-2, m.y-3);
-                    if (m.x > truck.x - 5 && m.y > truck.y - 40) { m.dead = true; lives--; }
-                    if (m.x > 420) m.dead = true;
+                missiles.forEach(function(m) {
+                    m.x += m.vx;
+                    px(m.x, m.y, 18, 10, ENEMY);
+                    px(m.x - 6, m.y + 2, 6, 6, '#ff8c3a');
+                    ctx.fillStyle = GOLD;
+                    ctx.font = '10px monospace';
+                    ctx.fillText(m.label, m.x - 4, m.y - 4);
+                    if (m.x > truckX - 8) { m.dead = true; lives--; }
+                    if (m.x > 660) m.dead = true;
                 });
-                missiles = missiles.filter(m => !m.dead);
-
-                // shots
-                shots.forEach(s => {
+                missiles = missiles.filter(function(m) { return !m.dead; });
+                shots.forEach(function(s) {
                     s.life++;
-                    const t = Math.min(1, s.life/16);
-                    const x = s.x + (s.tx-s.x)*t;
-                    const y = s.y + (s.ty-s.y)*t;
-                    ctx.fillStyle = '#39ff14';
-                    ctx.fillRect(x-2,y-2,4,4);
-                    // trail
-                    ctx.fillStyle = 'rgba(57,255,20,0.3)';
-                    ctx.fillRect(x-6,y-1,4,2);
-                    missiles.forEach(m => {
-                        if (Math.abs(m.x-x)<14 && Math.abs(m.y-y)<12) {
+                    const tt = Math.min(1, s.life / 16);
+                    const x = s.x + (s.tx - s.x) * tt;
+                    const y = s.y + (s.ty - s.y) * tt;
+                    px(x - 2, y - 2, 6, 6, NEON);
+                    px(x - 8, y - 1, 6, 3, 'rgba(57,255,20,0.35)');
+                    missiles.forEach(function(m) {
+                        if (Math.abs(m.x - x) < 16 && Math.abs(m.y - y) < 14) {
                             m.dead = true; s.done = true; score += 12;
+                            for (let k = 0; k < 6; k++) sparks.push({ x: x, y: y, life: 8 });
                         }
                     });
-                    if (t>=1) s.done = true;
+                    if (tt >= 1) s.done = true;
                 });
-                shots = shots.filter(s => !s.done);
-
-                drawTruck(truck.x, truck.y);
-
-                // HUD line
-                ctx.strokeStyle = 'rgba(57,255,20,0.2)';
-                ctx.strokeRect(4,4,392,252);
-
-                document.getElementById('pdScore').textContent = 'امتیاز: ' + score;
-                document.getElementById('pdLives').textContent = 'جان: ' + lives;
-                document.getElementById('pdWave').textContent = 'موج: ' + wave;
-                if (score >= 90 && wave===1) { wave=2; spawnEvery=55; }
-                if (score >= 200 && wave===2) { wave=3; spawnEvery=40; }
-                if (lives<=0 || score>=320) {
+                shots = shots.filter(function(s) { return !s.done; });
+                sparks.forEach(function(sp) {
+                    sp.life--;
+                    px(sp.x + (Math.random() * 10 - 5), sp.y + (Math.random() * 10 - 5), 3, 3, NEON_HI);
+                });
+                sparks = sparks.filter(function(sp) { return sp.life > 0; });
+                drawTruck(truckX, groundY);
+                var se = document.getElementById('pdScore');
+                var le = document.getElementById('pdLives');
+                var we = document.getElementById('pdWave');
+                if (se) se.textContent = 'امتیاز: ' + score;
+                if (le) le.textContent = 'جان: ' + lives;
+                if (we) we.textContent = 'موج: ' + wave;
+                if (score >= 90 && wave === 1) { wave = 2; spawnEvery = 50; }
+                if (score >= 200 && wave === 2) { wave = 3; spawnEvery = 38; }
+                if (lives <= 0 || score >= 320) {
                     over = true;
-                    const xp = Math.max(6, Math.floor(score/11));
+                    var xp = Math.max(6, Math.floor(score / 11));
                     finishGameXP(xp);
-                    ctx.fillStyle='rgba(0,0,0,0.72)';
-                    ctx.fillRect(0,0,400,260);
-                    ctx.fillStyle='#39ff14';
-                    ctx.font='15px Tahoma';
-                    ctx.fillText(lives<=0?'شکست قرارگاه':'دفاع موفق!', 130, 120);
-                    ctx.fillStyle='#c8a000';
-                    ctx.fillText('+'+xp+' XP', 160, 150);
+                    ctx.fillStyle = 'rgba(0,0,0,0.72)';
+                    ctx.fillRect(0, 0, 640, 280);
+                    ctx.fillStyle = NEON;
+                    ctx.font = '18px Tahoma';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(lives <= 0 ? 'شکست قرارگاه' : 'دفاع موفق!', 320, 120);
+                    ctx.fillStyle = GOLD;
+                    ctx.fillText('+' + xp + ' XP', 320, 150);
                     return;
                 }
                 window._pixelDefenseRAF = requestAnimationFrame(loop);
@@ -2776,7 +2764,6 @@ CORRECT: <A یا B یا C یا D>
             loop();
         }
 
-        
         async function startStoryResponderGame() {
             openGameArena('پاسخگوی قرارگاه');
             const body = document.getElementById('gameArenaBody');
