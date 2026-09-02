@@ -1525,6 +1525,7 @@
             if (!post) return;
             const modal = document.getElementById('readerModal');
             if (!modal) return;
+            window._readerIndex = index;
             document.getElementById('readerTitle').textContent = post.shobe || 'شبهه';
             document.getElementById('readerAns').innerHTML = escapeHtml(post.answer || 'پاسخی ثبت نشده').replace(/\n/g, '<br>');
             const meta = [];
@@ -1532,9 +1533,79 @@
             if (post.cat) meta.push('<i class="fas fa-tag"></i> ' + escapeHtml(post.cat));
             if (post.date) meta.push('<i class="fas fa-calendar"></i> ' + escapeHtml(String(post.date)));
             document.getElementById('readerMeta').innerHTML = meta.join(' · ');
+            var lb = post.liked_by;
+            if (typeof lb === 'string') { try { lb = JSON.parse(lb); } catch(e) { lb = []; } }
+            if (!Array.isArray(lb)) lb = [];
+            var cnt = document.getElementById('readerLikeCnt');
+            if (cnt) cnt.textContent = String(lb.length || post.likes || 0);
+            try { if (typeof fillPostComments === 'function') {
+                /* mirror comments into reader */
+                var holder = document.getElementById('readerComments');
+                if (holder) {
+                    var comments = post.comments;
+                    if (typeof comments === 'string') { try { comments = JSON.parse(comments); } catch(e) { comments = []; } }
+                    if (!Array.isArray(comments)) comments = [];
+                    holder.innerHTML = comments.length
+                        ? comments.map(function(c){ return '<div style="font-size:.6rem;padding:0.3rem 0;border-bottom:1px solid var(--br)"><b style="color:var(--neon)">' + escapeHtml(c.user||c.username||'کاربر') + '</b>: ' + escapeHtml(c.text||c.body||'') + '</div>'; }).join('')
+                        : '<div style="font-size:.55rem;color:var(--ts)">هنوز نظری نیست</div>';
+                }
+            } } catch(e) {}
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
         }
+        function readerToggleLike() {
+            if (window._readerIndex == null) return;
+            if (typeof toggleLike === 'function') toggleLike(window._readerIndex);
+            setTimeout(function(){
+                var p = allPosts[window._readerIndex];
+                if (!p) return;
+                var lb = p.liked_by;
+                if (typeof lb === 'string') { try { lb = JSON.parse(lb); } catch(e) { lb = []; } }
+                if (!Array.isArray(lb)) lb = [];
+                var cnt = document.getElementById('readerLikeCnt');
+                if (cnt) cnt.textContent = String(lb.length || p.likes || 0);
+            }, 400);
+        }
+        function readerFocusComment() {
+            var input = document.getElementById('readerCmtInput');
+            if (input) input.focus();
+        }
+        function readerSave() {
+            if (window._readerIndex == null) return;
+            if (typeof saveToBox === 'function') saveToBox(window._readerIndex);
+        }
+        function readerShare() {
+            if (window._readerIndex == null) return;
+            if (typeof sharePost === 'function') sharePost(window._readerIndex);
+        }
+        function readerShareImage() {
+            if (window._readerIndex == null) return;
+            if (typeof sharePostImage === 'function') sharePostImage(window._readerIndex);
+            else if (typeof sharePost === 'function') sharePost(window._readerIndex);
+        }
+        async function readerAddComment() {
+            if (window._readerIndex == null) return;
+            var input = document.getElementById('readerCmtInput');
+            var text = (input && input.value || '').trim();
+            if (!text) return;
+            if (!loggedUser) { alert('برای نظر دادن وارد حساب شوید'); return; }
+            var idx = window._readerIndex;
+            var p = allPosts[idx];
+            if (!p) return;
+            var comments = p.comments;
+            if (typeof comments === 'string') { try { comments = JSON.parse(comments); } catch(e) { comments = []; } }
+            if (!Array.isArray(comments)) comments = [];
+            comments.push({ user: loggedUser, text: text, date: new Date().toLocaleDateString('fa-IR') });
+            p.comments = comments;
+            try {
+                if (p.id != null && typeof updateInSupabase === 'function') {
+                    await updateInSupabase('posts', p.id, { comments: comments });
+                }
+            } catch(e) { console.error(e); }
+            if (input) input.value = '';
+            openReader(idx);
+        }
+
         function closeReader() {
             const modal = document.getElementById('readerModal');
             if (modal) modal.classList.remove('show');
