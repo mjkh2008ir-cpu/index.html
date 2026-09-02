@@ -108,9 +108,9 @@
         .page-title i{margin-left:0.3rem}
 
         /* ===== POSTS ===== */
-        .post{background:var(--bgp);border:1px solid var(--br);border-radius:8px;margin-bottom:0.45rem;overflow:hidden}
+        .post{background:var(--bgp);border:1px solid var(--br);border-radius:8px;margin:0.35rem 0;overflow:hidden;display:block!important}
         .post:hover{border-color:var(--neon)}
-        .post-hdr{padding:0.4rem 0.6rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:0.3rem;transition:.2s}
+        .post-hdr{display:flex!important;align-items:center;justify-content:space-between;padding:0.55rem 0.65rem;cursor:pointer;gap:0.4rem;color:var(--tp)!important;font-size:.72rem;font-weight:600}
         .post-hdr:hover{background:var(--bgm)}
         .post-hdr .title{font-weight:700;font-size:.78rem;flex:1;line-height:1.4}
         .post-hdr .title i{color:var(--am);margin-left:0.2rem}
@@ -354,6 +354,23 @@
         .reader-box .reader-meta{font-size:.6rem;color:var(--ts);display:flex;flex-wrap:wrap;gap:0.4rem}
         .reader-close{float:left;background:transparent;border:1px solid var(--br);color:var(--tp);border-radius:8px;padding:0.25rem 0.55rem;cursor:pointer;font-size:.7rem}
         .btn-read{background:linear-gradient(180deg,#1a3a14,#0c2010)!important;border:1px solid #3d9e2f!important;color:#d4f0c0!important;border-radius:7px;padding:0.32rem 0.55rem;font-size:.58rem;cursor:pointer;font-family:inherit;font-weight:600;box-shadow:0 0 8px rgba(57,255,20,.12)}
+    
+        .btn, .btn-read, .btn-gold, button.btn, .comment-form button {
+            background: linear-gradient(180deg,#1f4a18,#0d2810) !important;
+            border: 1px solid #39ff14 !important;
+            color: #e8ffd8 !important;
+            border-radius: 8px !important;
+            font-family: inherit !important;
+            box-shadow: 0 0 12px rgba(57,255,20,0.12) !important;
+        }
+        .btn-gold {
+            background: linear-gradient(180deg,#4a3a10,#2a2208) !important;
+            border-color: #c8a000 !important;
+            color: #fff2c0 !important;
+        }
+        .btn-read:active, .btn:active { filter: brightness(1.15); }
+
+        /* FORCE_MILITARY_BTNS */
     </style>
 
     <script type="application/ld+json">
@@ -456,7 +473,7 @@
     <div id="content">
 
         <!-- HOME -->
-        <div id="page-home" class="page active"><div id="connStatus" style="display:none;background:rgba(192,57,43,.15);border:1px solid #c0392b;color:#e8a0a0;padding:0.4rem;border-radius:6px;margin-bottom:0.4rem;font-size:.65rem;text-align:center"></div>
+        <div id="page-home" class="page active"><div id="deployMarker" style="display:none"></div><div id="connStatus" style="display:none;background:rgba(192,57,43,.15);border:1px solid #c0392b;color:#e8a0a0;padding:0.4rem;border-radius:6px;margin-bottom:0.4rem;font-size:.65rem;text-align:center"></div>
             <div class="page-title"><i class="fas fa-home"></i> صفحه اصلی</div>
             <div class="pie-launcher" id="pieLauncher" style="display:none"><span class="avatar">🤖</span><div class="content"><div class="name">🎯 پای لانچر</div><div class="text" id="pieText">سلام سرباز! به قرارگاه پدافند شبهات خوش اومدی. اینجا قراره به شبهات پاسخ بدیم و از مرزهای اعتقادی دفاع کنیم. آماده‌ای؟</div></div><button class="btn-start-tutorial" onclick="startTutorial()"><i class="fas fa-play"></i> آموزش</button><button class="btn-close-tip" onclick="closePieLauncher()"><i class="fas fa-times"></i></button></div>
             <div style="display:flex;gap:0.4rem;background:var(--bgp);border:1px solid var(--br);border-radius:4px;padding:0.2rem 0.4rem;margin-bottom:0.4rem;flex-wrap:wrap;font-size:.6rem"><span><i class="fas fa-bullseye"></i> <b id="postCount">0</b> شبهه</span><span><i class="fas fa-users"></i> <b id="userCount">0</b> کاربر</span><span><i class="fas fa-rocket"></i> عملیات ۳۶۵</span></div>
@@ -927,6 +944,14 @@
                 });
                 renderPosts(allPosts);
                 renderPosts(allPosts.slice(0, 3), 'homePosts');
+                const pcEl = document.getElementById('postContainer');
+                if (pcEl && (!allPosts || !allPosts.length)) {
+                    pcEl.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts)">هنوز مطلبی نیست</div>';
+                }
+                if (pcEl && allPosts && allPosts.length && !pcEl.innerHTML.trim()) {
+                    try { renderPosts(allPosts, 'postContainer'); } catch(e) { console.error(e); }
+                }
+
                 try{ if(typeof initGames==='function') initGames(); }catch(e){}
                 try{ if(typeof renderGamesLeaderboard==='function') renderGamesLeaderboard(); }catch(e){}
                 const pc = document.getElementById('postCount');
@@ -951,6 +976,14 @@
         function renderAll() {
             renderPosts(allPosts);
             renderPosts(allPosts.slice(0, 3), 'homePosts');
+                const pcEl = document.getElementById('postContainer');
+                if (pcEl && (!allPosts || !allPosts.length)) {
+                    pcEl.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--ts)">هنوز مطلبی نیست</div>';
+                }
+                if (pcEl && allPosts && allPosts.length && !pcEl.innerHTML.trim()) {
+                    try { renderPosts(allPosts, 'postContainer'); } catch(e) { console.error(e); }
+                }
+
                 try{ if(typeof initGames==='function') initGames(); }catch(e){}
                 try{ if(typeof renderGamesLeaderboard==='function') renderGamesLeaderboard(); }catch(e){}
             document.getElementById('postCount').textContent = allPosts.length;
