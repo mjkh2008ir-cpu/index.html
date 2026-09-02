@@ -4120,143 +4120,88 @@ ${body || '—'}`;
         try { setTimeout(detectHostileEnvironment, 2000); } catch(e){}
 
         
+        
         async function checkAccess() {
-            const unitInput = (document.getElementById('cmdUnit') && document.getElementById('cmdUnit').value || '').trim();
+            const unitEl = document.getElementById('cmdUnit');
+            const unitInput = (unitEl && unitEl.value || '').trim();
             const err = document.getElementById('cmdError');
-            const siteUser = getSiteLoggedUser();
-            let allowedList = getAllowedCommanders();
-
             if (!unitInput) {
-                if (err) { err.textContent = '⚠️ کد دسترسی را وارد کنید (مثلاً Khayyatzadeh)'; err.style.color = '#c0392b'; }
+                if (err) { err.textContent = '⚠️ کد دسترسی را وارد کنید'; err.style.color = '#c0392b'; }
                 return;
             }
-
-            // کدهای اصلی سرور همیشه مجازند (حتی اگر نام در لیست نباشد) — بعد از تأیید سرور
-            if (err) { err.textContent = 'در حال احراز هویت امن…'; err.style.color = '#c8a000'; }
-
-            // اگر کاربر سایت لاگین نیست، فقط کدهای اصلی را بپذیر (با هشدار)
-            const primaryCodes = ['Khayyatzadeh', 'Padafand313'];
-            const isPrimary = primaryCodes.indexOf(unitInput) >= 0;
-
-            if (!siteUser && !isPrimary) {
-                if (err) { err.textContent = '⛔ ابتدا در سایت وارد شوید یا از کد فرماندهی اصلی استفاده کنید.'; err.style.color = '#c0392b'; }
-                logAccessAttempt({ user: 'بدون ورود', code: unitInput, result: 'رد', reason: 'بدون نشست سایت' });
-                noteAuthFailure();
-                return;
-            }
-
+            if (err) { err.textContent = 'در حال اتصال به سرور…'; err.style.color = '#c8a000'; }
+            const worker = (typeof AI_WORKER_URL !== 'undefined' && AI_WORKER_URL)
+                ? AI_WORKER_URL.replace(/\/$/, '')
+                : 'https://padafand-shobahat.padafand-shobahat.workers.dev';
             try {
-                const res = await fetch(CMD_WORKER + '/api/command-auth', {
+                const res = await fetch(worker + '/api/command-auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ code: unitInput, site_user: siteUser || '' })
+                    body: JSON.stringify({ code: unitInput })
                 });
                 const data = await res.json().catch(function(){ return {}; });
                 if (!res.ok || !data.ok || !data.token) {
                     if (err) {
-                        err.textContent = res.status === 429 ? '⛔ تلاش بیش از حد' : '⛔ کد نادرست یا دسترسی رد شد';
+                        err.textContent = res.status === 429 ? '⛔ تلاش بیش از حد' : '⛔ کد نادرست';
                         err.style.color = '#c0392b';
                     }
-                    logAccessAttempt({ user: siteUser || 'ناشناس', code: unitInput, result: 'شکست', reason: 'کد نامعتبر' });
-                    noteAuthFailure();
+                    try { noteAuthFailure(); } catch (e) {}
+                    try { logAccessAttempt({ user: '—', code: unitInput, result: 'شکست', reason: 'کد' }); } catch (e) {}
                     return;
                 }
-
-                // بعد از تأیید سرور: اگر کد اصلی نیست، نام باید در لیست مجاز باشد
-                let fullname = data.user || siteUser || '';
-                if (!isPrimary && siteUser) {
-                    try {
-                        if (typeof allUsers === 'object' && allUsers[siteUser]) {
-                            fullname = allUsers[siteUser].fullname || fullname;
-                        }
-                    } catch (e) {}
-                    const okName = allowedList.some(function(n){ return n === fullname || n === siteUser; });
-                    if (!okName) {
-                        if (err) { err.textContent = '⛔ ورود شما به اینجا ممنوع است. از فرمانده بخواهید نامتان را در تنظیمات اضافه کند.'; err.style.color = '#c0392b'; }
-                        logAccessAttempt({ user: fullname, code: unitInput, result: 'ممنوع', reason: 'خارج از لیست مجاز' });
-                        warnIntruder(fullname);
-                        noteAuthFailure();
-                        return;
-                    }
-                }
-
                 cmdSessionToken = data.token;
-                currentUser = data.user || fullname || 'فرمانده';
+                currentUser = data.user || 'فرمانده';
                 currentUnit = data.unit || 'شورای فرماندهی';
                 try {
                     sessionStorage.setItem('padafand_cmd_token', cmdSessionToken);
                     sessionStorage.setItem('padafand_cmd_user', currentUser);
                     sessionStorage.setItem('padafand_cmd_unit', currentUnit);
                 } catch (e) {}
-                logAccessAttempt({ user: currentUser, code: '***', result: 'موفق', reason: 'ورود' });
-                _failAuthCount = 0;
+                try { logAccessAttempt({ user: currentUser, code: '***', result: 'موفق', reason: 'ورود' }); } catch (e) {}
                 if (err) { err.textContent = '✅ خوش آمدید ' + currentUser; err.style.color = '#39ff14'; }
-                if (typeof enterCommand === 'function') {
-                    if (enterCommand.constructor.name === 'AsyncFunction') await enterCommand();
-                    else enterCommand();
-                }
+                // ورود مستقیم بدون وابستگی به requireCmdAuth
+                document.body.classList.add('authenticated');
+                const sec = document.getElementById('securityPage');
+                const side = document.getElementById('sidebar');
+                const main = document.querySelector('.main');
+                if (sec) sec.style.display = 'none';
+                if (side) side.style.display = 'block';
+                if (main) main.style.display = 'block';
+                try {
+                    const sn = document.getElementById('sideName');
+                    if (sn) sn.textContent = currentUser;
+                } catch (e) {}
+                try { if (typeof refreshData === 'function') refreshData(); } catch (e) {}
                 try { renderAccessMonitor(); renderAllowedList(); } catch (e) {}
             } catch (e) {
-                console.error(e);
-                if (err) { err.textContent = '⛔ خطا در ارتباط امن — اتصال اینترنت/Worker را چک کنید'; err.style.color = '#c0392b'; }
-                noteAuthFailure();
+                console.error('command-auth', e);
+                if (err) {
+                    err.textContent = '⛔ خطا: ' + (e && e.message ? e.message : 'ارتباط');
+                    err.style.color = '#c0392b';
+                }
             }
         }
 
-        function getAllowedCommanders() {
-            const base = ['محمد جواد خیاط زاده','محمد برزکار','محمد مهدی سعیدی','محمد باقر متوسل'];
-            let extra = [];
-            try { extra = JSON.parse(localStorage.getItem('padafand_cmd_allowed') || '[]'); } catch (e) {}
-            return base.concat(Array.isArray(extra) ? extra : []);
-        }
-        function addAllowedCommander() {
-            const inp = document.getElementById('newAllowedCommander');
-            const name = (inp && inp.value || '').trim();
-            if (!name) { alert('نام را وارد کنید'); return; }
-            let extra = [];
-            try { extra = JSON.parse(localStorage.getItem('padafand_cmd_allowed') || '[]'); } catch (e) {}
-            if (extra.indexOf(name) < 0) extra.push(name);
-            localStorage.setItem('padafand_cmd_allowed', JSON.stringify(extra));
-            if (inp) inp.value = '';
-            renderAllowedList();
-            alert('اضافه شد: ' + name);
-        }
-        function renderAllowedList() {
-            const el = document.getElementById('allowedListView');
-            if (!el) return;
-            el.innerHTML = 'مجازها: ' + getAllowedCommanders().map(function(n){ return n; }).join(' | ');
+        async function requireCmdAuth(lock) {
+            if (lock === undefined) lock = true;
+            let token = cmdSessionToken;
+            try { if (!token) token = sessionStorage.getItem('padafand_cmd_token'); } catch (e) {}
+            if (!token) {
+                if (lock && typeof forceCommandLock === 'function') forceCommandLock();
+                return false;
+            }
+            cmdSessionToken = token;
+            return true;
         }
 
         async function ensureCmdSession() {
-            let token = cmdSessionToken;
-            try { if (!token) token = sessionStorage.getItem('padafand_cmd_token'); } catch (e) {}
-            if (!token) return false;
-            try {
-                const res = await fetch(CMD_WORKER + '/api/command-verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Cmd-Token': token },
-                    body: JSON.stringify({ token })
-                });
-                const data = await res.json().catch(() => ({}));
-                if (!data.ok) {
-                    cmdSessionToken = null;
-                    try {
-                        sessionStorage.removeItem('padafand_cmd_token');
-                    } catch (e) {}
-                    return false;
-                }
-                cmdSessionToken = token;
-                currentUser = data.user || currentUser;
-                return true;
-            } catch (e) {
-                return false;
-            }
+            return await requireCmdAuth(false);
         }
 
-
+        
         async function enterCommand() {
             if (!(await requireCmdAuth(false))) {
-                forceCommandLock('ورود بدون توکن سرور ممکن نیست');
+                // اجازه تلاش مجدد با فرم
                 return;
             }
             document.body.classList.add('authenticated');
