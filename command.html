@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+
+<script>
+/* CMD_GATE_V2 - early gate: hide panel until authenticated class */
+(function(){
+  try {
+    var t = sessionStorage.getItem('padafand_cmd_token');
+    if (!t) {
+      document.documentElement.classList.add('cmd-locked');
+    }
+  } catch(e){}
+})();
+</script>
+<style>
+html.cmd-locked #sidebar,
+html.cmd-locked .main,
+html.cmd-locked #tab-dashboard,
+html.cmd-locked .nav-item { display:none !important; }
+html.cmd-locked #securityPage { display:block !important; }
+</style>
+
     <meta name="padafand-cache-v" content="20260902b">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="no-referrer">
