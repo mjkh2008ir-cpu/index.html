@@ -72,7 +72,7 @@
         .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
         /* ===== SEARCH ===== */
-        #search-section{background:var(--bgm);padding:0.3rem 0.6rem;border-bottom:1px solid var(--br)}
+        #search-section{background:var(--bgm);padding:0.2rem 0.5rem;border-bottom:1px solid var(--br)}
         .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
         .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
         .search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
@@ -80,7 +80,7 @@
         .search-wrap button:hover{transform:scale(1.05)}
 
         /* ===== NAV ===== */
-        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.2rem 0;position:sticky;top:0;z-index:90}
+        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.12rem 0;position:sticky;top:0;z-index:90}
         .more-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
         .more-sheet.show{display:flex}
         .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
@@ -101,10 +101,10 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.45rem 0.6rem 100px}
-        .page{display:none;min-height:50vh;padding:0.35rem 0 1rem}
+        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.25rem 0.55rem 100px}
+        .page{display:none;padding:0.15rem 0 0.8rem}
         .page.active{display:block}
-        .page-title{font-size:.8rem;font-weight:700;color:var(--tp);margin:0.2rem 0 0.4rem;display:flex;align-items:center;gap:0.35rem}
+        .page-title{font-size:.78rem;font-weight:700;color:var(--tp);margin:0.1rem 0 0.35rem;display:flex;align-items:center;gap:0.35rem}
         .page-title i{margin-left:0.3rem}
 
         /* ===== POSTS ===== */
@@ -964,6 +964,8 @@
                 try { renderPosts(allPosts.slice(0, 5), 'homePosts'); } catch (e) { console.error('render home', e); }
                 const pc = document.getElementById('postCount');
                 if (pc) pc.textContent = String(allPosts.length);
+                var uc = document.getElementById('userCount');
+                if (uc) uc.textContent = String(Object.keys(allUsers||{}).length);
                 try { if (typeof renderNews === 'function') renderNews(); } catch (e) {}
                 try { if (typeof updateStats === 'function') updateStats(); } catch (e) {}
             } catch (e) {
