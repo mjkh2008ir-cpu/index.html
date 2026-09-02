@@ -102,8 +102,8 @@
 
         /* ===== CONTENT ===== */
         #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.45rem 0.6rem 100px}
-        .page{display:none!important;animation:fadeIn .35s ease;min-height:45vh;padding-bottom:0.5rem}
-        .page.active{display:block!important}
+        .page{display:none;min-height:50vh;padding-bottom:0.5rem}
+        .page.active{display:block!important;visibility:visible!important;opacity:1!important}
         .page-title{font-size:.8rem;font-weight:700;color:var(--tp);margin:0.2rem 0 0.4rem;display:flex;align-items:center;gap:0.35rem}
         .page-title i{margin-left:0.3rem}
 
@@ -370,6 +370,10 @@
         }
         .btn-read:active, .btn:active { filter: brightness(1.15); }
 
+        /* POST_VIS */
+        #page-posts.active, #page-posts.active #postContainer { display:block !important; }
+        #postContainer .post { display:block !important; margin:0.4rem 0 !important; }
+        #postContainer .post-hdr { display:flex !important; color:#d4e8b0 !important; }
         /* FORCE_MILITARY_BTNS */
     </style>
 
@@ -1445,14 +1449,21 @@
         }
         function switchPage(page) {
             if (!page) return;
-            closeMoreMenu();
+            try { closeMoreMenu(); } catch (e) {}
             const target = document.getElementById('page-' + page);
             if (!target) {
                 console.error('صفحه یافت نشد:', page);
                 return;
             }
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none';
+            });
             target.classList.add('active');
+            target.style.display = 'block';
+            target.style.minHeight = '50vh';
+            target.style.visibility = 'visible';
+            target.style.opacity = '1';
             // نوار بالا
             document.querySelectorAll('.nav-btn[data-page]').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-page') === page);
@@ -1465,8 +1476,23 @@
                 if (sItems[sMap[page]]) sItems[sMap[page]].classList.add('active');
             }
             if (page === 'posts') {
-                if (typeof renderPosts === 'function') renderPosts(allPosts || [], 'postContainer');
-                else if (typeof filterPosts === 'function') filterPosts();
+                const box = document.getElementById('postContainer');
+                if (box) {
+                    box.style.display = 'block';
+                    box.style.minHeight = '120px';
+                    if (!allPosts || !allPosts.length) {
+                        box.innerHTML = '<div style="text-align:center;padding:1rem;color:#8ab88a;font-size:.7rem">در حال بارگذاری مطالب...</div>';
+                        if (typeof loadAllData === 'function') {
+                            loadAllData().then(function(){
+                                if (typeof renderPosts === 'function') renderPosts(allPosts || [], 'postContainer');
+                            }).catch(function(){
+                                box.innerHTML = '<div style="text-align:center;padding:1rem;color:#e8a0a0">خطا در دریافت مطالب</div>';
+                            });
+                        }
+                    } else if (typeof renderPosts === 'function') {
+                        renderPosts(allPosts, 'postContainer');
+                    }
+                }
             }
             if (page === 'home') {
                 if (typeof renderPosts === 'function') renderPosts((allPosts || []).slice(0, 3), 'homePosts');
