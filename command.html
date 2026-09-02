@@ -1488,7 +1488,7 @@ button.danger, .btn-danger {
             </div>
         </div>
 
-        <div id="tab-dashboard" class="tab-content">
+        <div id="tab-dashboard" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card"><span class="icon"><i class="fas fa-file-alt"></i></span>
                     <div class="num" id="statPosts">0</div>
@@ -4180,7 +4180,29 @@ ${body || '—'}`;
 
         
         
-        async function checkAccess() {
+        
+        function showTab(name) {
+            document.querySelectorAll('.tab-content').forEach(function(el){
+                el.classList.remove('active');
+                el.style.display = 'none';
+            });
+            var t = document.getElementById('tab-' + name);
+            if (t) {
+                t.classList.add('active');
+                t.style.display = 'block';
+            }
+            document.querySelectorAll('.nav-item, .side-item, [data-tab]').forEach(function(el){
+                el.classList.remove('active');
+                var dt = el.getAttribute('data-tab') || '';
+                var oc = el.getAttribute('onclick') || '';
+                if (dt === name || oc.indexOf("'" + name + "'") >= 0 || oc.indexOf('"' + name + '"') >= 0) {
+                    el.classList.add('active');
+                }
+            });
+            try { window.scrollTo(0, 0); } catch(e) {}
+        }
+
+async function checkAccess() {
             const unitEl = document.getElementById('cmdUnit');
             const unitInput = (unitEl && unitEl.value || '').trim();
             const err = document.getElementById('cmdError');
