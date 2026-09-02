@@ -187,10 +187,8 @@
         .foot-links a{color:var(--ts);font-size:.5rem;padding:0.1rem 0.4rem;border:1px solid var(--br);border-radius:3px;cursor:pointer;text-decoration:none;transition:.3s}
         .foot-links a:hover{color:var(--neon);border-color:var(--neon);transform:translateY(-2px)}
         .foot-copy{color:var(--ts);font-size:.4rem;opacity:0.4}
-        .defense-anim{width:100%;height:150px;will-change:transform;position:relative;overflow:hidden;
-            background:linear-gradient(180deg,#0c1a0d,#050a05);margin-bottom:70px;
-            border-radius:8px;margin-top:0.4rem;border:2px solid #133a15;
-            box-shadow:0 0 0 1px #000,0 0 30px rgba(57,255,20,.12),inset 0 0 40px rgba(0,0,0,.6)}
+        #defenseAnim canvas{display:block;width:100%;height:150px;image-rendering:pixelated;image-rendering:crisp-edges}
+        .defense-anim{width:100%;height:150px;will-change:transform;position:relative;overflow:hidden;background:#020402;border-top:1px solid var(--br);margin:0;padding:0}
         .defense-anim canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#020402}
         .defense-anim .status-text{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:0.4rem;
             color:#39ff14;font-family:monospace;letter-spacing:1px;text-shadow:0 0 8px #39ff14;pointer-events:none;z-index:2}
@@ -3282,6 +3280,13 @@ requestAnimationFrame(frameWrapped);
 
 
     
+        setTimeout(function(){
+            try {
+                var cv=document.getElementById('defenseCanvas');
+                if(cv){ var ctx=cv.getContext('2d'); if(ctx){ /* anim IIFE already ran */ } }
+            } catch(e){}
+        },500);
+        /* PADAFAND_FORCE_ANIM */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').catch(e => console.warn('SW', e));
