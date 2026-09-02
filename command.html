@@ -19,7 +19,8 @@ html.cmd-locked .main,
 html.cmd-locked #tab-dashboard,
 html.cmd-locked .nav-item { display:none !important; }
 html.cmd-locked #securityPage { display:block !important; }
-html.cmd-open #sidebar, html.cmd-open .main { display:block !important; }
+html.cmd-open #sidebar, html.cmd-open .main { display:block !important; visibility:visible !important; }
+html.cmd-open #securityPage { display:none !important; }
 html.cmd-open #securityPage { display:none !important; }
 </style>
 
@@ -4202,8 +4203,17 @@ ${body || '—'}`;
                 const side = document.getElementById('sidebar');
                 const main = document.querySelector('.main');
                 if (sec) sec.style.display = 'none';
-                if (side) side.style.display = 'block';
-                if (main) main.style.display = 'block';
+                if (side) { side.style.display = 'block'; side.style.visibility = 'visible'; }
+                if (main) { main.style.display = 'block'; main.style.visibility = 'visible'; }
+                document.querySelectorAll('.nav-item, .tab-content, #sidebar, .main').forEach(function(el){
+                    if (el.id === 'securityPage') return;
+                    el.style.display = '';
+                    el.style.visibility = 'visible';
+                });
+                // show first tab
+                var dash = document.getElementById('tab-dashboard') || document.querySelector('.tab-content');
+                if (dash) { dash.style.display = 'block'; dash.classList.add('active'); }
+
                 try {
                     const sn = document.getElementById('sideName');
                     if (sn) sn.textContent = currentUser;
