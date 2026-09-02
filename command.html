@@ -2079,17 +2079,29 @@
         </div>
 
         <div id="tab-settings" class="tab-content" style="display:none">
-            <div style="margin:0.35rem 0;padding:0.4rem;border:1px solid rgba(255,80,80,0.35);border-radius:6px;background:rgba(40,0,0,0.4)">
-                <div style="color:#ff6666;font-size:0.5rem;font-weight:700;margin-bottom:0.25rem"><i class="fas fa-desktop"></i> مانیتور تلاش‌های ورود</div>
-                <div id="accessMonitorList" style="max-height:160px;overflow-y:auto;font-size:0.4rem"></div>
-                <button type="button" class="btn-launch" style="margin-top:0.3rem;font-size:0.4rem" onclick="renderAccessMonitor()">بروزرسانی مانیتور</button>
-                <div style="margin-top:0.4rem;border-top:1px solid rgba(255,255,255,0.1);padding-top:0.3rem">
-                    <div style="color:var(--gold);font-size:0.45rem;margin-bottom:0.2rem">افزودن فرمانده مجاز (نام کامل)</div>
-                    <input type="text" id="newAllowedCommander" placeholder="نام کامل مطابق ثبت‌نام" style="width:100%;font-size:0.4rem;margin-bottom:0.2rem">
-                    <button type="button" class="btn-launch" style="font-size:0.4rem" onclick="addAllowedCommander()">افزودن به لیست مجاز</button>
-                    <div id="allowedListView" style="margin-top:0.25rem;font-size:0.38rem;color:var(--text-secondary)"></div>
+            
+            <div class="crt-monitor-wrap" style="margin:0.5rem 0 0.7rem;display:flex;flex-direction:column;align-items:center">
+              <div style="font-size:0.38rem;color:#5dff3a;margin-bottom:0.25rem;letter-spacing:1px">PADAFAND CMD // ACCESS MONITOR</div>
+              <div style="width:100%;max-width:340px;background:#1a1a1a;border-radius:14px;padding:12px 12px 28px;border:2px solid #2a2a2a;box-shadow:0 8px 28px rgba(0,0,0,.55)">
+                <div style="background:#020805;border-radius:6px;border:2px solid #222;min-height:150px;max-height:180px;overflow:hidden;position:relative;
+                  background-image:linear-gradient(rgba(10,30,12,.35) 1px, transparent 1px),linear-gradient(90deg, rgba(10,30,12,.35) 1px, transparent 1px);
+                  background-size:20px 20px;">
+                  <div id="accessMonitorList" style="position:relative;z-index:1;max-height:180px;overflow-y:auto;padding:0.4rem;font-size:0.38rem;line-height:1.65;color:#5dff3a;font-family:monospace"></div>
+                  <div style="pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0,rgba(0,0,0,.2) 1px,transparent 2px,transparent 3px);opacity:.5"></div>
                 </div>
+                <div style="text-align:center;margin-top:10px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#39ff14;box-shadow:0 0 8px #39ff14"></span></div>
+              </div>
+              <div style="width:36px;height:18px;background:#333;margin-top:-2px"></div>
+              <div style="width:90px;height:8px;background:#444;border-radius:2px"></div>
+              <button type="button" class="btn-launch" style="margin-top:0.35rem;font-size:0.4rem" onclick="renderAccessMonitor()">بروزرسانی مانیتور</button>
+              <div style="margin-top:0.4rem;width:100%;max-width:340px;border-top:1px solid rgba(255,255,255,0.08);padding-top:0.3rem">
+                <div style="color:var(--gold);font-size:0.42rem;margin-bottom:0.15rem">افزودن فرمانده مجاز</div>
+                <input type="text" id="newAllowedCommander" placeholder="نام کامل" style="width:100%;font-size:0.4rem;margin-bottom:0.2rem;background:#0c140c;border:1px solid #2f6b22;color:#d4e8b0;border-radius:4px;padding:0.25rem">
+                <button type="button" class="btn-launch" style="font-size:0.4rem" onclick="addAllowedCommander()">افزودن</button>
+                <div id="allowedListView" style="margin-top:0.2rem;font-size:0.36rem;color:var(--text-secondary)"></div>
+              </div>
             </div>
+
 
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-cog"></i> تنظیمات مرکز فرماندهی</div>
@@ -4075,7 +4087,7 @@ ${body || '—'}`;
             let list = [];
             try { list = JSON.parse(localStorage.getItem('padafand_access_monitor') || '[]'); } catch (e) {}
             if (!list.length) {
-                el.innerHTML = '<div style="color:var(--text-secondary);font-size:0.4rem">هنوز تلاشی ثبت نشده</div>';
+                el.innerHTML = '<div style="color:#1a4a20;text-align:center;padding:1.2rem 0.3rem;font-size:0.42rem">ACCESS MONITOR — READY<br><span style="color:#0f3020">no signals yet</span></div>';
                 return;
             }
             el.innerHTML = list.slice(0, 25).map(function(r) {
