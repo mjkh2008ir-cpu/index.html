@@ -102,8 +102,8 @@
 
         /* ===== CONTENT ===== */
         #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.45rem 0.6rem 100px}
-        .page{display:none;min-height:50vh;padding-bottom:0.5rem}
-        .page.active{display:block!important;visibility:visible!important;opacity:1!important}
+        .page{display:none!important;min-height:55vh;padding:0.3rem 0 1rem;box-sizing:border-box}
+        .page.active{display:block!important;visibility:visible!important;opacity:1!important;min-height:55vh}
         .page-title{font-size:.8rem;font-weight:700;color:var(--tp);margin:0.2rem 0 0.4rem;display:flex;align-items:center;gap:0.35rem}
         .page-title i{margin-left:0.3rem}
 
@@ -506,7 +506,8 @@
         </div>
 
         <!-- POSTS -->
-        <div id="page-posts" class="page"><div class="page-title"><i class="fas fa-list"></i> شبهات</div><div id="postContainer"></div></div>
+        <div id="page-posts" class="page"><div class="page-title"><i class="fas fa-list"></i> شبهات <span id="postCount" style="font-size:.55rem;color:var(--ts);font-weight:400"></span></div>
+<div id="postContainer"><div style="text-align:center;padding:1rem;color:var(--ts);font-size:.65rem"><i class="fas fa-spinner fa-spin"></i> در حال دریافت مطالب از سرور...</div></div></div>
 
         <!-- GAMES -->
         <div id="page-games" class="page">
@@ -1454,6 +1455,9 @@
                 p.style.display = 'none';
             });
             target.classList.add('active');
+            target.style.display = 'block';
+            target.style.visibility = 'visible';
+            target.style.opacity = '1';
             target.style.display = 'block';
             target.style.minHeight = '50vh';
             target.style.visibility = 'visible';
@@ -3191,6 +3195,10 @@ CORRECT: <A یا B یا C یا D>
             try { if (typeof initGames === 'function') initGames(); } catch(e) {}
         });
         /* PADAFAND_BOOT */
+        /* PADAFAND_FORCE_LOAD_V3 */
+        setTimeout(function(){ try{ loadAllData(); }catch(e){ console.error(e);} }, 300);
+        setTimeout(function(){ try{ loadAllData(); }catch(e){} }, 2000);
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').catch(e => console.warn('SW', e));
