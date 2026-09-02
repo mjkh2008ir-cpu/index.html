@@ -49,11 +49,11 @@
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
         /* ===== HEADER ===== */
-        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:1px solid var(--g);padding:0.08rem 0.55rem;position:sticky;top:0;z-index:100}
-        .hdr-top{display:none!important}
+        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
+        .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);padding:0.1rem 0 0.15rem}
         .hdr-top .online{display:flex;gap:.2rem;align-items:center}
         .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
-        .hdr-main{display:flex;align-items:center;justify-content:space-between;gap:0.3rem;padding:0.1rem 0;min-height:36px}
+        .hdr-main{display:flex;align-items:center;justify-content:space-between;gap:0.4rem;padding:0.15rem 0}
         .hdr-left{display:flex;align-items:center;gap:0.4rem}
         .hdr-left .icon{font-size:1.5rem;animation:float 3s ease-in-out infinite;color:var(--gold)}
         .hdr-left h1{font-size:.95rem;margin:0;line-height:1.2}
@@ -71,7 +71,7 @@
         .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
         /* ===== SEARCH ===== */
-        #search-section{background:var(--bgm);padding:0.12rem 0.5rem;border-bottom:1px solid var(--br)}
+        #search-section{background:var(--bgm);padding:0.3rem 0.6rem;border-bottom:1px solid var(--br)}
         .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
         .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
         .search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
@@ -79,7 +79,7 @@
         .search-wrap button:hover{transform:scale(1.05)}
 
         /* ===== NAV ===== */
-        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.08rem 0;position:sticky;top:42px;z-index:90}
+        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.2rem 0;position:sticky;top:0;z-index:90}
         .more-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
         .more-sheet.show{display:flex}
         .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
@@ -100,10 +100,10 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.1rem 0.5rem 96px}
+        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.45rem 0.6rem 100px}
         .page{display:none;animation:fadeIn .4s ease}
         .page.active{display:block}
-        .page-title{font-size:.75rem;font-weight:700;color:var(--tp);margin:0.05rem 0 0.25rem;display:flex;align-items:center;gap:0.25rem}
+        .page-title{font-size:.8rem;font-weight:700;color:var(--tp);margin:0.2rem 0 0.4rem;display:flex;align-items:center;gap:0.35rem}
         .page-title i{margin-left:0.3rem}
 
         /* ===== POSTS ===== */
@@ -480,10 +480,9 @@
                     <div style="font-size:.58rem;color:var(--ts);margin-top:.15rem">به‌زودی تاسیس می‌شود</div>
                 </div>
             </div>
-id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
+            <div id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
             <div class="page-title" style="margin-top:0.6rem"><i class="fas fa-newspaper"></i> اخبار پدافند</div>
             <div id="homeNews" style="margin-bottom:0.6rem"></div>
-        </div>
         </div>
 
         <!-- POSTS -->
