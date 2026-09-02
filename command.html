@@ -1333,12 +1333,31 @@
             background: radial-gradient(ellipse at top, #0a1410 0%, #050a08 50%) !important;
         }
 
+    
+        #cyberAlertOverlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(80,0,0,0.55);align-items:center;justify-content:center;flex-direction:column}
+        #cyberAlertOverlay.show{display:flex;animation:cyberPulse .4s infinite alternate}
+        @keyframes cyberPulse{from{background:rgba(120,0,0,.5)}to{background:rgba(200,0,0,.65)}}
+        #cyberAlertBox{background:#1a0505;border:2px solid #ff3333;border-radius:10px;padding:1rem 1.2rem;max-width:92%;text-align:center;box-shadow:0 0 40px rgba(255,0,0,.4)}
+        #cyberAlertBox h2{color:#ff4444;margin:0 0 .4rem;font-size:1rem;letter-spacing:1px}
+        #cyberAlertBox p{color:#f0c0c0;font-size:.7rem;line-height:1.7;margin:.2rem 0}
+        #cyberSirenBar{display:none;position:fixed;top:0;left:0;right:0;z-index:99998;background:#8b0000;color:#fff;text-align:center;padding:0.35rem;font-size:.65rem;font-weight:700}
+        #cyberSirenBar.show{display:block;animation:cyberPulse .5s infinite alternate}
     </style>
 </head>
 <body>
 
     <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
+    
+    <div id="cyberSirenBar">⚠ هشدار امنیتی — فعالیت مشکوک شناسایی شد</div>
+    <div id="cyberAlertOverlay">
+      <div id="cyberAlertBox">
+        <h2>🚨 آژیر پدافند سایبری</h2>
+        <p id="cyberAlertReason">حمله سایبری / تلاش برای نفوذ یا سرقت داده شناسایی شد.</p>
+        <p style="color:#ffaa00">دسترسی‌ها در حال قفل اضطراری هستند. فرماندهان مطلع شوند.</p>
+        <button type="button" class="btn-launch" style="margin-top:0.6rem" onclick="silenceCyberAlert()">قطع آژیر</button>
+      </div>
+    </div>
     <div id="securityPage">
         <div class="login-box">
             <span class="logo"><i class="fas fa-shield-alt"></i></span>
@@ -2109,6 +2128,9 @@
                         <input type="password" id="settingsPassword" placeholder="رمز جدید..." style="flex:1;min-width:80px">
                         <button class="btn-launch" onclick="changeSettingsPassword()" style="font-size:0.4rem;padding:0.1rem">
                             <i class="fas fa-save"></i> تغییر رمز
+                        </button>
+                        <button class="btn-launch" onclick="triggerCyberAlert('تست دستی آژیر — شبیه‌سازی حمله سایبری')" style="font-size:0.4rem;padding:0.1rem;background:#8b0000">
+                            <i class="fas fa-siren-on"></i> تست آژیر سایبری
                         </button>
                     </div>
                     <div style="font-size:0.35rem;color:var(--text-secondary);margin-top:0.1rem">فقط ۲ فرد مجاز به تغییر رمز هستند</div>
@@ -3902,6 +3924,78 @@ ${body || '—'}`;
             ? AI_WORKER_URL.replace(/\/$/, '')
             : 'https://padafand-shobahat.padafand-shobahat.workers.dev';
 
+        
+        let _cyberAudioCtx=null, _cyberOsc=null, _cyberInterval=null, _failAuthCount=0;
+        function playCyberSiren(){
+            try{
+                if(!_cyberAudioCtx) _cyberAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
+                const ctx=_cyberAudioCtx;
+                if(_cyberOsc){ try{_cyberOsc.stop();}catch(e){} }
+                const osc=ctx.createOscillator();
+                const gain=ctx.createGain();
+                osc.type='sawtooth';
+                osc.frequency.value=680;
+                gain.gain.value=0.08;
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start();
+                _cyberOsc=osc;
+                let up=true;
+                _cyberInterval=setInterval(function(){
+                    if(!_cyberOsc) return;
+                    _cyberOsc.frequency.value=up?920:620;
+                    up=!up;
+                }, 220);
+            }catch(e){}
+        }
+        function stopCyberSiren(){
+            try{ if(_cyberInterval) clearInterval(_cyberInterval); _cyberInterval=null; }catch(e){}
+            try{ if(_cyberOsc){ _cyberOsc.stop(); _cyberOsc=null; } }catch(e){}
+        }
+        async function triggerCyberAlert(reason){
+            const ov=document.getElementById('cyberAlertOverlay');
+            const bar=document.getElementById('cyberSirenBar');
+            const rs=document.getElementById('cyberAlertReason');
+            if(rs) rs.textContent=reason||'حمله سایبری / تلاش برای نفوذ یا سرقت داده شناسایی شد.';
+            if(ov) ov.classList.add('show');
+            if(bar) bar.classList.add('show');
+            playCyberSiren();
+            try{
+                if(typeof saveToSupabase==='function'){
+                    await saveToSupabase('commander_log',{name:currentUser||'سیستم',action:'هشدار سایبری: '+(reason||'حمله'),time:new Date().toLocaleString('fa-IR')});
+                }
+            }catch(e){}
+        }
+        function silenceCyberAlert(){
+            const ov=document.getElementById('cyberAlertOverlay');
+            const bar=document.getElementById('cyberSirenBar');
+            if(ov) ov.classList.remove('show');
+            if(bar) bar.classList.remove('show');
+            stopCyberSiren();
+        }
+        function noteAuthFailure(){
+            _failAuthCount++;
+            if(_failAuthCount>=5){
+                triggerCyberAlert('۵ تلاش ناموفق ورود به فرماندهی — احتمال حمله Brute-force');
+                _failAuthCount=0;
+            }
+        }
+        // تشخیص خطای شبکه / دسترسی غیرمجاز به API
+        const _origFetch=window.fetch;
+        window.fetch=async function(){
+            try{
+                const res=await _origFetch.apply(this, arguments);
+                if(res && (res.status===401 || res.status===403)){
+                    const url=String(arguments[0]||'');
+                    if(url.indexOf('supabase')>=0 || url.indexOf('command-auth')>=0){
+                        noteAuthFailure();
+                    }
+                }
+                return res;
+            }catch(e){
+                return Promise.reject(e);
+            }
+        };
+
         async function checkAccess() {
             const unitInput = (document.getElementById('cmdUnit')?.value || '').trim();
             const err = document.getElementById('cmdError');
@@ -3922,6 +4016,7 @@ ${body || '—'}`;
                         err.textContent = res.status === 429
                             ? '⛔ تعداد تلاش بیش از حد — کمی بعد دوباره'
                             : '⛔ دسترسی رد شد';
+                    noteAuthFailure();
                         err.style.color = '#c0392b';
                     }
                     return;
@@ -4286,6 +4381,15 @@ ${body || '—'}`;
             background: radial-gradient(ellipse at top, #0a1410 0%, #050a08 50%) !important;
         }
 
+    
+        #cyberAlertOverlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(80,0,0,0.55);align-items:center;justify-content:center;flex-direction:column}
+        #cyberAlertOverlay.show{display:flex;animation:cyberPulse .4s infinite alternate}
+        @keyframes cyberPulse{from{background:rgba(120,0,0,.5)}to{background:rgba(200,0,0,.65)}}
+        #cyberAlertBox{background:#1a0505;border:2px solid #ff3333;border-radius:10px;padding:1rem 1.2rem;max-width:92%;text-align:center;box-shadow:0 0 40px rgba(255,0,0,.4)}
+        #cyberAlertBox h2{color:#ff4444;margin:0 0 .4rem;font-size:1rem;letter-spacing:1px}
+        #cyberAlertBox p{color:#f0c0c0;font-size:.7rem;line-height:1.7;margin:.2rem 0}
+        #cyberSirenBar{display:none;position:fixed;top:0;left:0;right:0;z-index:99998;background:#8b0000;color:#fff;text-align:center;padding:0.35rem;font-size:.65rem;font-weight:700}
+        #cyberSirenBar.show{display:block;animation:cyberPulse .5s infinite alternate}
     </style>
                 </head>
                 <body>
