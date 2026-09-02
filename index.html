@@ -50,8 +50,8 @@
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
         /* ===== HEADER ===== */
-        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.3rem 0.8rem;position:sticky;top:0;z-index:100}
-        .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.55rem;color:var(--ts);padding:0.1rem 0 0.15rem}
+        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.2rem 0.55rem;position:sticky;top:0;z-index:100}
+        .hdr-top{display:none}
         .hdr-top .online{display:flex;gap:.2rem;align-items:center}
         .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
         .hdr-main{display:flex;align-items:center;justify-content:space-between;gap:0.4rem;padding:0.15rem 0}
@@ -72,7 +72,7 @@
         .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
         /* ===== SEARCH ===== */
-        #search-section{background:var(--bgm);padding:0.2rem 0.5rem;border-bottom:1px solid var(--br)}
+        #search-section{background:var(--bgm);padding:0.12rem 0.5rem;border-bottom:1px solid var(--br)}
         .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
         .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
         .search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
@@ -80,7 +80,7 @@
         .search-wrap button:hover{transform:scale(1.05)}
 
         /* ===== NAV ===== */
-        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.12rem 0;position:sticky;top:0;z-index:90}
+        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.06rem 0;position:sticky;top:0;z-index:90}
         .more-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
         .more-sheet.show{display:flex}
         .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
@@ -101,14 +101,14 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.25rem 0.55rem 100px}
-        .page{display:none;padding:0.15rem 0 0.8rem}
-        .page.active{display:block}
-        .page-title{font-size:.78rem;font-weight:700;color:var(--tp);margin:0.1rem 0 0.35rem;display:flex;align-items:center;gap:0.35rem}
+        #content{max-width:800px;width:100%;margin:0 auto;padding:0 0.5rem 110px;flex:1 1 auto}
+        .page{display:none;margin:0;padding:0}
+        .page.active{display:block;margin:0;padding:0}
+        .page-title{font-size:.78rem;font-weight:700;color:var(--tp);margin:0.05rem 0 0.2rem;display:flex;align-items:center;gap:0.3rem}
         .page-title i{margin-left:0.3rem}
 
         /* ===== POSTS ===== */
-        .post{background:var(--bgp);border:1px solid var(--br);border-radius:8px;margin:0.35rem 0;overflow:hidden;display:block!important}
+        .post{background:var(--bgp);border:1px solid var(--br);border-radius:8px;margin:0.2rem 0;overflow:hidden;display:block}
         .post:hover{border-color:var(--neon)}
         .post-hdr{display:flex!important;align-items:center;justify-content:space-between;padding:0.55rem 0.65rem;cursor:pointer;gap:0.4rem;color:var(--tp)!important;font-size:.72rem;font-weight:600}
         .post-hdr:hover{background:var(--bgm)}
@@ -757,6 +757,17 @@
     <h2 id="readerTitle"></h2>
     <div class="reader-ans" id="readerAns"></div>
     <div class="reader-meta" id="readerMeta"></div>
+    <div id="readerActions" style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--br)">
+      <button type="button" class="btn-read" id="readerLikeBtn" onclick="readerToggleLike()"><i class="fas fa-heart"></i> <span id="readerLikeCnt">0</span></button>
+      <button type="button" class="btn-read" onclick="readerFocusComment()"><i class="fas fa-comment"></i> کامنت</button>
+      <button type="button" class="btn-read" onclick="readerSave()"><i class="fas fa-box"></i> ذخیره</button>
+      <button type="button" class="btn-read" onclick="readerShare()"><i class="fas fa-share-alt"></i> اشتراک</button>
+    </div>
+    <div id="readerComments" style="margin-top:0.55rem"></div>
+    <div style="display:flex;gap:0.3rem;margin-top:0.4rem">
+      <input type="text" id="readerCmtInput" placeholder="نظر شما..." style="flex:1;background:var(--bg);border:1px solid var(--br);color:var(--tp);border-radius:6px;padding:0.35rem 0.5rem;font-family:inherit;font-size:.65rem">
+      <button type="button" class="btn-read" onclick="readerAddComment()"><i class="fas fa-paper-plane"></i></button>
+    </div>
   </div>
 </div>
 
@@ -1318,9 +1329,19 @@
             const savedUser = localStorage.getItem('padafand_logged_user');
             if (savedUser) { loggedUser = savedUser; }
             loadAllData().then(() => {
+                try {
+                    const savedUser = localStorage.getItem('padafand_logged_user');
+                    if (savedUser) {
+                        loggedUser = savedUser;
+                        if (!allUsers[savedUser]) {
+                            allUsers[savedUser] = { username: savedUser, fullname: savedUser };
+                        }
+                    }
+                    if (typeof updateHeader === 'function') updateHeader();
+                    if (typeof updateProfile === 'function') updateProfile();
+                } catch (e) { console.error('restore session', e); }
                 setTimeout(showWelcomeMessage, 800);
                 setTimeout(() => { if (loggedUser) offerTutorialAfterAuth(); }, 1200);
-                
             });
             // هماهنگی زنده بین دو سایت (هر ۱۵ ثانیه)
             setInterval(() => { loadAllData(); }, 12000);
@@ -2556,6 +2577,8 @@
             };
             const savedUser = await saveToSupabase('users', userData);
             allUsers[username] = savedUser ? { ...userData, ...savedUser } : userData;
+            loggedUser = username;
+            localStorage.setItem('padafand_logged_user', username);
             if (isSpecial) {
                 document.getElementById('authMsg').textContent =
                     `<i class="fas fa-medal ico-gold"></i> سردار گرامی ${special.name}، به قرارگاه پدافند شبهات خوش آمدید! ۱۰۰۰ XP دریافت کردید.`;
