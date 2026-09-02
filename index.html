@@ -102,8 +102,8 @@
 
         /* ===== CONTENT ===== */
         #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.45rem 0.6rem 100px}
-        .page{display:none!important;min-height:55vh;padding:0.3rem 0 1rem;box-sizing:border-box}
-        .page.active{display:block!important;visibility:visible!important;opacity:1!important;min-height:55vh}
+        .page{display:none;min-height:50vh;padding:0.35rem 0 1rem}
+        .page.active{display:block}
         .page-title{font-size:.8rem;font-weight:700;color:var(--tp);margin:0.2rem 0 0.4rem;display:flex;align-items:center;gap:0.35rem}
         .page-title i{margin-left:0.3rem}
 
@@ -503,6 +503,8 @@
             <div id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
             <div class="page-title" style="margin-top:0.6rem"><i class="fas fa-newspaper"></i> اخبار پدافند</div>
             <div id="homeNews" style="margin-bottom:0.6rem"></div>
+        </div>
+        </div>
         </div>
 
         <!-- POSTS -->
@@ -1445,72 +1447,51 @@
         function switchPage(page) {
             if (!page) return;
             try { closeMoreMenu(); } catch (e) {}
-            const target = document.getElementById('page-' + page);
+            var target = document.getElementById('page-' + page);
             if (!target) {
                 console.error('صفحه یافت نشد:', page);
                 return;
             }
-            document.querySelectorAll('.page').forEach(p => {
+            document.querySelectorAll('.page').forEach(function(p) {
                 p.classList.remove('active');
                 p.style.display = 'none';
             });
             target.classList.add('active');
             target.style.display = 'block';
-            target.style.visibility = 'visible';
-            target.style.opacity = '1';
-            target.style.display = 'block';
-            target.style.minHeight = '50vh';
-            target.style.visibility = 'visible';
-            target.style.opacity = '1';
-            // نوار بالا
-            document.querySelectorAll('.nav-btn[data-page]').forEach(b => {
+            try { window.scrollTo(0, 0); } catch (e) {}
+            document.querySelectorAll('.nav-btn[data-page]').forEach(function(b) {
                 b.classList.toggle('active', b.getAttribute('data-page') === page);
             });
-            // نوار پایین
-            document.querySelectorAll('.sidebar-nav .nav-item').forEach(b => b.classList.remove('active'));
-            const sMap = { home: 0, posts: 1, ai: 2, account: 3 };
-            const sItems = document.querySelectorAll('.sidebar-nav .nav-item');
-            if (page === 'home' || page === 'posts' || page === 'ai') {
-                if (sItems[sMap[page]]) sItems[sMap[page]].classList.add('active');
-            }
+            document.querySelectorAll('.sidebar-nav .nav-item').forEach(function(b) { b.classList.remove('active'); });
+            var sMap = { home: 0, posts: 1, ai: 2 };
+            var sItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            if (sMap[page] != null && sItems[sMap[page]]) sItems[sMap[page]].classList.add('active');
             if (page === 'posts') {
-                const box = document.getElementById('postContainer');
-                if (box) {
-                    box.style.display = 'block';
-                    box.style.minHeight = '120px';
-                    if (!allPosts || !allPosts.length) {
-                        box.innerHTML = '<div style="text-align:center;padding:1rem;color:#8ab88a;font-size:.7rem">در حال بارگذاری مطالب...</div>';
-                        if (typeof loadAllData === 'function') {
-                            loadAllData().then(function(){
-                                if (typeof renderPosts === 'function') renderPosts(allPosts || [], 'postContainer');
-                            }).catch(function(){
-                                box.innerHTML = '<div style="text-align:center;padding:1rem;color:#e8a0a0">خطا در دریافت مطالب</div>';
-                            });
-                        }
-                    } else if (typeof renderPosts === 'function') {
+                try {
+                    if (typeof allPosts !== 'undefined' && allPosts && allPosts.length) {
                         renderPosts(allPosts, 'postContainer');
+                    } else if (typeof loadAllData === 'function') {
+                        loadAllData();
                     }
-                }
+                } catch (e) { console.error(e); }
             }
             if (page === 'home') {
-                if (typeof renderPosts === 'function') renderPosts((allPosts || []).slice(0, 3), 'homePosts');
-                if (typeof renderNews === 'function') renderNews();
+                try {
+                    if (typeof allPosts !== 'undefined' && allPosts && allPosts.length) {
+                        renderPosts(allPosts.slice(0, 5), 'homePosts');
+                    }
+                    if (typeof renderNews === 'function') renderNews();
+                } catch (e) {}
             }
-            if (page === 'news' && typeof renderNews === 'function') renderNews();
             if (page === 'games') {
-                if (typeof initGames === 'function') initGames();
-                if (typeof renderGamesLeaderboard === 'function') renderGamesLeaderboard();
-                if (typeof renderUserBadges === 'function') renderUserBadges();
+                try { if (typeof initGames === 'function') initGames(); } catch (e) {}
             }
-            if (page === 'ai') {
-                /* AI static form always in HTML */
+            if (page === 'saved') {
+                try { if (typeof renderSaved === 'function') renderSaved(); } catch (e) {}
             }
-            if (page === 'saved' && typeof renderSaved === 'function') renderSaved();
-            try { window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' }); } catch (e) { window.scrollTo(0,0); }
-            if (page === 'saved' && typeof renderSaved === 'function') renderSaved();
-            try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
         }
 
+        
         function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
         // ===== POSTS =====
