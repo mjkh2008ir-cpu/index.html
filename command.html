@@ -19,6 +19,8 @@ html.cmd-locked .main,
 html.cmd-locked #tab-dashboard,
 html.cmd-locked .nav-item { display:none !important; }
 html.cmd-locked #securityPage { display:block !important; }
+html.cmd-open #sidebar, html.cmd-open .main { display:block !important; }
+html.cmd-open #securityPage { display:none !important; }
 </style>
 
     <meta name="padafand-cache-v" content="20260902b">
@@ -4194,6 +4196,8 @@ ${body || '—'}`;
                 if (err) { err.textContent = '✅ خوش آمدید ' + currentUser; err.style.color = '#39ff14'; }
                 // ورود مستقیم بدون وابستگی به requireCmdAuth
                 document.body.classList.add('authenticated');
+                try { document.documentElement.classList.remove('cmd-locked'); } catch (e) {}
+                try { document.documentElement.classList.add('cmd-open'); } catch (e) {}
                 const sec = document.getElementById('securityPage');
                 const side = document.getElementById('sidebar');
                 const main = document.querySelector('.main');
@@ -4238,6 +4242,8 @@ ${body || '—'}`;
                 return;
             }
             document.body.classList.add('authenticated');
+                try { document.documentElement.classList.remove('cmd-locked'); } catch (e) {}
+                try { document.documentElement.classList.add('cmd-open'); } catch (e) {}
             document.getElementById('securityPage').style.display = 'none';
             document.getElementById('sidebar').style.display = 'block';
             document.querySelector('.main').style.display = 'block';
