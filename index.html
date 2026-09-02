@@ -49,14 +49,14 @@
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
         /* ===== HEADER ===== */
-        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.15rem 0.7rem;position:sticky;top:0;z-index:100}
-        .hdr-top{display:flex;justify-content:space-between;align-items:center;font-size:.5rem;color:var(--ts);font-family:monospace}
+        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:1px solid var(--g);padding:0.08rem 0.55rem;position:sticky;top:0;z-index:100}
+        .hdr-top{display:none!important}
         .hdr-top .online{display:flex;gap:.2rem;align-items:center}
         .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
-        .hdr-main{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem;margin-top:0.1rem}
+        .hdr-main{display:flex;align-items:center;justify-content:space-between;gap:0.3rem;padding:0.1rem 0;min-height:36px}
         .hdr-left{display:flex;align-items:center;gap:0.4rem}
         .hdr-left .icon{font-size:1.5rem;animation:float 3s ease-in-out infinite;color:var(--gold)}
-        .hdr-left h1{font-size:.95rem;font-weight:900;letter-spacing:1px}
+        .hdr-left h1{font-size:.95rem;margin:0;line-height:1.2}
         .hdr-left h1 span{color:var(--gl)}
         .hdr-left .sub{font-size:.45rem;color:var(--ts);letter-spacing:0.5px}
         .hdr-right{display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap}
@@ -71,7 +71,7 @@
         .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
         /* ===== SEARCH ===== */
-        #search-section{background:var(--bgm);padding:0.3rem 0.8rem;border-bottom:1px solid var(--br)}
+        #search-section{background:var(--bgm);padding:0.12rem 0.5rem;border-bottom:1px solid var(--br)}
         .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
         .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
         .search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
@@ -79,7 +79,7 @@
         .search-wrap button:hover{transform:scale(1.05)}
 
         /* ===== NAV ===== */
-        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0 0.6rem;overflow-x:auto}
+        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.08rem 0;position:sticky;top:42px;z-index:90}
         .more-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
         .more-sheet.show{display:flex}
         .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
@@ -100,10 +100,10 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.25rem 0.55rem 100px}
+        #content{flex:1;max-width:800px;width:100%;margin:0 auto;padding:0.1rem 0.5rem 96px}
         .page{display:none;animation:fadeIn .4s ease}
         .page.active{display:block}
-        .page-title{font-size:.8rem;font-weight:700;color:var(--neon);border-bottom:1px solid var(--br);padding-bottom:0.2rem;margin-bottom:0.4rem;animation:neonPulse 2s infinite}
+        .page-title{font-size:.75rem;font-weight:700;color:var(--tp);margin:0.05rem 0 0.25rem;display:flex;align-items:center;gap:0.25rem}
         .page-title i{margin-left:0.3rem}
 
         /* ===== POSTS ===== */
@@ -280,7 +280,7 @@
         #userPanel .form-group input:focus{border-color:var(--neon)}
 
         /* ===== PIE LAUNCHER ===== */
-        #pieLauncher{display:none}.pie-launcher{display:none;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
+        #pieLauncher{display:none}.pie-launcher{display:none!important;align-items:center;gap:0.5rem;background:var(--bgp);border:1px solid var(--gold);border-radius:8px;padding:0.4rem 0.6rem;margin-bottom:0.4rem;border-right:3px solid var(--gold)}
         .pie-launcher .avatar{font-size:2rem;animation:float 2s ease-in-out infinite}
         .pie-launcher .content{flex:1}
         .pie-launcher .name{font-size:.6rem;font-weight:700;color:var(--gold)}
@@ -1522,6 +1522,8 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
                     '<div class="tags">' + tags.map(tg => '<span>#' + escapeHtml(String(tg)) + '</span>').join('') + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.4rem;align-items:center">' +
                     '' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();toggleLike(' + idx + ')" id="likeBtn' + idx + '"><i class="fas fa-heart"></i> <span id="likeCnt' + idx + '">' + ((p.liked_by&&p.liked_by.length)||p.likes||0) + '</span><\/button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();focusComment(' + idx + ')"><i class="fas fa-comment"></i> کامنت<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePostImage(' + idx + ')"><i class="fas fa-image"></i> استوری<\/button>' +
@@ -1657,7 +1659,41 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
                 alert('ثبت نظر ممکن نشد');
             }
         }
-        async function sharePostImage(index) {
+        async 
+        function parseLikedBy(p) {
+            let a = p && p.liked_by;
+            if (typeof a === 'string') { try { a = JSON.parse(a); } catch(e) { a = []; } }
+            return Array.isArray(a) ? a : [];
+        }
+        async function toggleLike(idx) {
+            if (!loggedUser) { alert('برای لایک وارد حساب شوید'); return; }
+            const p = allPosts[idx];
+            if (!p || p.id == null) return;
+            let liked = parseLikedBy(p);
+            const i = liked.indexOf(loggedUser);
+            if (i >= 0) liked.splice(i, 1); else liked.push(loggedUser);
+            try {
+                await updateInSupabase('posts', p.id, { liked_by: liked, likes: liked.length });
+                p.liked_by = liked; p.likes = liked.length;
+                const cnt = document.getElementById('likeCnt' + idx);
+                if (cnt) cnt.textContent = liked.length;
+                const btn = document.getElementById('likeBtn' + idx);
+                if (btn) btn.style.color = liked.includes(loggedUser) ? '#e74c3c' : '';
+            } catch (e) { alert('لایک ثبت نشد'); }
+        }
+        function focusComment(idx) {
+            const input = document.getElementById('cmtInput' + idx);
+            const body = document.getElementById('pb-postContainer-' + (allPosts[idx] && allPosts[idx].id));
+            // open post body if collapsed
+            try {
+                const postEl = document.querySelector('.post[data-post-id="' + String(allPosts[idx].id) + '"] .post-body');
+                if (postEl) postEl.classList.add('show');
+            } catch (e) {}
+            if (input) { input.focus(); input.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            else alert('برای کامنت وارد حساب شوید');
+        }
+
+        function sharePostImage(index) {
             const post = allPosts[index];
             if (!post) return;
             function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -2195,7 +2231,7 @@ id="homePosts" style="margin-top:0.2rem;margin-bottom:0.6rem"></div>
                 nameEl.textContent = u?.fullname || loggedUser;
                 const level = getUserLevel(u?.xp || 0, u?.is_special || false);
                 levelEl.innerHTML = level.name + (u?.is_special ? ' <i class="fas fa-star ico-gold"></i>' : '');
-                avatarEl.innerHTML = `<i class="fas ${u?.avatar || 'fa-user'}"></i>`;
+                const av=(String(u?.avatar||'fa-user').match(/fa-[a-z0-9-]+/i)||['fa-user'])[0]; avatarEl.innerHTML='<i class="fas '+av+'"></i>';
                 avatarEl.style.color = u?.is_special ? '#c8a000' : 'var(--neon)';
             } else {
                 nameEl.textContent = 'ورود';
@@ -2652,7 +2688,7 @@ CORRECT: <A یا B یا C یا D>
             const baseX = 640 - TRUCK_DISPLAY_W - 24;
             let score=0, lives=3, wave=1, over=false, frameN=0;
             let missiles=[], shots=[], stars=[];
-            for (let i=0;i<26;i++) stars.push({x:Math.random()*640,y:Math.random()*150,s:Math.random()>0.7?2:1,ph:Math.random()*10});
+            for (let i=0;i<12;i++) stars.push({x:Math.random()*640,y:Math.random()*150,s:1,ph:Math.random()*10});
 
             const truckImg = new Image();
             let truckLoaded = false, TRUCK_DISPLAY_H = 0;
@@ -2747,8 +2783,11 @@ CORRECT: <A یا B یا C یا D>
 
             let spawnEvery=55;
             const t0=performance.now();
+            let lastDraw=0;
             function loop(now){
               if(over) return;
+              if(now-lastDraw<33){ window._pixelDefenseRAF=requestAnimationFrame(loop); return; }
+              lastDraw=now;
               frameN++;
               const t=now-t0;
               drawBG(t);
