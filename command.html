@@ -2001,6 +2001,20 @@ button.danger, .btn-danger {
         </div>
 
         <div id="tab-launch" class="tab-content" style="display:none">
+            <div class="list-container" style="margin-bottom:0.6rem;border:1px solid rgba(57,255,20,0.2);border-radius:8px;padding:0.5rem">
+                <div class="list-title"><i class="fas fa-newspaper"></i> اخبار سایت (ادغام‌شده با شلیک مطلب)</div>
+                <div class="form-group">
+                    <label>عنوان خبر</label>
+                    <input type="text" id="newsTitle" placeholder="عنوان خبر...">
+                </div>
+                <div class="form-group">
+                    <label>متن خبر</label>
+                    <textarea id="newsBody" rows="4" placeholder="متن خبر..."></textarea>
+                </div>
+                <button type="button" class="btn-launch" onclick="typeof submitNews==='function' && submitNews()"><i class="fas fa-newspaper"></i> انتشار خبر</button>
+                <div id="mergedNewsBox" style="margin-top:0.5rem;max-height:22vh;overflow:auto;font-size:0.6rem"></div>
+            </div>
+
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-rocket"></i> شلیک مطلب جدید</div>
                 <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.45rem">
@@ -2067,23 +2081,9 @@ button.danger, .btn-danger {
             </div>
         </div>
 
-                <div id="tab-commanders" class="tab-content" style="display:none!important" hidden style="display:none">
-            <div class="list-container">
-                <div class="list-title"><i class="fas fa-star ico-gold"></i> فرماندهان</div>
-                <div id="commandersList">
-                    <div style="color:var(--text-secondary);text-align:center;padding:0.4rem">در حال بارگذاری...</div>
-                </div>
-            </div>
-            <div class="list-container">
-                <div class="list-title"><i class="fas fa-history ico-cyan"></i> تاریخچه ورود و خروج</div>
-                <div id="commanderLogList">
-                    <div style="color:var(--text-secondary);text-align:center;padding:0.4rem">در حال بارگذاری...</div>
-                </div>
-            </div>
-        </div>
+                <div id="tab-commanders" class="tab-content" hidden style="display:none!important"></div>
 
-
-        <div id="tab-comments" class="tab-content" style="display:none">
+        <div <div id="tab-comments" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-comment-dots"></i> کامنت‌های کاربران</div>
                 <div id="commentsList">
@@ -2134,32 +2134,9 @@ button.danger, .btn-danger {
 
         
         
-        <div id="tab-news" class="tab-content" style="display:none!important" hidden style="display:none">
-            <div class="launch-section">
-                <div class="launch-title"><i class="fas fa-newspaper"></i> انتشار خبر در سایت</div>
-                <p style="font-size:0.35rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
-                    خبرهای مربوط به پدافند (بات تلگرام/روبیکا، به‌روزرسانی سایت و …). دستیار AI متن را مرتب می‌کند؛ انتشار با تأیید شماست.
-                </p>
-                <div class="form-group">
-                    <label>عنوان خبر</label>
-                    <input type="text" id="newsTitle" placeholder="مثلاً: راه‌اندازی بات تلگرام پدافند شبهات">
-                </div>
-                <div class="form-group">
-                    <label>متن خبر (خام یا پیش‌نویس)</label>
-                    <textarea id="newsBody" rows="6" placeholder="متن خبر را بنویسید یا بچسبانید..."></textarea>
-                </div>
-                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem">
-                    <button type="button" class="btn-msg" onclick="aiFormatNews()"><i class="fas fa-robot"></i> مرتب‌سازی با AI</button>
-                    <button type="button" class="approve-btn" onclick="publishNewsToSite()"><i class="fas fa-bullhorn"></i> تأیید و انتشار در سایت</button>
-                </div>
-                <div id="newsStatus" style="font-size:0.35rem;color:var(--text-secondary);min-height:1.1em"></div>
-            </div>
-            <div class="list-container">
-                <div class="list-title"><i class="fas fa-list"></i> اخبار منتشرشده (دسته: اخبار)</div>
-                <div id="publishedNewsList" style="font-size:0.35rem">—</div>
-            </div>
-        </div>
-<div id="tab-aiassist" class="tab-content" style="display:none">
+        <div id="tab-news" class="tab-content" hidden style="display:none!important"></div>
+
+        <div <div id="tab-aiassist" class="tab-content" style="display:none">
             <div class="launch-section" style="margin-bottom:0.6rem">
                 <div class="launch-title"><i class="fas fa-robot"></i> دستیار فرماندهی هوش مصنوعی</div>
                 <p style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
@@ -2796,57 +2773,77 @@ button.danger, .btn-danger {
         }
 
         function updateCommanders() {
-            const container = document.getElementById('commandersList');
+            var container = document.getElementById('mergedCommandersBox') || document.getElementById('commandersList');
             if (!container) return;
-            const commanders = Object.values(commandMembers);
-            const log = allCommanderLog || [];
-            let html = commanders.map(c => {
-                const lastLog = log.filter(l => l.name === c.name).slice(-1)[0];
-                const status = lastLog?.action === 'ورود' ? '<i class="fas fa-circle ico-green" style="font-size:0.55rem"></i> آنلاین' : '<i class="fas fa-circle ico-cyan" style="font-size:0.55rem"></i> آفلاین';
-                const isSpecial = !!SPECIAL_USERS[c.phone];
-                const lastTime = lastLog ? lastLog.time : '—';
-                return `
-                        <div class="list-item" onclick="showUserDetail('${c.name}')">
-                            <span class="name">${isSpecial ? '⭐ ' : ''}${c.name}</span>
-                            <span class="role">🎖️ ${c.rank} • ${c.unit || ''}</span>
-                            <span class="status">${status}</span>
-                            <span class="phone" style="font-size:0.3rem;color:var(--text-secondary)">${lastTime}</span>
-                        </div>
-                    `;
-            }).join('');
-            html += '<div class="list-title" style="margin-top:0.4rem"><i class="fas fa-history"></i> تاریخچه ورود/خروج</div>';
-            if (!log.length) {
-                html += '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.2rem">هنوز ورودی ثبت نشده</div>';
-            } else {
-                html += log.slice().reverse().slice(0, 15).map(l => `
-                    <div class="list-item">
-                        <span class="name">${l.name}</span>
-                        <span class="role">${l.action === 'ورود' ? '<i class="fas fa-sign-in-alt ico-green"></i> ورود' : '<i class="fas fa-sign-out-alt ico-red"></i> خروج'}</span>
-                        <span class="status">${l.time}</span>
-                    </div>
-                `).join('');
-            }
-            container.innerHTML = html;
-        }
-
-        function updateCommanderLog() {
-            const container = document.getElementById('commanderLogList');
-            if (!container) return;
-            const log = allCommanderLog || [];
-            if (!log.length) {
-                container.innerHTML =
-                    '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ ورود/خروجی ثبت نشده</div>';
+            var commanders = [];
+            try {
+                if (typeof commandMembers === 'object' && commandMembers) {
+                    commanders = Object.values(commandMembers);
+                }
+            } catch(e) {}
+            try {
+                if (typeof allUsers === 'object' && allUsers) {
+                    Object.keys(allUsers).forEach(function(k) {
+                        var u = allUsers[k];
+                        if (u && (u.is_special || u.rank === 'سردار')) {
+                            commanders.push({ name: u.fullname || u.username, rank: u.rank || 'سردار' });
+                        }
+                    });
+                }
+            } catch(e) {}
+            // unique by name
+            var seen = {};
+            commanders = commanders.filter(function(c) {
+                var n = c.name || c.fullname || '';
+                if (!n || seen[n]) return false;
+                seen[n] = true;
+                return true;
+            });
+            if (!commanders.length) {
+                container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.55rem;padding:0.3rem">فرمانده‌ای یافت نشد</div>';
                 return;
             }
-            container.innerHTML = log.slice().reverse().slice(0, 40).map(l => `
-                    <div class="list-item">
-                        <span class="name">${l.name}</span>
-                        <span class="role">${l.action}</span>
-                        <span class="status">${l.time}</span>
-                    </div>
-                `).join('');
+            container.innerHTML = commanders.map(function(c) {
+                return '<div style="padding:0.35rem 0;border-bottom:1px solid rgba(57,255,20,0.12);display:flex;justify-content:space-between">'
+                    + '<span><i class="fas fa-star" style="color:var(--gold)"></i> ' + (c.name||c.fullname||'') + '</span>'
+                    + '<span style="color:var(--text-secondary)">' + (c.rank||'فرمانده') + '</span></div>';
+            }).join('');
         }
-
+        
+        function updateCommanderLog() {
+            // فقط در تنظیمات — باکس commanderAccessLog
+            var container = document.getElementById('commanderAccessLog');
+            if (!container) return;
+            var log = [];
+            try {
+                log = JSON.parse(localStorage.getItem('cmd_access_log') || '[]');
+            } catch(e) { log = []; }
+            if (typeof allCommanderLog !== 'undefined' && allCommanderLog && allCommanderLog.length) {
+                // ادغام با لاگ سرور ولی حداکثر ۱۰
+                allCommanderLog.slice(-10).forEach(function(r) {
+                    log.push({
+                        name: r.name || r.user || '?',
+                        action: r.action || r.type || 'login',
+                        fa: r.fa || r.date || r.at || '',
+                        at: r.at || ''
+                    });
+                });
+            }
+            // یکتا و فقط ۱۰ تای آخر
+            log = log.slice(-10);
+            try { localStorage.setItem('cmd_access_log', JSON.stringify(log)); } catch(e) {}
+            if (!log.length) {
+                container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.55rem;padding:0.3rem">هنوز ورود/خروجی ثبت نشده</div>';
+                return;
+            }
+            container.innerHTML = log.slice().reverse().map(function(r) {
+                var label = (r.action === 'logout' || r.action === 'خروج') ? 'خروج' : 'ورود';
+                return '<div style="padding:0.35rem 0;border-bottom:1px solid rgba(57,255,20,0.12);display:flex;justify-content:space-between;gap:0.4rem;font-size:0.6rem">'
+                    + '<span><b>' + (r.name||'') + '</b> — ' + label + '</span>'
+                    + '<span style="color:var(--text-secondary)">' + (r.fa||r.at||'') + '</span></div>';
+            }).join('');
+        }
+        
         function updateComments() {
             const container = document.getElementById('commentsList');
             let allComments = [];
@@ -4128,11 +4125,32 @@ ${body || '—'}`;
                 el.style.setProperty('display', 'none', 'important');
                 el.setAttribute('hidden', '');
             });
+            // ورود/خروج فقط تنظیمات — اگر جای دیگری کپی شده مخفی کن
+            var accessBoxes = document.querySelectorAll('#commanderAccessLog, #commanderLogList');
+            accessBoxes.forEach(function(box) {
+                var parentTab = box.closest('.tab-content');
+                if (parentTab && parentTab.id !== 'tab-settings') {
+                    box.style.display = 'none';
+                    if (box.parentElement) box.parentElement.style.display = 'none';
+                }
+            });
             var panel = document.getElementById('tab-' + tab);
             if (panel) {
                 panel.classList.add('active');
                 panel.style.setProperty('display', 'block', 'important');
                 panel.removeAttribute('hidden');
+            }
+            if (tab === 'settings') {
+                try { updateCommanderLog(); renderCommanderAccessLog(); } catch(e) {}
+            }
+            if (tab === 'users') {
+                try { updateCommanders(); } catch(e) {}
+            }
+            if (tab === 'kartabl') {
+                try { updateReports(); } catch(e) {}
+            }
+            if (tab === 'launch') {
+                try { renderMergedNews(); } catch(e) {}
             }
             document.querySelectorAll('.sidebar .nav-item').forEach(function(n) { n.classList.remove('active'); });
             const items = document.querySelectorAll('.sidebar .nav-item');
