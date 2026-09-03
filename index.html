@@ -50,7 +50,7 @@
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
         /* ===== HEADER ===== */
-        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:2px solid var(--g);padding:0.2rem 0.55rem;position:sticky;top:0;z-index:100}
+        #header{background:linear-gradient(180deg,#0a1206,var(--bgm));border-bottom:1px solid var(--g);padding:0.15rem 0.5rem;position:relative;z-index:100}
         .hdr-top{display:none}
         .hdr-top .online{display:flex;gap:.2rem;align-items:center}
         .hdr-top .online .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);animation:blink 1.5s infinite}
@@ -72,7 +72,7 @@
         .hdr-right .inbox-btn .badge{position:absolute;top:-4px;left:-4px;background:var(--rd);color:#fff;font-size:.4rem;border-radius:50%;padding:0.05rem 0.2rem;min-width:14px;text-align:center}
 
         /* ===== SEARCH ===== */
-        #search-section{background:var(--bgm);padding:0.12rem 0.5rem;border-bottom:1px solid var(--br)}
+        #search-section{background:var(--bgm);padding:0.1rem 0.5rem;border-bottom:1px solid var(--br)}
         .search-wrap{max-width:800px;margin:0 auto;display:flex;gap:0.3rem;align-items:center}
         .search-wrap input{flex:1;padding:0.3rem 0.6rem;border-radius:16px;border:1px solid var(--br);background:var(--bg);color:var(--tp);font-size:.7rem;outline:none;min-height:28px;transition:.3s}
         .search-wrap input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
@@ -80,7 +80,7 @@
         .search-wrap button:hover{transform:scale(1.05)}
 
         /* ===== NAV ===== */
-        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.06rem 0;position:sticky;top:0;z-index:90}
+        #main-nav{background:var(--bgm);border-bottom:1px solid var(--br);padding:0.05rem 0;position:relative;z-index:90}
         .more-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
         .more-sheet.show{display:flex}
         .more-sheet-panel{width:100%;max-width:480px;background:var(--bgm);border-top:1px solid var(--br);border-radius:14px 14px 0 0;padding:0.75rem 0.75rem 1.2rem;max-height:70vh;overflow-y:auto}
@@ -101,7 +101,7 @@
         .fab:hover .tooltip{display:block}
 
         /* ===== CONTENT ===== */
-        #content{max-width:800px;width:100%;margin:0 auto;padding:0 0.5rem 110px;flex:1 1 auto}
+        #content{max-width:800px;width:100%;margin:0 auto;padding:0.1rem 0.5rem 100px}
         .page{display:none;margin:0;padding:0}
         .page.active{display:block;margin:0;padding:0}
         .page-title{font-size:.78rem;font-weight:700;color:var(--tp);margin:0.05rem 0 0.2rem;display:flex;align-items:center;gap:0.3rem}
@@ -446,33 +446,6 @@
         <button class="nav-btn" type="button" onclick="openMoreMenu()"><i class="fas fa-ellipsis-h"></i> بیشتر</button>
     </div></nav>
 
-    <!-- ===== FAB ===== -->
-    <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
-
-    <!-- ===== SIDEBAR ===== -->
-    <div class="sidebar-nav" id="sidebarNav">
-        <button class="nav-item active" onclick="switchPage('home')"><i class="fas fa-home"></i><span>خانه</span></button>
-        <button class="nav-item" onclick="switchPage('posts')"><i class="fas fa-list"></i><span>شبهات</span></button>
-        <button class="nav-item" onclick="switchPage('ai')"><i class="fas fa-robot"></i><span>AI</span></button>
-        <button class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></button>
-        <button class="nav-item" onclick="openMoreMenu()"><i class="fas fa-ellipsis-h"></i><span>بیشتر</span></button>
-    </div>
-    <div class="more-sheet" id="moreSheet" onclick="if(event.target===this)closeMoreMenu()">
-        <div class="more-sheet-panel">
-            <div class="more-sheet-title"><span><i class="fas fa-th-large"></i> بخش‌های بیشتر</span>
-                <button type="button" onclick="closeMoreMenu()" style="background:none;border:none;color:var(--ts);font-size:1rem;cursor:pointer"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="more-grid">
-                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('faq')"><i class="fas fa-question-circle"></i>سوالات</button>
-                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('news')"><i class="fas fa-newspaper"></i>اخبار</button>
-                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('about')"><i class="fas fa-shield-alt"></i>آشنایی</button>
-                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('games')"><i class="fas fa-gamepad"></i>بازی‌ها</button>
-                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('saved')"><i class="fas fa-box"></i>جعبه مهمات</button>
-                <button type="button" class="more-item" onclick="closeMoreMenu();openSendToCommand()"><i class="fas fa-paper-plane"></i>ارسال شبهه</button>
-            </div>
-        </div>
-    </div>
-
     <!-- ===== CONTENT ===== -->
     <div id="content">
 
@@ -664,6 +637,36 @@
 
         <div id="page-saved" class="page"><div class="page-title"><i class="fas fa-box"></i> جعبه مهمات</div><div id="savedContainer"></div></div>
 
+    </div>
+
+    
+
+
+    <!-- ===== FAB ===== -->
+    <button class="fab" onclick="openSendToCommand()"><i class="fas fa-pen"></i><span class="tooltip">ارسال شبهه</span></button>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar-nav" id="sidebarNav">
+        <button class="nav-item active" onclick="switchPage('home')"><i class="fas fa-home"></i><span>خانه</span></button>
+        <button class="nav-item" onclick="switchPage('posts')"><i class="fas fa-list"></i><span>شبهات</span></button>
+        <button class="nav-item" onclick="switchPage('ai')"><i class="fas fa-robot"></i><span>AI</span></button>
+        <button class="nav-item" onclick="toggleUserPanel()"><i class="fas fa-user"></i><span>حساب</span></button>
+        <button class="nav-item" onclick="openMoreMenu()"><i class="fas fa-ellipsis-h"></i><span>بیشتر</span></button>
+    </div>
+    <div class="more-sheet" id="moreSheet" onclick="if(event.target===this)closeMoreMenu()">
+        <div class="more-sheet-panel">
+            <div class="more-sheet-title"><span><i class="fas fa-th-large"></i> بخش‌های بیشتر</span>
+                <button type="button" onclick="closeMoreMenu()" style="background:none;border:none;color:var(--ts);font-size:1rem;cursor:pointer"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="more-grid">
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('faq')"><i class="fas fa-question-circle"></i>سوالات</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('news')"><i class="fas fa-newspaper"></i>اخبار</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('about')"><i class="fas fa-shield-alt"></i>آشنایی</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('games')"><i class="fas fa-gamepad"></i>بازی‌ها</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();switchPage('saved')"><i class="fas fa-box"></i>جعبه مهمات</button>
+                <button type="button" class="more-item" onclick="closeMoreMenu();openSendToCommand()"><i class="fas fa-paper-plane"></i>ارسال شبهه</button>
+            </div>
+        </div>
     </div>
 
     <!-- ===== MODALS ===== -->
@@ -1160,10 +1163,12 @@
 
         async function askPadafandAI(question) {
             const url = (typeof AI_WORKER_URL !== 'undefined' ? AI_WORKER_URL : 'https://padafand-shobahat.padafand-shobahat.workers.dev').replace(/\/$/, '');
+            const enriched = "\u062a\u0648 \u062f\u0633\u062a\u06cc\u0627\u0631 \u00ab\u067e\u062f\u0627\u0641\u0646\u062f \u0634\u0628\u0647\u0627\u062a\u00bb \u0647\u0633\u062a\u06cc. \u0628\u0647 \u0641\u0627\u0631\u0633\u06cc \u0631\u0633\u0645\u06cc \u0648 \u0631\u0648\u0634\u0646 \u062c\u0648\u0627\u0628 \u0628\u062f\u0647. \u062d\u062a\u0645\u0627\u064b \u0627\u0633\u062a\u062f\u0644\u0627\u0644 \u0648 \u062f\u0644\u06cc\u0644 \u0628\u06cc\u0627\u0648\u0631 (\u062d\u062f\u0627\u0642\u0644 \u06f3 \u0628\u0646\u062f). \u0627\u06af\u0631 \u0634\u0628\u0647\u0647 \u0627\u0633\u062a \u0627\u0628\u062a\u062f\u0627 \u0634\u0628\u0647\u0647 \u0631\u0627 \u062e\u0644\u0627\u0635\u0647 \u06a9\u0646\u060c \u0633\u067e\u0633 \u067e\u0627\u0633\u062e \u0645\u0633\u062a\u062f\u0644 \u0628\u0627 \u0627\u0634\u0627\u0631\u0647 \u0628\u0647 \u0645\u0646\u0637\u0642\u060c \u0642\u0631\u0622\u0646/\u0631\u0648\u0627\u06cc\u062a \u06cc\u0627 \u0648\u0627\u0642\u0639\u06cc\u062a \u0645\u06cc\u062f\u0627\u0646\u06cc (\u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0631\u062a\u0628\u0627\u0637) \u0628\u062f\u0647. \u0627\u0632 \u0634\u0639\u0627\u0631 \u062e\u0627\u0644\u06cc \u067e\u0631\u0647\u06cc\u0632 \u06a9\u0646. \u062f\u0631 \u067e\u0627\u06cc\u0627\u0646 \u06cc\u06a9 \u062c\u0645\u0639\u200c\u0628\u0646\u062f\u06cc \u06a9\u0648\u062a\u0627\u0647 \u0628\u0646\u0648\u06cc\u0633.\\n\\n\u0633\u0624\u0627\u0644 \u0645\u062e\u0627\u0637\u0628:\\n" + question;
             const payloads = [
-                { question: question, session_id: loggedUser || ('web-' + Date.now()), source: 'website' },
-                { text: question, session_id: loggedUser || ('web-' + Date.now()), source: 'website' },
-                { message: question, source: 'website' }
+                { question: enriched, session_id: loggedUser || ('web-' + Date.now()), source: 'website', system: 'padafand-reasoner' },
+                { text: enriched, session_id: loggedUser || ('web-' + Date.now()), source: 'website' },
+                { message: enriched, source: 'website' },
+                { messages: [{ role: 'system', content: 'تو دستیار پدافند شبهات هستی. پاسخ فارسی، مستدل، با دلیل و استدلال روشن.' }, { role: 'user', content: question }], source: 'website' }
             ];
             const paths = ['/api/ai', '/ai', '/chat', '/'];
             for (const path of paths) {
