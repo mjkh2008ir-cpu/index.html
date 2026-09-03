@@ -2052,18 +2052,27 @@ button.danger, .btn-danger {
         </div>
 
         <div id="tab-launch" class="tab-content" style="display:none">
-            <div class="list-container" style="margin-bottom:0.6rem;border:1px solid rgba(57,255,20,0.2);border-radius:8px;padding:0.5rem">
-                <div class="list-title"><i class="fas fa-newspaper"></i> اخبار سایت (ادغام‌شده با شلیک مطلب)</div>
-                <div class="form-group">
-                    <label>عنوان خبر</label>
-                    <input type="text" id="newsTitle" placeholder="عنوان خبر...">
+            <div class="list-container" style="margin-bottom:0.75rem;border:1px solid rgba(232,201,92,0.35);border-radius:12px;padding:0.75rem;background:rgba(232,201,92,0.04)">
+                <div class="list-title" style="font-size:0.85rem;margin-bottom:0.55rem">
+                    <i class="fas fa-newspaper" style="color:var(--gold)"></i> اخبار سایت
                 </div>
+                <p style="font-size:0.58rem;color:var(--text-secondary);margin:0 0 0.55rem;line-height:1.7">خبرهای رسمی پدافند (راه‌اندازی بات، به‌روزرسانی و …). بعد از انتشار در «مطالب» و صفحه اصلی هم دیده می‌شوند.</p>
                 <div class="form-group">
-                    <label>متن خبر</label>
-                    <textarea id="newsBody" rows="4" placeholder="متن خبر..."></textarea>
+                    <label style="color:var(--gold)">عنوان خبر</label>
+                    <input type="text" id="newsTitle" placeholder="مثلاً: راه‌اندازی بات تلگرام پدافند شبهات" style="width:100%;margin-top:0.25rem">
                 </div>
-                <button type="button" class="btn-launch" onclick="typeof submitNews==='function' && submitNews()"><i class="fas fa-newspaper"></i> انتشار خبر</button>
-                <div id="mergedNewsBox" style="margin-top:0.5rem;max-height:22vh;overflow:auto;font-size:0.6rem"></div>
+                <div class="form-group" style="margin-top:0.45rem">
+                    <label style="color:var(--gold)">متن خبر</label>
+                    <textarea id="newsBody" rows="4" placeholder="متن کامل خبر..." style="width:100%;margin-top:0.25rem"></textarea>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.55rem">
+                    <button type="button" class="btn-launch" onclick="publishNewsToSite()"><i class="fas fa-bullhorn"></i> انتشار خبر</button>
+                    <button type="button" class="btn-msg" onclick="document.getElementById('newsTitle').value='';document.getElementById('newsBody').value='';window._editingNewsId=null;"><i class="fas fa-eraser"></i> پاک کردن فرم</button>
+                </div>
+                <div id="newsStatus" style="font-size:0.58rem;margin-top:0.35rem;color:var(--text-secondary)"></div>
+                <div class="list-title" style="margin-top:0.75rem;font-size:0.75rem"><i class="fas fa-list"></i> اخبار منتشرشده</div>
+                <div id="mergedNewsBox" style="margin-top:0.4rem;max-height:28vh;overflow:auto"></div>
+                <div id="publishedNewsList" style="display:none"></div>
             </div>
 
             <div class="launch-section">
@@ -3530,7 +3539,7 @@ button.danger, .btn-danger {
             switchTab('launch');
         }
 
-        async function deletePost(index) {
+        async async function deletePost(index) {
             if (!confirm('مطمئنی می‌خوای این مطلب رو حذف کنی؟')) return;
             await deleteFromSupabase('posts', allPosts[index].id);
             await loadAllData();
@@ -4007,15 +4016,16 @@ ${body || '—'}`;
             }
         }
 
-        async function publishNewsToSite() {
+        async async function publishNewsToSite() {
             const st = document.getElementById('newsStatus');
             const title = (document.getElementById('newsTitle')?.value || '').trim();
             const body = (document.getElementById('newsBody')?.value || '').trim();
             if (!title || !body) {
-                if (st) st.textContent = '⚠️ عنوان و متن الزامی است';
+                if (st) { st.textContent = '⚠️ عنوان و متن الزامی است'; st.style.color = '#e74c3c'; }
                 return;
             }
-            if (!confirm('انتشار این خبر در بخش اخبار سایت؟')) return;
+            const editingId = window._editingNewsId;
+            if (!editingId && !confirm('انتشار این خبر در سایت؟')) return;
             const post = {
                 shobe: title,
                 answer: body,
@@ -4023,25 +4033,39 @@ ${body || '—'}`;
                 tags: ['اخبار'],
                 cat: 'اخبار',
                 date: new Date().toLocaleDateString('fa-IR'),
-                time: new Date().toLocaleTimeString('fa-IR'),
-                sender: currentUser || 'فرماندهی',
-                comments: [],
-                likes: 0,
-                liked_by: []
+                status: 'published',
+                type: 'news'
             };
-            const saved = await saveToSupabase('posts', post);
-            if (!saved) {
-                if (st) st.textContent = '❌ انتشار ناموفق';
-                return;
+            try {
+                if (editingId) {
+                    post.id = editingId;
+                    if (typeof updateInSupabase === 'function') {
+                        await updateInSupabase('posts', editingId, post);
+                    } else if (typeof upsertToSupabase === 'function') {
+                        await upsertToSupabase('posts', post);
+                    } else {
+                        // fallback: delete + insert
+                        await deleteFromSupabase('posts', editingId);
+                        await insertToSupabase('posts', post);
+                    }
+                    if (st) { st.textContent = '✅ خبر ویرایش و به‌روز شد'; st.style.color = '#39ff14'; }
+                } else {
+                    if (typeof insertToSupabase === 'function') await insertToSupabase('posts', post);
+                    else if (typeof saveToSupabase === 'function') await saveToSupabase('posts', post);
+                    if (st) { st.textContent = '✅ خبر منتشر شد'; st.style.color = '#39ff14'; }
+                }
+                window._editingNewsId = null;
+                document.getElementById('newsTitle').value = '';
+                document.getElementById('newsBody').value = '';
+                await loadAllData();
+                if (typeof updateAll === 'function') updateAll();
+                renderMergedNews();
+            } catch (err) {
+                console.error(err);
+                if (st) { st.textContent = '❌ خطا در انتشار'; st.style.color = '#e74c3c'; }
             }
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsBody').value = '';
-            if (st) st.textContent = '✅ خبر در سایت منتشر شد';
-            await loadAllData();
-            updateAll();
-            refreshPublishedNewsList();
         }
-
+        
         function refreshPublishedNewsList() {
             const el = document.getElementById('publishedNewsList');
             if (!el) return;
@@ -4137,23 +4161,43 @@ ${body || '—'}`;
             }).join('');
         }
         function renderMergedNews() {
-            var el = document.getElementById('mergedNewsBox');
+            var el = document.getElementById('mergedNewsBox') || document.getElementById('publishedNewsList');
             if (!el) return;
-            var news = (typeof allNews !== 'undefined' && allNews) ? allNews : [];
-            if (!news.length && typeof allPosts !== 'undefined') {
-                news = (allPosts || []).filter(function(p){ return p.cat === 'اخبار' || p.type === 'news'; }).slice(0, 10);
-            }
+            var news = (allPosts || []).filter(function(p) {
+                return p.cat === 'اخبار' || p.type === 'news' || (Array.isArray(p.tags) && p.tags.indexOf('اخبار') >= 0);
+            });
             if (!news.length) {
-                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.3rem;font-size:0.55rem">خبری نیست — از همین بخش مطلب/خبر منتشر کنید</div>';
+                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.45rem;font-size:0.58rem;text-align:center">هنوز خبری منتشر نشده</div>';
                 return;
             }
-            el.innerHTML = news.slice(0, 10).map(function(n) {
-                return '<div style="padding:0.35rem 0;border-bottom:1px solid rgba(57,255,20,0.12)">'
-                    + '<b>' + (n.title || n.shobe || 'خبر') + '</b>'
-                    + '<div style="color:var(--text-secondary);font-size:0.55rem">' + (n.date || '') + '</div></div>';
+            el.innerHTML = news.slice(0, 25).map(function(n, idx) {
+                var real = (allPosts || []).findIndex(function(x){ return String(x.id) === String(n.id); });
+                var title = (n.shobe || n.title || 'بدون عنوان');
+                var date = n.date || '';
+                return '<div class="list-item" style="flex-direction:column;align-items:stretch;gap:0.35rem;padding:0.5rem;margin-bottom:0.35rem;border:1px solid rgba(57,255,20,0.15);border-radius:8px">'
+                    + '<div style="display:flex;justify-content:space-between;gap:0.4rem;align-items:flex-start">'
+                    + '<span class="name" style="font-size:0.7rem;line-height:1.5">' + title + '</span>'
+                    + '<span class="status" style="font-size:0.55rem;white-space:nowrap">' + date + '</span></div>'
+                    + '<div style="display:flex;gap:0.3rem;flex-wrap:wrap">'
+                    + '<button type="button" class="btn-msg" style="font-size:0.55rem" onclick="editNewsItem(' + real + ')"><i class="fas fa-edit"></i> ویرایش</button>'
+                    + '<button type="button" class="btn-msg" style="font-size:0.55rem;border-color:#c0392b;color:#e74c3c" onclick="deletePost(' + real + ')"><i class="fas fa-trash"></i> حذف</button>'
+                    + '</div></div>';
             }).join('');
         }
-
+        function editNewsItem(index) {
+            var post = allPosts[index];
+            if (!post) return;
+            var t = document.getElementById('newsTitle');
+            var b = document.getElementById('newsBody');
+            if (t) t.value = post.shobe || '';
+            if (b) b.value = post.answer || '';
+            window._editingNewsId = post.id;
+            var st = document.getElementById('newsStatus');
+            if (st) { st.textContent = '✏️ در حال ویرایش — پس از اصلاح دوباره «انتشار خبر» را بزنید'; st.style.color = 'var(--gold)'; }
+            try { document.getElementById('newsTitle').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+        }
+        function submitNews() { publishNewsToSite(); }
+        
         async function switchTab(tab) {
             if (tab === 'settings') {
                 const pass = prompt('🔒 برای ورود به تنظیمات، رمز فرماندهی را وارد کنید:');
