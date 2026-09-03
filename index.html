@@ -400,6 +400,72 @@
   display: block;
 }
 /* PAGE_HIDDEN_ATTR */
+
+/* DESKTOP_LAYOUT_V1 */
+@media (min-width: 900px) {
+  body { font-size: 15px; }
+  #header > div,
+  #search-section .search-wrap,
+  #main-nav .nav-inner,
+  #content {
+    max-width: 960px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  #content {
+    padding: 0.75rem 1.25rem 120px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #search-section { padding: 0.35rem 1rem !important; }
+  #main-nav { padding: 0.25rem 0 !important; }
+  #main-nav .nav-inner {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.15rem 0.5rem;
+  }
+  #main-nav .nav-btn {
+    min-width: 110px;
+    font-size: 0.85rem !important;
+    padding: 0.45rem 0.85rem !important;
+  }
+  .hdr-left h1 { font-size: 1.35rem !important; }
+  .hdr-left .sub { font-size: 0.7rem !important; }
+  /* cards / posts */
+  .post, .post-card, .list-item, .news-card {
+    max-width: 100%;
+  }
+  /* home sections */
+  #page-home .section-title,
+  #page-home h2 {
+    font-size: 1rem;
+  }
+  /* defense anim not full ugly stretch */
+  .defense-anim, #defenseAnim {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+  }
+  /* bottom fixed bars centered */
+  .bottom-bar, .tab-bar, #bottomNav {
+    left: 50% !important;
+    transform: translateX(-50%);
+    max-width: 960px;
+    width: 100%;
+  }
+}
+@media (min-width: 1200px) {
+  #header > div,
+  #search-section .search-wrap,
+  #main-nav .nav-inner,
+  #content,
+  .defense-anim, #defenseAnim {
+    max-width: 1040px !important;
+  }
+}
+
 </style>
 
     <script type="application/ld+json">
@@ -1944,202 +2010,233 @@
             canvas.width = W; canvas.height = H;
             const ctx = canvas.getContext('2d');
             const pad = 100;
+            const contentWidth = W - pad * 2;
 
-            // ورقه کاهی
+            // --- helpers ---
+            function stripEmoji(s) {
+                return String(s || '')
+                    .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+                    .replace(/[\u{2600}-\u{27BF}]/gu, '')
+                    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+                    .replace(/[\u{200D}]/gu, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+            function normalizeFa(s) {
+                return stripEmoji(s)
+                    .replace(/ي/g, 'ی')
+                    .replace(/ك/g, 'ک')
+                    .replace(/\u200c+/g, '\u200c')
+                    .trim();
+            }
+            // split into short lines that fit width (RTL-aware measure)
+            function breakLines(text, font, maxW) {
+                ctx.font = font;
+                const words = String(text || '').split(' ').filter(Boolean);
+                const lines = [];
+                let line = '';
+                for (let n = 0; n < words.length; n++) {
+                    const test = line ? (line + ' ' + words[n]) : words[n];
+                    if (ctx.measureText(test).width > maxW && line) {
+                        lines.push(line);
+                        line = words[n];
+                    } else {
+                        line = test;
+                    }
+                }
+                if (line) lines.push(line);
+                return lines;
+            }
+            function drawLines(lines, xRight, startY, lineH, font, color, maxLines) {
+                ctx.font = font;
+                ctx.fillStyle = color;
+                ctx.textAlign = 'right';
+                ctx.direction = 'rtl';
+                let y = startY;
+                const limit = Math.min(lines.length, maxLines || 99);
+                for (let i = 0; i < limit; i++) {
+                    let tline = lines[i];
+                    if (i === limit - 1 && lines.length > limit) tline = tline + ' …';
+                    ctx.fillText(tline, xRight, y);
+                    y += lineH;
+                }
+                return y;
+            }
+
+            // --- background kraft ---
             const bg = ctx.createLinearGradient(0, 0, 0, H);
-            bg.addColorStop(0, '#d2b48c');
-            bg.addColorStop(0.5, '#c4a574');
+            bg.addColorStop(0, '#d7c09a');
+            bg.addColorStop(0.5, '#c9a97a');
             bg.addColorStop(1, '#b8956a');
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, W, H);
-            // بافت خیلی ملایم
-            for (let k = 0; k < 1200; k++) {
-                ctx.fillStyle = 'rgba(90,60,30,' + (Math.random() * 0.03) + ')';
+            // subtle grain
+            for (let k = 0; k < 900; k++) {
+                ctx.fillStyle = 'rgba(70,45,20,' + (Math.random() * 0.025) + ')';
                 ctx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
             }
-
-            // حاشیه رسمی
+            // borders
             ctx.strokeStyle = '#5c4030';
             ctx.lineWidth = 10;
-            ctx.strokeRect(36, 36, W - 72, H - 72);
+            ctx.strokeRect(34, 34, W - 68, H - 68);
             ctx.strokeStyle = '#8b6914';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(52, 52, W - 104, H - 104);
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 50, W - 100, H - 100);
 
-            let y = 130;
+            let y = 120;
 
-            // سپر چوبی ساده
-            function drawWoodenShield(cx, cy, s) {
+            // wooden shield + Allah
+            function drawShield(cx, cy, s) {
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.beginPath();
                 ctx.moveTo(0, -s);
-                ctx.lineTo(s * 0.85, -s * 0.55);
-                ctx.lineTo(s * 0.75, s * 0.35);
-                ctx.quadraticCurveTo(0, s * 1.05, -s * 0.75, s * 0.35);
-                ctx.lineTo(-s * 0.85, -s * 0.55);
+                ctx.lineTo(s * 0.82, -s * 0.5);
+                ctx.lineTo(s * 0.72, s * 0.4);
+                ctx.quadraticCurveTo(0, s * 1.05, -s * 0.72, s * 0.4);
+                ctx.lineTo(-s * 0.82, -s * 0.5);
                 ctx.closePath();
                 const wood = ctx.createLinearGradient(-s, -s, s, s);
-                wood.addColorStop(0, '#a67c52');
+                wood.addColorStop(0, '#b0895a');
                 wood.addColorStop(0.5, '#8b6914');
-                wood.addColorStop(1, '#6b4423');
+                wood.addColorStop(1, '#5c3d1e');
                 ctx.fillStyle = wood;
                 ctx.fill();
-                ctx.strokeStyle = '#4a3728';
-                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#3d2914';
+                ctx.lineWidth = 3;
                 ctx.stroke();
-                // سمبل الله (ساده از پرچم ایران)
                 ctx.fillStyle = '#8B0000';
-                ctx.font = 'bold ' + Math.floor(s * 0.7) + 'px Tahoma, Arial, sans-serif';
+                ctx.font = 'bold ' + Math.floor(s * 0.62) + 'px Tahoma, Arial, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('الله', 0, s * 0.05);
+                ctx.direction = 'rtl';
+                ctx.fillText('الله', 0, s * 0.08);
                 ctx.restore();
             }
-            drawWoodenShield(W / 2, y + 10, 70);
-            y += 160;
+            drawShield(W / 2, y + 8, 68);
+            y += 150;
 
-            // عنوان
+            // titles
+            ctx.direction = 'rtl';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'alphabetic';
-            ctx.fillStyle = '#4a3728';
-            ctx.font = 'bold 52px Tahoma, Arial, sans-serif';
+            ctx.fillStyle = '#3d2914';
+            ctx.font = 'bold 50px Tahoma, Arial, sans-serif';
             ctx.fillText('پدافند شبهات', W / 2, y);
-            y += 48;
-            // خط تزئینی
+            y += 44;
             ctx.strokeStyle = '#8b6914';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(W / 2 - 180, y);
-            ctx.lineTo(W / 2 + 180, y);
+            ctx.moveTo(W / 2 - 170, y);
+            ctx.lineTo(W / 2 + 170, y);
             ctx.stroke();
             ctx.beginPath();
-            ctx.arc(W / 2, y, 5, 0, Math.PI * 2);
+            ctx.arc(W / 2, y, 4, 0, Math.PI * 2);
             ctx.fillStyle = '#8b6914';
             ctx.fill();
-            y += 40;
+            y += 36;
             ctx.fillStyle = '#5c4030';
-            ctx.font = '28px Tahoma, Arial, sans-serif';
+            ctx.font = '26px Tahoma, Arial, sans-serif';
             ctx.fillText('قرارگاه پاسخگویی به شبهات', W / 2, y);
-            y += 55;
+            y += 50;
 
-            // سایه کمرنگ ماشین پدافند در پس‌زمینه متن
+            // faint truck watermark BEHIND text area only (lower half)
             ctx.save();
-            ctx.globalAlpha = 0.12;
-            ctx.strokeStyle = '#4a3728';
-            ctx.fillStyle = '#4a3728';
-            ctx.lineWidth = 3;
-            // کابین و بدنه ساده
-            const tx = W / 2 - 280, ty = 980;
-            ctx.fillRect(tx + 40, ty + 40, 420, 120);
-            ctx.fillRect(tx, ty + 70, 90, 90);
-            // لوله‌ها
-            for (let m = 0; m < 4; m++) {
-                ctx.fillRect(tx + 280 + m * 36, ty - 80, 28, 160);
-            }
-            // چرخ‌ها
+            ctx.globalAlpha = 0.08;
+            ctx.fillStyle = '#3d2914';
+            const tx = W / 2 - 260, ty = 1180;
+            ctx.fillRect(tx + 50, ty + 30, 380, 100);
+            ctx.fillRect(tx, ty + 55, 80, 75);
+            for (let m = 0; m < 4; m++) ctx.fillRect(tx + 260 + m * 34, ty - 70, 24, 140);
             for (let w = 0; w < 4; w++) {
                 ctx.beginPath();
-                ctx.arc(tx + 80 + w * 110, ty + 175, 28, 0, Math.PI * 2);
+                ctx.arc(tx + 90 + w * 100, ty + 150, 24, 0, Math.PI * 2);
                 ctx.fill();
             }
             ctx.restore();
 
-            function wrapText(text, font, color, lineH, maxLines) {
-                ctx.font = font;
-                ctx.fillStyle = color;
-                ctx.textAlign = 'right';
-                const maxW = W - pad * 2;
-                const words = String(text || '').replace(/\s+/g, ' ').trim().split(' ');
-                let line = '';
-                let count = 0;
-                for (let n = 0; n < words.length; n++) {
-                    const test = line ? (line + ' ' + words[n]) : words[n];
-                    if (ctx.measureText(test).width > maxW && line) {
-                        ctx.fillText(line, W - pad, y);
-                        y += lineH;
-                        line = words[n];
-                        count++;
-                        if (count >= maxLines) {
-                            ctx.fillText('...', W - pad, y);
-                            y += lineH;
-                            return;
-                        }
-                    } else line = test;
-                }
-                if (line) {
-                    ctx.fillText(line, W - pad, y);
-                    y += lineH;
-                }
-            }
+            // content box area
+            const title = normalizeFa(post.shobe || post.title || '');
+            let answer = normalizeFa(post.answer || post.body || '');
 
-            // بخش شبهه
+            // label شبهه
             ctx.textAlign = 'right';
             ctx.fillStyle = '#6b4423';
-            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
             ctx.fillText('شبهه', W - pad, y);
-            y += 48;
-            wrapText(post.shobe || '', 'bold 38px Tahoma, Arial, sans-serif', '#3d2914', 54, 7);
+            y += 44;
+
+            const titleFont = 'bold 36px Tahoma, Arial, sans-serif';
+            const titleLines = breakLines(title, titleFont, contentWidth);
+            y = drawLines(titleLines, W - pad, y, 52, titleFont, '#2c1a0e', 6);
             y += 28;
 
-            ctx.strokeStyle = 'rgba(139,105,20,0.4)';
+            // divider
+            ctx.strokeStyle = 'rgba(92,64,48,0.35)';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(pad, y);
             ctx.lineTo(W - pad, y);
             ctx.stroke();
+            y += 40;
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#6b4423';
+            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+            ctx.fillText('پاسخ', W - pad, y);
             y += 44;
 
-            ctx.fillStyle = '#6b4423';
-            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
-            ctx.textAlign = 'right';
-            ctx.fillText('پاسخ', W - pad, y);
-            y += 48;
-
-            let raw = String(post.answer || '').replace(/\r/g, '').trim();
-            let paras = raw.split(/\n+/).map(function(p) { return p.trim(); }).filter(Boolean);
+            // paragraphs
+            let paras = String(post.answer || '').replace(/\r/g, '').split(/\n+/).map(normalizeFa).filter(Boolean);
             if (paras.length <= 1) {
-                const bits = raw.split(/(?<=[\.\!\?\u061F])\s+/);
+                const bits = answer.split(/(?<=[\.\!\?\u061F])\s+/);
                 paras = [];
                 let buf = '';
                 bits.forEach(function(s) {
-                    if ((buf + ' ' + s).length > 100 && buf) {
-                        paras.push(buf.trim());
+                    s = normalizeFa(s);
+                    if (!s) return;
+                    if ((buf + ' ' + s).length > 95 && buf) {
+                        paras.push(buf);
                         buf = s;
                     } else buf = buf ? (buf + ' ' + s) : s;
                 });
-                if (buf.trim()) paras.push(buf.trim());
+                if (buf) paras.push(buf);
             }
 
+            const bodyFont = '30px Tahoma, Arial, sans-serif';
+            const lineH = 46;
             for (let pi = 0; pi < paras.length; pi++) {
-                if (y > H - 240) break;
-                let para = paras[pi].trim();
-                if (!para) continue;
-                if (pi > 0) y += 26;
+                if (y > H - 220) break;
+                if (pi > 0) y += 22;
+                // bullet
                 ctx.fillStyle = '#6b4423';
-                ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+                ctx.font = 'bold 26px Tahoma, Arial, sans-serif';
                 ctx.textAlign = 'right';
-                ctx.fillText('●', W - pad, y);
-                wrapText(para, '32px Tahoma, Arial, sans-serif', '#3d2914', 48, 10);
+                ctx.direction = 'rtl';
+                ctx.fillText('•', W - pad, y);
+                // text with indent
+                const lines = breakLines(paras[pi], bodyFont, contentWidth - 36);
+                y = drawLines(lines, W - pad - 28, y, lineH, bodyFont, '#2c1a0e', 8);
             }
 
-            // فوتر
-            ctx.strokeStyle = 'rgba(92,64,48,0.35)';
+            // footer
+            ctx.strokeStyle = 'rgba(92,64,48,0.3)';
             ctx.beginPath();
-            ctx.moveTo(pad, H - 150);
-            ctx.lineTo(W - pad, H - 150);
+            ctx.moveTo(pad, H - 140);
+            ctx.lineTo(W - pad, H - 140);
             ctx.stroke();
-            drawWoodenShield(W / 2 - 160, H - 95, 28);
+            drawShield(W / 2 - 150, H - 88, 26);
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#4a3728';
-            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
-            ctx.fillText('@padafand_shobahat', W / 2 + 20, H - 85);
+            ctx.fillStyle = '#3d2914';
+            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+            ctx.direction = 'ltr';
+            ctx.fillText('@padafand_shobahat', W / 2 + 24, H - 80);
 
             canvas.toBlob(function(blob) {
                 if (!blob) { alert('خطا در ساخت تصویر'); return; }
                 const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function() {});
+                    navigator.share({ files: [file], title: title || 'پدافند شبهات', text: title }).catch(function() {});
                 } else {
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(blob);
