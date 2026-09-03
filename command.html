@@ -2195,7 +2195,13 @@ button.danger, .btn-danger {
 <div id="tab-kartabl" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-folder-open"></i> کارتابل عملیاتی</div>
-                <div id="kartablList" style="max-height:60vh;overflow-y:auto">
+                <div id="kartablList" style="max-height:40vh;overflow-y:auto">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div>
+                </div>
+            </div>
+            <div class="list-container" style="margin-top:0.6rem">
+                <div class="list-title"><i class="fas fa-clipboard"></i> گزارش‌ها</div>
+                <div id="mergedReportsBox" style="max-height:35vh;overflow-y:auto">
                     <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div>
                 </div>
             </div>
@@ -2328,8 +2334,9 @@ button.danger, .btn-danger {
                     <i class="fas fa-download"></i> دانلود لیست ورود/خروج
                 </button>
             </div>
+        </div>
 
-        id="tab-stats" class="tab-content" style="display:none">
+        <div id="tab-stats" class="tab-content" style="display:none">
             <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
                 <div class="stat-card">
                     <div class="num" id="statAllPosts">0</div>
@@ -2638,6 +2645,8 @@ button.danger, .btn-danger {
             run(updateCommanderLog);
             run(updateSettings);
             run(renderCommanderAccessLog);
+            run(renderMergedCommanders);
+            run(renderMergedNews);
         }
 
 
@@ -4038,6 +4047,49 @@ ${body || '—'}`;
             a.href = URL.createObjectURL(blob);
             a.download = 'commander-access-log.txt';
             a.click();
+        }
+
+        
+        function renderMergedCommanders() {
+            var el = document.getElementById('mergedCommandersBox');
+            if (!el) return;
+            var list = [];
+            try {
+                if (typeof allUsers === 'object' && allUsers) {
+                    Object.keys(allUsers).forEach(function(k) {
+                        var u = allUsers[k];
+                        if (u && (u.is_special || u.rank === 'سردار' || u.role === 'commander')) {
+                            list.push(u);
+                        }
+                    });
+                }
+            } catch(e) {}
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.3rem;font-size:0.55rem">فرمانده ویژه‌ای ثبت نشده یا از لیست کاربران خوانده نشد</div>';
+                return;
+            }
+            el.innerHTML = list.map(function(u) {
+                return '<div style="padding:0.35rem 0;border-bottom:1px solid rgba(57,255,20,0.12);display:flex;justify-content:space-between">'
+                    + '<span><i class="fas fa-star" style="color:var(--gold)"></i> ' + (u.fullname || u.username || '') + '</span>'
+                    + '<span style="color:var(--text-secondary)">' + (u.rank || 'سردار') + '</span></div>';
+            }).join('');
+        }
+        function renderMergedNews() {
+            var el = document.getElementById('mergedNewsBox');
+            if (!el) return;
+            var news = (typeof allNews !== 'undefined' && allNews) ? allNews : [];
+            if (!news.length && typeof allPosts !== 'undefined') {
+                news = (allPosts || []).filter(function(p){ return p.cat === 'اخبار' || p.type === 'news'; }).slice(0, 10);
+            }
+            if (!news.length) {
+                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.3rem;font-size:0.55rem">خبری نیست — از همین بخش مطلب/خبر منتشر کنید</div>';
+                return;
+            }
+            el.innerHTML = news.slice(0, 10).map(function(n) {
+                return '<div style="padding:0.35rem 0;border-bottom:1px solid rgba(57,255,20,0.12)">'
+                    + '<b>' + (n.title || n.shobe || 'خبر') + '</b>'
+                    + '<div style="color:var(--text-secondary);font-size:0.55rem">' + (n.date || '') + '</div></div>';
+            }).join('');
         }
 
         async function switchTab(tab) {
