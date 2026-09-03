@@ -2994,7 +2994,8 @@ button.danger, .btn-danger {
         }
 
         function updateReports() {
-            const container = document.getElementById('reportsList');
+            const container = document.getElementById('mergedReportsBox') || document.getElementById('reportsList');
+            if (!container) return;
             if (!allReports.length) {
                 container.innerHTML =
                     '<div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ گزارشی ارسال نشده</div>';
