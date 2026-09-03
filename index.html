@@ -1943,52 +1943,129 @@
             const canvas = document.createElement('canvas');
             canvas.width = W; canvas.height = H;
             const ctx = canvas.getContext('2d');
-            const pad = 90;
+            const pad = 100;
 
-            ctx.fillStyle = '#0a1206';
+            // ورقه کاهی
+            const bg = ctx.createLinearGradient(0, 0, 0, H);
+            bg.addColorStop(0, '#d2b48c');
+            bg.addColorStop(0.5, '#c4a574');
+            bg.addColorStop(1, '#b8956a');
+            ctx.fillStyle = bg;
             ctx.fillRect(0, 0, W, H);
-            ctx.strokeStyle = '#39ff14';
-            ctx.lineWidth = 8;
-            ctx.strokeRect(30, 30, W-60, H-60);
+            // بافت خیلی ملایم
+            for (let k = 0; k < 1200; k++) {
+                ctx.fillStyle = 'rgba(90,60,30,' + (Math.random() * 0.03) + ')';
+                ctx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+            }
 
-            let y = 120;
+            // حاشیه رسمی
+            ctx.strokeStyle = '#5c4030';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(36, 36, W - 72, H - 72);
+            ctx.strokeStyle = '#8b6914';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(52, 52, W - 104, H - 104);
+
+            let y = 130;
+
+            // سپر چوبی ساده
+            function drawWoodenShield(cx, cy, s) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.beginPath();
+                ctx.moveTo(0, -s);
+                ctx.lineTo(s * 0.85, -s * 0.55);
+                ctx.lineTo(s * 0.75, s * 0.35);
+                ctx.quadraticCurveTo(0, s * 1.05, -s * 0.75, s * 0.35);
+                ctx.lineTo(-s * 0.85, -s * 0.55);
+                ctx.closePath();
+                const wood = ctx.createLinearGradient(-s, -s, s, s);
+                wood.addColorStop(0, '#a67c52');
+                wood.addColorStop(0.5, '#8b6914');
+                wood.addColorStop(1, '#6b4423');
+                ctx.fillStyle = wood;
+                ctx.fill();
+                ctx.strokeStyle = '#4a3728';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                // سمبل الله (ساده از پرچم ایران)
+                ctx.fillStyle = '#8B0000';
+                ctx.font = 'bold ' + Math.floor(s * 0.7) + 'px Tahoma, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('الله', 0, s * 0.05);
+                ctx.restore();
+            }
+            drawWoodenShield(W / 2, y + 10, 70);
+            y += 160;
+
+            // عنوان
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#c8a000';
-            ctx.font = 'bold 46px Tahoma, Arial, sans-serif';
-            ctx.fillText('پدافند شبهات', W/2, y);
-            y += 55;
-            ctx.fillStyle = '#6a8a70';
-            ctx.font = '28px Tahoma, Arial, sans-serif';
-            ctx.fillText('پاسخ روشن به شبهات', W/2, y);
-            y += 40;
-            ctx.strokeStyle = 'rgba(57,255,20,0.3)';
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#4a3728';
+            ctx.font = 'bold 52px Tahoma, Arial, sans-serif';
+            ctx.fillText('پدافند شبهات', W / 2, y);
+            y += 48;
+            // خط تزئینی
+            ctx.strokeStyle = '#8b6914';
             ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(W / 2 - 180, y);
+            ctx.lineTo(W / 2 + 180, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(W / 2, y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#8b6914';
+            ctx.fill();
+            y += 40;
+            ctx.fillStyle = '#5c4030';
+            ctx.font = '28px Tahoma, Arial, sans-serif';
+            ctx.fillText('قرارگاه پاسخگویی به شبهات', W / 2, y);
             y += 55;
+
+            // سایه کمرنگ ماشین پدافند در پس‌زمینه متن
+            ctx.save();
+            ctx.globalAlpha = 0.12;
+            ctx.strokeStyle = '#4a3728';
+            ctx.fillStyle = '#4a3728';
+            ctx.lineWidth = 3;
+            // کابین و بدنه ساده
+            const tx = W / 2 - 280, ty = 980;
+            ctx.fillRect(tx + 40, ty + 40, 420, 120);
+            ctx.fillRect(tx, ty + 70, 90, 90);
+            // لوله‌ها
+            for (let m = 0; m < 4; m++) {
+                ctx.fillRect(tx + 280 + m * 36, ty - 80, 28, 160);
+            }
+            // چرخ‌ها
+            for (let w = 0; w < 4; w++) {
+                ctx.beginPath();
+                ctx.arc(tx + 80 + w * 110, ty + 175, 28, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
 
             function wrapText(text, font, color, lineH, maxLines) {
                 ctx.font = font;
                 ctx.fillStyle = color;
                 ctx.textAlign = 'right';
-                const maxW = W - pad*2;
+                const maxW = W - pad * 2;
                 const words = String(text || '').replace(/\s+/g, ' ').trim().split(' ');
                 let line = '';
                 let count = 0;
-                for (let i = 0; i < words.length; i++) {
-                    const test = line ? (line + ' ' + words[i]) : words[i];
+                for (let n = 0; n < words.length; n++) {
+                    const test = line ? (line + ' ' + words[n]) : words[n];
                     if (ctx.measureText(test).width > maxW && line) {
                         ctx.fillText(line, W - pad, y);
                         y += lineH;
-                        line = words[i];
+                        line = words[n];
                         count++;
                         if (count >= maxLines) {
                             ctx.fillText('...', W - pad, y);
                             y += lineH;
                             return;
                         }
-                    } else {
-                        line = test;
-                    }
+                    } else line = test;
                 }
                 if (line) {
                     ctx.fillText(line, W - pad, y);
@@ -1996,27 +2073,31 @@
                 }
             }
 
-            // عنوان بخش شبهه
+            // بخش شبهه
             ctx.textAlign = 'right';
-            ctx.fillStyle = '#39ff14';
-            ctx.font = 'bold 32px Tahoma, Arial, sans-serif';
-            ctx.fillText('• شبهه', W - pad, y);
-            y += 50;
-            wrapText(post.shobe || '', 'bold 40px Tahoma, Arial, sans-serif', '#f0f5e0', 56, 8);
-            y += 30;
+            ctx.fillStyle = '#6b4423';
+            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+            ctx.fillText('شبهه', W - pad, y);
+            y += 48;
+            wrapText(post.shobe || '', 'bold 38px Tahoma, Arial, sans-serif', '#3d2914', 54, 7);
+            y += 28;
 
-            ctx.strokeStyle = 'rgba(200,160,0,0.35)';
-            ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
-            y += 50;
+            ctx.strokeStyle = 'rgba(139,105,20,0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(pad, y);
+            ctx.lineTo(W - pad, y);
+            ctx.stroke();
+            y += 44;
 
-            ctx.fillStyle = '#c8a000';
-            ctx.font = 'bold 32px Tahoma, Arial, sans-serif';
+            ctx.fillStyle = '#6b4423';
+            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
             ctx.textAlign = 'right';
-            ctx.fillText('• پاسخ', W - pad, y);
-            y += 50;
+            ctx.fillText('پاسخ', W - pad, y);
+            y += 48;
 
             let raw = String(post.answer || '').replace(/\r/g, '').trim();
-            let paras = raw.split(/\n+/).map(function(p){ return p.trim(); }).filter(Boolean);
+            let paras = raw.split(/\n+/).map(function(p) { return p.trim(); }).filter(Boolean);
             if (paras.length <= 1) {
                 const bits = raw.split(/(?<=[\.\!\?\u061F])\s+/);
                 paras = [];
@@ -2025,40 +2106,40 @@
                     if ((buf + ' ' + s).length > 100 && buf) {
                         paras.push(buf.trim());
                         buf = s;
-                    } else {
-                        buf = buf ? (buf + ' ' + s) : s;
-                    }
+                    } else buf = buf ? (buf + ' ' + s) : s;
                 });
                 if (buf.trim()) paras.push(buf.trim());
             }
 
             for (let pi = 0; pi < paras.length; pi++) {
-                if (y > H - 220) break;
+                if (y > H - 240) break;
                 let para = paras[pi].trim();
                 if (!para) continue;
-                if (pi > 0) y += 28;
-                ctx.fillStyle = '#39ff14';
-                ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+                if (pi > 0) y += 26;
+                ctx.fillStyle = '#6b4423';
+                ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
                 ctx.textAlign = 'right';
                 ctx.fillText('●', W - pad, y);
-                wrapText(para, '34px Tahoma, Arial, sans-serif', '#c5d9b0', 50, 12);
+                wrapText(para, '32px Tahoma, Arial, sans-serif', '#3d2914', 48, 10);
             }
 
-            ctx.fillStyle = 'rgba(57,255,20,0.08)';
-            ctx.fillRect(60, H - 150, W - 120, 90);
+            // فوتر
+            ctx.strokeStyle = 'rgba(92,64,48,0.35)';
+            ctx.beginPath();
+            ctx.moveTo(pad, H - 150);
+            ctx.lineTo(W - pad, H - 150);
+            ctx.stroke();
+            drawWoodenShield(W / 2 - 160, H - 95, 28);
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#39ff14';
-            ctx.font = 'bold 34px Tahoma, Arial, sans-serif';
-            ctx.fillText('@padafand_shobahat', W/2, H - 105);
-            ctx.fillStyle = '#6a8a70';
-            ctx.font = '24px Tahoma, Arial, sans-serif';
-            ctx.fillText('برای هر شبهه، یک پاسخ روشن', W/2, H - 68);
+            ctx.fillStyle = '#4a3728';
+            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+            ctx.fillText('@padafand_shobahat', W / 2 + 20, H - 85);
 
             canvas.toBlob(function(blob) {
                 if (!blob) { alert('خطا در ساخت تصویر'); return; }
                 const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function(){});
+                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function() {});
                 } else {
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(blob);
@@ -2071,7 +2152,7 @@
             }, 'image/png', 0.95);
             } catch (err) {
                 console.error(err);
-                alert('خطا در ساخت استوری: ' + (err && err.message ? err.message : err));
+                alert('خطا در ساخت استوری');
             }
         }
         
