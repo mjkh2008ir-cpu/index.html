@@ -22,6 +22,54 @@ html.cmd-locked #securityPage { display:block !important; }
 html.cmd-open #sidebar, html.cmd-open .main { display:block !important; visibility:visible !important; }
 html.cmd-open #securityPage { display:none !important; }
 html.cmd-open #securityPage { display:none !important; }
+
+/* CMD_MOBILE_V3 */
+.sidebar .nav-item, .sidebar .nav-item span, #sidebar .nav-item {
+  font-size: 0.72rem !important;
+  padding: 0.35rem 0.55rem !important;
+  white-space: nowrap;
+}
+.sidebar .logo-area h2 { font-size: 0.95rem !important; }
+.sidebar .logo-area .sub { font-size: 0.55rem !important; }
+.sidebar .commander-badge { font-size: 0.6rem !important; padding: 0.3rem !important; }
+#sidebar {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100vh;
+}
+@media (max-width: 768px) {
+  #sidebar, .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: min(88vw, 300px) !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 250 !important;
+    box-shadow: -8px 0 24px rgba(0,0,0,0.45);
+  }
+  #sidebar.open, .sidebar.open {
+    transform: translateX(0) !important;
+  }
+  .hamburger {
+    display: block !important;
+    position: fixed !important;
+    top: 8px !important;
+    left: 8px !important;
+    z-index: 300 !important;
+  }
+  .main {
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 2.8rem 0.45rem 1rem !important;
+  }
+  .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 0.35rem !important; }
+  .monitor-container, .radar-panel-v2 { max-width: 100% !important; }
+}
+
 </style>
 
     <meta name="padafand-cache-v" content="20260902b">
@@ -3495,7 +3543,7 @@ BODY:
             // فهرست کوتاه هشتگ تا پرامپت خیلی طولانی نشود
             const tagSample = ['#اعتقادی','#مذهبی','#سیاسی','#اجتماعی','#نظامی','#حجاب','#قرآن','#ایران','#آمریکا','#اسرائیل','#هوش_مصنوعی','#ولایت_فقیه','#رهبری','#جنگ','#پدافند'].join(' ');
             const clipped = raw.length > 2800 ? raw.slice(0, 2800) + '\n…' : raw;
-            const prompt = `تو ویراستار کانال پدافند شبهات هستی. متن خام زیر را مرتب کن.
+            const prompt = `تو ویراستار کانال پدافند شبهات هستی. هرگز متن را خلاصه نکن و هیچ بخشی از محتوا را حذف نکن. فقط مرتب‌سازی، ویرایش نگارشی (نیم‌فاصله)، پاراگراف‌بندی و ایموجی‌گذاری اول هر بند را انجام بده. طول متن خروجی باید نزدیک به متن ورودی باشد.
 خروجی دقیقاً با همین برچسب‌ها:
 TITLE: <شبهه سوالی با ؟>
 CATEGORY: <اعتقادی|مذهبی|سیاسی|اجتماعی|نظامی>
@@ -3505,7 +3553,7 @@ AUTHOR: ✍🏻 پدافند شبهات
 BODY:
 <متن ویراسته؛ نیم‌فاصله درست؛ ایموجی اول هر بند؛ امضای کانال در انتها>
 
-قوانین: محتوا را حذف نکن؛ منبع جعلی نساز؛ فقط فارسی. پاسخ باید کامل و خودکفا باشد نه فقط ارجاع به کتاب.
+قوانین سخت: ۱) خلاصه ممنوع ۲) حذف محتوا ممنوع ۳) فقط مرتب‌سازی و ایموجی ۴) منبع جعلی نساز ۵) فقط فارسی ۶) متن کامل بماند.
 
 متن خام:
 """
