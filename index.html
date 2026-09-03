@@ -1938,176 +1938,131 @@
         function sharePostImage(index) {
             const post = allPosts[index];
             if (!post) return;
-
             const W = 1080, H = 1920;
             const canvas = document.createElement('canvas');
             canvas.width = W; canvas.height = H;
             const ctx = canvas.getContext('2d');
+            const pad = 88;
 
-            // background
+            // bg
             const bg = ctx.createLinearGradient(0, 0, 0, H);
-            bg.addColorStop(0, '#070f05');
-            bg.addColorStop(0.5, '#0c1a08');
-            bg.addColorStop(1, '#0a1406');
+            bg.addColorStop(0, '#060d04');
+            bg.addColorStop(1, '#0c1808');
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, W, H);
+            // frames
+            ctx.strokeStyle = '#39ff14'; ctx.lineWidth = 8; ctx.strokeRect(24, 24, W-48, H-48);
+            ctx.strokeStyle = 'rgba(200,160,0,0.4)'; ctx.lineWidth = 2; ctx.strokeRect(42, 42, W-84, H-84);
 
-            // outer frame
-            ctx.strokeStyle = '#39ff14';
-            ctx.lineWidth = 8;
-            ctx.strokeRect(28, 28, W - 56, H - 56);
-            ctx.strokeStyle = 'rgba(200,160,0,0.45)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(44, 44, W - 88, H - 88);
-
-            const padX = 90;
-            let y = 120;
-
-            // brand
+            let y = 110;
             ctx.textAlign = 'center';
             ctx.fillStyle = '#c8a000';
-            ctx.font = 'bold 42px Tahoma, Arial, sans-serif';
-            ctx.fillText('پدافند شبهات', W / 2, y);
-            y += 48;
+            ctx.font = 'bold 44px Tahoma, Arial, sans-serif';
+            ctx.fillText('پدافند شبهات', W/2, y);
+            y += 50;
             ctx.fillStyle = '#6a8a70';
             ctx.font = '26px Tahoma, Arial, sans-serif';
-            ctx.fillText('پاسخ روشن به شبهات', W / 2, y);
-            y += 36;
+            ctx.fillText('پاسخ روشن به شبهات', W/2, y);
+            y += 30;
+            ctx.strokeStyle = 'rgba(57,255,20,0.25)';
+            ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
+            y += 48;
 
-            // line
-            ctx.strokeStyle = 'rgba(57,255,20,0.3)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(padX, y);
-            ctx.lineTo(W - padX, y);
-            ctx.stroke();
-            y += 50;
-
-            // helper: draw wrapped text, returns new y
-            function drawWrapped(text, font, color, lineH, maxLines, align) {
-                ctx.fillStyle = color;
+            function wrap(text, font, color, lineH, maxLines) {
                 ctx.font = font;
-                ctx.textAlign = align || 'right';
-                const maxW = W - padX * 2;
-                const words = String(text || '').replace(/\s+/g, ' ').trim().split(' ');
-                let line = '';
-                let lines = 0;
-                const x = align === 'center' ? W / 2 : (align === 'left' ? padX : W - padX);
-                for (let n = 0; n < words.length; n++) {
-                    const test = line ? (line + ' ' + words[n]) : words[n];
+                ctx.fillStyle = color;
+                ctx.textAlign = 'right';
+                const maxW = W - pad*2;
+                const words = String(text||'').replace(/\s+/g,' ').trim().split(' ');
+                let line = '', nlines = 0;
+                for (let i = 0; i < words.length; i++) {
+                    const test = line ? line + ' ' + words[i] : words[i];
                     if (ctx.measureText(test).width > maxW && line) {
-                        ctx.fillText(line, x, y);
+                        ctx.fillText(line, W - pad, y);
                         y += lineH;
-                        line = words[n];
-                        lines++;
-                        if (lines >= maxLines) {
-                            ctx.fillText('…', x, y);
-                            y += lineH;
-                            return;
-                        }
-                    } else {
-                        line = test;
-                    }
+                        line = words[i];
+                        nlines++;
+                        if (nlines >= maxLines) { ctx.fillText('…', W - pad, y); y += lineH; return; }
+                    } else line = test;
                 }
-                if (line) {
-                    ctx.fillText(line, x, y);
-                    y += lineH;
-                }
+                if (line) { ctx.fillText(line, W - pad, y); y += lineH; }
             }
 
-            // section label
+            // SEMIHE section
             ctx.textAlign = 'right';
             ctx.fillStyle = '#39ff14';
-            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
-            ctx.fillText('◀ شبهه', W - padX, y);
+            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+            ctx.fillText('شبهه', W - pad, y);
+            y += 20;
+            // soft card
+            const cardTop = y;
+            y += 48;
+            wrap(post.shobe || '', 'bold 42px Tahoma, Arial, sans-serif', '#f2f7e8', 58, 7);
+            y += 36;
+
+            // separator
+            ctx.strokeStyle = 'rgba(200,160,0,0.3)';
+            ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
             y += 44;
-
-            // title card background
-            const titleStart = y - 10;
-            const titleText = String(post.shobe || '').trim();
-            // measure title height roughly
-            ctx.font = 'bold 40px Tahoma, Arial, sans-serif';
-            // draw title with spacing
-            drawWrapped(titleText, 'bold 40px Tahoma, Arial, sans-serif', '#f0f5e0', 56, 6, 'right');
-            y += 24;
-
-            // divider
-            ctx.strokeStyle = 'rgba(200,160,0,0.35)';
-            ctx.beginPath();
-            ctx.moveTo(padX, y);
-            ctx.lineTo(W - padX, y);
-            ctx.stroke();
-            y += 40;
 
             ctx.fillStyle = '#c8a000';
-            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+            ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
             ctx.textAlign = 'right';
-            ctx.fillText('◀ پاسخ', W - padX, y);
-            y += 44;
+            ctx.fillText('پاسخ', W - pad, y);
+            y += 48;
 
-            // answer: split by newlines / sentences into paragraphs
-            let answer = String(post.answer || '').trim();
-            answer = answer.replace(/\r/g, '');
-            let paras = answer.split(/\n+/).map(function(p) { return p.trim(); }).filter(Boolean);
+            // paragraphs from answer
+            let raw = String(post.answer || '').replace(/\r/g, '').trim();
+            let paras = raw.split(/\n+/).map(function(p){ return p.trim(); }).filter(Boolean);
             if (paras.length <= 1) {
-                // split long text into chunks by sentence
-                const parts = answer.split(/(?<=[.!?؟。])\s+/);
-                paras = [];
-                let buf = '';
-                parts.forEach(function(s) {
-                    if ((buf + ' ' + s).length > 120 && buf) {
-                        paras.push(buf.trim());
-                        buf = s;
-                    } else {
-                        buf = buf ? (buf + ' ' + s) : s;
-                    }
+                const bits = raw.split(/(?<=[.!?؟])\s+/);
+                paras = []; let buf = '';
+                bits.forEach(function(s){
+                    if ((buf + ' ' + s).length > 110 && buf) { paras.push(buf.trim()); buf = s; }
+                    else buf = buf ? buf + ' ' + s : s;
                 });
                 if (buf.trim()) paras.push(buf.trim());
             }
 
-            const bulletColors = ['#9fdf7a', '#b8e0a0', '#a8d48c'];
-            for (let pi = 0; pi < paras.length; pi++) {
-                if (y > H - 220) break;
-                let para = paras[pi];
-                // strip messy emoji clusters at start, add clean bullet
-                para = para.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\s]+/u, '').trim();
-                if (!para) continue;
-                // bullet
+            paras.forEach(function(para, idx) {
+                if (y > H - 230) return;
+                // clean leading junk emojis
+                para = para.replace(/^(?:[\u2600-\u27BF\uD83C-\uDBFF\uDC00-\uDFFF]\s*)+/g, '').trim();
+                if (!para) return;
+                // gap between paragraphs
+                if (idx > 0) y += 22;
+                // green bullet
                 ctx.fillStyle = '#39ff14';
-                ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+                ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
                 ctx.textAlign = 'right';
-                ctx.fillText('●', W - padX, y);
-                // paragraph text with indent
-                const savedPad = padX;
-                // temporarily narrower for text after bullet — use drawWrapped with full width but text already has spacing
-                const before = y;
-                drawWrapped(para, '32px Tahoma, Arial, sans-serif', bulletColors[pi % 3], 48, 8, 'right');
-                y += 28; // paragraph spacing
-            }
+                ctx.fillText('●', W - pad, y);
+                // text slightly lower indent via shorter width — manual: use pad+30 on measure
+                const oldPad = pad;
+                // draw with normal wrap
+                wrap(para, '34px Tahoma, Arial, sans-serif', '#c8dcb0', 50, 10);
+            });
 
-            // footer bar
-            ctx.fillStyle = 'rgba(57,255,20,0.08)';
-            ctx.fillRect(60, H - 160, W - 120, 100);
+            // footer
+            ctx.fillStyle = 'rgba(57,255,20,0.07)';
+            ctx.fillRect(56, H-150, W-112, 90);
+            ctx.textAlign = 'center';
             ctx.fillStyle = '#39ff14';
             ctx.font = 'bold 34px Tahoma, Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('@padafand_shobahat', W / 2, H - 115);
-            ctx.fillStyle = '#7a9a80';
+            ctx.fillText('@padafand_shobahat', W/2, H-105);
+            ctx.fillStyle = '#6a8a70';
             ctx.font = '24px Tahoma, Arial, sans-serif';
-            ctx.fillText('برای هر شبهه، یک پاسخ روشن', W / 2, H - 75);
+            ctx.fillText('برای هر شبهه، یک پاسخ روشن', W/2, H-68);
 
             canvas.toBlob(function(blob) {
                 if (!blob) { alert('خطا در ساخت تصویر'); return; }
                 const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function() {});
+                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function(){});
                 } else {
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(blob);
                     a.download = 'padafand-story.png';
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
+                    document.body.appendChild(a); a.click(); a.remove();
                     alert('تصویر استوری دانلود شد');
                 }
             }, 'image/png', 0.95);
