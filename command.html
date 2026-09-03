@@ -54,12 +54,19 @@ html.cmd-open #securityPage { display:none !important; }
     transform: translateX(0) !important;
   }
   .hamburger {
-    display: block !important;
-    position: fixed !important;
-    top: 8px !important;
-    left: 8px !important;
-    z-index: 300 !important;
-  }
+            display: none !important;
+            position: fixed !important;
+            top: 12px !important;
+            right: 12px !important;
+            left: auto !important;
+            z-index: 300 !important;
+            background: #1a3d12 !important;
+            border: 1px solid #39ff14 !important;
+            color: #d4e8b0 !important;
+            border-radius: 8px !important;
+            padding: 0.35rem 0.5rem !important;
+            font-size: 0.95rem !important;
+        }
   .main {
     margin-right: 0 !important;
     width: 100% !important;
@@ -70,6 +77,16 @@ html.cmd-open #securityPage { display:none !important; }
   .monitor-container, .radar-panel-v2 { max-width: 100% !important; }
 }
 
+
+/* CMD_FIT_PHONE */
+html, body { max-width: 100vw; overflow-x: hidden !important; }
+.main, #main, .content-area { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+.stats-grid { grid-template-columns: 1fr 1fr !important; }
+.monitor-screen, .monitor-container, svg { max-width: 100% !important; height: auto !important; }
+@media (max-width: 768px) {
+  .sidebar, #sidebar { width: min(86vw, 280px) !important; }
+  table { display: block; overflow-x: auto; max-width: 100%; }
+}
 </style>
 
     <meta name="padafand-cache-v" content="20260902b">
@@ -1529,19 +1546,19 @@ button.danger, .btn-danger {
             <button class="nav-item" onclick="switchTab('posts')"><i class="fas fa-file-alt"></i> مطالب</button>
             <div class="nav-divider"></div>
             <button class="nav-item" onclick="switchTab('users')"><i class="fas fa-users"></i> کاربران</button>
-            <button class="nav-item" onclick="switchTab('commanders')"><i class="fas fa-star"></i> فرماندهان</button>
+            
             <button class="nav-item" onclick="switchTab('comments')"><i class="fas fa-comment-dots"></i> کامنت‌ها</button>
             <button class="nav-item" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> پیام‌ها</button>
             <button class="nav-item" onclick="switchTab('incoming')"><i class="fas fa-inbox"></i> شبهات دریافتی</button>
             <button class="nav-item" onclick="switchTab('aiassist')"><i class="fas fa-robot"></i> دستیار AI</button>
-            <button class="nav-item" onclick="switchTab('news')"><i class="fas fa-newspaper"></i> اخبار سایت</button>
+            
             <button class="nav-item" onclick="switchTab('kartabl')"><i class="fas fa-folder-open"></i> کارتابل</button>
-            <button class="nav-item" onclick="switchTab('reports')"><i class="fas fa-clipboard"></i> گزارش‌ها</button>
+            
             <button class="nav-item" onclick="switchTab('settings')"><i class="fas fa-cog"></i> تنظیمات</button>
             <div class="nav-divider"></div>
             <button class="nav-item" onclick="switchTab('stats')"><i class="fas fa-chart-bar"></i> آمار</button>
             <button class="nav-item" onclick="switchTab('rules')"><i class="fas fa-scroll"></i> آیین‌نامه</button>
-            <button class="nav-item" onclick="switchTab('games')"><i class="fas fa-gamepad"></i> بازی</button>
+            
             <div class="nav-divider"></div>
             <button class="nav-item" onclick="window.location.href='./index.html'"><i class="fas fa-home"></i> بازگشت</button>
         </nav>
@@ -2046,7 +2063,7 @@ button.danger, .btn-danger {
             </div>
         </div>
 
-                <div id="tab-commanders" class="tab-content" style="display:none">
+                <div id="tab-commanders" class="tab-content" style="display:none!important" hidden style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-star ico-gold"></i> فرماندهان</div>
                 <div id="commandersList">
@@ -2113,7 +2130,7 @@ button.danger, .btn-danger {
 
         
         
-        <div id="tab-news" class="tab-content" style="display:none">
+        <div id="tab-news" class="tab-content" style="display:none!important" hidden style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-newspaper"></i> انتشار خبر در سایت</div>
                 <p style="font-size:0.35rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
@@ -2184,7 +2201,7 @@ button.danger, .btn-danger {
             </div>
         </div>
 
-        <div id="tab-reports" class="tab-content" style="display:none">
+        <div id="tab-reports" class="tab-content" style="display:none!important" hidden style="display:none">
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-clipboard"></i> نوشتن گزارش جدید</div>
                 <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
@@ -2302,7 +2319,17 @@ button.danger, .btn-danger {
             </div>
         </div>
 
-        <div id="tab-stats" class="tab-content" style="display:none">
+        <div 
+            <div class="list-container" style="margin-top:1rem;border:1px solid var(--neon);border-radius:8px;padding:0.6rem">
+                <div class="list-title"><i class="fas fa-user-shield"></i> ورود و خروج فرماندهان</div>
+                <p style="font-size:0.55rem;color:var(--text-secondary);margin:0.25rem 0">۱۰ مورد اخیر نگه داشته می‌شود؛ بقیه کامل حذف می‌شوند.</p>
+                <div id="commanderAccessLog" style="font-size:0.6rem;max-height:220px;overflow:auto;margin:0.4rem 0"></div>
+                <button type="button" class="btn btn-gold" onclick="downloadCommanderAccessLog()" style="font-size:0.65rem">
+                    <i class="fas fa-download"></i> دانلود لیست ورود/خروج
+                </button>
+            </div>
+
+        id="tab-stats" class="tab-content" style="display:none">
             <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
                 <div class="stat-card">
                     <div class="num" id="statAllPosts">0</div>
@@ -2371,7 +2398,7 @@ button.danger, .btn-danger {
             </div>
         </div>
 
-        <div id="tab-games" class="tab-content" style="display:none">
+        <div id="tab-games" class="tab-content" style="display:none!important" hidden style="display:none">
             <div style="background:var(--bg-card);border:1px solid var(--border-military);border-radius:4px;padding:0.4rem;text-align:center">
                 <div style="font-size:1.8rem;margin-bottom:0.2rem;color:var(--gold)"><i class="fas fa-gamepad"></i></div>
                 <div style="color:var(--text-primary);font-size:0.6rem;font-weight:700;margin-bottom:0.2rem">بازی‌های قرارگاه</div>
@@ -2610,6 +2637,7 @@ button.danger, .btn-danger {
             run(updateReports);
             run(updateCommanderLog);
             run(updateSettings);
+            run(renderCommanderAccessLog);
         }
 
 
@@ -3958,6 +3986,59 @@ ${body || '—'}`;
         }
 
 
+        
+        function getCommanderAccessLog() {
+            try { return JSON.parse(localStorage.getItem('cmd_access_log') || '[]'); } catch(e) { return []; }
+        }
+        function saveCommanderAccessLog(list) {
+            // فقط ۱۰ تای اخیر، حذف کامل بقیه
+            var trimmed = (list || []).slice(-10);
+            localStorage.setItem('cmd_access_log', JSON.stringify(trimmed));
+            // حذف کامل از سرور اگر جدول log باشد
+            try {
+                if (typeof allData !== 'undefined') { /* no orphan files */ }
+            } catch(e) {}
+            return trimmed;
+        }
+        function logCommanderAccess(action, name) {
+            var list = getCommanderAccessLog();
+            list.push({
+                action: action || 'login',
+                name: name || (window.loggedUser || 'unknown'),
+                at: new Date().toISOString(),
+                fa: new Date().toLocaleString('fa-IR')
+            });
+            saveCommanderAccessLog(list);
+            renderCommanderAccessLog();
+        }
+        function renderCommanderAccessLog() {
+            var el = document.getElementById('commanderAccessLog');
+            if (!el) return;
+            var list = getCommanderAccessLog().slice().reverse();
+            if (!list.length) {
+                el.innerHTML = '<div style="color:var(--text-secondary);padding:0.4rem">هنوز ورود/خروجی ثبت نشده</div>';
+                return;
+            }
+            el.innerHTML = list.map(function(r) {
+                var icon = r.action === 'logout' ? 'sign-out-alt' : 'sign-in-alt';
+                var label = r.action === 'logout' ? 'خروج' : 'ورود';
+                return '<div style="padding:0.35rem 0;border-bottom:1px solid rgba(57,255,20,0.15);display:flex;justify-content:space-between;gap:0.4rem">'
+                    + '<span><i class="fas fa-' + icon + '"></i> <b>' + (r.name || '') + '</b> — ' + label + '</span>'
+                    + '<span style="color:var(--text-secondary)">' + (r.fa || r.at || '') + '</span></div>';
+            }).join('');
+        }
+        function downloadCommanderAccessLog() {
+            var list = getCommanderAccessLog();
+            var text = list.map(function(r) {
+                return [r.fa || r.at, r.name, r.action].join('\t');
+            }).join('\n');
+            var blob = new Blob(['زمان\tنام\tعمل\n' + text], { type: 'text/plain;charset=utf-8' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'commander-access-log.txt';
+            a.click();
+        }
+
         async function switchTab(tab) {
             if (tab === 'settings') {
                 const pass = prompt('🔒 برای ورود به تنظیمات، رمز فرماندهی را وارد کنید:');
@@ -3970,7 +4051,7 @@ ${body || '—'}`;
                     });
                     const data = await res.json().catch(() => ({}));
                     if (!data.ok) { alert('⛔ رمز اشتباه است'); return; }
-                    cmdSessionToken = data.token;
+                    cmdSessionToken = data.token; try { logCommanderAccess('login', (window.loggedUser||localStorage.getItem('padafand_logged_user')||'commander')); } catch(e) {};
                 } catch (e) { alert('⛔ خطا در احراز هویت'); return; }
             }
             currentTab = tab;
