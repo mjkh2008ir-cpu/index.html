@@ -1938,82 +1938,169 @@
         function sharePostImage(index) {
             const post = allPosts[index];
             if (!post) return;
-            const canvas = document.createElement('canvas');
-            canvas.width = 1080;
-            canvas.height = 1920;
-            const ctx = canvas.getContext('2d');
-            // background
-            const g = ctx.createLinearGradient(0, 0, 0, 1920);
-            g.addColorStop(0, '#0a1206');
-            g.addColorStop(1, '#0f1c0a');
-            ctx.fillStyle = g;
-            ctx.fillRect(0, 0, 1080, 1920);
-            // border
-            ctx.strokeStyle = '#39ff14';
-            ctx.lineWidth = 10;
-            ctx.strokeRect(36, 36, 1008, 1848);
-            // header
-            ctx.fillStyle = '#c8a000';
-            ctx.font = 'bold 44px Tahoma, Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('🛡 پدافند شبهات', 540, 120);
-            ctx.fillStyle = '#5a7a65';
-            ctx.font = '28px Tahoma, Arial, sans-serif';
-            ctx.fillText('پاسخ به شبهات', 540, 170);
-            // title (full question)
-            ctx.fillStyle = '#e8f5d0';
-            ctx.font = 'bold 48px Tahoma, Arial, sans-serif';
-            const title = String(post.shobe || '').trim();
-            let y = 260;
-            y = wrapCanvasText(ctx, title, 540, y, 920, 62, 8);
-            // divider
-            y += 20;
-            ctx.strokeStyle = 'rgba(57,255,20,0.35)';
-            ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.moveTo(100, y); ctx.lineTo(980, y); ctx.stroke();
-            y += 50;
-            // answer - larger font, more lines
-            ctx.fillStyle = '#c5d9b0';
-            ctx.font = '36px Tahoma, Arial, sans-serif';
-            const answer = String(post.answer || '').replace(/\s+/g, ' ').trim();
-            y = wrapCanvasText(ctx, answer, 540, y, 920, 52, 22);
-            // footer
-            ctx.fillStyle = '#39ff14';
-            ctx.font = 'bold 36px Tahoma, Arial, sans-serif';
-            ctx.fillText('@padafand_shobahat', 540, 1840);
-            ctx.fillStyle = '#5a7a65';
-            ctx.font = '26px Tahoma, Arial, sans-serif';
-            ctx.fillText('برای هر شبهه، یک پاسخ روشن', 540, 1885);
 
-            function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
-                const words = String(text || '').split(' ');
+            const W = 1080, H = 1920;
+            const canvas = document.createElement('canvas');
+            canvas.width = W; canvas.height = H;
+            const ctx = canvas.getContext('2d');
+
+            // background
+            const bg = ctx.createLinearGradient(0, 0, 0, H);
+            bg.addColorStop(0, '#070f05');
+            bg.addColorStop(0.5, '#0c1a08');
+            bg.addColorStop(1, '#0a1406');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, W, H);
+
+            // outer frame
+            ctx.strokeStyle = '#39ff14';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(28, 28, W - 56, H - 56);
+            ctx.strokeStyle = 'rgba(200,160,0,0.45)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(44, 44, W - 88, H - 88);
+
+            const padX = 90;
+            let y = 120;
+
+            // brand
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#c8a000';
+            ctx.font = 'bold 42px Tahoma, Arial, sans-serif';
+            ctx.fillText('پدافند شبهات', W / 2, y);
+            y += 48;
+            ctx.fillStyle = '#6a8a70';
+            ctx.font = '26px Tahoma, Arial, sans-serif';
+            ctx.fillText('پاسخ روشن به شبهات', W / 2, y);
+            y += 36;
+
+            // line
+            ctx.strokeStyle = 'rgba(57,255,20,0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padX, y);
+            ctx.lineTo(W - padX, y);
+            ctx.stroke();
+            y += 50;
+
+            // helper: draw wrapped text, returns new y
+            function drawWrapped(text, font, color, lineH, maxLines, align) {
+                ctx.fillStyle = color;
+                ctx.font = font;
+                ctx.textAlign = align || 'right';
+                const maxW = W - padX * 2;
+                const words = String(text || '').replace(/\s+/g, ' ').trim().split(' ');
                 let line = '';
                 let lines = 0;
+                const x = align === 'center' ? W / 2 : (align === 'left' ? padX : W - padX);
                 for (let n = 0; n < words.length; n++) {
-                    const test = line + words[n] + ' ';
-                    if (ctx.measureText(test).width > maxWidth && n > 0) {
-                        ctx.fillText(line.trim(), x, y);
-                        line = words[n] + ' ';
-                        y += lineHeight;
+                    const test = line ? (line + ' ' + words[n]) : words[n];
+                    if (ctx.measureText(test).width > maxW && line) {
+                        ctx.fillText(line, x, y);
+                        y += lineH;
+                        line = words[n];
                         lines++;
                         if (lines >= maxLines) {
-                            ctx.fillText((line.trim() + ' …').slice(0, 40), x, y);
-                            return y + lineHeight;
+                            ctx.fillText('…', x, y);
+                            y += lineH;
+                            return;
                         }
-                    } else line = test;
+                    } else {
+                        line = test;
+                    }
                 }
-                if (line.trim()) {
-                    ctx.fillText(line.trim(), x, y);
-                    y += lineHeight;
+                if (line) {
+                    ctx.fillText(line, x, y);
+                    y += lineH;
                 }
-                return y;
             }
+
+            // section label
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#39ff14';
+            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+            ctx.fillText('◀ شبهه', W - padX, y);
+            y += 44;
+
+            // title card background
+            const titleStart = y - 10;
+            const titleText = String(post.shobe || '').trim();
+            // measure title height roughly
+            ctx.font = 'bold 40px Tahoma, Arial, sans-serif';
+            // draw title with spacing
+            drawWrapped(titleText, 'bold 40px Tahoma, Arial, sans-serif', '#f0f5e0', 56, 6, 'right');
+            y += 24;
+
+            // divider
+            ctx.strokeStyle = 'rgba(200,160,0,0.35)';
+            ctx.beginPath();
+            ctx.moveTo(padX, y);
+            ctx.lineTo(W - padX, y);
+            ctx.stroke();
+            y += 40;
+
+            ctx.fillStyle = '#c8a000';
+            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('◀ پاسخ', W - padX, y);
+            y += 44;
+
+            // answer: split by newlines / sentences into paragraphs
+            let answer = String(post.answer || '').trim();
+            answer = answer.replace(/\r/g, '');
+            let paras = answer.split(/\n+/).map(function(p) { return p.trim(); }).filter(Boolean);
+            if (paras.length <= 1) {
+                // split long text into chunks by sentence
+                const parts = answer.split(/(?<=[.!?؟。])\s+/);
+                paras = [];
+                let buf = '';
+                parts.forEach(function(s) {
+                    if ((buf + ' ' + s).length > 120 && buf) {
+                        paras.push(buf.trim());
+                        buf = s;
+                    } else {
+                        buf = buf ? (buf + ' ' + s) : s;
+                    }
+                });
+                if (buf.trim()) paras.push(buf.trim());
+            }
+
+            const bulletColors = ['#9fdf7a', '#b8e0a0', '#a8d48c'];
+            for (let pi = 0; pi < paras.length; pi++) {
+                if (y > H - 220) break;
+                let para = paras[pi];
+                // strip messy emoji clusters at start, add clean bullet
+                para = para.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\s]+/u, '').trim();
+                if (!para) continue;
+                // bullet
+                ctx.fillStyle = '#39ff14';
+                ctx.font = 'bold 30px Tahoma, Arial, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText('●', W - padX, y);
+                // paragraph text with indent
+                const savedPad = padX;
+                // temporarily narrower for text after bullet — use drawWrapped with full width but text already has spacing
+                const before = y;
+                drawWrapped(para, '32px Tahoma, Arial, sans-serif', bulletColors[pi % 3], 48, 8, 'right');
+                y += 28; // paragraph spacing
+            }
+
+            // footer bar
+            ctx.fillStyle = 'rgba(57,255,20,0.08)';
+            ctx.fillRect(60, H - 160, W - 120, 100);
+            ctx.fillStyle = '#39ff14';
+            ctx.font = 'bold 34px Tahoma, Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('@padafand_shobahat', W / 2, H - 115);
+            ctx.fillStyle = '#7a9a80';
+            ctx.font = '24px Tahoma, Arial, sans-serif';
+            ctx.fillText('برای هر شبهه، یک پاسخ روشن', W / 2, H - 75);
 
             canvas.toBlob(function(blob) {
                 if (!blob) { alert('خطا در ساخت تصویر'); return; }
                 const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function(){});
+                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function() {});
                 } else {
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(blob);
