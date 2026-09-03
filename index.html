@@ -1938,74 +1938,94 @@
         function sharePostImage(index) {
             const post = allPosts[index];
             if (!post) return;
-            function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-                const words = String(text).split(' ');
-                let line = '';
-                let yy = y;
-                for (let n = 0; n < words.length; n++) {
-                    const test = line + words[n] + ' ';
-                    if (ctx.measureText(test).width > maxWidth && n > 0) {
-                        ctx.fillText(line, x, yy);
-                        line = words[n] + ' ';
-                        yy += lineHeight;
-                        if (yy > 1650) break;
-                    } else line = test;
-                }
-                ctx.fillText(line, x, yy);
-            }
             const canvas = document.createElement('canvas');
             canvas.width = 1080;
             canvas.height = 1920;
             const ctx = canvas.getContext('2d');
+            // background
             const g = ctx.createLinearGradient(0, 0, 0, 1920);
             g.addColorStop(0, '#0a1206');
-            g.addColorStop(1, '#12200c');
+            g.addColorStop(1, '#0f1c0a');
             ctx.fillStyle = g;
             ctx.fillRect(0, 0, 1080, 1920);
+            // border
             ctx.strokeStyle = '#39ff14';
-            ctx.lineWidth = 8;
-            ctx.strokeRect(40, 40, 1000, 1840);
+            ctx.lineWidth = 10;
+            ctx.strokeRect(36, 36, 1008, 1848);
+            // header
             ctx.fillStyle = '#c8a000';
-            ctx.font = 'bold 42px Tahoma, sans-serif';
+            ctx.font = 'bold 44px Tahoma, Arial, sans-serif';
             ctx.textAlign = 'center';
-            ctx.direction = 'rtl';
-            ctx.fillText('پدافند شبهات', 540, 140);
-            ctx.fillStyle = '#99ff77';
-            ctx.font = '28px Tahoma, sans-serif';
-            ctx.fillText('پاسخ به شبهات با مستندات معتبر', 540, 190);
+            ctx.fillText('🛡 پدافند شبهات', 540, 120);
+            ctx.fillStyle = '#5a7a65';
+            ctx.font = '28px Tahoma, Arial, sans-serif';
+            ctx.fillText('پاسخ به شبهات', 540, 170);
+            // title (full question)
+            ctx.fillStyle = '#e8f5d0';
+            ctx.font = 'bold 48px Tahoma, Arial, sans-serif';
+            const title = String(post.shobe || '').trim();
+            let y = 260;
+            y = wrapCanvasText(ctx, title, 540, y, 920, 62, 8);
+            // divider
+            y += 20;
+            ctx.strokeStyle = 'rgba(57,255,20,0.35)';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(100, y); ctx.lineTo(980, y); ctx.stroke();
+            y += 50;
+            // answer - larger font, more lines
+            ctx.fillStyle = '#c5d9b0';
+            ctx.font = '36px Tahoma, Arial, sans-serif';
+            const answer = String(post.answer || '').replace(/\s+/g, ' ').trim();
+            y = wrapCanvasText(ctx, answer, 540, y, 920, 52, 22);
+            // footer
             ctx.fillStyle = '#39ff14';
-            ctx.font = 'bold 36px Tahoma, sans-serif';
-            ctx.textAlign = 'right';
-            const q = String(post.shobe || '').slice(0, 180);
-            wrapText(ctx, q, 1000, 280, 900, 48);
-            ctx.fillStyle = '#d4e8b0';
-            ctx.font = '32px Tahoma, sans-serif';
-            const a = String(post.answer || '').slice(0, 500);
-            wrapText(ctx, a, 1000, 520, 900, 44);
-            ctx.fillStyle = '#c8a000';
-            ctx.font = '26px Tahoma, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('@padafand_shobahat', 540, 1800);
-            ctx.fillStyle = '#668866';
-            ctx.font = '22px Tahoma, sans-serif';
-            ctx.fillText('index-html-delta-nine.vercel.app', 540, 1850);
-            canvas.toBlob(async (blob) => {
-                if (!blob) return;
-                const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({ files: [file], title: 'پدافند شبهات', text: post.shobe || '' });
-                        return;
-                    } catch (e) {}
+            ctx.font = 'bold 36px Tahoma, Arial, sans-serif';
+            ctx.fillText('@padafand_shobahat', 540, 1840);
+            ctx.fillStyle = '#5a7a65';
+            ctx.font = '26px Tahoma, Arial, sans-serif';
+            ctx.fillText('برای هر شبهه، یک پاسخ روشن', 540, 1885);
+
+            function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+                const words = String(text || '').split(' ');
+                let line = '';
+                let lines = 0;
+                for (let n = 0; n < words.length; n++) {
+                    const test = line + words[n] + ' ';
+                    if (ctx.measureText(test).width > maxWidth && n > 0) {
+                        ctx.fillText(line.trim(), x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                        lines++;
+                        if (lines >= maxLines) {
+                            ctx.fillText((line.trim() + ' …').slice(0, 40), x, y);
+                            return y + lineHeight;
+                        }
+                    } else line = test;
                 }
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'padafand-story.png';
-                a.click();
-                URL.revokeObjectURL(a.href);
-                alert('تصویر استوری ذخیره شد');
-            }, 'image/png');
+                if (line.trim()) {
+                    ctx.fillText(line.trim(), x, y);
+                    y += lineHeight;
+                }
+                return y;
+            }
+
+            canvas.toBlob(function(blob) {
+                if (!blob) { alert('خطا در ساخت تصویر'); return; }
+                const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({ files: [file], title: post.shobe || 'پدافند شبهات', text: post.shobe || '' }).catch(function(){});
+                } else {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'padafand-story.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    alert('تصویر استوری دانلود شد');
+                }
+            }, 'image/png', 0.95);
         }
+        
         function requestNotifyPermission() {
             try {
                 if (!('Notification' in window)) return;
