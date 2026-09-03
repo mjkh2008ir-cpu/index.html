@@ -3539,7 +3539,7 @@ button.danger, .btn-danger {
             switchTab('launch');
         }
 
-        async async function deletePost(index) {
+        async function deletePost(index) {
             if (!confirm('مطمئنی می‌خوای این مطلب رو حذف کنی؟')) return;
             await deleteFromSupabase('posts', allPosts[index].id);
             await loadAllData();
