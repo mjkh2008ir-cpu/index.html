@@ -2199,15 +2199,25 @@ button.danger, .btn-danger {
 <div id="tab-kartabl" class="tab-content" style="display:none">
             <div class="list-container">
                 <div class="list-title"><i class="fas fa-folder-open"></i> کارتابل عملیاتی</div>
-                <div id="kartablList" style="max-height:40vh;overflow-y:auto">
+                <div id="kartablList" style="max-height:28vh;overflow-y:auto">
                     <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div>
                 </div>
             </div>
-            <div class="list-container" style="margin-top:0.6rem">
-                <div class="list-title"><i class="fas fa-clipboard"></i> گزارش‌ها</div>
-                <div id="mergedReportsBox" style="max-height:35vh;overflow-y:auto">
+            <div class="list-container" style="margin-top:0.55rem">
+                <div class="list-title"><i class="fas fa-clipboard"></i> گزارش‌ها (ادغام‌شده)</div>
+                <div class="launch-section" style="margin:0.4rem 0">
+                    <div class="launch-title"><i class="fas fa-file-pen"></i> نوشتن گزارش جدید</div>
+                    <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
+                    <input type="text" id="reportTitle" placeholder="عنوان گزارش...">
+                    <textarea id="reportBody" rows="4" placeholder="متن گزارش..."></textarea>
+                    <button class="btn-launch btn-ai-assist" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
+                    <div class="msg" id="reportMsg"></div>
+                </div>
+                <div class="list-title" style="margin-top:0.5rem"><i class="fas fa-list"></i> گزارش‌های ثبت‌شده</div>
+                <div id="mergedReportsBox" style="max-height:30vh;overflow-y:auto">
                     <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div>
                 </div>
+                <div id="reportsList" style="display:none"></div>
             </div>
         </div>
 
@@ -2215,14 +2225,14 @@ button.danger, .btn-danger {
             <div class="launch-section">
                 <div class="launch-title"><i class="fas fa-clipboard"></i> نوشتن گزارش جدید</div>
                 <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
-                <input type="text" id="reportTitle" placeholder="عنوان گزارش...">
-                <textarea id="reportBody" rows="4" placeholder="متن گزارش..."></textarea>
+                <input type="text" id="reportTitle_old" placeholder="عنوان گزارش...">
+                <textarea id="reportBody_old" rows="4" placeholder="متن گزارش..."></textarea>
                 <button class="btn-launch btn-ai-assist" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
-                <div class="msg" id="reportMsg"></div>
+                <div class="msg" id="reportMsg_old"></div>
             </div>
             <div class="list-container" style="margin-top:0.3rem">
                 <div class="list-title"><i class="fas fa-list"></i> گزارش‌های ارسال‌شده</div>
-                <div id="reportsList">
+                <div id="reportsList_old">
                     <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ گزارشی ارسال نشده
                     </div>
                 </div>
@@ -4113,14 +4123,16 @@ ${body || '—'}`;
             }
             currentTab = tab;
             try { var sb = document.getElementById('sidebar'); if (sb) sb.classList.remove('open'); } catch(e) {}
-            document.querySelectorAll('.tab-content').forEach(function(t) {
-                t.classList.remove('active');
-                t.style.display = 'none';
+            document.querySelectorAll('.tab-content').forEach(function(el) {
+                el.classList.remove('active');
+                el.style.setProperty('display', 'none', 'important');
+                el.setAttribute('hidden', '');
             });
             var panel = document.getElementById('tab-' + tab);
             if (panel) {
                 panel.classList.add('active');
-                panel.style.display = 'block';
+                panel.style.setProperty('display', 'block', 'important');
+                panel.removeAttribute('hidden');
             }
             document.querySelectorAll('.sidebar .nav-item').forEach(function(n) { n.classList.remove('active'); });
             const items = document.querySelectorAll('.sidebar .nav-item');
