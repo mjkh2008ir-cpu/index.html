@@ -386,6 +386,20 @@
 .sidebar-nav,.more-sheet,.fab{position:fixed!important}
 .more-sheet:not(.show){display:none!important;height:0!important;overflow:hidden!important;pointer-events:none!important}
 
+
+.page[hidden]{display:none!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;min-height:0!important}
+#content{padding-top:0!important;margin-top:0!important}
+#page-posts.page.active,#page-ai.page.active,#page-games.page.active{margin-top:0!important;padding-top:0!important}
+/* footer animation frame */
+#footer .foot-anim, #footer .pixel-defense, #defenseCanvas, .defense-wrap {
+  border: 2px solid var(--neon, #39ff14) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 12px rgba(57,255,20,0.25), inset 0 0 8px rgba(57,255,20,0.08);
+  margin: 0.4rem auto !important;
+  max-width: 96%;
+  display: block;
+}
+/* PAGE_HIDDEN_ATTR */
 </style>
 
     <script type="application/ld+json">
@@ -1487,17 +1501,24 @@
             if (!page) return;
             try { closeMoreMenu(); } catch (e) {}
             var target = document.getElementById('page-' + page);
-            if (!target) {
-                console.error('صفحه یافت نشد:', page);
-                return;
-            }
+            if (!target) { console.error('صفحه یافت نشد:', page); return; }
             document.querySelectorAll('.page').forEach(function(p) {
                 p.classList.remove('active');
-                p.style.display = 'none';
+                p.style.setProperty('display', 'none', 'important');
+                p.setAttribute('hidden', '');
             });
             target.classList.add('active');
-            target.style.display = 'block';
-            try { window.scrollTo(0, 0); } catch (e) {}
+            target.style.setProperty('display', 'block', 'important');
+            target.removeAttribute('hidden');
+            target.style.setProperty('margin', '0', 'important');
+            target.style.setProperty('padding', '0', 'important');
+            // فشرده‌سازی فاصله زیر منو
+            var content = document.getElementById('content');
+            if (content) {
+                content.style.paddingTop = '0';
+                content.style.marginTop = '0';
+            }
+            try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {}
             document.querySelectorAll('.nav-btn[data-page]').forEach(function(b) {
                 b.classList.toggle('active', b.getAttribute('data-page') === page);
             });
@@ -1509,9 +1530,7 @@
                 try {
                     if (typeof allPosts !== 'undefined' && allPosts && allPosts.length) {
                         renderPosts(allPosts, 'postContainer');
-                    } else if (typeof loadAllData === 'function') {
-                        loadAllData();
-                    }
+                    } else if (typeof loadAllData === 'function') { loadAllData(); }
                 } catch (e) { console.error(e); }
             }
             if (page === 'home') {
