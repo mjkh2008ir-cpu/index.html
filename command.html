@@ -12,6 +12,27 @@
     }
   } catch(e){}
 })();
+
+        /* TAB_INIT_V9 */
+        (function(){
+          function lockTabs(){
+            document.querySelectorAll('.tab-content').forEach(function(el){
+              if(el.id==='tab-dashboard'){
+                el.classList.add('active');
+                el.style.setProperty('display','block','important');
+                el.removeAttribute('hidden');
+              } else {
+                el.classList.remove('active');
+                el.style.setProperty('display','none','important');
+                el.setAttribute('hidden','');
+              }
+            });
+            try{ document.body.classList.remove('settings-open'); }catch(e){}
+          }
+          if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', lockTabs);
+          else lockTabs();
+        })();
+
 </script>
 <style>
 html.cmd-locked #sidebar,
@@ -88,11 +109,34 @@ html, body { max-width: 100vw; overflow-x: hidden !important; }
   table { display: block; overflow-x: auto; max-width: 100%; }
 }
 
-/* ACCESS_LOG_ONLY_SETTINGS */
-#cmdAccessOnly, #commanderAccessLog, #commanderLogList { display: none !important; }
-#tab-settings.active #cmdAccessOnly,
-#tab-settings.active #commanderAccessLog { display: block !important; }
-#tab-settings.active #cmdAccessOnly #commanderAccessLog { display: block !important; }
+/* TAB_LOCK_V9 */
+.tab-content:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  max-height:0!important;
+  overflow:hidden!important;
+  margin:0!important;
+  padding:0!important;
+  position:absolute!important;
+  left:-9999px!important;
+  pointer-events:none!important;
+}
+.tab-content.active{
+  display:block!important;
+  visibility:visible!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  position:relative!important;
+  left:auto!important;
+  pointer-events:auto!important;
+}
+/* ورود/خروج فقط وقتی تنظیمات active است */
+body:not(.settings-open) #commanderAccessLog,
+body:not(.settings-open) [onclick="downloadCommanderAccessLog()"]{
+  /* fallback handled by tab hide */
+}
 
 </style>
 
@@ -1409,7 +1453,7 @@ html, body { max-width: 100vw; overflow-x: hidden !important; }
             margin-bottom: 0.55rem !important;
             padding: 0.55rem !important;
         }
-        .tab-content{display:none!important;padding-bottom:1rem}.tab-content.active{display:block!important}
+        
     
         /* تم بهتر فرماندهی */
         :root {
@@ -1588,17 +1632,6 @@ button.danger, .btn-danger {
                 <span id="refreshStatus" style="font-size:0.3rem;color:var(--neon)"></span>
             </div>
         </div>
-
-            <div id="cmdAccessOnly" class="list-container cmd-access-only" style="margin-top:1rem;border:1px solid var(--neon);border-radius:8px;padding:0.6rem">
-                <div class="list-title"><i class="fas fa-user-shield"></i> ورود و خروج فرماندهان</div>
-                <p style="font-size:0.55rem;color:var(--text-secondary);margin:0.25rem 0">فقط در تنظیمات — ۱۰ مورد اخیر</p>
-                <div id="commanderAccessLog" style="font-size:0.6rem;max-height:220px;overflow:auto;margin:0.4rem 0"></div>
-                <button type="button" class="btn btn-gold" onclick="downloadCommanderAccessLog()" style="font-size:0.65rem">
-                    <i class="fas fa-download"></i> دانلود لیست ورود/خروج
-                </button>
-            </div>
-
-        
 
         <div id="tab-dashboard" class="tab-content active">
             <div class="stats-grid">
@@ -2008,7 +2041,341 @@ button.danger, .btn-danger {
                     </div>
                 </div>
             </div>
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-users"></i> کاربران آنلاین</div>
+                <div id="onlineUsers">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-launch" class="tab-content" style="display:none">
+            <div class="list-container" style="margin-bottom:0.6rem;border:1px solid rgba(57,255,20,0.2);border-radius:8px;padding:0.5rem">
+                <div class="list-title"><i class="fas fa-newspaper"></i> اخبار سایت (ادغام‌شده با شلیک مطلب)</div>
+                <div class="form-group">
+                    <label>عنوان خبر</label>
+                    <input type="text" id="newsTitle" placeholder="عنوان خبر...">
+                </div>
+                <div class="form-group">
+                    <label>متن خبر</label>
+                    <textarea id="newsBody" rows="4" placeholder="متن خبر..."></textarea>
+                </div>
+                <button type="button" class="btn-launch" onclick="typeof submitNews==='function' && submitNews()"><i class="fas fa-newspaper"></i> انتشار خبر</button>
+                <div id="mergedNewsBox" style="margin-top:0.5rem;max-height:22vh;overflow:auto;font-size:0.6rem"></div>
+            </div>
+
+            <div class="launch-section">
+                <div class="launch-title"><i class="fas fa-rocket"></i> شلیک مطلب جدید</div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.45rem">
+                    <button type="button" class="btn-msg" onclick="aiGenerateChannelPost()"><i class="fas fa-robot"></i> دستیار AI — مطلب تصادفی (قالب کانال)</button>
+                    <button type="button" class="btn-msg" onclick="aiImproveLaunchDraft()"><i class="fas fa-magic"></i> بهبود پیش‌نویس فعلی</button>
+                </div>
+                <div style="background:rgba(232,201,92,0.06);border:1px solid rgba(232,201,92,0.25);border-radius:8px;padding:0.45rem;margin-bottom:0.45rem">
+                    <label style="font-size:0.35rem;color:var(--gold);display:block;margin-bottom:0.25rem"><i class="fab fa-telegram"></i> چسباندن پست از کانال تلگرام / ایتا</label>
+                    <textarea id="channelPasteRaw" rows="5" placeholder="متن پست کانال را اینجا بچسبانید (کپی از تلگرام/ایتا)..." style="width:100%;font-size:0.38rem;line-height:1.7"></textarea>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem">
+                        <button type="button" class="approve-btn" onclick="aiFormatChannelPaste()"><i class="fas fa-wand-magic-sparkles"></i> مرتب‌سازی با AI و پر کردن فرم</button>
+                        <button type="button" class="btn-msg" onclick="document.getElementById('channelPasteRaw').value=''">پاک کردن</button>
+                    </div>
+                    <p style="font-size:0.3rem;color:var(--text-secondary);margin-top:0.25rem;line-height:1.6">AI عنوان سوالی، متن ویراسته، هشتگ رسمی و منبع را استخراج/اصلاح می‌کند. انتشار فقط با تأیید شماست.</p>
+                </div>
+                <div id="launchAiStatus" style="font-size:0.35rem;color:var(--text-secondary);margin-bottom:0.35rem;min-height:1.1em"></div>
+                <label style="font-size:0.35rem;color:var(--gold)">عنوان (درشت)</label>
+                <input type="text" id="newShobe" placeholder="عنوان مطلب..." style="font-weight:700;font-size:0.55rem">
+                <label style="font-size:0.35rem;color:var(--gold)">مطلب / پاسخ</label>
+                <textarea id="newAnswer" rows="10" placeholder="متن کامل با قالب کانال..."></textarea>
+                <div class="row">
+                    <input type="text" id="newSource" placeholder="منبع 🔗">
+                    <input type="text" id="newTags" placeholder="هشتگ‌ها مثل #پدافند_شبهات">
+                </div>
+                <input type="text" id="newAuthor" placeholder="نویسنده ✍🏻 یا گوینده 🎙" style="margin-bottom:0.3rem">
+                <select id="newCategory">
+                    <option value="اعتقادی">اعتقادی</option>
+                    <option value="مذهبی">مذهبی</option>
+                    <option value="سیاسی">سیاسی</option>
+                    <option value="اجتماعی">اجتماعی</option>
+                    <option value="نظامی">نظامی</option>
+                </select>
+                <div style="background:rgba(57,255,20,0.05);border:1px solid rgba(57,255,20,0.2);border-radius:6px;padding:0.4rem;margin:0.4rem 0;font-size:0.32rem;color:var(--text-secondary);line-height:1.7">
+                    پس از تولید AI، متن را بررسی کنید. انتشار فقط با زدن «شلیک مطلب» انجام می‌شود.
+                </div>
+                <button class="btn-launch btn-ai-assist" onclick="firePost()"><i class="fas fa-rocket"></i> تأیید و شلیک مطلب</button>
+                <div class="msg" id="fireMsg"></div>
+            </div>
+        </div>
+
+        <div id="tab-posts" class="tab-content" style="display:none">
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-file-alt"></i> مطالب ارسال‌شده
+                    <button type="button" class="btn-msg" style="float:left;font-size:0.3rem" onclick="switchTab('launch');setTimeout(aiGenerateChannelPost,200)"><i class="fas fa-robot"></i> مطلب جدید با AI</button>
+                </div>
+                <div id="postsList">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-users" class="tab-content" style="display:none">
+            <div class="list-container" style="margin-bottom:0.5rem">
+                <div class="list-title"><i class="fas fa-crown"></i> فرماندهان (ادغام‌شده)</div>
+                <div id="mergedCommandersBox" style="font-size:0.65rem"></div>
+            </div>
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-users"></i> کاربران سیستم</div>
+                <div id="usersList">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <div id="tab-commanders" class="tab-content" hidden style="display:none!important"></div>
+
+        <div <div id="tab-comments" class="tab-content" style="display:none">
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-comment-dots"></i> کامنت‌های کاربران</div>
+                <div id="commentsList">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-messages" class="tab-content" style="display:none">
+            <div class="launch-section">
+                <div class="launch-title"><i class="fas fa-envelope"></i> ارسال پیام به کاربران</div>
+                <div style="margin-bottom:0.35rem">
+                    <button type="button" class="btn-msg" onclick="aiDraftUserMessage()"><i class="fas fa-robot"></i> پیش‌نویس پیام با AI</button>
+                    <span id="msgAiBarStatus" style="font-size:0.32rem;color:var(--text-secondary);margin-right:0.3rem"></span>
+                </div>
+                <div class="row">
+                    <select id="msgRecipient">
+                        <option value="all">همه کاربران</option>
+                    </select>
+                    <input type="text" id="msgSubject" placeholder="موضوع پیام...">
+                </div>
+                <textarea id="msgBody" rows="3" placeholder="متن پیام..."></textarea>
+                <button class="btn-launch" onclick="sendCommanderMessageToUser()"><i class="fas fa-paper-plane"></i> ارسال
+                    پیام</button>
+                <div class="msg" id="msgSendResult"></div>
+            </div>
+            <div class="list-container" style="margin-top:0.3rem">
+                <div class="list-title"><i class="fas fa-history"></i> تاریخچه پیام‌های ارسالی</div>
+                <div id="sentMessagesList">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ پیامی ارسال نشده
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-incoming" class="tab-content" style="display:none">
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-inbox"></i> شبهات ارسالی از سوی مردم
+                    <span style="font-size:0.3rem;color:var(--text-secondary);font-weight:400"> — روی هر مورد بزنید؛ پیشنهاد AI داخل جزئیات است</span>
+                </div>
+                <div id="incomingList">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">در حال بارگذاری...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        
+        <div id="tab-news" class="tab-content" hidden style="display:none!important"></div>
+
+        <div <div id="tab-aiassist" class="tab-content" style="display:none">
+            <div class="launch-section" style="margin-bottom:0.6rem">
+                <div class="launch-title"><i class="fas fa-robot"></i> دستیار فرماندهی هوش مصنوعی</div>
+                <p style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8;margin-bottom:0.4rem">
+                    دستیار فقط <b style="color:var(--gold)">پیشنهاد</b> می‌دهد. انتشار مطلب یا ارسال پیام فقط بعد از تأیید شما انجام می‌شود.
+                </p>
+                <div class="form-group">
+                    <label>دستور / سؤال برای دستیار</label>
+                    <textarea id="aiAssistPrompt" rows="3" placeholder="مثال: برای این شبهه یک پاسخ کوتاه بنویس... یا: پیش‌نویس پیام تشکر به کاربر..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>متن پایه (شبهه، پیام کاربر، یا پیش‌نویس)</label>
+                    <textarea id="aiAssistContext" rows="4" placeholder="متن شبهه یا پیام را اینجا بچسبانید..."></textarea>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem">
+                    <button class="approve-btn" type="button" onclick="runAiAssist('reply')"><i class="fas fa-comment-dots"></i> پیشنهاد پاسخ به شبهه</button>
+                    <button class="btn-msg" type="button" onclick="runAiAssist('post')"><i class="fas fa-file-alt"></i> پیش‌نویس مطلب کامل</button>
+                    <button class="btn-msg" type="button" onclick="runAiAssist('message')"><i class="fas fa-envelope"></i> پیش‌نویس پیام به کاربر</button>
+                    <button class="btn-msg" type="button" onclick="runAiAssist('summary')"><i class="fas fa-list"></i> خلاصه و اولویت</button>
+                </div>
+                <div class="form-group">
+                    <label>خروجی دستیار (قابل ویرایش)</label>
+                    <textarea id="aiAssistOutput" rows="8" placeholder="پاسخ دستیار اینجا می‌آید..."></textarea>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem">
+                    <button class="approve-btn" type="button" onclick="applyAiToLaunch()"><i class="fas fa-rocket"></i> انتقال به شلیک مطلب</button>
+                    <button class="btn-msg" type="button" onclick="applyAiToMessageBox()"><i class="fas fa-paper-plane"></i> انتقال به فرم پیام</button>
+                    <button class="btn-msg" type="button" onclick="copyAiOutput()"><i class="fas fa-copy"></i> کپی</button>
+                </div>
+                <div id="aiAssistStatus" style="margin-top:0.35rem;font-size:0.35rem;color:var(--text-secondary)"></div>
+            </div>
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-inbox"></i> میانبر: آخرین شبهات دریافتی</div>
+                <div id="aiAssistIncoming" style="font-size:0.35rem"></div>
+            </div>
+        </div>
+
+<div id="tab-kartabl" class="tab-content" style="display:none">
+            <div class="list-container">
+                <div class="list-title"><i class="fas fa-folder-open"></i> کارتابل عملیاتی</div>
+                <div id="kartablList" style="max-height:28vh;overflow-y:auto">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div>
+                </div>
+            </div>
+            <div class="list-container" style="margin-top:0.55rem">
+                <div class="list-title"><i class="fas fa-clipboard"></i> گزارش‌ها (ادغام‌شده)</div>
+                <div class="launch-section" style="margin:0.4rem 0">
+                    <div class="launch-title"><i class="fas fa-file-pen"></i> نوشتن گزارش جدید</div>
+                    <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
+                    <input type="text" id="reportTitle" placeholder="عنوان گزارش...">
+                    <textarea id="reportBody" rows="4" placeholder="متن گزارش..."></textarea>
+                    <button class="btn-launch btn-ai-assist" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
+                    <div class="msg" id="reportMsg"></div>
+                </div>
+                <div class="list-title" style="margin-top:0.5rem"><i class="fas fa-list"></i> گزارش‌های ثبت‌شده</div>
+                <div id="mergedReportsBox" style="max-height:30vh;overflow-y:auto">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.3rem">در حال بارگذاری...</div>
+                </div>
+                <div id="reportsList" style="display:none"></div>
+            </div>
+        </div>
+
+        <div id="tab-reports" class="tab-content" style="display:none!important" hidden style="display:none">
+            <div class="launch-section">
+                <div class="launch-title"><i class="fas fa-clipboard"></i> نوشتن گزارش جدید</div>
+                <button type="button" class="btn-msg" style="margin-bottom:0.3rem" onclick="aiDraftReport()"><i class="fas fa-robot"></i> پیش‌نویس گزارش با AI</button>
+                <input type="text" id="reportTitle_old" placeholder="عنوان گزارش...">
+                <textarea id="reportBody_old" rows="4" placeholder="متن گزارش..."></textarea>
+                <button class="btn-launch btn-ai-assist" onclick="submitReport()"><i class="fas fa-file-pen"></i> ارسال گزارش</button>
+                <div class="msg" id="reportMsg_old"></div>
+            </div>
+            <div class="list-container" style="margin-top:0.3rem">
+                <div class="list-title"><i class="fas fa-list"></i> گزارش‌های ارسال‌شده</div>
+                <div id="reportsList_old">
+                    <div style="color:var(--text-secondary);font-size:0.35rem;text-align:center;padding:0.05rem">هیچ گزارشی ارسال نشده
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-settings" class="tab-content" style="display:none">
             
+            <div class="crt-monitor-wrap" style="margin:0.5rem 0 0.7rem;display:flex;flex-direction:column;align-items:center">
+              <div style="font-size:0.38rem;color:#5dff3a;margin-bottom:0.25rem;letter-spacing:1px">PADAFAND CMD // ACCESS MONITOR</div>
+              <div style="width:100%;max-width:340px;background:#1a1a1a;border-radius:14px;padding:12px 12px 28px;border:2px solid #2a2a2a;box-shadow:0 8px 28px rgba(0,0,0,.55)">
+                <div style="background:#020805;border-radius:6px;border:2px solid #222;min-height:150px;max-height:180px;overflow:hidden;position:relative;
+                  background-image:linear-gradient(rgba(10,30,12,.35) 1px, transparent 1px),linear-gradient(90deg, rgba(10,30,12,.35) 1px, transparent 1px);
+                  background-size:20px 20px;">
+                  <div id="accessMonitorList" style="position:relative;z-index:1;max-height:180px;overflow-y:auto;padding:0.4rem;font-size:0.38rem;line-height:1.65;color:#5dff3a;font-family:monospace"></div>
+                  <div style="pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0,rgba(0,0,0,.2) 1px,transparent 2px,transparent 3px);opacity:.5"></div>
+                </div>
+                <div style="text-align:center;margin-top:10px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#39ff14;box-shadow:0 0 8px #39ff14"></span></div>
+              </div>
+              <div style="width:36px;height:18px;background:#333;margin-top:-2px"></div>
+              <div style="width:90px;height:8px;background:#444;border-radius:2px"></div>
+              <button type="button" class="btn-launch" style="margin-top:0.35rem;font-size:0.4rem" onclick="renderAccessMonitor()">بروزرسانی مانیتور</button>
+              <div style="margin-top:0.4rem;width:100%;max-width:340px;border-top:1px solid rgba(255,255,255,0.08);padding-top:0.3rem">
+                <div style="color:var(--gold);font-size:0.42rem;margin-bottom:0.15rem">افزودن فرمانده مجاز</div>
+                <input type="text" id="newAllowedCommander" placeholder="نام کامل" style="width:100%;font-size:0.4rem;margin-bottom:0.2rem;background:#0c140c;border:1px solid #2f6b22;color:#d4e8b0;border-radius:4px;padding:0.25rem">
+                <button type="button" class="btn-launch" style="font-size:0.4rem" onclick="addAllowedCommander()">افزودن</button>
+                <div id="allowedListView" style="margin-top:0.2rem;font-size:0.36rem;color:var(--text-secondary)"></div>
+              </div>
+            </div>
+
+
+            <div class="launch-section">
+                <div class="launch-title"><i class="fas fa-cog"></i> تنظیمات مرکز فرماندهی</div>
+
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">📊 وضعیت سرور</h4>
+                    <div style="font-size:0.4rem;color:var(--text-secondary);line-height:1.8">
+                        <div>📁 حجم کل دیتابیس: <span id="dbSize">در حال محاسبه...</span></div>
+                        <div>📊 جزئیات جداول: <span id="storageSize">—</span></div>
+                        <div id="dbTablesDetail" style="font-size:0.32rem;color:var(--text-secondary);margin:0.2rem 0 0.35rem;line-height:1.7"></div>
+                        <div>👥 تعداد کاربران: <span id="totalUsers">۰</span></div>
+                        <div>📝 تعداد شبهات: <span id="totalPosts">۰</span></div>
+                        <div>💬 تعداد کامنت‌ها: <span id="totalComments">۰</span></div>
+                        <div>📨 تعداد پیام‌ها: <span id="totalMessages">۰</span></div>
+                        <div>🔗 وضعیت اتصال: <span style="color:var(--neon)">✅ آنلاین</span></div>
+                    </div>
+                </div>
+
+                <div class="nav-divider" style="margin:0.3rem 0"></div>
+
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">👥 مدیریت کاربران</h4>
+                    <div id="userManagementList" style="max-height:150px;overflow-y:auto">
+                        <div style="font-size:0.35rem;color:var(--text-secondary)">در حال بارگذاری...</div>
+                    </div>
+                    <button class="btn-launch" onclick="deleteSelectedUser()" style="font-size:0.4rem;padding:0.1rem;margin-top:0.1rem">
+                        <i class="fas fa-trash"></i> حذف کاربر انتخاب‌شده
+                    </button>
+                </div>
+
+                <div class="nav-divider" style="margin:0.3rem 0"></div>
+
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">🔑 مدیریت دسترسی به فرماندهی</h4>
+                    <div id="accessControlList" style="max-height:150px;overflow-y:auto">
+                        <div style="font-size:0.35rem;color:var(--text-secondary)">در حال بارگذاری...</div>
+                    </div>
+                    <div style="display:flex;gap:0.2rem;margin-top:0.1rem;flex-wrap:wrap">
+                        <input type="text" id="newAccessUser" placeholder="نام کاربری..." style="flex:1;min-width:80px">
+                        <button class="btn-launch" onclick="addAccessUser()" style="font-size:0.4rem;padding:0.1rem">
+                            <i class="fas fa-plus"></i> افزودن دسترسی
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-divider" style="margin:0.3rem 0"></div>
+
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">🔒 رمز ورود به تنظیمات</h4>
+                    <div style="display:flex;gap:0.2rem;flex-wrap:wrap">
+                        <input type="password" id="settingsPassword" placeholder="رمز جدید..." style="flex:1;min-width:80px">
+                        <button class="btn-launch" onclick="changeSettingsPassword()" style="font-size:0.4rem;padding:0.1rem">
+                            <i class="fas fa-save"></i> تغییر رمز
+                        </button>
+                        <button class="btn-launch" onclick="triggerCyberAlert('تست دستی آژیر — شبیه‌سازی حمله سایبری')" style="font-size:0.4rem;padding:0.1rem;background:#8b0000">
+                            <i class="fas fa-siren-on"></i> تست آژیر سایبری
+                        </button>
+                    </div>
+                    <div style="font-size:0.35rem;color:var(--text-secondary);margin-top:0.1rem">فقط ۲ فرد مجاز به تغییر رمز هستند</div>
+                </div>
+
+                <div class="nav-divider" style="margin:0.3rem 0"></div>
+
+                <div style="margin-bottom:0.5rem">
+                    <h4 style="color:var(--gold);font-size:0.5rem;margin-bottom:0.1rem">💾 بکاپ‌گیری</h4>
+                    <button class="btn-launch" onclick="createBackup()" style="font-size:0.5rem;padding:0.2rem">
+                        <i class="fas fa-download"></i> گرفتن بکاپ از کل داده‌ها
+                    </button>
+                    <div id="backupHistory" style="margin-top:0.2rem;max-height:80px;overflow-y:auto">
+                        <div style="font-size:0.35rem;color:var(--text-secondary)">تاریخچه بکاپ‌ها:</div>
+                        <div id="backupList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div 
+            <div class="list-container" style="margin-top:1rem;border:1px solid var(--neon);border-radius:8px;padding:0.6rem">
+                <div class="list-title"><i class="fas fa-user-shield"></i> ورود و خروج فرماندهان</div>
+                <p style="font-size:0.55rem;color:var(--text-secondary);margin:0.25rem 0">۱۰ مورد اخیر نگه داشته می‌شود؛ بقیه کامل حذف می‌شوند.</p>
+                <div id="commanderAccessLog" style="font-size:0.6rem;max-height:220px;overflow:auto;margin:0.4rem 0"></div>
+                <button type="button" class="btn btn-gold" onclick="downloadCommanderAccessLog()" style="font-size:0.65rem">
+                    <i class="fas fa-download"></i> دانلود لیست ورود/خروج
+                </button>
+            </div>
         </div>
 
         <div id="tab-stats" class="tab-content" style="display:none">
@@ -2317,9 +2684,9 @@ button.danger, .btn-danger {
             run(updateIncomingMessages);
             run(updateKartabl);
             run(updateReports);
-            /* access log only on settings tab */
+            /* no global access log */
             run(updateSettings);
-            /* access log only on settings tab */
+            /* no global access log */
             run(renderMergedCommanders);
             run(renderMergedNews);
         }
@@ -3825,17 +4192,7 @@ ${body || '—'}`;
                 panel.removeAttribute('hidden');
             }
             if (tab === 'settings') {
-                try {
-                    var box = document.getElementById('cmdAccessOnly');
-                    if (box) box.style.setProperty('display', 'block', 'important');
-                    updateCommanderLog();
-                    if (typeof renderCommanderAccessLog === 'function') renderCommanderAccessLog();
-                } catch(e) {}
-            } else {
-                try {
-                    var box = document.getElementById('cmdAccessOnly');
-                    if (box) box.style.setProperty('display', 'none', 'important');
-                } catch(e) {}
+                try { updateCommanderLog(); renderCommanderAccessLog(); } catch(e) {}
             }
             if (tab === 'users') {
                 try { updateCommanders(); } catch(e) {}
