@@ -503,6 +503,7 @@
 
     <link rel="alternate" type="application/rss+xml" title="اخبار پدافند شبهات" href="/rss.xml">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -842,7 +843,7 @@
         <div class="foot-links">
             <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a>
             <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
-            <!-- command shortcut removed from public site -->
+            <a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a>
         </div>
         <div class="foot-copy">PADAFAND v10.0</div>
     </div>
@@ -2792,6 +2793,53 @@
             try { return localStorage.getItem('GOOGLE_CLIENT_ID') || window.GOOGLE_CLIENT_ID || ''; } catch(e) { return ''; }
         })();
 
+        
+        // EmailJS — از command.html: service_c8bgjtx / template_vzufaw2
+        // Public Key را یک‌بار تنظیم کنید: localStorage.setItem('EMAILJS_PUBLIC_KEY','xxxx')
+        var EMAILJS_SERVICE = 'service_c8bgjtx';
+        var EMAILJS_TEMPLATE = 'template_vzufaw2';
+        var EMAILJS_PUBLIC_KEY = (function(){
+            try { return localStorage.getItem('EMAILJS_PUBLIC_KEY') || window.EMAILJS_PUBLIC_KEY || ''; } catch(e){ return ''; }
+        })();
+        var _emailjsReady = false;
+        function ensureEmailJs() {
+            if (_emailjsReady) return true;
+            if (typeof emailjs === 'undefined') return false;
+            if (!EMAILJS_PUBLIC_KEY) {
+                // بدون public key فقط لاگ
+                console.warn('EMAILJS_PUBLIC_KEY تنظیم نشده');
+                return false;
+            }
+            try {
+                emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+                _emailjsReady = true;
+                return true;
+            } catch (e) {
+                console.error(e);
+                return false;
+            }
+        }
+        async function sendWelcomeEmail(toEmail, fullname) {
+            if (!toEmail || !String(toEmail).includes('@')) return false;
+            if (!ensureEmailJs()) {
+                console.warn('EmailJS آماده نیست — ایمیل خوش‌آمد ارسال نشد');
+                return false;
+            }
+            try {
+                await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+                    to_email: toEmail,
+                    fullname: fullname || toEmail,
+                    subject: 'خوش آمدید به پدافند شبهات',
+                    message: 'سلام ' + (fullname || '') + '،\n\nبه قرارگاه پدافند شبهات خوش آمدید.\nورود شما ثبت شد.\n\n🛡 پدافند شبهات\n@padafand_shobahat'
+                });
+                console.log('welcome email sent to', toEmail);
+                return true;
+            } catch (e) {
+                console.error('welcome email failed', e);
+                return false;
+            }
+        }
+
         function startGoogleLogin() {
             if (!GOOGLE_CLIENT_ID) {
                 var id = prompt('شناسه کلاینت گوگل (Google OAuth Client ID) را وارد کنید:\\nمثال: xxxxx.apps.googleusercontent.com\\n\\nاز Google Cloud Console > APIs > Credentials بگیرید.');
@@ -2852,7 +2900,7 @@
             }
         }
 
-        async function completeGoogleLogin(profile) {
+        async async function completeGoogleLogin(profile) {
             if (!profile || !profile.email) {
                 alert('اطلاعات حساب گوگل دریافت نشد');
                 return;
@@ -2890,7 +2938,7 @@
                 }
             } catch (e) { console.warn('supabase google sync', e); }
 
-            // welcome / notify message to inbox
+            // صندوق پیام داخلی
             try {
                 var inbox = JSON.parse(localStorage.getItem('padafand_inbox_' + username) || '[]');
                 inbox.unshift({
@@ -2903,6 +2951,8 @@
                 });
                 localStorage.setItem('padafand_inbox_' + username, JSON.stringify(inbox.slice(0, 50)));
             } catch (e) {}
+            // ایمیل خوش‌آمد به آدرس گوگل
+            try { await sendWelcomeEmail(profile.email, fullname); } catch (e) { console.warn(e); }
 
             if (typeof closeModal === 'function') closeModal('loginModal');
             if (typeof updateHeader === 'function') updateHeader();
