@@ -502,6 +502,7 @@
     </script>
 
     <link rel="alternate" type="application/rss+xml" title="اخبار پدافند شبهات" href="/rss.xml">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -765,7 +766,10 @@
     <!-- ===== MODALS ===== -->
     <div class="modal" id="sendToCommandModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-paper-plane"></i> ارسال به فرماندهی</h3><button class="modal-close" onclick="closeModal('sendToCommandModal')">×</button></div><div class="form-group"><label>شبهه <span style="color:var(--rd)">*</span></label><input type="text" id="sendShobe" placeholder="شبهه را وارد کنید..."></div><div class="form-group"><label>پاسخ پیشنهادی (اختیاری)</label><textarea id="sendAnswer" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem"><div class="form-group"><label>دسته‌بندی</label><select id="sendCategory"><option value="اعتقادی">اعتقادی</option><option value="مذهبی">مذهبی</option><option value="سیاسی">سیاسی</option><option value="اجتماعی">اجتماعی</option></select></div><div class="form-group"><label>اولویت</label><select id="sendPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div></div><button class="btn btn-gold btn-block" onclick="sendToCommand()"><i class="fas fa-rocket"></i> ارسال به فرماندهی</button><div id="sendMsg" style="font-size:.5rem;text-align:center;margin-top:0.2rem"></div></div></div>
 
-    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button><button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regWebsite" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" aria-hidden="true"><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder="رمز عبور"></div>
+    <div class="modal" id="loginModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> ورود / ثبت‌نام</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button></div><div id="loginForm"><div class="form-group"><label>نام کاربری</label><input type="text" id="loginUser" name="username" autocomplete="username" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" name="password" autocomplete="current-password" placeholder="رمز عبور"></div><button class="btn btn-block" onclick="userLogin()"><i class="fas fa-sign-in-alt"></i> ورود</button>
+<div style="display:flex;align-items:center;gap:0.5rem;margin:0.55rem 0;opacity:.7"><div style="flex:1;height:1px;background:var(--br)"></div><span style="font-size:0.55rem">یا</span><div style="flex:1;height:1px;background:var(--br)"></div></div>
+<button type="button" class="btn btn-block" id="googleLoginBtn" onclick="startGoogleLogin()" style="background:#fff;color:#222;border:1px solid #dadce0"><i class="fab fa-google" style="color:#ea4335"></i> ورود با گوگل</button>
+<button class="btn btn-gold btn-block" style="margin-top:0.3rem" onclick="showRegisterForm()"><i class="fas fa-user-plus"></i> ثبت‌نام جدید</button></div><div id="registerForm" style="display:none"><div class="form-group"><label>نام کامل</label><input type="text" id="regFullname" placeholder="نام کامل"></div><div class="form-group"><label>شماره تلفن</label><input type="tel" id="regPhone" placeholder="مثلاً 09123456789"></div><div class="form-group"><label>نام کاربری</label><input type="text" id="regWebsite" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" aria-hidden="true"><input type="text" id="regUsername" placeholder="نام کاربری"></div><div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder="رمز عبور"></div>
 <div style="margin:0.4rem 0;padding:0.4rem;background:var(--bg);border:1px solid var(--br);border-radius:6px;font-size:.55rem;color:var(--ts);line-height:1.7">
 <label style="display:flex;gap:0.4rem;align-items:flex-start;cursor:pointer">
 <input type="checkbox" id="regAcceptTerms" style="margin-top:0.2rem;flex-shrink:0">
@@ -838,7 +842,7 @@
         <div class="foot-links">
             <a href="http://eitaayar.ir/anonymous/uW79.B16eQ8" target="_blank"><i class="fas fa-envelope"></i> ارتباط</a>
             <a href="https://takl.ink/padafand_shobahat/" target="_blank"><i class="fas fa-link"></i> مجموعه</a>
-            <a href="command.html" target="_blank" id="cmdLink"><i class="fas fa-shield-alt"></i> فرماندهی</a>
+            <!-- command shortcut removed from public site -->
         </div>
         <div class="foot-copy">PADAFAND v10.0</div>
     </div>
@@ -857,7 +861,8 @@
       <button type="button" class="btn-read" id="readerLikeBtn" onclick="readerToggleLike()"><i class="fas fa-heart"></i> <span id="readerLikeCnt">0</span></button>
       <button type="button" class="btn-read" onclick="readerFocusComment()"><i class="fas fa-comment"></i> کامنت</button>
       <button type="button" class="btn-read" onclick="readerSave()"><i class="fas fa-box"></i> ذخیره</button>
-      <button type="button" class="btn-read" onclick="readerShareChoice()"><i class="fas fa-share-alt"></i> اشتراک</button>
+      <button type="button" class="btn-read" onclick="readerShare()"><i class="fas fa-align-right"></i> متنی</button>
+      <button type="button" class="btn-read" onclick="readerShareImage()"><i class="fas fa-image"></i> استوری</button>
       <button type="button" class="btn-read" onclick="readerShareImage()"><i class="fas fa-image"></i> استوری</button>
     </div>
     <div id="readerComments" style="margin-top:0.55rem"></div>
@@ -1839,12 +1844,8 @@
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();toggleLike(' + idx + ')" id="likeBtn' + idx + '"><i class="fas fa-heart"></i> <span id="likeCnt' + idx + '">' + ((p.liked_by&&p.liked_by.length)||p.likes||0) + '</span><\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();focusComment(' + idx + ')"><i class="fas fa-comment"></i> کامنت<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره<\/button>' +
-                    '<div style="position:relative;display:inline-block" class="share-wrap">' +
-                    '<button type="button" class="btn-read" onclick="event.stopPropagation();toggleShareMenu(event,' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک<\/button>' +
-                    '<div id="shareMenu' + idx + '" class="share-menu" style="display:none;position:absolute;bottom:100%;right:0;margin-bottom:6px;background:#0c1a0c;border:1px solid #39ff14;border-radius:10px;padding:0.4rem;z-index:200;min-width:150px;box-shadow:0 6px 20px rgba(0,0,0,.5)">' +
-                    '<button type="button" class="btn-read" style="width:100%;margin:0.12rem 0;justify-content:flex-start;gap:0.4rem" onclick="event.stopPropagation();closeShareMenus();sharePost(' + idx + ')"><i class="fas fa-align-right"></i> متنی<\/button>' +
-                    '<button type="button" class="btn-read" style="width:100%;margin:0.12rem 0;justify-content:flex-start;gap:0.4rem" onclick="event.stopPropagation();closeShareMenus();sharePostImage(' + idx + ')"><i class="fas fa-image"></i> تصویری (استوری)<\/button>' +
-                    '<\/div><\/div>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-align-right"></i> متنی<\/button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePostImage(' + idx + ')"><i class="fas fa-image"></i> استوری<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();reportPost(' + idx + ')" style="opacity:.9"><i class="fas fa-flag"></i> گزارش بازبینی<\/button>' +
                     '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
                     '</div>' +
@@ -2784,7 +2785,132 @@
             setTimeout(offerTutorialAfterAuth, 700);
         }
 
-        async function userLogin() {
+        async 
+        // ===== Google Sign-In =====
+        // Client ID را یک‌بار در کنسول تنظیم کنید: localStorage.setItem('GOOGLE_CLIENT_ID','YOUR_ID.apps.googleusercontent.com')
+        var GOOGLE_CLIENT_ID = (function(){
+            try { return localStorage.getItem('GOOGLE_CLIENT_ID') || window.GOOGLE_CLIENT_ID || ''; } catch(e) { return ''; }
+        })();
+
+        function startGoogleLogin() {
+            if (!GOOGLE_CLIENT_ID) {
+                var id = prompt('شناسه کلاینت گوگل (Google OAuth Client ID) را وارد کنید:\\nمثال: xxxxx.apps.googleusercontent.com\\n\\nاز Google Cloud Console > APIs > Credentials بگیرید.');
+                if (!id) return;
+                GOOGLE_CLIENT_ID = id.trim();
+                try { localStorage.setItem('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID); } catch(e) {}
+            }
+            if (typeof google === 'undefined' || !google.accounts) {
+                alert('در حال بارگذاری سرویس گوگل... چند ثانیه بعد دوباره بزنید.');
+                return;
+            }
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential,
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+            // One-tap or button flow via prompt
+            google.accounts.id.prompt(function(notification) {
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    // fallback: render button popup via oauth2 token client is heavier; use code client
+                    try {
+                        var client = google.accounts.oauth2.initTokenClient({
+                            client_id: GOOGLE_CLIENT_ID,
+                            scope: 'openid email profile',
+                            callback: function(tokenResponse) {
+                                if (tokenResponse && tokenResponse.access_token) {
+                                    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                                        headers: { Authorization: 'Bearer ' + tokenResponse.access_token }
+                                    }).then(function(r){ return r.json(); }).then(function(profile) {
+                                        completeGoogleLogin(profile);
+                                    }).catch(function(){ alert('خطا در دریافت اطلاعات گوگل'); });
+                                }
+                            }
+                        });
+                        client.requestAccessToken();
+                    } catch (e) {
+                        console.error(e);
+                        alert('ورود گوگل در دسترس نیست. از ورود معمولی استفاده کنید.');
+                    }
+                }
+            });
+        }
+
+        function handleGoogleCredential(response) {
+            try {
+                if (!response || !response.credential) return;
+                var payload = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+                completeGoogleLogin({
+                    email: payload.email,
+                    name: payload.name,
+                    picture: payload.picture,
+                    sub: payload.sub
+                });
+            } catch (e) {
+                console.error(e);
+                alert('خطا در پردازش ورود گوگل');
+            }
+        }
+
+        async function completeGoogleLogin(profile) {
+            if (!profile || !profile.email) {
+                alert('اطلاعات حساب گوگل دریافت نشد');
+                return;
+            }
+            var username = (profile.email.split('@')[0] || ('user_' + Date.now())).replace(/[^a-zA-Z0-9_\u0600-\u06FF]/g, '_');
+            var fullname = profile.name || username;
+            // local session
+            try {
+                var users = JSON.parse(localStorage.getItem('padafand_users') || '{}');
+                if (!users[username]) {
+                    users[username] = {
+                        username: username,
+                        fullname: fullname,
+                        email: profile.email,
+                        google: true,
+                        google_sub: profile.sub || '',
+                        avatar: profile.picture || '',
+                        rank: 'سرباز',
+                        xp: 0,
+                        created_at: new Date().toISOString()
+                    };
+                    localStorage.setItem('padafand_users', JSON.stringify(users));
+                }
+                localStorage.setItem('padafand_logged', username);
+                if (typeof loggedUser !== 'undefined') loggedUser = username;
+                if (typeof allUsers === 'object') allUsers[username] = users[username];
+            } catch (e) { console.error(e); }
+
+            // try sync to supabase if available
+            try {
+                if (typeof upsertUser === 'function') {
+                    await upsertUser({ username: username, fullname: fullname, email: profile.email, provider: 'google' });
+                } else if (typeof sbRest === 'function') {
+                    await sbRest('users', 'POST', { username: username, fullname: fullname, email: profile.email });
+                }
+            } catch (e) { console.warn('supabase google sync', e); }
+
+            // welcome / notify message to inbox
+            try {
+                var inbox = JSON.parse(localStorage.getItem('padafand_inbox_' + username) || '[]');
+                inbox.unshift({
+                    id: 'g-' + Date.now(),
+                    from: 'سیستم',
+                    title: 'خوش آمدید',
+                    body: 'ورود شما با حساب گوگل («' + fullname + '») ثبت شد. به پدافند شبهات خوش آمدید.',
+                    date: new Date().toLocaleDateString('fa-IR'),
+                    read: false
+                });
+                localStorage.setItem('padafand_inbox_' + username, JSON.stringify(inbox.slice(0, 50)));
+            } catch (e) {}
+
+            if (typeof closeModal === 'function') closeModal('loginModal');
+            if (typeof updateHeader === 'function') updateHeader();
+            if (typeof showToast === 'function') showToast('ورود با گوگل موفق بود');
+            else alert('✅ ورود با گوگل: ' + fullname);
+        }
+
+        function userLogin() {
             const username = document.getElementById('loginUser').value.trim();
             const password = document.getElementById('loginPass').value.trim();
             const users = await loadFromSupabase('users');
