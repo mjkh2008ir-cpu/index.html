@@ -1538,6 +1538,7 @@ button.danger, .btn-danger {
 }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -5152,7 +5153,15 @@ async function checkAccess() {
             }
         }
 
+        function ensureCmdEmailJs() {
+            if (typeof emailjs === 'undefined') return false;
+            var pk = '';
+            try { pk = localStorage.getItem('EMAILJS_PUBLIC_KEY') || window.EMAILJS_PUBLIC_KEY || ''; } catch(e) {}
+            if (!pk) return false;
+            try { emailjs.init({ publicKey: pk }); return true; } catch(e) { return false; }
+        }
         async function sendEmail(to, fullname, subject, message) {
+            if (!ensureCmdEmailJs()) { console.warn('EmailJS public key missing'); return false; }
             try {
                 await emailjs.send('service_c8bgjtx', 'template_vzufaw2', {
                     to_email: to,
