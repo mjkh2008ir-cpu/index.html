@@ -857,7 +857,8 @@
       <button type="button" class="btn-read" id="readerLikeBtn" onclick="readerToggleLike()"><i class="fas fa-heart"></i> <span id="readerLikeCnt">0</span></button>
       <button type="button" class="btn-read" onclick="readerFocusComment()"><i class="fas fa-comment"></i> کامنت</button>
       <button type="button" class="btn-read" onclick="readerSave()"><i class="fas fa-box"></i> ذخیره</button>
-      <button type="button" class="btn-read" onclick="readerShare()"><i class="fas fa-share-alt"></i> متن</button>
+      <button type="button" class="btn-read" onclick="readerShare()"><i class="fas fa-align-right"></i> متن</button>
+      <button type="button" class="btn-read" onclick="readerShareImage()"><i class="fas fa-image"></i> استوری</button>
       <button type="button" class="btn-read" onclick="readerShareImage()"><i class="fas fa-image"></i> استوری</button>
     </div>
     <div id="readerComments" style="margin-top:0.55rem"></div>
@@ -1830,12 +1831,8 @@
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();toggleLike(' + idx + ')" id="likeBtn' + idx + '"><i class="fas fa-heart"></i> <span id="likeCnt' + idx + '">' + ((p.liked_by&&p.liked_by.length)||p.likes||0) + '</span><\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();focusComment(' + idx + ')"><i class="fas fa-comment"></i> کامنت<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();saveToBox(' + idx + ')"><i class="fas fa-box"></i> ذخیره<\/button>' +
-                    '<div style="position:relative;display:inline-block" id="shareWrap' + idx + '">' +
-                    '<button type="button" class="btn-read" onclick="event.stopPropagation();toggleShareMenu(' + idx + ')"><i class="fas fa-share-alt"></i> اشتراک<\/button>' +
-                    '<div id="shareMenu' + idx + '" style="display:none;position:absolute;bottom:110%;right:0;background:var(--bgm,#0c1a0c);border:1px solid var(--neon,#39ff14);border-radius:8px;padding:0.35rem;z-index:50;min-width:140px;box-shadow:0 4px 16px rgba(0,0,0,.45)">' +
-                    '<button type="button" class="btn-read" style="width:100%;margin:0.15rem 0;justify-content:flex-start" onclick="event.stopPropagation();hideShareMenus();sharePost(' + idx + ')"><i class="fas fa-align-right"></i> متن<\/button>' +
-                    '<button type="button" class="btn-read" style="width:100%;margin:0.15rem 0;justify-content:flex-start" onclick="event.stopPropagation();hideShareMenus();sharePostImage(' + idx + ')"><i class="fas fa-image"></i> استوری<\/button>' +
-                    '<\/div><\/div>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePost(' + idx + ')"><i class="fas fa-align-right"></i> متن<\/button>' +
+                    '<button type="button" class="btn-read" onclick="event.stopPropagation();sharePostImage(' + idx + ')"><i class="fas fa-image"></i> استوری<\/button>' +
                     '<button type="button" class="btn-read" onclick="event.stopPropagation();reportPost(' + idx + ')" style="opacity:.9"><i class="fas fa-flag"></i> گزارش بازبینی<\/button>' +
                     '<span id="savedMsg' + idx + '" class="saved-msg" style="font-size:.5rem;color:var(--neon)"></span>' +
                     '</div>' +
@@ -2020,217 +2017,207 @@
 
         function sharePostImage(index) {
             try {
-            const post = allPosts[index];
-            if (!post) return;
-            const W = 1080, H = 1920;
-            const canvas = document.createElement('canvas');
-            canvas.width = W; canvas.height = H;
-            const ctx = canvas.getContext('2d');
-            const pad = 100;
-            const contentW = W - pad * 2;
+                const post = allPosts[index];
+                if (!post) { alert('مطلب یافت نشد'); return; }
 
-            function stripEmoji(s) {
-                return String(s || '')
-                    .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '')
-                    .replace(/[\u2600-\u27BF]/g, '')
-                    .replace(/\s+/g, ' ')
-                    .trim();
-            }
-            function fa(s) {
-                return stripEmoji(s).replace(/ي/g,'ی').replace(/ك/g,'ک').trim();
-            }
-            function breakLines(text, font, maxW) {
-                ctx.font = font;
-                const words = String(text || '').split(' ').filter(Boolean);
-                const lines = [];
-                let line = '';
-                for (let n = 0; n < words.length; n++) {
-                    const test = line ? line + ' ' + words[n] : words[n];
-                    if (ctx.measureText(test).width > maxW && line) {
-                        lines.push(line);
-                        line = words[n];
-                    } else line = test;
+                const W = 1080, H = 1920;
+                const canvas = document.createElement('canvas');
+                canvas.width = W; canvas.height = H;
+                const ctx = canvas.getContext('2d');
+                const pad = 96;
+                const maxW = W - pad * 2;
+
+                function clean(s) {
+                    return String(s || '')
+                        .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '')
+                        .replace(/[\u2600-\u27BF]/g, '')
+                        .replace(/\s+/g, ' ')
+                        .replace(/ي/g, 'ی').replace(/ك/g, 'ک')
+                        .trim();
                 }
-                if (line) lines.push(line);
-                return lines;
-            }
-            function drawRTL(lines, xRight, y0, lh, font, color, maxLines) {
-                ctx.font = font;
-                ctx.fillStyle = color;
-                ctx.textAlign = 'right';
-                try { ctx.direction = 'rtl'; } catch(e) {}
-                let y = y0;
-                const n = Math.min(lines.length, maxLines || 99);
-                for (let i = 0; i < n; i++) {
-                    let L = lines[i];
-                    if (i === n - 1 && lines.length > n) L += ' …';
-                    ctx.fillText(L, xRight, y);
-                    y += lh;
+                function linesOf(text, font, width) {
+                    ctx.font = font;
+                    const words = String(text || '').split(' ').filter(Boolean);
+                    const out = [];
+                    let line = '';
+                    for (let n = 0; n < words.length; n++) {
+                        const test = line ? (line + ' ' + words[n]) : words[n];
+                        if (ctx.measureText(test).width > width && line) {
+                            out.push(line);
+                            line = words[n];
+                        } else line = test;
+                    }
+                    if (line) out.push(line);
+                    return out;
                 }
-                return y;
-            }
-
-            // kraft paper
-            const bg = ctx.createLinearGradient(0, 0, W, H);
-            bg.addColorStop(0, '#dcc6a0');
-            bg.addColorStop(0.5, '#d0b48a');
-            bg.addColorStop(1, '#c4a574');
-            ctx.fillStyle = bg;
-            ctx.fillRect(0, 0, W, H);
-            for (let k = 0; k < 800; k++) {
-                ctx.fillStyle = 'rgba(60,40,15,' + (Math.random() * 0.02) + ')';
-                ctx.fillRect(Math.random()*W, Math.random()*H, 2, 2);
-            }
-
-            // double border like template
-            ctx.strokeStyle = '#6b4f2a';
-            ctx.lineWidth = 8;
-            ctx.strokeRect(40, 40, W-80, H-80);
-            ctx.strokeStyle = '#a08050';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(54, 54, W-108, H-108);
-
-            let y = 130;
-
-            // hexagonal wooden shield with الله
-            function drawHexShield(cx, cy, R) {
-                ctx.save();
-                ctx.translate(cx, cy);
-                ctx.beginPath();
-                for (let i = 0; i < 6; i++) {
-                    const a = Math.PI / 6 + i * Math.PI / 3;
-                    const x = Math.cos(a) * R;
-                    const yy = Math.sin(a) * R;
-                    if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+                function drawRTL(lines, xRight, y, lh, font, color, maxLines) {
+                    ctx.font = font;
+                    ctx.fillStyle = color;
+                    ctx.textAlign = 'right';
+                    try { ctx.direction = 'rtl'; } catch (e) {}
+                    const n = Math.min(lines.length, maxLines || 99);
+                    for (let i = 0; i < n; i++) {
+                        let L = lines[i];
+                        if (i === n - 1 && lines.length > n) L += ' …';
+                        ctx.fillText(L, xRight, y);
+                        y += lh;
+                    }
+                    return y;
                 }
-                ctx.closePath();
-                const g = ctx.createLinearGradient(-R, -R, R, R);
-                g.addColorStop(0, '#a67c52');
-                g.addColorStop(0.5, '#8b6914');
-                g.addColorStop(1, '#5c3d1e');
-                ctx.fillStyle = g;
-                ctx.fill();
-                ctx.strokeStyle = '#3d2914';
-                ctx.lineWidth = 4;
-                ctx.stroke();
-                ctx.fillStyle = '#8B0000';
-                ctx.font = 'bold ' + Math.floor(R * 0.7) + 'px Tahoma, Arial, sans-serif';
+                function drawHexShield(cx, cy, R) {
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.beginPath();
+                    for (let i = 0; i < 6; i++) {
+                        const a = Math.PI / 6 + i * Math.PI / 3;
+                        const x = Math.cos(a) * R, yy = Math.sin(a) * R;
+                        if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+                    }
+                    ctx.closePath();
+                    const g = ctx.createLinearGradient(-R, -R, R, R);
+                    g.addColorStop(0, '#b0895a');
+                    g.addColorStop(0.5, '#8b6914');
+                    g.addColorStop(1, '#5c3d1e');
+                    ctx.fillStyle = g;
+                    ctx.fill();
+                    ctx.strokeStyle = '#3d2914';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    ctx.fillStyle = '#8B0000';
+                    ctx.font = 'bold ' + Math.floor(R * 0.65) + 'px Tahoma, Arial, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    try { ctx.direction = 'rtl'; } catch (e) {}
+                    ctx.fillText('الله', 0, 2);
+                    ctx.restore();
+                }
+
+                // kraft bg
+                const bg = ctx.createLinearGradient(0, 0, 0, H);
+                bg.addColorStop(0, '#dcc6a0');
+                bg.addColorStop(0.5, '#d0b48a');
+                bg.addColorStop(1, '#c4a574');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, W, H);
+                for (let k = 0; k < 700; k++) {
+                    ctx.fillStyle = 'rgba(60,40,15,' + (Math.random() * 0.02) + ')';
+                    ctx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+                }
+                ctx.strokeStyle = '#6b4f2a';
+                ctx.lineWidth = 8;
+                ctx.strokeRect(36, 36, W - 72, H - 72);
+                ctx.strokeStyle = '#a08050';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(50, 50, W - 100, H - 100);
+
+                let y = 120;
+                drawHexShield(W / 2, y, 54);
+                y += 95;
+
                 ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                try { ctx.direction = 'rtl'; } catch(e) {}
-                ctx.fillText('الله', 0, 2);
+                ctx.textBaseline = 'alphabetic';
+                ctx.fillStyle = '#3d2914';
+                ctx.font = 'bold 50px Tahoma, Arial, sans-serif';
+                try { ctx.direction = 'rtl'; } catch (e) {}
+                ctx.fillText('پدافند شبهات', W / 2, y);
+                y += 40;
+                ctx.strokeStyle = '#8b6914';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(W / 2 - 150, y); ctx.lineTo(W / 2 - 10, y);
+                ctx.moveTo(W / 2 + 10, y); ctx.lineTo(W / 2 + 150, y);
+                ctx.stroke();
+                ctx.beginPath(); ctx.arc(W / 2, y, 4, 0, Math.PI * 2); ctx.fillStyle = '#8b6914'; ctx.fill();
+                y += 32;
+                ctx.fillStyle = '#5c4030';
+                ctx.font = '25px Tahoma, Arial, sans-serif';
+                ctx.fillText('قرارگاه پاسخگویی به شبهات', W / 2, y);
+                y += 50;
+
+                // faint truck watermark lower
+                ctx.save();
+                ctx.globalAlpha = 0.07;
+                ctx.fillStyle = '#3d2914';
+                const tx = W / 2 - 230, ty = 1280;
+                ctx.fillRect(tx + 40, ty + 20, 340, 90);
+                ctx.fillRect(tx, ty + 45, 65, 65);
+                for (let m = 0; m < 4; m++) ctx.fillRect(tx + 240 + m * 30, ty - 55, 20, 120);
+                for (let w = 0; w < 4; w++) { ctx.beginPath(); ctx.arc(tx + 75 + w * 90, ty + 130, 20, 0, Math.PI * 2); ctx.fill(); }
                 ctx.restore();
-            }
-            drawHexShield(W/2, y, 56);
-            y += 100;
 
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'alphabetic';
-            ctx.fillStyle = '#3d2914';
-            ctx.font = 'bold 52px Tahoma, Arial, sans-serif';
-            try { ctx.direction = 'rtl'; } catch(e) {}
-            ctx.fillText('پدافند شبهات', W/2, y);
-            y += 42;
-            // ornament line
-            ctx.strokeStyle = '#8b6914';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(W/2 - 160, y);
-            ctx.lineTo(W/2 - 12, y);
-            ctx.moveTo(W/2 + 12, y);
-            ctx.lineTo(W/2 + 160, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(W/2, y, 4, 0, Math.PI*2);
-            ctx.fillStyle = '#8b6914';
-            ctx.fill();
-            y += 34;
-            ctx.fillStyle = '#5c4030';
-            ctx.font = '26px Tahoma, Arial, sans-serif';
-            ctx.fillText('قرارگاه پاسخگویی به شبهات', W/2, y);
-            y += 55;
+                const title = clean(post.shobe || post.title || '');
+                const answer = clean(post.answer || post.body || '');
 
-            // watermark truck very faint bottom area only
-            ctx.save();
-            ctx.globalAlpha = 0.07;
-            ctx.fillStyle = '#3d2914';
-            const tx = W/2 - 240, ty = 1250;
-            ctx.fillRect(tx+40, ty+20, 360, 95);
-            ctx.fillRect(tx, ty+45, 70, 70);
-            for (let m=0;m<4;m++) ctx.fillRect(tx+250+m*32, ty-60, 22, 130);
-            for (let w=0;w<4;w++) { ctx.beginPath(); ctx.arc(tx+80+w*95, ty+140, 22, 0, Math.PI*2); ctx.fill(); }
-            ctx.restore();
-
-            const title = fa(post.shobe || post.title || '');
-            const answerRaw = String(post.answer || post.body || '');
-
-            // شبهه label
-            ctx.textAlign = 'right';
-            ctx.fillStyle = '#6b4423';
-            ctx.font = 'bold 26px Tahoma, Arial, sans-serif';
-            ctx.fillText('شبهه', W - pad, y);
-            y += 42;
-
-            const tFont = 'bold 36px Tahoma, Arial, sans-serif';
-            y = drawRTL(breakLines(title, tFont, contentW), W-pad, y, 50, tFont, '#2c1a0e', 6);
-            y += 26;
-
-            ctx.strokeStyle = 'rgba(92,64,48,0.3)';
-            ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
-            y += 38;
-
-            ctx.textAlign = 'right';
-            ctx.fillStyle = '#6b4423';
-            ctx.font = 'bold 26px Tahoma, Arial, sans-serif';
-            ctx.fillText('پاسخ', W - pad, y);
-            y += 42;
-
-            let paras = answerRaw.replace(/\r/g,'').split(/\n+/).map(fa).filter(Boolean);
-            if (paras.length <= 1) {
-                const bits = fa(answerRaw).split(/(?<=[\.\!\?\u061F])\s+/);
-                paras = []; let buf = '';
-                bits.forEach(function(s) {
-                    if (!s) return;
-                    if ((buf+' '+s).length > 90 && buf) { paras.push(buf); buf = s; }
-                    else buf = buf ? buf+' '+s : s;
-                });
-                if (buf) paras.push(buf);
-            }
-
-            const bFont = '30px Tahoma, Arial, sans-serif';
-            for (let pi = 0; pi < paras.length; pi++) {
-                if (y > H - 210) break;
-                if (pi > 0) y += 20;
-                ctx.fillStyle = '#6b4423';
-                ctx.font = 'bold 24px Tahoma, Arial, sans-serif';
                 ctx.textAlign = 'right';
-                ctx.fillText('•', W - pad, y);
-                y = drawRTL(breakLines(paras[pi], bFont, contentW - 40), W - pad - 30, y, 44, bFont, '#2c1a0e', 9);
-            }
+                ctx.fillStyle = '#6b4423';
+                ctx.font = 'bold 26px Tahoma, Arial, sans-serif';
+                ctx.fillText('شبهه', W - pad, y);
+                y += 40;
+                const tFont = 'bold 36px Tahoma, Arial, sans-serif';
+                y = drawRTL(linesOf(title, tFont, maxW), W - pad, y, 48, tFont, '#2c1a0e', 6);
+                y += 24;
 
-            // footer
-            ctx.strokeStyle = 'rgba(92,64,48,0.28)';
-            ctx.beginPath(); ctx.moveTo(pad, H-135); ctx.lineTo(W-pad, H-135); ctx.stroke();
-            drawHexShield(W/2 - 155, H-85, 24);
-            ctx.textAlign = 'center';
-            ctx.fillStyle = '#3d2914';
-            ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
-            try { ctx.direction = 'ltr'; } catch(e) {}
-            ctx.fillText('@padafand_shobahat', W/2 + 28, H-78);
+                ctx.strokeStyle = 'rgba(92,64,48,0.3)';
+                ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W - pad, y); ctx.stroke();
+                y += 36;
 
-            canvas.toBlob(function(blob) {
-                if (!blob) { alert('خطا در ساخت تصویر'); return; }
-                const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({ files: [file], title: title || 'پدافند شبهات', text: title }).catch(function(){});
-                } else {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'padafand-story.png';
-                    document.body.appendChild(a); a.click(); a.remove();
-                    alert('تصویر استوری دانلود شد');
+                ctx.fillStyle = '#6b4423';
+                ctx.font = 'bold 26px Tahoma, Arial, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText('پاسخ', W - pad, y);
+                y += 40;
+
+                let paras = String(post.answer || '').replace(/\r/g, '').split(/\n+/).map(clean).filter(Boolean);
+                if (paras.length <= 1) {
+                    const bits = answer.split(/(?<=[\.\!\?\u061F])\s+/);
+                    paras = []; let buf = '';
+                    bits.forEach(function(s) {
+                        s = clean(s);
+                        if (!s) return;
+                        if ((buf + ' ' + s).length > 90 && buf) { paras.push(buf); buf = s; }
+                        else buf = buf ? (buf + ' ' + s) : s;
+                    });
+                    if (buf) paras.push(buf);
                 }
-            }, 'image/png', 0.95);
+                const bFont = '30px Tahoma, Arial, sans-serif';
+                for (let pi = 0; pi < paras.length; pi++) {
+                    if (y > H - 200) break;
+                    if (pi > 0) y += 18;
+                    ctx.fillStyle = '#6b4423';
+                    ctx.font = 'bold 24px Tahoma, Arial, sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.fillText('•', W - pad, y);
+                    y = drawRTL(linesOf(paras[pi], bFont, maxW - 36), W - pad - 28, y, 42, bFont, '#2c1a0e', 8);
+                }
+
+                ctx.strokeStyle = 'rgba(92,64,48,0.28)';
+                ctx.beginPath(); ctx.moveTo(pad, H - 130); ctx.lineTo(W - pad, H - 130); ctx.stroke();
+                drawHexShield(W / 2 - 150, H - 82, 22);
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#3d2914';
+                ctx.font = 'bold 28px Tahoma, Arial, sans-serif';
+                try { ctx.direction = 'ltr'; } catch (e) {}
+                ctx.fillText('@padafand_shobahat', W / 2 + 26, H - 74);
+
+                canvas.toBlob(function(blob) {
+                    if (!blob) { alert('خطا در ساخت تصویر استوری'); return; }
+                    const file = new File([blob], 'padafand-story.png', { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({ files: [file], title: title || 'پدافند شبهات', text: title }).catch(function() {
+                            const a = document.createElement('a');
+                            a.href = URL.createObjectURL(blob);
+                            a.download = 'padafand-story.png';
+                            document.body.appendChild(a); a.click(); a.remove();
+                            alert('تصویر استوری دانلود شد');
+                        });
+                    } else {
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = 'padafand-story.png';
+                        document.body.appendChild(a); a.click(); a.remove();
+                        alert('تصویر استوری دانلود شد');
+                    }
+                }, 'image/png', 0.95);
             } catch (err) {
                 console.error(err);
                 alert('خطا در ساخت استوری');
@@ -2264,96 +2251,31 @@
         }
 
         function sharePost(index) {
-            const post = allPosts[index];
-            if (!post) return;
-            const text = `🛡 پدافند شبهات\n❓ ${post.shobe}\n💡 ${post.answer}`;
-            if (navigator.share) {
-                navigator.share({ title: 'پدافند شبهات', text: text, url: window.location.href }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(text + '\n\n' + window.location.href)
-                    .then(() => alert('✅ مطلب کپی شد!'))
-                    .catch(() => alert('📋 لینک و متن رو کپی کن:\n' + text));
-            }
-        }
-
-        // ===== SAVED =====
-        async function saveToBox(index) {
-            if (!loggedUser) { alert('⚠️ برای ذخیره مطالب وارد حساب خود شوید.'); return; }
-            const post = allPosts[index];
-            if (!post) return;
-            const msgEl = document.getElementById('savedMsg' + index);
             try {
-                const saved = await loadFromSupabase('saved') || [];
-                const userSaved = saved.filter(s => s.user === loggedUser);
-                const pid = post.id;
-                if (userSaved.some(s => String(s.post_id) === String(pid))) {
-                    if (msgEl) msgEl.textContent = 'قبلاً ذخیره شده';
-                    setTimeout(() => { if (msgEl) msgEl.textContent = ''; }, 2000);
-                    return;
+                const post = allPosts[index];
+                if (!post) { alert('مطلب یافت نشد'); return; }
+                const title = (post.shobe || post.title || '').trim();
+                const answer = (post.answer || post.body || '').trim();
+                const text = '🛡 پدافند شبهات\n\n❓ ' + title + '\n\n💡 ' + answer + '\n\n@padafand_shobahat';
+                if (navigator.share) {
+                    navigator.share({ title: 'پدافند شبهات', text: text }).catch(function() {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(text).then(function(){ alert('متن کپی شد'); });
+                        } else {
+                            prompt('متن را کپی کنید:', text);
+                        }
+                    });
+                } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(function(){ alert('متن کپی شد — می‌توانید در کانال/استوری بچسبانید'); });
+                } else {
+                    prompt('متن را کپی کنید:', text);
                 }
-                const result = await saveToSupabase('saved', {
-                    user: loggedUser,
-                    post_id: pid,
-                    data: {
-                        shobe: post.shobe || '',
-                        answer: post.answer || '',
-                        cat: post.cat || '',
-                        saved_at: new Date().toLocaleDateString('fa-IR')
-                    }
-                });
-                if (!result) {
-                    if (msgEl) msgEl.textContent = 'خطا در ذخیره';
-                    return;
-                }
-                if (allUsers[loggedUser] && allUsers[loggedUser].id) {
-                    allUsers[loggedUser].xp = (allUsers[loggedUser].xp || 0) + 1;
-                    await updateInSupabase('users', allUsers[loggedUser].id, { xp: allUsers[loggedUser].xp });
-                }
-                if (msgEl) msgEl.textContent = 'ذخیره شد';
-                setTimeout(() => { if (msgEl) msgEl.textContent = ''; }, 2000);
             } catch (e) {
                 console.error(e);
-                if (msgEl) msgEl.textContent = 'خطا';
+                alert('خطا در اشتراک متن');
             }
         }
-
-
-                async function renderSaved() {
-            const container = document.getElementById('savedContainer');
-            if (!container) return;
-            if (!loggedUser) {
-                container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.65rem"><i class="fas fa-lock"></i> وارد حساب خود شوید.</div>';
-                return;
-            }
-            const saved = await loadFromSupabase('saved') || [];
-            const userSaved = saved.filter(s => s.user === loggedUser);
-            if (!userSaved.length) {
-                container.innerHTML = '<div style="text-align:center;padding:0.5rem;color:var(--ts);font-size:.65rem"><i class="fas fa-box-open"></i> جعبه مهمات خالی است</div>';
-                return;
-            }
-            window._savedCache = userSaved;
-            container.innerHTML = userSaved.map((s, i) => {
-                const d = (typeof s.data === 'object' && s.data) ? s.data : {};
-                let shobe = d.shobe || s.shobe || '';
-                if (!shobe && s.post_id && allPosts.length) {
-                    const p = allPosts.find(x => String(x.id) === String(s.post_id));
-                    if (p) shobe = p.shobe || '';
-                }
-                const sid = s.id != null ? s.id : 'null';
-                return (
-                    '<div class="post">' +
-                    '<div class="post-hdr" onclick="openSavedReaderAt(' + i + ')" style="cursor:pointer">' +
-                    '<span class="title"><i class="fas fa-box"></i> ' + escapeHtml((shobe || 'مطلب ذخیره‌شده').substring(0, 120)) + '</span>' +
-                    '<span class="arrow"><i class="fas fa-book-open"></i></span>' +
-                    '</div>' +
-                    '<div style="padding:0.35rem 0.6rem 0.55rem;display:flex;gap:0.3rem;flex-wrap:wrap;border-top:1px solid var(--br)">' +
-                    '<button type="button" class="btn-read" onclick="openSavedReaderAt(' + i + ')"><i class="fas fa-book-open"></i> مطالعه<\/button>' +
-                    '<button type="button" class="btn-read" onclick="deleteSaved(' + sid + ')"><i class="fas fa-trash"></i> حذف<\/button>' +
-                    '</div></div>'
-                );
-            }).join('');
-        }
-
+        
         function openSavedReaderAt(i) {
             const s = (window._savedCache || [])[i];
             if (!s) return;
