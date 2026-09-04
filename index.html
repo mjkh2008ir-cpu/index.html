@@ -2614,7 +2614,7 @@
             }
         }
 
-        function updateProfile() {
+        async async function updateProfile() {
             const set = (id, val, html) => {
                 const el = document.getElementById(id);
                 if (!el) return;
@@ -2960,7 +2960,7 @@
             else alert('✅ ورود با گوگل: ' + fullname);
         }
 
-        function userLogin() {
+        async function userLogin() {
             const username = document.getElementById('loginUser').value.trim();
             const password = document.getElementById('loginPass').value.trim();
             const users = await loadFromSupabase('users');
