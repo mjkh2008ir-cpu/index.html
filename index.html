@@ -864,7 +864,6 @@
       <button type="button" class="btn-read" onclick="readerSave()"><i class="fas fa-box"></i> ذخیره</button>
       <button type="button" class="btn-read" onclick="readerShare()"><i class="fas fa-align-right"></i> متنی</button>
       <button type="button" class="btn-read" onclick="readerShareImage()"><i class="fas fa-image"></i> استوری</button>
-      <button type="button" class="btn-read" onclick="readerShareImage()"><i class="fas fa-image"></i> استوری</button>
     </div>
     <div id="readerComments" style="margin-top:0.55rem"></div>
     <div style="display:flex;gap:0.3rem;margin-top:0.4rem">
@@ -2841,46 +2840,41 @@
 
         function startGoogleLogin() {
             if (!GOOGLE_CLIENT_ID) {
-                var id = prompt('شناسه کلاینت گوگل (Google OAuth Client ID) را وارد کنید:\\nمثال: xxxxx.apps.googleusercontent.com\\n\\nاز Google Cloud Console > APIs > Credentials بگیرید.');
-                if (!id) return;
-                GOOGLE_CLIENT_ID = id.trim();
-                try { localStorage.setItem('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID); } catch(e) {}
-            }
-            if (typeof google === 'undefined' || !google.accounts) {
-                alert('در حال بارگذاری سرویس گوگل... چند ثانیه بعد دوباره بزنید.');
+                alert('برای ورود با گوگل باید یک‌بار Client ID تنظیم شود.\\n\\nاز Google Cloud Console یک OAuth Client ID از نوع Web بسازید و دامنه زیر را در Authorized JavaScript origins اضافه کنید:\\nhttps://index-html-delta-nine.vercel.app\\n\\nبعد Client ID را برای فرمانده بفرستید تا داخل سایت ثبت شود.');
                 return;
             }
-            google.accounts.id.initialize({
-                client_id: GOOGLE_CLIENT_ID,
-                callback: handleGoogleCredential,
-                auto_select: false,
-                cancel_on_tap_outside: true
-            });
-            // One-tap or button flow via prompt
-            google.accounts.id.prompt(function(notification) {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    // fallback: render button popup via oauth2 token client is heavier; use code client
-                    try {
-                        var client = google.accounts.oauth2.initTokenClient({
-                            client_id: GOOGLE_CLIENT_ID,
-                            scope: 'openid email profile',
-                            callback: function(tokenResponse) {
-                                if (tokenResponse && tokenResponse.access_token) {
-                                    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                                        headers: { Authorization: 'Bearer ' + tokenResponse.access_token }
-                                    }).then(function(r){ return r.json(); }).then(function(profile) {
-                                        completeGoogleLogin(profile);
-                                    }).catch(function(){ alert('خطا در دریافت اطلاعات گوگل'); });
-                                }
-                            }
-                        });
-                        client.requestAccessToken();
-                    } catch (e) {
-                        console.error(e);
-                        alert('ورود گوگل در دسترس نیست. از ورود معمولی استفاده کنید.');
+            if (typeof google === 'undefined' || !google.accounts) {
+                alert('سرویس گوگل هنوز بارگذاری نشده. چند ثانیه صبر کنید و دوباره بزنید.');
+                return;
+            }
+            try {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleCredential,
+                    auto_select: false,
+                    cancel_on_tap_outside: true,
+                    use_fedcm_for_prompt: false
+                });
+                // نمایش انتخاب حساب گوگل
+                google.accounts.id.prompt();
+                // مسیر پشتیبان با OAuth token
+                var client = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: 'openid email profile',
+                    callback: function(tokenResponse) {
+                        if (!tokenResponse || !tokenResponse.access_token) return;
+                        fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                            headers: { Authorization: 'Bearer ' + tokenResponse.access_token }
+                        }).then(function(r){ return r.json(); }).then(function(profile) {
+                            completeGoogleLogin(profile);
+                        }).catch(function(){ alert('خطا در دریافت اطلاعات حساب گوگل'); });
                     }
-                }
-            });
+                });
+                client.requestAccessToken({ prompt: 'select_account' });
+            } catch (e) {
+                console.error(e);
+                alert('ورود گوگل در دسترس نیست. از ورود با نام کاربری استفاده کنید.');
+            }
         }
 
         function handleGoogleCredential(response) {
@@ -2959,7 +2953,22 @@
             else alert('✅ ورود با گوگل: ' + fullname);
         }
 
+        
+        function loginRateCheck(key) {
+            try {
+                var k = 'padafand_rl_' + key;
+                var now = Date.now();
+                var data = JSON.parse(localStorage.getItem(k) || '{"n":0,"t":0}');
+                if (now - data.t > 15 * 60 * 1000) { data = {n:0, t:now}; }
+                if (data.n >= 8) return false;
+                data.n += 1; data.t = data.t || now;
+                localStorage.setItem(k, JSON.stringify(data));
+                return true;
+            } catch (e) { return true; }
+        }
+
         async function userLogin() {
+            if (!loginRateCheck('login')) { alert('تعداد تلاش ورود زیاد است. ۱۵ دقیقه بعد دوباره تلاش کنید.'); return; }
             const username = document.getElementById('loginUser').value.trim();
             const password = document.getElementById('loginPass').value.trim();
             const users = await loadFromSupabase('users');
